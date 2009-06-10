@@ -620,7 +620,7 @@
     <value>Inherit</value>
   </data>
   <data name="groupBox4.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>12, 157</value>
+    <value>12, 173</value>
   </data>
   <data name="groupBox4.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -629,7 +629,7 @@
     <value>False</value>
   </data>
   <data name="groupBox4.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 116</value>
+    <value>402, 135</value>
   </data>
   <data name="groupBox4.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>1</value>
@@ -992,7 +992,7 @@
     <value>Inherit</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>12, 279</value>
+    <value>12, 325</value>
   </data>
   <data name="groupBox1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1001,7 +1001,7 @@
     <value>False</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>400, 80</value>
+    <value>402, 80</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>2</value>
@@ -1346,7 +1346,7 @@
     <value>Inherit</value>
   </data>
   <data name="groupBox3.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>12, 16</value>
+    <value>12, 1</value>
   </data>
   <data name="groupBox3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1355,7 +1355,7 @@
     <value>False</value>
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>402, 135</value>
+    <value>402, 162</value>
   </data>
   <data name="groupBox3.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
@@ -2891,7 +2891,7 @@
     <value>2</value>
   </data>
   <data name="startInTrayIcon.Text">
-    <value>Hide iFolder main window while startup</value>
+    <value>Hide iFolder main window at startup</value>
   </data>
   <data name="startInTrayIcon.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleLeft</value>
@@ -2911,4 +2911,196 @@
   <data name="&gt;&gt;startInTrayIcon.ZOrder">
     <value>2</value>
   </data>
+  <data name="hideSyncLog.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>False</value>
+</data>
+<data name="hideSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Private</value>
+</data>
+<data name="hideSyncLog.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Private</value>
+</data>
+<data name="hideSyncLog.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Top, Left</value>
+</data>
+<data name="hideSyncLog.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Normal</value>
+</data>
+<data name="hideSyncLog.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleLeft</value>
+</data>
+<data name="hideSyncLog.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>None</value>
+</data>
+<data name="hideSyncLog.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="hideSyncLog.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>System</value>
+</data>
+<data name="hideSyncLog.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>AssociateIndex</value>
+</data>
+<data name="hideSyncLog.HelpString">
+  <value>Check to display synchronization logs</value>
+</data>
+<data name="hideSyncLog.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hideSyncLog.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleCenter</value>
+</data>
+<data name="hideSyncLog.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>-1</value>
+</data>
+<data name="hideSyncLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>NoControl</value>
+</data>
+<data name="hideSyncLog.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>16, 135</value>
+</data>
+<data name="hideSyncLog.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Inherit</value>
+</data>
+<data name="hideSyncLog.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="hideSyncLog.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>368, 24</value>
+</data>
+<data name="hideSyncLog.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>2</value>
+</data>
+<data name="hideSyncLog.Text">
+  <value>Display synchronization logs</value>
+</data>
+<data name="hideSyncLog.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleLeft</value>
+</data>
+<data name="hideSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="&gt;&gt;hideSyncLog.Name">
+  <value>hideSyncLog</value>
+</data>
+<data name="&gt;&gt;hideSyncLog.Type">
+  <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+</data>
+<data name="&gt;&gt;hideSyncLog.Parent">
+  <value>groupBox3</value>
+</data>
+<data name="&gt;&gt;hideSyncLog.ZOrder">
+  <value>2</value>
+</data>
+<data name="hidenotification.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>False</value>
+</data>
+<data name="hidenotification.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Private</value>
+</data>
+<data name="hidenotification.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Private</value>
+</data>
+<data name="hidenotification.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Top, Left</value>
+</data>
+<data name="hidenotification.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Normal</value>
+</data>
+<data name="hidenotification.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.CheckAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleLeft</value>
+</data>
+<data name="hidenotification.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>None</value>
+</data>
+<data name="hidenotification.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="hidenotification.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>System</value>
+</data>
+<data name="hidenotification.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.HelpKeyword" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.HelpNavigator" type="System.Windows.Forms.HelpNavigator, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>AssociateIndex</value>
+</data>
+<data name="hidenotification.HelpString">
+  <value>Check to display notification for policy violation.</value>
+</data>
+<data name="hidenotification.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value />
+</data>
+<data name="hidenotification.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleCenter</value>
+</data>
+<data name="hidenotification.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>-1</value>
+</data>
+<data name="hidenotification.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>NoControl</value>
+</data>
+<data name="hidenotification.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>16, 106</value>
+</data>
+<data name="hidenotification.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>Inherit</value>
+</data>
+<data name="hidenotification.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="hidenotification.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>368, 24</value>
+</data>
+<data name="hidenotification.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>2</value>
+</data>
+<data name="hidenotification.Text">
+  <value>Display notifications for policy violations</value>
+</data>
+<data name="hidenotification.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <value>MiddleLeft</value>
+</data>
+<data name="hidenotification.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <value>True</value>
+</data>
+<data name="&gt;&gt;hidenotification.Name">
+  <value>hidenotification</value>
+</data>
+<data name="&gt;&gt;hidenotification.Type">
+  <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+</data>
+<data name="&gt;&gt;hidenotification.Parent">
+  <value>groupBox3</value>
+</data>
+<data name="&gt;&gt;hidenotification.ZOrder">
+  <value>2</value>
+</data>
 </root>
