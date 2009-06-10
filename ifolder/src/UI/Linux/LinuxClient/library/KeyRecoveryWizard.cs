@@ -177,7 +177,15 @@ namespace Novell.iFolder
 
 		private Widget CreateWidgets()
                 {
+                  //      VBox vbox = new VBox(false, 0);
+                        EventBox widgetEventbox = new EventBox();
+	                   widgetEventbox.ModifyBg(StateType.Normal, this.Style.Background(StateType.Normal));
+
                         VBox vbox = new VBox(false, 0);
+
+                        widgetEventbox.Add(vbox);
+
+
 
                         KeyRecoveryPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
                         KeyRecoveryPixbuf = KeyRecoveryPixbuf.ScaleSimple(48, 48, Gdk.InterpType.Bilinear);
@@ -199,7 +207,7 @@ namespace Novell.iFolder
         		KeyRecoveryDruid.AppendPage(CreateFinishPage());
 	                KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
 
-                        return vbox;
+                        return widgetEventbox;
                 }
 
 		
