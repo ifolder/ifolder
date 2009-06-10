@@ -367,7 +367,7 @@ namespace Novell.iFolder
 			}
 			for (int x = 0; x < domains.Length; x++)
 			{
-				domainComboBox.AppendText(domains[x].Name);
+				domainComboBox.AppendText(domains[x].Name+"-"+domains[x].Host);
 			}
 			if( domains.Length > 0)
 				domainComboBox.Active = 0;
