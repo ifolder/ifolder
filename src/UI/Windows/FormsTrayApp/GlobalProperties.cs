@@ -3047,6 +3047,7 @@ namespace Novell.FormsTrayApp
             string id = usermemberid;
             string QuotaAvailable = null;
             string QuotaUsed = null;
+            string QuotaInfo = null;
             
             try
             {
@@ -3055,22 +3056,32 @@ namespace Novell.FormsTrayApp
 
                 QuotaUsed = calcUsedQuota(id);
                 //combining both the Available and Used Space in single string
-                QuotaAvailable += string.Format("            " + QuotaUsed);
+                QuotaInfo = string.Format(Resources.diskSpaceAvailable +
+                                        ":  " +
+                                        QuotaAvailable +
+                                        "            " +
+                                        Resources.diskSpaceUsed +
+                                        ":  " +
+                                        QuotaUsed);
             }
             catch
             {
                 QuotaAvailable = null;
                 QuotaUsed = null;
                 QuotaAvailable = TrayApp.Properties.Resources.notApplicable;
-                QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + 
-                    resourceManager.GetString("Available.Text") + QuotaAvailable);
+                QuotaAvailable = string.Format( Resources.diskSpaceAvailable + QuotaAvailable);
                 QuotaUsed = TrayApp.Properties.Resources.notApplicable;
-                QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + 
-                    resourceManager.GetString("Used.Text") + QuotaUsed);
+                QuotaUsed = string.Format(Resources.diskSpaceUsed + QuotaUsed);
                 //combining both the Available and Used Space in single string
-                QuotaAvailable += string.Format("            " + QuotaUsed);
+                QuotaInfo = string.Format(Resources.diskSpaceAvailable +
+                                        ":  " +
+                                        QuotaAvailable +
+                                        "            " +
+                                        Resources.diskSpaceUsed +
+                                        ":  " +
+                                        QuotaUsed);
             }
-            return QuotaAvailable;
+            return QuotaInfo;
         }
 
         private string calcUsedQuota(string usermemberid)
@@ -3078,18 +3089,16 @@ namespace Novell.FormsTrayApp
             DiskSpace diskSpace = ifWebService.GetUserDiskSpace(usermemberid);
             string QuotaUsed = null;
             //Calculating Used Space
-            if (diskSpace.UsedSpace != 0)
+            if (diskSpace.UsedSpace != -1)
             {
                 QuotaUsed = ((double)Math.Round(diskSpace.UsedSpace / megaByte, 2)).ToString();
-                QuotaUsed += resourceManager.GetString("freeSpaceUnits.Text");
+                QuotaUsed += string.Format(" " + Resources.mb);
             }
             else
             {
-                QuotaUsed = resourceManager.GetString("notApplicable");
+                QuotaUsed = Resources.notApplicalbeText;
 
             }
-            QuotaUsed = string.Format(resourceManager.GetString("DiskSpace.Text") + 
-                                    resourceManager.GetString("Used.Text") + QuotaUsed);
             return QuotaUsed;
         }
 
@@ -3098,17 +3107,15 @@ namespace Novell.FormsTrayApp
             DiskSpace diskSpace = ifWebService.GetUserDiskSpace(usermemberid);
             string QuotaAvailable = null;
             //Calculating Available Space
-            if (diskSpace.Limit != 0)
+            if (diskSpace.Limit != -1)
             {
                 QuotaAvailable = ((double)Math.Round(diskSpace.AvailableSpace / megaByte, 2)).ToString();
-                QuotaAvailable += TrayApp.Properties.Resources.freeSpaceUnits;
+                QuotaAvailable += string.Format(" " + TrayApp.Properties.Resources.freeSpaceUnits);
             }
             else
             {
-                QuotaAvailable = resourceManager.GetString("Unlimited.Text");
+                QuotaAvailable = Resources.Unlimited;
             }
-            QuotaAvailable = string.Format(resourceManager.GetString("DiskSpace.Text") + 
-                resourceManager.GetString("Available.Text") + QuotaAvailable);
             return QuotaAvailable;
         }
 
