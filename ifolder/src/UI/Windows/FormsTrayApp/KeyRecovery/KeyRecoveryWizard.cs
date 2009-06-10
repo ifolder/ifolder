@@ -241,6 +241,7 @@ namespace Novell.Wizard
             this.Controls.Add(this.finalPage);
             this.Controls.Add(this.exportKeyPage);
             this.Controls.Add(this.emailPage);
+            this.BackColor = System.Drawing.Color.Gainsboro;
 
 
             // Load the application icon.
