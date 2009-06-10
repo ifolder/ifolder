@@ -629,7 +629,8 @@ namespace Novell.FormsTrayApp
             {
                 infolog.Activate();
             }
-            else if (false == disableSyncLogPopup)
+            //else if ((false == disableSyncLogPopup) || (!Preferences.HideSyncLogWindow))
+            else if (Preferences.HideSyncLogWindow)
             {
                 infolog.Show();
             }
@@ -1747,7 +1748,10 @@ namespace Novell.FormsTrayApp
                             infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
                         }
                         notifyType = NotifyType.SyncError;
-                        shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("policyTypeFailure"), currentSyncCollectionName), " ", BalloonType.Error);
+                        if (Preferences.HidePolicyVoilationNotification)
+                        {
+                           shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("policyTypeFailure"), currentSyncCollectionName), " ", BalloonType.Error);
+                        }
                         break;
                     case SyncStatus.DiskFull:
                         message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);

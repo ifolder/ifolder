@@ -70,6 +70,10 @@ namespace Novell.FormsTrayApp
         private const string notifyShareDisabled = "NotifyShareDisable";
         private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
         private const string notifyJoinDisabled = "NotifyJoinDisabled";
+
+        private const string hideSyncWindowPopup = "hideSyncWindowPopup";
+        private const string hidePolicynotification = "hidePolicynotification";
+
         public static readonly string iFolderKey = @"SOFTWARE\Novell\iFolder";
         private const string preferencesX = "PreferencesX";
         private const string preferencesY = "PreferencesY";
@@ -126,7 +130,8 @@ namespace Novell.FormsTrayApp
         public Novell.FormsTrayApp.GlobalProperties parent;
         public string str;
         private System.Windows.Forms.CheckBox startInTrayIcon;
-        
+        private System.Windows.Forms.CheckBox hideSyncLog;
+        private System.Windows.Forms.CheckBox hidenotification;
         
         #endregion
 
@@ -196,6 +201,8 @@ namespace Novell.FormsTrayApp
             this.displayConfirmation = new System.Windows.Forms.CheckBox();
             this.displayTrayIcon = new System.Windows.Forms.CheckBox();
             this.startInTrayIcon = new System.Windows.Forms.CheckBox();
+            this.hideSyncLog = new System.Windows.Forms.CheckBox();
+            this.hidenotification = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabGeneral = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -370,6 +377,70 @@ namespace Novell.FormsTrayApp
             this.startInTrayIcon.CheckedChanged += new System.EventHandler(this.startInTrayIcon_CheckedChanged);
 
 
+            //
+            //hide Sync Log
+            //
+            this.hideSyncLog.AccessibleDescription = resources.GetString("hideSyncLog.AccessibleDescription");
+            this.hideSyncLog.AccessibleName = resources.GetString("hideSyncLog.AccessibleName");
+            this.hideSyncLog.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("hideSyncLog.Anchor")));
+            this.hideSyncLog.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("hideSyncLog.Appearance")));
+            this.hideSyncLog.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("hideSyncLog.BackgroundImage")));
+            this.hideSyncLog.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hideSyncLog.CheckAlign")));
+            this.hideSyncLog.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("hideSyncLog.Dock")));
+            this.hideSyncLog.Enabled = ((bool)(resources.GetObject("hideSyncLog.Enabled")));
+            this.hideSyncLog.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("hideSyncLog.FlatStyle")));
+            this.hideSyncLog.Font = ((System.Drawing.Font)(resources.GetObject("hideSyncLog.Font")));
+            this.helpProvider1.SetHelpKeyword(this.hideSyncLog, resources.GetString("hideSyncLog.HelpKeyword"));
+            this.helpProvider1.SetHelpNavigator(this.hideSyncLog, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("hideSyncLog.HelpNavigator"))));
+            this.helpProvider1.SetHelpString(this.hideSyncLog, resources.GetString("hideSyncLog.HelpString"));
+            this.hideSyncLog.Image = ((System.Drawing.Image)(resources.GetObject("hideSyncLog.Image")));
+            this.hideSyncLog.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hideSyncLog.ImageAlign")));
+            this.hideSyncLog.ImageIndex = ((int)(resources.GetObject("hideSyncLog.ImageIndex")));
+            this.hideSyncLog.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("hideSyncLog.ImeMode")));
+            this.hideSyncLog.Location = ((System.Drawing.Point)(resources.GetObject("hideSyncLog.Location")));
+            this.hideSyncLog.Name = "hideSyncLog";
+            this.hideSyncLog.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("hideSyncLog.RightToLeft")));
+            this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("hideSyncLog.ShowHelp"))));
+            this.hideSyncLog.Size = ((System.Drawing.Size)(resources.GetObject("hideSyncLog.Size")));
+            this.hideSyncLog.TabIndex = ((int)(resources.GetObject("hideSyncLog.TabIndex")));
+            this.hideSyncLog.Text = resources.GetString("hideSyncLog.Text");
+            this.hideSyncLog.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hideSyncLog.TextAlign")));
+            this.hideSyncLog.Visible = ((bool)(resources.GetObject("hideSyncLog.Visible")));
+            this.hideSyncLog.CheckedChanged += new System.EventHandler(this.hideSyncLog_CheckedChanged);
+
+
+
+            //
+            //hide notification
+            //
+            this.hidenotification.AccessibleDescription = resources.GetString("hidenotification.AccessibleDescription");
+            this.hidenotification.AccessibleName = resources.GetString("hidenotification.AccessibleName");
+            this.hidenotification.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("hidenotification.Anchor")));
+            this.hidenotification.Appearance = ((System.Windows.Forms.Appearance)(resources.GetObject("hidenotification.Appearance")));
+            this.hidenotification.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("hidenotification.BackgroundImage")));
+            this.hidenotification.CheckAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hidenotification.CheckAlign")));
+            this.hidenotification.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("hidenotification.Dock")));
+            this.hidenotification.Enabled = ((bool)(resources.GetObject("hidenotification.Enabled")));
+            this.hidenotification.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("hidenotification.FlatStyle")));
+            this.hidenotification.Font = ((System.Drawing.Font)(resources.GetObject("hidenotification.Font")));
+            this.helpProvider1.SetHelpKeyword(this.hidenotification, resources.GetString("hidenotification.HelpKeyword"));
+            this.helpProvider1.SetHelpNavigator(this.hidenotification, ((System.Windows.Forms.HelpNavigator)(resources.GetObject("hidenotification.HelpNavigator"))));
+            this.helpProvider1.SetHelpString(this.hidenotification, resources.GetString("hidenotification.HelpString"));
+            this.hidenotification.Image = ((System.Drawing.Image)(resources.GetObject("hidenotification.Image")));
+            this.hidenotification.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hidenotification.ImageAlign")));
+            this.hidenotification.ImageIndex = ((int)(resources.GetObject("hidenotification.ImageIndex")));
+            this.hidenotification.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("hidenotification.ImeMode")));
+            this.hidenotification.Location = ((System.Drawing.Point)(resources.GetObject("hidenotification.Location")));
+            this.hidenotification.Name = "hidenotification";
+            this.hidenotification.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("hidenotification.RightToLeft")));
+            this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("hidenotification.ShowHelp"))));
+            this.hidenotification.Size = ((System.Drawing.Size)(resources.GetObject("hidenotification.Size")));
+            this.hidenotification.TabIndex = ((int)(resources.GetObject("hidenotification.TabIndex")));
+            this.hidenotification.Text = resources.GetString("hidenotification.Text");
+            this.hidenotification.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("hidenotification.TextAlign")));
+            this.hidenotification.Visible = ((bool)(resources.GetObject("hidenotification.Visible")));
+            this.hidenotification.CheckedChanged += new System.EventHandler(this.hidenotification_CheckedChanged);
+
 
             // 
             // tabControl1
@@ -443,6 +514,7 @@ namespace Novell.FormsTrayApp
             this.groupBox4.Controls.Add(this.notifyCollisions);
             this.groupBox4.Controls.Add(this.notifyShared);
             this.groupBox4.Controls.Add(this.notifyJoins);
+            this.groupBox4.Controls.Add(this.hidenotification);
             this.groupBox4.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox4.Dock")));
             this.groupBox4.Enabled = ((bool)(resources.GetObject("groupBox4.Enabled")));
             this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -675,6 +747,7 @@ namespace Novell.FormsTrayApp
             this.groupBox3.Controls.Add(this.displayConfirmation);
             this.groupBox3.Controls.Add(this.displayTrayIcon);
             this.groupBox3.Controls.Add(this.startInTrayIcon);
+            this.groupBox3.Controls.Add(this.hideSyncLog);
             this.groupBox3.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("groupBox3.Dock")));
             this.groupBox3.Enabled = ((bool)(resources.GetObject("groupBox3.Enabled")));
             this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -1335,6 +1408,95 @@ namespace Novell.FormsTrayApp
             }
         }
  
+        
+        public static bool HideSyncLogWindow
+        {
+            get
+            {
+                int notify;
+                try
+                {
+                    // Create/open the iFolder key.
+                    RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                    // Get the notify share value ... default the value to 0 (enabled).
+                    notify = (int)regKey.GetValue(hideSyncWindowPopup, 1);
+                }
+                catch
+                {
+                    return true;
+                }
+
+                return (notify == 0);
+            }
+            set
+            {
+                // Create/open the iFolder key.
+                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                if (value)
+                {
+                    
+                    regKey.SetValue(hideSyncWindowPopup, 0);
+                }
+                else
+                {
+                    // Set the disable value.
+                    regKey.SetValue(hideSyncWindowPopup, 1);
+                }
+            }
+        }
+
+
+
+        
+        public static bool HidePolicyVoilationNotification
+        {
+            get
+            {
+                int notify;
+                try
+                {
+                    // Create/open the iFolder key.
+                    RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                    // Get the notify share value ... default the value to 0 (enabled).
+                    notify = (int)regKey.GetValue(hidePolicynotification, 1);
+                    
+                }
+                catch
+                {
+                    return true;
+                }
+
+                return (notify == 0);
+            }
+            set
+            {
+                // Create/open the iFolder key.
+                RegistryKey regKey = Registry.CurrentUser.CreateSubKey(iFolderKey);
+
+                if (value)
+                {
+                    
+                    regKey.SetValue(hidePolicynotification, 0);
+                }
+                else
+                {
+                    
+                    // Set the disable value.
+                    regKey.SetValue(hidePolicynotification, 1);
+                }
+            }
+        }
+
+
+
+
+     
+
+
+
         public iFolderWebService ifolderWebService
         {
             set
@@ -1851,6 +2013,10 @@ namespace Novell.FormsTrayApp
             NotifyJoinEnabled = notifyJoins.Checked;
             HideiFolderInTray = startInTrayIcon.Checked;
 
+            
+            HideSyncLogWindow = hideSyncLog.Checked;
+            HidePolicyVoilationNotification = hidenotification.Checked;
+
             // Check and update display confirmation setting.
             iFolderComponent.DisplayConfirmationEnabled = displayConfirmation.Checked;
 
@@ -2113,6 +2279,10 @@ namespace Novell.FormsTrayApp
                 notifyJoins.Checked = NotifyJoinEnabled;
                 startInTrayIcon.Checked = HideiFolderInTray;
 
+                
+                hideSyncLog.Checked = HideSyncLogWindow;
+                hidenotification.Checked = HidePolicyVoilationNotification;
+
                 // Update the display confirmation setting.
                 displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
                 displayTrayIcon.Checked = !(iFolderComponent.DisplayTrayIconEnabled);
@@ -2180,6 +2350,24 @@ namespace Novell.FormsTrayApp
         private void startInTrayIcon_CheckedChanged(object sender, System.EventArgs e)
         {
             if (startInTrayIcon.Focused)
+            {
+                apply.Enabled = true;
+            }
+        }
+
+
+        private void hidenotification_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (hidenotification.Focused)
+            {
+                apply.Enabled = true;
+            }
+        }
+
+
+        private void hideSyncLog_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (hideSyncLog.Focused)
             {
                 apply.Enabled = true;
             }
