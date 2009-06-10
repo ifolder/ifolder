@@ -191,6 +191,7 @@ namespace Novell.FormsTrayApp
         {
             this.components = new System.ComponentModel.Container();
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(Preferences));
+            this.BackColor = System.Drawing.Color.Gainsboro;
             this.defaultInterval = new System.Windows.Forms.NumericUpDown();
             this.displayConfirmation = new System.Windows.Forms.CheckBox();
             this.displayTrayIcon = new System.Windows.Forms.CheckBox();

@@ -371,6 +371,7 @@ namespace Novell.Wizard
 			this.groupBox1.TabIndex = 4;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "";
+            
 			// 
 			// AccountWizard
 			// 
@@ -385,6 +386,7 @@ namespace Novell.Wizard
 			this.Controls.Add(this.next);
 			this.Controls.Add(this.cancel);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.BackColor = System.Drawing.Color.Gainsboro;
 			this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
