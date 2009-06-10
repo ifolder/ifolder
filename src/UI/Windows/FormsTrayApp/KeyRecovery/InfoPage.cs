@@ -65,7 +65,7 @@ namespace Novell.Wizard
             base.ActivatePage(previousIndex);
 
             // Enable/disable the buttons.
-            ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Next | KeyRecoveryWizardButtons.Cancel;
+            ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Next | KeyRecoveryWizardButtons.Cancel|KeyRecoveryWizardButtons.Back;
 
         }
 

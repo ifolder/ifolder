@@ -838,7 +838,7 @@ namespace Novell.iFolderCom
 							else
 							{
 								// Passphrase not enterd at the time of login...
-								EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(domainItem.ID, this.simws);
+								EnterPassphraseDialog enterPassPhrase= new EnterPassphraseDialog(domainItem.ID, this.simws,this.ifWebService);
                                 enterPassPhrase.LoadPath = loadPath;
 								enterPassPhrase.ShowDialog();
 								passPhraseStatus = enterPassPhrase.PassphraseStatus;
@@ -1305,6 +1305,7 @@ namespace Novell.iFolderCom
 		private System.Windows.Forms.Button btnOk;
 		private System.ComponentModel.Container components = null;
 		private SimiasWebService simws;
+        private iFolderWebService ifws;
 		private string DomainID;
 		private bool	status;
         private string loadpath;
@@ -1324,6 +1325,13 @@ namespace Novell.iFolderCom
                 loadpath = value;
             }
         }
+        public EnterPassphraseDialog(string domainID, SimiasWebService simws, iFolderWebService ifws)
+            :this(domainID, simws)
+        {
+            this.ifws = ifws;
+        }
+
+
 
 		public EnterPassphraseDialog(string domainID, SimiasWebService simws)
 		{
@@ -1525,34 +1533,43 @@ namespace Novell.iFolderCom
 			{
 				string publicKey = null;
 				string ragent = null;
-				if( this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != resources.GetString("NoneText"))
-				{
-					// Show the certificate.....
-					byte[] CertificateObj = this.simws.GetRACertificateOnClient(DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
-					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
-				//	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
-					MyMessageBox mmb = new MyMessageBox( string.Format(resources.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resources.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
-					DialogResult messageDialogResult = mmb.ShowDialog();
-					mmb.Dispose();
-					mmb.Close();
-					if( messageDialogResult != DialogResult.Yes )
-						return;
-					else
-					{
-						ragent = this.RecoveryAgentCombo.SelectedText;
-						publicKey = Convert.ToBase64String(cert.GetPublicKey());
-					}
-					//return;
-				}
-				else
-				{
-					MyMessageBox mmb = new MyMessageBox( resources.GetString("NoCertWarning"), resources.GetString("NoCertTitle"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+                if (this.RecoveryAgentCombo.SelectedItem != null && (string)this.RecoveryAgentCombo.SelectedItem != resources.GetString("serverDefaultRA"))
+                {
+                    // Show the certificate.....
+                    byte[] CertificateObj = this.simws.GetRACertificateOnClient(DomainID, (string)this.RecoveryAgentCombo.SelectedItem);
+                    System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+                    //	MyMessageBox mmb = new MyMessageBox( "Verify Certificate", "Verify Certificate", cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2 );
+                    MyMessageBox mmb = new MyMessageBox(string.Format(resources.GetString("verifyCert"), (string)this.RecoveryAgentCombo.SelectedItem), resources.GetString("verifyCertTitle"), cert.ToString(true), MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
+                    DialogResult messageDialogResult = mmb.ShowDialog();
+                    mmb.Dispose();
+                    mmb.Close();
+                    if (messageDialogResult != DialogResult.Yes)
+                        return;
+                    else
+                    {
+                        ragent = this.RecoveryAgentCombo.SelectedText;
+                        publicKey = Convert.ToBase64String(cert.GetPublicKey());
+                    }
+                    //return;
+                }
+                /*else
+                {
+                    MyMessageBox mmb = new MyMessageBox( resources.GetString("NoCertWarning"), resources.GetString("NoCertTitle"), "", MyMessageBoxButtons.YesNo, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button2);
                                         DialogResult messageDialogResult = mmb.ShowDialog();
                                         mmb.Dispose();
                                         mmb.Close();
                                         if( messageDialogResult != DialogResult.Yes )
                                                 return;	
-				}
+                }*/
+
+                else
+                {
+                    ragent = "DEFAULT";
+
+                    DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.DomainID);
+                    string memberUID = domainInfo.MemberUserID;
+                    publicKey = this.ifws.GetDefaultServerPublicKey(this.DomainID, memberUID);
+                }
 				Status passPhraseStatus = null;
 				try
 				{
@@ -1602,13 +1619,14 @@ namespace Novell.iFolderCom
 			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine( loadpath, @"res\ifolder-banner-scaler.png"));
 			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
-			foreach( string rAgent in rAgents)
+            foreach( string rAgent in rAgents)
 			{
 				this.RecoveryAgentCombo.Items.Add( rAgent ); 
 				//MessageBox.Show(String.Format("Adding {0}", rAgent));
 			}
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
-			this.RecoveryAgentCombo.Items.Add( resources.GetString("NoneText" ));
+            
+            this.RecoveryAgentCombo.Items.Add( resources.GetString("serverDefaultRA"));
 		}
 
 		private void Passphrase_TextChanged(object sender, System.EventArgs e)

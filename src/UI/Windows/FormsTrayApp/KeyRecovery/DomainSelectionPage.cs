@@ -89,7 +89,7 @@ namespace Novell.Wizard
                     if (di.Authenticated)
                     {
                        
-                        DomainItem domainItem = new DomainItem(di.Name, di.ID);
+                        DomainItem domainItem = new DomainItem(di.Name, di.ID,di.Host);
                         this.domainComboBox.Items.Add(domainItem);
                         this.domainComboBox.SelectedIndex = 0;
                     }
@@ -134,9 +134,7 @@ namespace Novell.Wizard
           
             if ((ifWebService.GetSecurityPolicy(this.SelectedDomain.ID) != 0) && simiasWebService.IsPassPhraseSet(this.SelectedDomain.ID))
             {
-                //string RAName = this.ifWebService.GetRAName(SelectedDomain.ID);
-               // this.recoveryAgent.Text = RAName;
-                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel|KeyRecoveryWizardButtons.Next;
+               ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel|KeyRecoveryWizardButtons.Next;
             }
            
         }
@@ -146,11 +144,11 @@ namespace Novell.Wizard
         {
             string RAName = this.ifWebService.GetRAName(SelectedDomain.ID);
 
-            if (RAName == "DEFAULT")
-                currentIndex = wizard.MaxPages - 9;
+            if (RAName != "DEFAULT" && RAName != null)
+                currentIndex = wizard.MaxPages - 8;
 
             else
-                currentIndex = wizard.MaxPages - 7;
+                currentIndex = wizard.MaxPages - 9;
             
             return base.ValidatePage(currentIndex);
         }

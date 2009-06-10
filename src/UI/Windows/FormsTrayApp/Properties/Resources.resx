@@ -677,7 +677,7 @@ wizardText	Passphrase Recovery Wizard</value>
     <value>Downloading file: {0}</value>
   </data>
   <data name="emailAddress" xml:space="preserve">
-    <value>Email adress:</value>
+    <value>Email address:</value>
   </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>The encrypted key file was successfully exported.</value>

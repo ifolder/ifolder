@@ -35,6 +35,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 using Novell.iFolder.Web;
 using Novell.FormsTrayApp;
@@ -83,8 +84,8 @@ namespace Novell.Wizard
             base.ActivatePage(previousIndex);
             wizard = (KeyRecoveryWizard)this.Parent;
 
-            selectedDomain = wizard.DomainSelectionPage.SelectedDomain;
-            this.accountBox.Text = selectedDomain.Name;
+        selectedDomain = wizard.DomainSelectionPage.SelectedDomain;
+            this.accountBox.Text = wizard.DomainSelectionPage.SelectedDomain.Name +"-"+ wizard.DomainSelectionPage.SelectedDomain.Host;
             
             this.oneTimePassphrase.Enabled = false;
            ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Cancel;
@@ -109,14 +110,24 @@ namespace Novell.Wizard
         /// <param name="currentIndex">current index</param>
         internal override int ValidatePage(int currentIndex)
         {
-            bool result = true;
-            result = Import_func();
-
-            if (result == false)
+            if ((!File.Exists(LocationEntry.Text)) && (!LocationEntry.Text.EndsWith(".xml")))
             {
+                MessageBox.Show(TrayApp.Properties.Resources.oldDataFileError, TrayApp.Properties.Resources.newDataFileError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return currentIndex;
             }
-            return base.ValidatePage(currentIndex);
+
+            if (this.passphrase.Text != this.reTypePassphrase.Text)
+            {
+                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, TrayApp.Properties.Resources.resetPassphraseError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return currentIndex;
+            }
+            
+
+            if (Import_func())
+            {
+                return base.ValidatePage(currentIndex);
+            }
+            return currentIndex;
         }
 
         /// <summary>
@@ -139,7 +150,7 @@ namespace Novell.Wizard
         /// </summary>
         private void UpdateSensitivity()
         {
-            if( this.passphrase.Text.Length >0 && this.reTypePassphrase.Text.Length > 0 && this.reTypePassphrase.Text == this.passphrase.Text && this.LocationEntry.Text.Length > 0 && this.LocationEntry.Text.EndsWith(".xml") )
+            if( this.passphrase.Text.Length >0 && this.reTypePassphrase.Text.Length > 0 && this.LocationEntry.Text.Length > 0 )
             {
                 if ( this.isEncrypted.Checked == true)
                 {
@@ -227,11 +238,10 @@ namespace Novell.Wizard
               
                 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.wizardText, null,MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);//"Error importing the keys. Try again")
-                mmb.ShowDialog();
-                return false;
+               MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.wizardText,MessageBoxButtons.OK,MessageBoxIcon.Error);//"Error importing the keys. Try again")
+               return false;
             }
             return true;
         }

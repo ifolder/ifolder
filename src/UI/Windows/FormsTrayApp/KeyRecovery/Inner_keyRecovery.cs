@@ -120,9 +120,9 @@ namespace Novell.Wizard
                     File.Delete(outKeyPath);
                 document.Save(outKeyPath);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine("Exception while processing" + e.Message + e.StackTrace);
+                //Console.WriteLine("Exception while processing" + e.Message + e.StackTrace);
             }
         }
 
@@ -141,9 +141,9 @@ namespace Novell.Wizard
                 Console.WriteLine("encrypted mess {0}", Convert.ToBase64String(rsadec.Decrypt(rsaenc.Encrypt(Convert.FromBase64String(mess), false), false)));
 #endif
             }
-            catch (CryptographicException cExp)
+            catch (CryptographicException)
             {
-                Console.WriteLine("Crpto Error {0}", cExp.Message);
+                //Console.WriteLine("Crpto Error {0}", cExp.Message);
             }
             return mess;
         }
@@ -162,23 +162,16 @@ namespace Novell.Wizard
                 byte[] output = Transform(mess, tdesp.CreateEncryptor(input, IV));
                 retStr = Convert.ToBase64String(output);
             }
-            catch (CryptographicException cryExp)
+            catch (CryptographicException)
             {
-                Console.WriteLine("Crpto Error {0}", cryExp.Message);
+                //Console.WriteLine("Crpto Error {0}", cryExp.Message);
             }
             return retStr;
         }
 
         private byte[] HashPassPhrase(string Passphrase)
         {
-            /*change to PasswordDeriveBytes.CryptDeriveKey once the  implementation is done mono
-
-            PasswordDeriveBytes pdb = new PasswordDeriveBytes(Passphrase, salt);
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = pdb.CryptDeriveKey("TripleDES", "SHA1", 192, tdes.IV);
-            //tdes.Key is the NewPassphrase
-			
-            */
+           
             byte[] NewPassphrase = null;
             byte[] salt ={ 0x49, 0x46, 0x4F, 0x4C, 0x44, 0x45, 0x52 };
             UTF8Encoding utf8 = new UTF8Encoding();
@@ -196,9 +189,9 @@ namespace Novell.Wizard
                 Array.Copy(data, 0, NewPassphrase, 0, data.Length);
                 Array.Copy(data, 0, NewPassphrase, 20, 4);
             }
-            catch (Exception exp)
+            catch (Exception)
             {
-                Console.WriteLine("Exception {0}", exp.Message);
+                //Console.WriteLine("Exception {0}", exp.Message);
             }
 
             return NewPassphrase;
@@ -223,9 +216,9 @@ namespace Novell.Wizard
                 memStream.Close();
                 cryptStream.Close();
             }
-            catch (Exception exp)
+            catch (Exception)
             {
-                Console.WriteLine("Exception {0}", exp.Message);
+               // Console.WriteLine("Exception {0}", exp.Message);
             }
             // hand back the encrypted buffer
             return result;

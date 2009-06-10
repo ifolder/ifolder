@@ -81,12 +81,15 @@ namespace Novell.Wizard
         {
 
             base.ActivatePage(previousIndex);
+           //display account name
             wizard = (KeyRecoveryWizard)this.Parent;
             ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back;
-            iFolderAcc.Text = wizard.DomainSelectionPage.SelectedDomain.Name;
-            //DomainInformation di = new DomainInformation();
-            //di.ID =wizard.DomainSelectionPage.SelectedDomain.ID;
-           // userName.Text = di.MemberName;
+            iFolderAcc.Text = wizard.DomainSelectionPage.SelectedDomain.Name + wizard.DomainSelectionPage.SelectedDomain.Host;
+           //display user name
+            string domainID = wizard.DomainSelectionPage.SelectedDomain.ID;
+            DomainInformation domainInfo = (DomainInformation)this.simiasWebService.GetDomainInformation(domainID);
+            userName.Text = domainInfo.MemberName;
+
             newPassphrase.Focus();
             UpdateSensitivity();
 
@@ -106,9 +109,8 @@ namespace Novell.Wizard
         private void UpdateSensitivity()
         {
 
-            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0 && this.newPassphrase.Text == this.confirmPassphrase.Text && this.userName.Text.Length > 0 && this.password.Text.Length > 0)
-               // if(this.userName.Text.Length > 0 && this.password.Text.Length > 0)
-                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Next;
+            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0 && this.userName.Text.Length > 0 && this.password.Text.Length > 0)
+                   ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Next;
 
             else
                 ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Back;
@@ -127,6 +129,15 @@ namespace Novell.Wizard
             DomainInformation selectedDomainInfo = null;
             domains = this.simiasWebService.GetDomains(true);
             Status passPhraseStatus = null;
+
+            //check for equality
+            if (this.newPassphrase.Text != this.confirmPassphrase.Text)
+            {
+                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return currentIndex;
+            }
+
+            //obtain domain information
             foreach (DomainInformation di in domains)
             {
 
@@ -150,7 +161,7 @@ namespace Novell.Wizard
 
                     if (status.statusCode != StatusCodes.Success)
                     {
-                        MessageBox.Show(Resources.loginError);
+                        MessageBox.Show(Resources.loginError,TrayApp.Properties.Resources.authenticateError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                         return -999;
                       
                     }
@@ -159,48 +170,16 @@ namespace Novell.Wizard
 
                 }
             }
-            catch (Exception e)
+            catch (Exception)
 
             {
-               
+                MessageBox.Show(Resources.loginError, TrayApp.Properties.Resources.authenticateError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                           
                     return -999;
                
             
             }
-          /*  Preferences prefs = new Preferences(this.ifolderWebService, this.simiasWebService, this.simiasManager);
-
-            try
-            {
-
-
-                if (prefs.logoutFromDomain(domain))
-                {
-                    if (!prefs.loginToDomain(domain, true))
-                    {
-                        MyMessageBox mmb = new MyMessageBox(Resources.loginError,
-                            Resources.authenticateError, null, MyMessageBoxButtons.OK);
-                        mmb.ShowDialog();
-                        if (mmb.DialogResult == DialogResult.OK)
-                        {
-                            return -999;
-                        }
-                        /*loginErrorLabel.Text = TrayApp.Properties.Resources.loginError;
-                    ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
-                    newPassphrase.Enabled = confirmPassphrase.Enabled = false;
-                    return currentIndex; */
-                   /* }
-
-                    result = true;
-                }
-            }
-            catch (Exception e)
-            {
-                /* loginErrorLabel.Text = TrayApp.Properties.Resources.loginError;
-                 ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
-                 newPassphrase.Enabled = confirmPassphrase.Enabled = false;*/
-               /* return currentIndex;
-            }
-            */
+        
 
             if (result)
             {
@@ -217,16 +196,14 @@ namespace Novell.Wizard
                     passPhraseStatus = this.simiasWebService.SetPassPhrase(selectedDomainInfo.ID, this.newPassphrase.Text, "DEFAULT", publicKey);
                     result = true;
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
 
-                    MyMessageBox mmb = new MyMessageBox(Resources.recoveryError,
-                     Resources.resetPassphraseError, null, MyMessageBoxButtons.OK);
-                    mmb.ShowDialog();
-                    if (mmb.DialogResult == DialogResult.OK)
-                    {
-                        return -999;
-                    }
+                   MessageBox.Show(Resources.recoveryError,
+                     Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                   
+                     return -999;
+                  
                 }
 
 
@@ -234,13 +211,11 @@ namespace Novell.Wizard
 
             if (passPhraseStatus.statusCode != StatusCodes.Success)
             {
-                MyMessageBox mmb = new MyMessageBox(Resources.recoveryError,
-                        Resources.resetPassphraseError, null, MyMessageBoxButtons.OK);
-                mmb.ShowDialog();
-                if (mmb.DialogResult == DialogResult.OK)
-                {
-                    return currentIndex;
-                }
+               MessageBox.Show(Resources.recoveryError,
+                        Resources.resetPassphraseError, MessageBoxButtons.OK,MessageBoxIcon.Error);
+              
+                return currentIndex;
+               
                
             }
                 currentIndex = wizard.MaxPages - 4;

@@ -320,7 +320,7 @@ namespace Novell.Wizard
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

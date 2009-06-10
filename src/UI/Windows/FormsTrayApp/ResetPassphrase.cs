@@ -555,7 +555,7 @@ namespace Novell.FormsTrayApp
 					this.recoveryAgentCombo.Items.Add( rAgent ); 
 				}
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 			}
 			this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
@@ -575,12 +575,12 @@ namespace Novell.FormsTrayApp
 				{
 					if( di.Authenticated)
 					{
-						DomainItem domainItem = new DomainItem(di.Name, di.ID);
+						DomainItem domainItem = new DomainItem(di.Name, di.ID,di.Host);
 						this.DomainComboBox.Items.Add(domainItem);
 					}
 				}
 			}
-			catch(Exception ex)
+			catch(Exception )
 			{
 			}
 		}
