@@ -571,38 +571,8 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="mb" xml:space="preserve">
     <value>MB</value>
   </data>
-  <data name="acceptDescription1" xml:space="preserve">
-    <value>Download "{0}" to ...</value>
-  </data>
-  <data name="acceptError1" xml:space="preserve">
-    <value>An exception occurred while attempting to download the iFolder.</value>
-  </data>
-  <data name="access1" xml:space="preserve">
-    <value>Access</value>
-  </data>
-  <data name="accessDenied1" xml:space="preserve">
-    <value>You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again.</value>
-  </data>
-  <data name="AlsoRemoveMembership1" xml:space="preserve">
-    <value>Also remove my membership</value>
-  </data>
   <data name="authenticateError" xml:space="preserve">
     <value>Authentication failed</value>
-  </data>
-  <data name="autoSync1" xml:space="preserve">
-    <value>Automatic sync</value>
-  </data>
-  <data name="Available1" xml:space="preserve">
-    <value>Not set up</value>
-  </data>
-  <data name="availablefordownload1" xml:space="preserve">
-    <value>Available for download</value>
-  </data>
-  <data name="availableQuota1" xml:space="preserve">
-    <value>Available</value>
-  </data>
-  <data name="b1" xml:space="preserve">
-    <value>Bytes</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>back</value>
@@ -613,50 +583,11 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="browseText" xml:space="preserve">
     <value>Browse</value>
   </data>
-  <data name="cancel" xml:space="preserve">
-    <value>cancel</value>
-  </data>
   <data name="cancelText" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="cannotShareMessage1" xml:space="preserve">
-    <value>It is not possible to share an encrypted iFolder. Only regular folders can be shared</value>
-  </data>
-  <data name="cannotShareTitle1" xml:space="preserve">
-    <value>Cannot share iFolder</value>
-  </data>
-  <data name="checkingForiFolders1" xml:space="preserve">
-    <value>Checking for new iFolders...</value>
-  </data>
   <data name="confirmPassphrase" xml:space="preserve">
     <value>&amp;Confirm passphrase:</value>
-  </data>
-  <data name="declineError1" xml:space="preserve">
-    <value>An error was encountered while removing the iFolder.</value>
-  </data>
-  <data name="deleteAction1" xml:space="preserve">
-    <value>&amp;amp:Delete</value>
-  </data>
-  <data name="deleteClientDir1" xml:space="preserve">
-    <value>Deleting directory: {0}</value>
-  </data>
-  <data name="deleteClientFile1" xml:space="preserve">
-    <value>Deleting file:{0}</value>
-  </data>
-  <data name="deleteiFolder1" xml:space="preserve">
-    <value>This deletes the iFolder and its files from the server. Are you sure you sure you want to remove "{0}" form the server?</value>
-  </data>
-  <data name="deleteUnknown1" xml:space="preserve">
-    <value>Deleting on server: {0}</value>
-  </data>
-  <data name="details1" xml:space="preserve">
-    <value>Details</value>
-  </data>
-  <data name="disconnected1" xml:space="preserve">
-    <value>Server unavailable</value>
-  </data>
-  <data name="diskQuota1" xml:space="preserve">
-    <value>Disk quota</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
     <value>Select the account for which the passphrase needs to be reset.</value>
@@ -666,15 +597,6 @@ wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="domainSelectionPageTitle" xml:space="preserve">
     <value>Select account</value>
-  </data>
-  <data name="doneCheckingForiFolders1" xml:space="preserve">
-    <value>Done checking for new iFolders</value>
-  </data>
-  <data name="downloadDir1" xml:space="preserve">
-    <value>Downloading directory: {0}</value>
-  </data>
-  <data name="downloadFile1" xml:space="preserve">
-    <value>Downloading file: {0}</value>
   </data>
   <data name="emailAddress" xml:space="preserve">
     <value>Email address:</value>
@@ -691,20 +613,8 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="emailPageTitle" xml:space="preserve">
     <value>Old data file sent successfully. </value>
   </data>
-  <data name="encrypted1" xml:space="preserve">
-    <value>Encrypted</value>
-  </data>
   <data name="enterPassphrasePageName" xml:space="preserve">
     <value>enterPassphrasePage</value>
-  </data>
-  <data name="errorTitle1" xml:space="preserve">
-    <value>iFolder Error</value>
-  </data>
-  <data name="exitMessage1" xml:space="preserve">
-    <value>If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next ime you login, Novell iFolder will reconcile any differences between your iFolder and Server</value>
-  </data>
-  <data name="exitTitle1" xml:space="preserve">
-    <value>Exit Application</value>
   </data>
   <data name="exportPageFilePath" xml:space="preserve">
     <value>&amp;Location to save old data file:</value>
@@ -721,9 +631,6 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="exportPageTitle" xml:space="preserve">
     <value>Obtain old data file</value>
   </data>
-  <data name="filesnFolders1" xml:space="preserve">
-    <value>Files/Folders to sync</value>
-  </data>
   <data name="finalPageFirst" xml:space="preserve">
     <value>Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data.</value>
   </data>
@@ -736,21 +643,6 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="finishText" xml:space="preserve">
     <value>Finish</value>
   </data>
-  <data name="FolderDoesNotExistError1" xml:space="preserve">
-    <value>Then name of folder and iFolder must be the same</value>
-  </data>
-  <data name="FolderDoesNotExistErrorDesc1" xml:space="preserve">
-    <value>You can merge an iFolder only with a folder with same name. Select a folder with same name as the iFolder and try again</value>
-  </data>
-  <data name="FolderDoesNotExistErrorTitle1" xml:space="preserve">
-    <value>Folder doesnot exist</value>
-  </data>
-  <data name="freeSpaceUnits1" xml:space="preserve">
-    <value>MB</value>
-  </data>
-  <data name="gb1" xml:space="preserve">
-    <value>GB</value>
-  </data>
   <data name="help" xml:space="preserve">
     <value>help</value>
   </data>
@@ -759,21 +651,6 @@ wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="iFolderAcc" xml:space="preserve">
     <value>&amp;iFolder account :</value>
-  </data>
-  <data name="iFolderError1" xml:space="preserve">
-    <value>An error was encountered while reading iFolders</value>
-  </data>
-  <data name="iFolderErrorTitle1" xml:space="preserve">
-    <value>Unable to read iFolders</value>
-  </data>
-  <data name="iFolderErrorTittle1" xml:space="preserve">
-    <value>Unable to read iFolders</value>
-  </data>
-  <data name="iFolderOpenError1" xml:space="preserve">
-    <value>Unable to open iFolder {0}.</value>
-  </data>
-  <data name="iFolderRevertError1" xml:space="preserve">
-    <value>An error was encountered while reverting the iFolder.</value>
   </data>
   <data name="importErrorMesg" xml:space="preserve">
     <value>Unable to reset passphrase. Try again.</value>
@@ -805,51 +682,11 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="infoPageTitle" xml:space="preserve">
     <value>Welcome to the Passphrase Recovery Wizard</value>
   </data>
-  <data name="kb1" xml:space="preserve">
-    <value>KB</value>
-  </data>
-  <data name="lastSyncTime1" xml:space="preserve">
-    <value>Last sync time</value>
-  </data>
-  <data name="localDir1" xml:space="preserve">
-    <value>Found change in directory: {0}</value>
-  </data>
-  <data name="localFile1" xml:space="preserve">
-    <value>Found changes in file: {0}</value>
-  </data>
-  <data name="localSync1" xml:space="preserve">
-    <value>Checking for changes: {0}</value>
-  </data>
   <data name="logEntriesCleared1" xml:space="preserve">
     <value>Log entries cleared.</value>
   </data>
-  <data name="login1" xml:space="preserve">
-    <value>Connect</value>
-  </data>
   <data name="loginError" xml:space="preserve">
     <value>Unable to authenticate to the domain.You have been logged out of the account. Please login and try again.</value>
-  </data>
-  <data name="logoff1" xml:space="preserve">
-    <value>Disconnect</value>
-  </data>
-  <data name="mb1" xml:space="preserve">
-    <value>MB</value>
-  </data>
-  <data name="menuActionRemove1" xml:space="preserve">
-    <value>Delete from server</value>
-  </data>
-  <data name="mergeDescription1" xml:space="preserve">
-    <value>Merge "{0}" to ...</value>
-  </data>
-  <data name="na1" xml:space="preserve">
-    <value>N/A</value>
-    <comment>Not Available</comment>
-  </data>
-  <data name="name1" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="networkPath1" xml:space="preserve">
-    <value>The selected location is on a network or non-physical drive. iFolders must reside on a physical drive. Please select a different location and try again.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;New passphrase:</value>
@@ -860,68 +697,14 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="nextText" xml:space="preserve">
     <value>&amp;Next</value>
   </data>
-  <data name="noifolder1" xml:space="preserve">
-    <value>No of iFolders</value>
-  </data>
-  <data name="notApplicable1" xml:space="preserve">
-    <value>N/A</value>
-  </data>
-  <data name="openErrorTitle1" xml:space="preserve">
-    <value>iFolder Open Error</value>
-  </data>
-  <data name="owner1" xml:space="preserve">
-    <value>Owner</value>
-  </data>
   <data name="passwordText" xml:space="preserve">
     <value>&amp;Password:</value>
-  </data>
-  <data name="PathDoesNotExist1" xml:space="preserve">
-    <value> contain a folder with the same name as the iFolder.</value>
-  </data>
-  <data name="pathExistsError1" xml:space="preserve">
-    <value>The loation you selected already contains a folder with the same name as this iFolder. Please select a different location and try again.</value>
-  </data>
-  <data name="PathIncludesProgFilesDirError1" xml:space="preserve">
-    <value>The selected location includes the Program Files folder. The Program Files folder cannot contain an iFolder. Please select a different location and try again.</value>
-  </data>
-  <data name="pathIncludesWinDirError1" xml:space="preserve">
-    <value>The selected location includes the Windows folder. The Windows folder cannot contain an iFolder. Please select a different lcoation and try again.</value>
-  </data>
-  <data name="pathIniFolderError1" xml:space="preserve">
-    <value>The selected location is inside another iFolder. iFolders connot exist inside other iFolders. Please select a different location and try again.</value>
-  </data>
-  <data name="pathInStoreError1" xml:space="preserve">
-    <value>The selected location is inside the iFolder data folder. Please select a different location and try again.</value>
-  </data>
-  <data name="pathInvalidErrorTitle1" xml:space="preserve">
-    <value>Invalid Location</value>
-  </data>
-  <data name="preSync1" xml:space="preserve">
-    <value>Checking for changes</value>
   </data>
   <data name="recoveryError" xml:space="preserve">
     <value>Cannot reset passphrase. You have been logged out of the account.Please login and try again.</value>
   </data>
-  <data name="regular1" xml:space="preserve">
-    <value>Regular</value>
-  </data>
-  <data name="RemoveMembershipMesg1" xml:space="preserve">
-    <value>This removes membership from iFolder and removes the iFolder from the list </value>
-  </data>
-  <data name="RemoveMembershipTitle1" xml:space="preserve">
-    <value>Remove your membership from {0}</value>
-  </data>
-  <data name="RemoveMyMembership1" xml:space="preserve">
-    <value>Remove My Membership</value>
-  </data>
-  <data name="removeTitle1" xml:space="preserve">
-    <value>Delete iFolder</value>
-  </data>
   <data name="resetPassphraseError" xml:space="preserve">
     <value>Passphrase reset failed</value>
-  </data>
-  <data name="revertErrorTitle1" xml:space="preserve">
-    <value>iFolder Revert Error</value>
   </data>
   <data name="selectionPageFive" xml:space="preserve">
     <value>You can exit the wizard at any step and work on subsequent steps later by using this page         </value>
@@ -944,17 +727,11 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="selectionPageTitle" xml:space="preserve">
     <value>Select Passphrase Recovery step</value>
   </data>
-  <data name="server1" xml:space="preserve">
-    <value>Server</value>
-  </data>
   <data name="serverDefaultRA" xml:space="preserve">
     <value>Server_Default</value>
   </data>
   <data name="setNewPassphraseTitle" xml:space="preserve">
     <value>Set New Passphrase</value>
-  </data>
-  <data name="showiFolders1" xml:space="preserve">
-    <value>Hide available iFolders</value>
   </data>
   <data name="singleAccountText" xml:space="preserve">
     <value>You have a single account. Click Next to proceed.</value>
@@ -974,86 +751,17 @@ wizardText	Passphrase Recovery Wizard</value>
   <data name="singleWizPasswd" xml:space="preserve">
     <value>&amp;Secret file password:</value>
   </data>
-  <data name="statusConflicts1" xml:space="preserve">
-    <value>Has Conflicts</value>
-  </data>
-  <data name="statusSynced1" xml:space="preserve">
-    <value>Synchronized: {0}</value>
-  </data>
-  <data name="statusSyncFailure1" xml:space="preserve">
-    <value>Incomplete synchronization</value>
-  </data>
-  <data name="statusSyncing1" xml:space="preserve">
-    <value>Synchronizing</value>
-  </data>
-  <data name="statusSyncingItems1" xml:space="preserve">
-    <value>{0} items to synchronize</value>
-  </data>
-  <data name="statusSyncItemsFailed1" xml:space="preserve">
-    <value>{0} items not synchronized</value>
-  </data>
-  <data name="statusUnknown1" xml:space="preserve">
-    <value>Unknown</value>
-  </data>
   <data name="successPageName" xml:space="preserve">
     <value>SuccessPage</value>
   </data>
-  <data name="syncComplete1" xml:space="preserve">
-    <value>Started synchronization: {0}</value>
-  </data>
-  <data name="syncError1" xml:space="preserve">
-    <value>An error was encountered while synchronizing the iFolder.</value>
-  </data>
-  <data name="syncErrorTitle1" xml:space="preserve">
-    <value>iFolder Synchronization Error</value>
-  </data>
-  <data name="syncErrorTittle1" xml:space="preserve">
-    <value>iFolder Synchronization Error</value>
-  </data>
-  <data name="synciFolder1" xml:space="preserve">
-    <value>Started synchronization: {0}</value>
-  </data>
-  <data name="syncingDir1" xml:space="preserve">
-    <value>Synchronizing directory: {0}</value>
-  </data>
-  <data name="syncingFile1" xml:space="preserve">
-    <value>Synchronizing file: {0}</value>
-  </data>
-  <data name="thumbnails1" xml:space="preserve">
-    <value>Thumbnails</value>
-  </data>
-  <data name="type1" xml:space="preserve">
-    <value>Type</value>
-  </data>
   <data name="unableToExportMesg" xml:space="preserve">
     <value>Unable to obtain old data file.Try again</value>
-  </data>
-  <data name="uploadDir1" xml:space="preserve">
-    <value>Uploading directory: {0}</value>
-  </data>
-  <data name="uploadFile1" xml:space="preserve">
-    <value>Uploading file: {0}</value>
-  </data>
-  <data name="usedQuota1" xml:space="preserve">
-    <value>Used</value>
-  </data>
-  <data name="user1" xml:space="preserve">
-    <value>User</value>
   </data>
   <data name="userNameText" xml:space="preserve">
     <value>User name:</value>
   </data>
   <data name="verifyText" xml:space="preserve">
     <value>Verify</value>
-  </data>
-  <data name="viewAvailableiFolders1" xml:space="preserve">
-    <value>View available iFolders</value>
-  </data>
-  <data name="WaitConnect1" xml:space="preserve">
-    <value>Waiting to Connect</value>
-  </data>
-  <data name="WaitSync1" xml:space="preserve">
-    <value>Waiting to synchronize</value>
   </data>
   <data name="wizardName" xml:space="preserve">
     <value>passphraseRecoveryWizard</value>
@@ -1078,5 +786,26 @@ wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="domainSelectionPageSecond" xml:space="preserve">
     <value>Click Next to proceed.</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>cancel</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Disk space available</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Disk space used</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Not applicable</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Unlimited</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>used</value>
   </data>
 </root>
