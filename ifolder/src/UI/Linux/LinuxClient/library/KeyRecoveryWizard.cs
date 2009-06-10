@@ -197,7 +197,7 @@ namespace Novell.iFolder
                       	KeyRecoveryDruid.AppendPage(CreateExportKeyPage());
 			KeyRecoveryDruid.AppendPage(CreateEmailPage());
         		KeyRecoveryDruid.AppendPage(CreateFinishPage());
-	                KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
+	                KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
 
                         return vbox;
                 }
@@ -221,6 +221,18 @@ namespace Novell.iFolder
 
 				}
 		}
+		
+		public string selectedDomainIP
+		{
+			 get{
+                                DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.selectedDomain);
+                                return domainInfo.Host;
+
+                                }
+
+
+		}
+
 
 		public string selectedDomain
 		{
@@ -233,17 +245,17 @@ namespace Novell.iFolder
 			}	
 		}
 		
-				private modelKeyPage CreateDomainSelectionPage()
-				{
-						DomainSelectionPage = new modelKeyPage(Util.GS("Select account"),KeyRecoveryPixbuf,null);
-						
-						DomainSelectionPage.CancelClicked += new Gnome.CancelClickedHandler(OnCancelClicked);
+		private modelKeyPage CreateDomainSelectionPage()
+		{
+			DomainSelectionPage = new modelKeyPage(Util.GS("Select account"),KeyRecoveryPixbuf,null);
+				
+			DomainSelectionPage.CancelClicked += new Gnome.CancelClickedHandler(OnCancelClicked);
 			
-						DomainSelectionPage.Prepared += new Gnome.PreparedHandler(OnDomainSelectionPagePrepared);
+			DomainSelectionPage.Prepared += new Gnome.PreparedHandler(OnDomainSelectionPagePrepared);
 			
-						DomainSelectionPage.ValidateClicked += new KRValidateClickedHandler(OnDomainSelectionPageValidated);
+			DomainSelectionPage.ValidateClicked += new KRValidateClickedHandler(OnDomainSelectionPageValidated);
 		
-						Table table = new Table(4, 3, false);
+			Table table = new Table(4, 3, false);
     	                DomainSelectionPage.VBox.PackStart(table,false,false, 0);
                         table.ColumnSpacing = 6;
                         table.RowSpacing = 6;
@@ -266,16 +278,16 @@ namespace Novell.iFolder
 			
 		
 							
-		//DomainComboBox
+			//DomainComboBox
 								         
-			domainComboBox = ComboBox.NewText();
+			//domainComboBox = ComboBox.NewText();
                         // read domains from domain controller...
                         domainComboBox = ComboBox.NewText();
 			DomainController domainController = DomainController.GetDomainController();
                         domains= domainController.GetLoggedInDomains();
                         for (int x = 0; x < domains.Length; x++)
                         {
-                                domainComboBox.AppendText(domains[x].Name);
+                                domainComboBox.AppendText(domains[x].Name+"-"+domains[x].Host);
                         }
                         if( domains.Length > 0)
                                 domainComboBox.Active = 0;
@@ -284,7 +296,7 @@ namespace Novell.iFolder
 
 
                         domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
-			            l2.MnemonicWidget = domainComboBox;
+			l2.MnemonicWidget = domainComboBox;
 
                         //Row 3
                         Label l3 = new Label(Util.GS("Click Next to proceed."));
@@ -292,24 +304,24 @@ namespace Novell.iFolder
                                 AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
                         l3.LineWrap = true;
                         l3.Xalign = 0.0F;
-				return DomainSelectionPage;	
+		
+		return DomainSelectionPage;	
 						
-				}
+		}
 
 
-                  private void OnDomainSelectionPagePrepared(object o, Gnome.PreparedArgs args)
+                private void OnDomainSelectionPagePrepared(object o, Gnome.PreparedArgs args)
                 {
                     this.Title = Util.GS("Passphrase Recovery Wizard");
-			UpdateSensitivity();
-                    KeyRecoveryDruid.SetButtonsSensitive(false, false, true, true);
+			DomainSelectionUpdateSensitivity();
+                 //   KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
+			DomainSelectionUpdateSensitivity();
                 }
 
 
             private bool OnDomainSelectionPageValidated(object obj, EventArgs args)
 
             {
-	              	
-			  
                         DomainController domController = DomainController.GetDomainController();
                         string raName = domController.GetRAName(this.selectedDomain);
 			if(raName == "DEFAULT")
@@ -324,16 +336,16 @@ namespace Novell.iFolder
 
                private void OnDomainChangedEvent( object o, EventArgs args)
                 {
-                	UpdateSensitivity();
+                	DomainSelectionUpdateSensitivity();
 		}
 		
-		private void UpdateSensitivity()
+		private void DomainSelectionUpdateSensitivity()
 		{
 			 if( ifws.GetSecurityPolicy(this.selectedDomain) != 0 && simws.IsPassPhraseSet(this.selectedDomain))
-				 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+				 KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
 
 			else
-				 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+				 KeyRecoveryDruid.SetButtonsSensitive(false, false, true, true);
 	}	
 
             private Gnome.DruidPage  CreateEnterPassphrasePage()
@@ -396,7 +408,8 @@ namespace Novell.iFolder
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
 
 		userName = new Entry();
-		userName.Changed += new EventHandler(OnEnterPassphraseFieldsChanged);
+		//userName.Changed += new EventHandler(OnEnterPassphraseFieldsChanged);
+		userName.Sensitive = false;
 		 table.Attach(userName, 1, 2, 3, 4,
                         AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
                 l.MnemonicWidget = userName;
@@ -422,8 +435,10 @@ namespace Novell.iFolder
             private void OnEnterPassphrasePagePrepared(object o, Gnome.PreparedArgs args)
             {
                 this.Title = Util.GS("Passphrase Recovery Wizard");
-		this.iFolderAcc.Text = this.selectedDomainName;
-                //KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
+		this.iFolderAcc.Text = this.selectedDomainName+"-"+this.selectedDomainIP ;
+		DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.selectedDomain);
+		this.userName.Text = domainInfo.MemberName;
+                KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
             }
 
 
@@ -433,6 +448,16 @@ namespace Novell.iFolder
 		bool result = false;
 		Status status = null;
 
+                       if(this.newPassphrase.Text != this.confirmPassphrase.Text)
+                      {
+                                 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("The values in the new and confirm passphrase fields do not match"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+                                        return false;
+
+                        }
 		
 		 DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.selectedDomain);
 		try{
@@ -449,9 +474,7 @@ namespace Novell.iFolder
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-               		 //         EnterPassphrasePage.Hide();
-		         return false;
-			//		CloseDialog();
+		         	return false;
 
 			//	Console.WriteLine("Inside not success");
 
@@ -459,15 +482,14 @@ namespace Novell.iFolder
 		result = true;
 		}
                 }
-		catch(Exception e)
+		catch(Exception)
 		{
 			 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-                                EnterPassphrasePage.Hide(); 
-
+				  return false;
 		}
 		if(result)
 		{
@@ -479,14 +501,15 @@ namespace Novell.iFolder
                     this.simws.ExportRecoverImport(domainInfo.ID, memberUID, this.newPassphrase.Text);
 			KeyRecoveryDruid.Page = FinishPage;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
                               iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("You have been logged out of the account.Please login and try again."), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-                       CloseDialog(); 
+                       		//CloseDialog(); 
+				return false;
 		
 			}
 		//	KeyRecoveryDruid.Page = FinishPage;
@@ -502,7 +525,7 @@ namespace Novell.iFolder
                 {
 	         
 			if(this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0  && this.newPassphrase.Text == this.confirmPassphrase.Text)
-			if(userName.Text.Length > 0 && password.Text.Length > 0)	
+			if(password.Text.Length > 0)	
 			 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
 			else
 				 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
@@ -554,7 +577,6 @@ namespace Novell.iFolder
                         l5.LineWrap = true;
                         l5.Xalign = 0.0F;
 
-		//	KeyRecoveryDruid.BackButton.Sensitive = false;
 			return InfoPage;
                 }
 
@@ -562,8 +584,7 @@ namespace Novell.iFolder
             {
                 this.Title = Util.GS("Passphrase Recovery Wizard");
 
-                KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
-		 KeyRecoveryDruid.BackButton.Sensitive = false;
+                KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
             }
  
 
@@ -648,7 +669,7 @@ namespace Novell.iFolder
 				KeyRecoveryDruid.Page = SelectionPage;
 				
 				
-		}
+			}
 	
 			else if(this.haveOne.Active == true)
 
@@ -675,7 +696,7 @@ namespace Novell.iFolder
 	private Gnome.DruidPage CreateExportKeyPage()
 	{
 	
-			ExportKeyPage =  new modelKeyPage(
+		ExportKeyPage =  new modelKeyPage(
                                         Util.GS("Obtain old data file"),
                                         KeyRecoveryPixbuf,
                                         null);
@@ -683,12 +704,12 @@ namespace Novell.iFolder
          	 ExportKeyPage.CancelClicked +=
                                 new Gnome.CancelClickedHandler(OnCancelClicked);
 
-             ExportKeyPage.Prepared +=
+            	 ExportKeyPage.Prepared +=
                                 new Gnome.PreparedHandler(OnExportKeyPagePrepared);
 			
-				ExportKeyPage.ValidateClicked +=
-								new KRValidateClickedHandler(OnExportKeyPageValidated);
-				ExportKeyPage.SkipClicked +=
+		ExportKeyPage.ValidateClicked +=
+				new KRValidateClickedHandler(OnExportKeyPageValidated);
+		ExportKeyPage.SkipClicked +=
                                 new KRSkipClickedHandler(OnExportKeyPageSkipClicked);
 
 
@@ -753,7 +774,7 @@ namespace Novell.iFolder
 
 		  private bool OnExportKeyPageSkipClicked(object o, EventArgs args)
                 {
-                       	KeyRecoveryDruid.Page = SelectionPage;
+                       	KeyRecoveryDruid.Page = SingleWizPage;
 
                        // BackButton.Label = Util.GS("gtk-go-back");
                         return true;
@@ -761,18 +782,24 @@ namespace Novell.iFolder
 
 
                 private void OnExportKeyPagePrepared(object o, Gnome.PreparedArgs args)
-				{
-					this.Title = Util.GS("Passphrase Recovery Wizard");
-					//ExportUpdateUI();
-					DisplayRAName();			
-					exportLocation.GrabFocus();
-					exportDomain.Text = this.selectedDomainName;		
-			 	// Hack to make sure the "Forward" button has the right text.
-                		     ForwardButton.Label = "gtk-go-forward";
-			
-				}
+		{
+			this.Title = Util.GS("Passphrase Recovery Wizard");
+			//ExportUpdateUI();
+			DisplayRAName();			
+			exportLocation.GrabFocus();
+			exportDomain.Text = this.selectedDomainName+"-"+this.selectedDomainIP;		
+			ExportWizGetDefaultPath();
+			ExportUpdateSensitivity();
+				
+		}
 
-		
+                private void ExportWizGetDefaultPath()
+                {
+
+                         string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
+			this.exportLocation.Text = str+ "/"+ this.exportDomain.Text+".xml";
+		}
+	
 
 
                 private void DisplayRAName()
@@ -826,31 +853,51 @@ namespace Novell.iFolder
              
                 private void OnExportPageFieldsChanged(object obj, EventArgs args)
                 {
-                        //bool enableOK = false;
-                        if( this.exportLocation.Text.Length > 0 && this.exportLocation.Text.EndsWith(".xml"))
-				 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+			ExportUpdateSensitivity();
+		}
 
-                	else
-				 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
-		
+		private void ExportUpdateSensitivity()
+		{
+			 if( this.exportLocation.Text.Length > 0)
+                                 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+
+                        else
+                                 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
+
 		}
 
 		private bool OnExportKeyPageValidated(object obj, EventArgs args)
 		{
 			bool result = false;
+
+			if((!this.exportLocation.Text.EndsWith(".xml")))
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Unable to send old data file"), Util.GS("Enter the location of an xml file"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+                                        return false;
+
+
+			}
+			
+				if(!File.Exists(this.exportLocation.Text))
+        	                        File.Create(this.exportLocation.Text);
+
 				try
 				{	
 					this.simws.ExportiFoldersCryptoKeys(this.selectedDomain,this.exportLocation.Text );		
 					result = true;	
 				}
-				catch(Exception ex)
+				catch(Exception)
 				{
-				iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Export Encrypted Keys"), Util.GS(ex.Message), Util.GS(""));
+				iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Unable to send old data file"), Util.GS("Passphrase reset failed"), Util.GS(""));
 				  dialog.Run();
 				  dialog.Hide();	
 				  dialog.Destroy();
 				  dialog = null;
-					result =false;
+					return false;
 				}
 			return result;
 
@@ -890,9 +937,7 @@ namespace Novell.iFolder
                         //Row 2
 
                         exportedPath = new Entry();
-                        //exportedPath.Text = this.exportLocation.Text;
                         exportedPath.Sensitive = false;
-
                         table.Attach(exportedPath, 0, 1, 1, 2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
                         //l.LineWrap = true;
@@ -930,11 +975,9 @@ namespace Novell.iFolder
               private void OnEmailPagePrepared(object o, Gnome.PreparedArgs args)
               {
                         this.Title = Util.GS("Passphrase Recovery Wizard");
-		//	FinishButton.Label = Util.GS("_Finish");
 			this.exportedPath.Text = this.exportLocation.Text;
 			KeyRecoveryDruid.CancelButton.Label = Util.GS("Finish");
                         KeyRecoveryDruid.SetButtonsSensitive(false,false , true, true);
-
 
                 }
 	
@@ -974,11 +1017,11 @@ namespace Novell.iFolder
             	                   new Gnome.PreparedHandler(OnImportKeyPagePrepared);
 
 
-					ImportKeyPage.ValidateClicked +=
-									new KRValidateClickedHandler(OnImportKeyPageValidated);	
+			ImportKeyPage.ValidateClicked +=
+					new KRValidateClickedHandler(OnImportKeyPageValidated);	
 				
-					ImportKeyPage.SkipClicked +=
-                                new KRSkipClickedHandler(OnImportKeyPageSkipClicked);
+			ImportKeyPage.SkipClicked +=
+                       		         new KRSkipClickedHandler(OnImportKeyPageSkipClicked);
 
 		                ///
                         /// Content
@@ -1020,9 +1063,8 @@ namespace Novell.iFolder
                         importBrowseButton.Clicked += new EventHandler(OnImportBrowseButtonClicked);
 
                         
-			 isEncrypted = new CheckButton(Util.GS("Is the _above file encrypted?"));
+			isEncrypted = new CheckButton(Util.GS("Is the _above file encrypted?"));
                         table.Attach(isEncrypted, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
-		//	isEncrypted.Toggled += new EventHandler(OnImportFieldsChanged);
 			isEncrypted.Active = true;
 			// Row 2
                         l = new Label(Util.GS("One Time Password")+":");
@@ -1060,24 +1102,24 @@ namespace Novell.iFolder
                         table.Attach(importPageConfirmPassphrase, 1, 2, 5, 6,
                                 AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
                         l.MnemonicWidget = importPageConfirmPassphrase;
-					return ImportKeyPage;
+
+			return ImportKeyPage;
                 }
 
 
 		  private bool OnImportKeyPageSkipClicked(object o, EventArgs args)
                 {
-                        KeyRecoveryDruid.Page = SelectionPage;
+                        KeyRecoveryDruid.Page = SingleWizPage;
 
-                        BackButton.Label = Util.GS("gtk-go-back");
-                        return false;
+                        return true;
                 }
 
 
                 private void OnImportKeyPagePrepared(object o, Gnome.PreparedArgs args)
 		        {
-				this.importDomain.Text = this.selectedDomainName;
-
-				KeyRecoveryDruid.SetButtonsSensitive(false,false , true, true);
+				this.importDomain.Text = this.selectedDomainName+"-"+this.selectedDomainIP;
+				ImportUpdateSensitivity();
+				KeyRecoveryDruid.SetButtonsSensitive(true,false , true, true);
 		}
 		
 
@@ -1101,37 +1143,66 @@ namespace Novell.iFolder
 		   private void OnImportFieldsChanged(object obj, EventArgs args)
                 {
                         //bool enableOK = false;
-                    if (this.importPageNewPassphrase.Text.Length > 0 && this.importPageConfirmPassphrase.Text.Length > 0 && this.importPageNewPassphrase.Text == this.importPageConfirmPassphrase.Text)
+			ImportUpdateSensitivity();
+                }
+	
+
+
+		private void ImportUpdateSensitivity()
+		{
+			  if (this.importPageNewPassphrase.Text.Length > 0 && this.importPageConfirmPassphrase.Text.Length >0)
                            if( this.importLocation.Text.Length > 0)
-			{	
-				 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
-			}
+                        {
+                                 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+                        }
                         else
                                  KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
-
-                }
-		
+	
+		}	
 		private bool OnImportKeyPageValidated (object o, EventArgs args)
 		{	
+			
+			if(this.importPageNewPassphrase.Text != this.importPageConfirmPassphrase.Text)
+			{
+				 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("The values in the new and confirm passphrase fields do not match"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+					return false;
+
+				
+			}
+	
+			if((File.Exists(this.importLocation.Text) == false)||(!this.importLocation.Text.EndsWith(".xml")))
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Enter the location of an xml file"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+                                        return false;
+
+					
+			}
+
+
 			try{
 			 bool rememberOption = this.simws.GetRememberOption(this.selectedDomain);
 			this.simws.ImportiFoldersCryptoKeys( this.selectedDomain, importPageNewPassphrase.Text, this.OneTimePP, importLocation.Text);
 			 //clear the values
-                                //        this.simws.StorePassPhrase(this.selectedDomain, "", CredentialType.None, false);
+                                     this.simws.StorePassPhrase(this.selectedDomain, "", CredentialType.None, false);
 							
-			 //  simws.StorePassPhrase(this.selectedDomain, importPageNewPassphrase.Text, CredentialType.Basic, rememberOption);
+			   simws.StorePassPhrase(this.selectedDomain, importPageNewPassphrase.Text, CredentialType.Basic, rememberOption);
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 		                                 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Please try again"), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-                //                        result =false;
-			
-					
-			return false;
+				return false;
 			}
 
 			KeyRecoveryDruid.Page = FinishPage;
@@ -1244,9 +1315,6 @@ namespace Novell.iFolder
                         singleWizNewPassphrase.Changed += new EventHandler(UpdateSensitivity);
 
 
-                        //Row 5
-                        //encryResult = new CheckButton("Encrypt Resulting Key ? ");
-                        //table.Attach(encryResult, 1,2,5,6, AttachOptions.Expand|AttachOptions.Fill, 0,0,0);
 
                         //Row 6
 
@@ -1270,34 +1338,38 @@ namespace Novell.iFolder
 
 		 private void OnSingleWizPagePrepared(object o, Gnome.PreparedArgs args)
                         {
-				this.singleWizDomain.Text = this.selectedDomainName;
+
+				this.Title = Util.GS("Passphrase Recovery Wizard"); 
+				this.singleWizDomain.Text = this.selectedDomainName+"-"+this.selectedDomainIP;
+				SingleWizUpdateSensitivity();
 			}
 		  private bool OnSingleWizSkipClicked(object o, EventArgs args)
                 {
-                       KeyRecoveryDruid.Page = SelectionPage;
-
-                        BackButton.Label = Util.GS("gtk-go-back");
-                        return false;
+	                KeyRecoveryDruid.Page = SingleWizPage;
+			 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+                        return true;
                 }
 	
 
 		private void UpdateSensitivity(object o,EventArgs args)
 		{
-			
-			if (
-                		this.p12FilePath.Text.Length > 0 && 
-                this.domainPasswd.Text.Length > 0 &&   this.newPassphrase.Text.Length > 0 &&
-               this.confirmPassphrase.Text.Length > 0
-                )
-			  KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
-
-                        else
-                          KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
-
+			SingleWizUpdateSensitivity();			
 
 		}
 
+		private void SingleWizUpdateSensitivity()
+		{
+			 if (
+                                this.p12FilePath.Text.Length > 0 &&
+                this.domainPasswd.Text.Length > 0 &&   this.singleWizNewPassphrase.Text.Length > 0 &&
+               this.singleWizConfirmPassphrase.Text.Length > 0
+                )
+                          KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+
+                        else
+                          KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
 	
+		}	
 		
                 private void OnSingleWizBrowseButtonClicked(object o, EventArgs e)
                 {
@@ -1319,8 +1391,12 @@ namespace Novell.iFolder
 		{
 		
 			 string str = Mono.Unix.UnixEnvironment.EffectiveUser.HomeDirectory;
-                         singleWizExportPath = str+ "/"+ this.singleWizDomain+"_Encry.xml";
-			singleWizImportPath = str + "/"+ this.singleWizDomain+"_Decry.xml";
+                         singleWizExportPath = str+ "/"+ this.singleWizDomain.Text+"_Encry.xml";
+			singleWizImportPath = str + "/"+ this.singleWizDomain.Text+"_Decry.xml";
+			if(!File.Exists(singleWizExportPath))
+				File.Create(singleWizExportPath);
+			if(!File.Exists(singleWizImportPath))
+				File.Create(singleWizImportPath);
 
 		}
 	
@@ -1328,8 +1404,31 @@ namespace Novell.iFolder
 		 private bool  OnSingleWizPageValidated(object o, EventArgs args)
                 {
 
-       		     Debug.PrintLine("Submit clicked");
+       		     	Debug.PrintLine("Submit clicked");
 			bool result =false;
+
+                        if(this.singleWizNewPassphrase.Text != this.singleWizConfirmPassphrase.Text)
+                      {
+                                 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("The values in the new and confirm passphrase fields do not match"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+                                        return false;
+
+			}
+
+			if((File.Exists(this.p12FilePath.Text)== false)||(!this.p12FilePath.Text.EndsWith(".p12")))			
+			{
+				 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Location of secret file is invalid"), Util.GS(""));
+                                  dialog.Run();
+                                  dialog.Hide();
+                                  dialog.Destroy();
+                                  dialog = null;
+                                        return false;
+
+			}
+	
 			singleWizGetDefaultPath();	
 			   
 			//export first to default path
@@ -1338,14 +1437,14 @@ namespace Novell.iFolder
 					this.simws.ExportiFoldersCryptoKeys(this.selectedDomain,singleWizExportPath);
                                         
                                 }
-                                catch(Exception ex)
+                                catch(Exception)
                                 {
-                                  iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,"Export Encrypted Keys in single wiz", Util.GS(ex.Message), Util.GS(""));
+                                  iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failes"),Util.GS("Unable to send old data file"), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
-                                  result = false;
+                                  return false;
                                 }
 
 			//Convert into usable form after export
@@ -1354,17 +1453,17 @@ namespace Novell.iFolder
 			InitializeKey();
 			ProcessInputKeyFile();
 			}
-			catch(Exception ex1)
+			catch(Exception)
 			{
 				//	Debug.WriteLine("Error in key recovery process");
-				                                        iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,(Util.GS("Resetting Passphrase failed")), Util.GS(ex1.Message), Util.GS(""));
+	               iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,(Util.GS("Passphrase reset failed")), Util.GS("Error importing the keys."), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
 
 				
-				result = false;
+				return false;
 			
 			}
 				
@@ -1374,20 +1473,21 @@ namespace Novell.iFolder
 			try
 			{
 				bool rememberOption = this.simws.GetRememberOption(this.selectedDomain);
-                        	this.simws.ImportiFoldersCryptoKeys( this.selectedDomain,newPassphrase.Text , null, singleWizImportPath);
-                         	//clear the values
+                        	this.simws.ImportiFoldersCryptoKeys( this.selectedDomain,singleWizNewPassphrase.Text , null, singleWizImportPath);
+                         	result = true;
+				//clear the values
                                         this.simws.StorePassPhrase(this.selectedDomain, "", CredentialType.None, false);
 
                            	simws.StorePassPhrase(this.selectedDomain, singleWizNewPassphrase.Text, CredentialType.Basic, rememberOption);
 			}	
-			catch(Exception ex)
+			catch(Exception)
 			 {
-                                        iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,(Util.GS("Resetting Passphrase failed")), Util.GS(ex.Message), Util.GS(""));
+                                        iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,(Util.GS("Passphrase reset failed")), Util.GS("Error importing the keys."), Util.GS(""));
                                   dialog.Run();
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;      
-                                   result = false;
+                                   return false;
 			}
 			if(result)
 			
@@ -1421,7 +1521,7 @@ namespace Novell.iFolder
                                 }
                         }
                         }
-                        catch (System.Security.Cryptography.CryptographicException e){
+                        catch (System.Security.Cryptography.CryptographicException ){
                         }
                 }
 
@@ -1481,7 +1581,7 @@ namespace Novell.iFolder
             {
                 mess = Convert.ToBase64String(rsadec.Decrypt(encmess, false));
             }
-            catch (CryptographicException cExp)
+            catch (CryptographicException)
             {
 		//                Debug.WriteLine("Crpto Error {0}", cExp.Message);
             }
@@ -1495,12 +1595,9 @@ namespace Novell.iFolder
                 private Gnome.DruidPage CreateFinishPage()
                 {
 			FinishPage = new Gnome.DruidPageStandard(Util.GS("Passphrase reset successfully"),KeyRecoveryPixbuf,null);
-                        //FinishPage.ValidateClicked +=
-        	                  //      new KRValidateClickedHandler(OnFinishPageValidated);
 			FinishPage.CancelClicked +=
                                 new Gnome.CancelClickedHandler(OnCancelClicked);
 	
-                        //FinishPage.Can
 			FinishPage.Prepared +=
                                 new Gnome.PreparedHandler(OnFinishPagePrepared);
 
@@ -1521,27 +1618,6 @@ namespace Novell.iFolder
 			 return FinishPage;
                 }
 
-
-		    private bool  OnFinishPageValidated(object o,EventArgs  args)
-
-                {	
-			
-	               		try
-			{ 
-				CloseDialog();
-				/*if(!ShowNextWizard())
-            			{
-                			Util.ShowiFolderWindow();
-					
-            			}*/
-					return true;			
-			}		
-
-				catch(Exception e){return false;}
-			
-			
-                }
-
 		  private void OnFinishPagePrepared(object o, Gnome.PreparedArgs args)
                 {
                         this.Title = Util.GS("Passphrase Recovery Wizard");
@@ -1559,7 +1635,7 @@ namespace Novell.iFolder
                 if(null != krw)
                     krw.Maximize();
             }
-            catch(Exception e)
+            catch(Exception )
             {
                 //iFolderWindow.log.Info("Excepion in Pop of ShowNextWizard. {0} {1}", e.GetType(), e.Message);
                 return false;
