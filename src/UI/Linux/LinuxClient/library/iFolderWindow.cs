@@ -184,7 +184,7 @@ namespace Novell.iFolder
 		public Label labelUser = null;
 		public Label labelServer = null;
 		public Label labeliFolderCount = null;
-		public Label labeliDiskQouta = null;
+	//	public Label labeliDiskQouta = null;
 		public Label labeliDiskUsed = null;
 		public Label labeliDiskAvailable = null;
 		public Label labelName = null;
@@ -201,7 +201,9 @@ namespace Novell.iFolder
 			
 		public VBox packIconView;
 		public VBox packListView;
-		
+		public string diskQuotaUsed = Util.GS("N/A");	
+		public string diskQuotaAvailable = Util.GS("N/A");	
+	
 
 		public int LastXPos
 		{
@@ -1457,14 +1459,15 @@ namespace Novell.iFolder
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 0);
             //####################### ADD LABEL
-			lable = Util.GS("N/A");
+	/*		lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Disk Quota: {0}"),lable); 
 		    labeliDiskQouta = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
 		    actionsVBox.PackStart(labeliDiskQouta, false, false, 0);
 		    labeliDiskQouta.UseMarkup = true;
 			labeliDiskQouta.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    labeliDiskQouta.Xalign = 0.0F;
+		    labeliDiskQouta.Xalign = 0.0F; 
+       */
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
@@ -1580,10 +1583,8 @@ namespace Novell.iFolder
 
 		private void OnComboBoxIndexChange(object o, EventArgs args)
 		{
-
 			 UpdateServerInfoForSelectedDomain();
-
-			return;
+			 return;
 		}
 
 		private void OnviewListIndexChange(object o, EventArgs args)
@@ -1626,24 +1627,24 @@ namespace Novell.iFolder
 
 		public void UpdateSelectedServerDetails(DomainInformation domain)
 		{
-			 string QoutaAvailable = null;
-	         int count=0, index = 0, tmpValue = 0;
-	         DiskSpace ds = null;
-			 DomainInformation currentDomain = domain;
+	             string QoutaAvailable = null;
+	             int count=0, index = 0, tmpValue = 0;
+	             DiskSpace ds = null;
+		     DomainInformation currentDomain = domain;
 
-			 if(labelUser != null && currentDomain != null)
-			 {
-				labelUser.Text = string.Format(Util.GS("User: {0}"), currentDomain.MemberName);
-			 }		 
+	             if(labelUser != null && currentDomain != null)
+		     {
+		         labelUser.Text = string.Format(Util.GS("User: {0}"), currentDomain.MemberName);
+		     }		 
 			 if (labeliFolderCount != null && labeliDiskUsed != null 
-				&& labeliDiskAvailable != null && labeliDiskQouta != null 
+				&& labeliDiskAvailable != null /*&& labeliDiskQouta != null */
 				&& currentDomain != null)
 			 {
-		     	labelServer.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
-		     	labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
-		     	labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
-		        labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(currentDomain.MemberUserID));
-  	         	labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(currentDomain.MemberUserID)); 
+		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
+		     	     labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
+		     	   //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaUsed);
+  	         	     labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), diskQuotaAvailable); 
 
 			 }
 
@@ -1764,7 +1765,7 @@ namespace Novell.iFolder
 			 string totalQouta = string.Format("{0} {1}", 0, Util.GS("MB"));	
 			 int tempValue =0;
 			 //ServerDomain = dom;
-		     DiskSpace ds = ifws.GetUserDiskSpace(domainMemeberID);         
+		         DiskSpace ds = ifws.GetUserDiskSpace(domainMemeberID);         
 			 if(ds.Limit == 0)
 			 {
 				 totalQouta = Util.GS("N/A");
@@ -2374,6 +2375,7 @@ namespace Novell.iFolder
 				menu.Popup(null, null, null, 
 					IntPtr.Zero, 3, 
 					Gtk.Global.CurrentEventTime);
+		        	UpdateServerInfoForSelectedDomain();
 			}
 		}
 		
@@ -3505,7 +3507,7 @@ namespace Novell.iFolder
                         		else
 						iFoldersIconView.UnselectAll();
 					
-			        UpdateServerInfoForSelectedDomain();
+			        //UpdateServerInfoForSelectedDomain();
 				}
 				catch(Exception e)
 				{
@@ -3554,6 +3556,7 @@ namespace Novell.iFolder
 					ied.Destroy();
 					return;
 				}
+			        UpdateServerInfoForSelectedDomain();
 			}
 		}
 		
@@ -3622,8 +3625,10 @@ namespace Novell.iFolder
 		  if (domain == null) return;
 	      try 
 		  {		 
-		  	str = string.Format(Util.GS("Disk Space Available: {0}"), CalculateDiskQouta(domain.MemberUserID) );
-		  	str1 = string.Format(Util.GS("Disk Space Used: {0}"), CalculateDiskUsed(domain.MemberUserID)) ;
+			diskQuotaUsed = CalculateDiskUsed(domain.MemberUserID);
+			diskQuotaAvailable = CalculateDiskQouta(domain.MemberUserID);
+		  	str = string.Format(Util.GS("Disk Space Available: {0}"), diskQuotaAvailable );
+		  	str1 = string.Format(Util.GS("Disk Space Used: {0}"), diskQuotaUsed ) ;
 		  	str = str + "            " + str1;
 		  	ifGrp = (iFolderViewGroup)serverGroups[domain.ID];	  
 		  	if(ifGrp != null)
@@ -4267,6 +4272,8 @@ namespace Novell.iFolder
 							}
 							if( removeDefault )
 								simws.DefaultAccount(domainID, null);
+
+			        			UpdateServerInfoForSelectedDomain();
 						}
 						
 						if( ifolderlistview.Visible )
@@ -4570,7 +4577,7 @@ namespace Novell.iFolder
 			 UpdateServerInfoForSelectedDomain();
 		}
 
-		private bool UpdateServerInfoForSelectedDomain()
+		public bool UpdateServerInfoForSelectedDomain()
 		{
 			//###### Update Server Information for the selected Domain.
 			try{	
@@ -4823,6 +4830,7 @@ namespace Novell.iFolder
 					{
                          			DomainInformation domain = domainController.GetDomain(args.ID);
 					 	UpdateQoutaData(domain); 
+					        UpdateServerInfoForSelectedDomain();	
 					}
 					break;
 				}
