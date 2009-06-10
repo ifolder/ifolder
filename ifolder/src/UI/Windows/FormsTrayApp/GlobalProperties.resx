@@ -442,13 +442,13 @@
     <value>Delete from server</value>
   </data>
   <data name="toolStripMenuThumbnails.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>161, 22</value>
   </data>
   <data name="toolStripMenuThumbnails.Text" xml:space="preserve">
     <value>Thumbnails</value>
   </data>
   <data name="toolStripMenuLeftPane.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 22</value>
+    <value>161, 22</value>
   </data>
   <data name="toolStripMenuLeftPane.Text" xml:space="preserve">
     <value>iFolder server info</value>
@@ -499,76 +499,76 @@
     <value>851, 21</value>
   </metadata>
   <data name="CtxMenuOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="CtxMenuOpen.Text" xml:space="preserve">
     <value>&amp;Open</value>
   </data>
   <data name="MenuResolveSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>195, 6</value>
   </data>
   <data name="MenuResolve.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuResolve.Text" xml:space="preserve">
     <value>Resolve &amp;Conflicts</value>
   </data>
   <data name="MenuAccept.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuAccept.Text" xml:space="preserve">
     <value>&amp;Download</value>
   </data>
   <data name="MenuMerge.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuMerge.Text" xml:space="preserve">
     <value>&amp;Merge</value>
   </data>
   <data name="menuSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>195, 6</value>
   </data>
   <data name="MenuRemove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuRemove.Text" xml:space="preserve">
     <value>Delete &amp;from Server</value>
   </data>
   <data name="menuSyncNow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="menuSyncNow.Text" xml:space="preserve">
     <value>S&amp;ynchronize Now</value>
   </data>
   <data name="menuShare.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="menuShare.Text" xml:space="preserve">
     <value>&amp;Share with ...</value>
   </data>
   <data name="MenuRevert.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuRevert.Text" xml:space="preserve">
     <value>Revert to a Normal Folder</value>
   </data>
   <data name="menuSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>206, 6</value>
+    <value>195, 6</value>
   </data>
   <data name="menuProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="menuProperties.Text" xml:space="preserve">
     <value>&amp;Properties</value>
   </data>
   <data name="MenuRefresh.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 22</value>
+    <value>198, 22</value>
   </data>
   <data name="MenuRefresh.Text" xml:space="preserve">
     <value>&amp;Refresh</value>
   </data>
   <data name="iFolderContextMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 242</value>
+    <value>199, 242</value>
   </data>
   <data name="&gt;&gt;iFolderContextMenu.Name" xml:space="preserve">
     <value>iFolderContextMenu</value>
@@ -1087,10 +1087,10 @@
     <value>10</value>
   </data>
   <data name="groupBox2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>0, -10</value>
   </data>
   <data name="groupBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>217, 454</value>
+    <value>217, 464</value>
   </data>
   <data name="groupBox2.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1588,7 +1588,7 @@
     <value>803, 595</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>iFolder</value>
+    <value> </value>
   </data>
   <data name="&gt;&gt;mainMenu1.Name" xml:space="preserve">
     <value>mainMenu1</value>

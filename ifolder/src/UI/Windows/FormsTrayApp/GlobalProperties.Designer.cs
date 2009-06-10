@@ -472,9 +472,7 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripMenuLeftPane
             // 
-            this.toolStripMenuLeftPane.Checked = true;
             this.toolStripMenuLeftPane.CheckOnClick = true;
-            this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
             this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
@@ -746,13 +744,16 @@ namespace Novell.FormsTrayApp
             this.Server,
             this.Status});
             this.listView1.ContextMenuStrip = this.iFolderContextMenu;
+            this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.listView1.FullRowSelect = true;
+            this.listView1.HideSelection = false;
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
+            this.listView1.ShowItemToolTips = true;
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.DoubleClick += new System.EventHandler(this.menuOpen_Click);
+            this.listView1.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
             this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
             this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
