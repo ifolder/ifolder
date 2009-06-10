@@ -64,6 +64,9 @@ namespace Novell.iFolder
 
 		private NotifyWindow			oneMinuteLimitNotifyWindow;
 
+		private Gtk.CheckButton			HideSyncLogButton;
+		private Gtk.CheckButton			NotifyPolicyVoilationButton;
+
 		/// <summary>
 		/// Default constructor for iFolderPropSharingPage
 		/// </summary>
@@ -196,7 +199,7 @@ namespace Novell.iFolder
 
 
 			HideMainWindowButton=
-				new CheckButton(Util.GS("_Hide ifolder main window while startup")); 
+				new CheckButton(Util.GS("Hide ifolder _main window at startup")); 
 			notifyWidgetBox.PackStart(HideMainWindowButton, false, true, 0);
 			HideMainWindowButton.Toggled += 
 						new EventHandler(OnHideMainWindowButton);
@@ -215,6 +218,20 @@ namespace Novell.iFolder
 //						new EventHandler(OnNotifySyncErrorsButton);
 
 			
+			
+			HideSyncLogButton =
+				new CheckButton(Util.GS("Display synchronization _logs")); 
+			notifyWidgetBox.PackStart(HideSyncLogButton, false, true, 0);
+
+			HideSyncLogButton.Toggled += 
+						new EventHandler(OnHideSyncLogButton);
+
+			NotifyPolicyVoilationButton =
+				new CheckButton(Util.GS("Display notifications for _policy violations")); 
+			notifyWidgetBox.PackStart(NotifyPolicyVoilationButton, false, true, 0);
+
+			 NotifyPolicyVoilationButton.Toggled += 
+						new EventHandler(OnNotifyPolicyVoilationButton);
 
 			//------------------------------
 			// Sync Settings
@@ -300,8 +317,17 @@ namespace Novell.iFolder
 				NotifyUsersButton.Active = true;
 			else
 				NotifyUsersButton.Active = false;
+			
 
+			if((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_SYNC_LOG))
+				HideSyncLogButton.Active = true;
+			else
+				HideSyncLogButton.Active = false;
 
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION))
+				NotifyPolicyVoilationButton.Active = true;
+			else
+				NotifyPolicyVoilationButton.Active = false;
 
 			if((bool)ClientConfig.Get(ClientConfig.KEY_IFOLDER_WINDOW_HIDE))
 				HideMainWindowButton.Active = true;
@@ -324,6 +350,17 @@ namespace Novell.iFolder
 //				NotifySyncErrorsButton.Active = true;
 //			else
 //				NotifySyncErrorsButton.Active = false;
+
+			if((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_SYNC_LOG))
+				NotifyUsersButton.Active = true;
+			else
+				NotifyUsersButton.Active = false;
+
+			if((bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION))
+				NotifyUsersButton.Active = true;
+			else
+				NotifyUsersButton.Active = false;
+
 
 			try
 			{
@@ -406,6 +443,23 @@ namespace Novell.iFolder
 				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, true);
 			else
 				ClientConfig.Set(ClientConfig.KEY_NOTIFY_USERS, false);
+		}
+
+
+		private void OnHideSyncLogButton(object o, EventArgs args)
+		{
+			if(HideSyncLogButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_SHOW_SYNC_LOG, true);
+			else
+				ClientConfig.Set(ClientConfig.KEY_SHOW_SYNC_LOG, false);
+		}
+
+		private void OnNotifyPolicyVoilationButton(object o, EventArgs args)
+		{
+			if(NotifyPolicyVoilationButton.Active)
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_POLICY_VOILATION, true);
+			else
+				ClientConfig.Set(ClientConfig.KEY_NOTIFY_POLICY_VOILATION, false);
 		}
 
 		private void OnNotifyCollisionsButton(object o, EventArgs args)

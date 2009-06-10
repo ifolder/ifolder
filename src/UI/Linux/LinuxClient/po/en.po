@@ -3905,12 +3905,12 @@ msgstr ""
 
 msgid ""
 "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
-msgstr "'
+msgstr ""
 "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
 
 msgid ""
 "You have been logged out of the account.Please login and try again."
-msgstr "'
+msgstr ""
 "You have been logged out of the account.Please login and try again."
 
 msgid ""
@@ -3938,7 +3938,22 @@ msgid ""
 msgstr ""
 "Enter the location of an xml file"
 
-msgid "'
+msgid ""
 "Unable to send old data file"
 msgstr ""
 "Unable to send old data file"
+
+msgid ""
+"Display synchronization _logs"
+msgstr ""
+"Display synchronization _logs"
+
+msgid ""
+"Display notifications for _policy violations"
+msgstr ""
+"Display notifications for _policy violations"
+
+msgid ""
+"Hide ifolder _main window at startup"
+msgstr ""
+"Hide ifolder _main window at startup"

@@ -1641,7 +1641,7 @@ namespace Novell.iFolder
 			 {
 		     	labelServer.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
 		     	labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
-		     	labeliDiskQouta.Text = string.Format(Util.GS("Disk Qouta: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+		     	labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
 		        labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),CalculateDiskQouta(currentDomain.MemberUserID));
   	         	labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), CalculateDiskUsed(currentDomain.MemberUserID)); 
 
@@ -3746,7 +3746,7 @@ namespace Novell.iFolder
 			ViewFolderPropertiesButton.Visible		= false;
 			ResolveConflictsButton.Sensitive = false;
 			RemoveiFolderButton.Sensitive = false;
-		    DownloadAvailableiFolderButton.Sensitive = false;
+		        DownloadAvailableiFolderButton.Sensitive = false;
 			MergeAvailableiFolderButton.Sensitive = false;
 			DeleteFromServerButton.Sensitive = false;
 			RemoveMembershipButton.Sensitive = false;
@@ -3826,25 +3826,28 @@ namespace Novell.iFolder
 					        //ViewFolderPropertiesButton.Visible	= true;
 					}
 
-					RemoveiFolderButton.Sensitive	= true;
+					//RemoveiFolderButton.Sensitive	= true;
 
 					if (holder.iFolder.HasConflicts)
 						ResolveConflictsButton.Sensitive = true;
 					else
 						ResolveConflictsButton.Sensitive = false;
+
+
+					if( ( ( holder.iFolder.State == "WaitSync" ) 
+                                              || ( holder.iFolder.State == "Local" ) )   
+				 	  && (holder.State == iFolderState.Synchronizing) )
+					{
+						RemoveiFolderButton.Sensitive = false;
+					}
+					else
+					{
+						RemoveiFolderButton.Sensitive = true;
+					}
 				}
 
 				SynchronizedFolderTasks.Visible = true;
 				
-				if( ( holder.iFolder.State == "WaitSync" )
-				 && (holder.State == iFolderState.Synchronizing) )
-				{
-					RemoveiFolderButton.Sensitive = false;
-				}
-				else
-				{
-					RemoveiFolderButton.Sensitive = true;
-				}
 			}
 
 		}
@@ -3982,7 +3985,7 @@ namespace Novell.iFolder
 			this.RefreshAvailableiFolderTimer.Change(300000, 300000);
 
 			 //GLib.Idle.Add(UpdateServerInfoForSelectedDomain);
-			 UpdateServerInfoForSelectedDomain();
+			 //UpdateServerInfoForSelectedDomain();
 		}
 
 		private void RefreshAvailableiFolderTimer_click(object sender)
@@ -4801,21 +4804,26 @@ namespace Novell.iFolder
 				{
 					if(SyncBar != null)
 						SyncBar.Hide();
-
+		
 					UpdateStatus(Util.GS("Idle..."));
 
-                    //Activate the Revert Button
-				    this.RevertMenuItem.Sensitive = true;	
-					this.RemoveiFolderButton.Sensitive = true;
+                                       //Activate the Revert Button
+					iFolderHolder holder = null;
+                   			holder = iFolderIconView.SelectedFolder;
+					if ( (holder != null)
+                     			   &&  (holder.iFolder != null)
+                     			   && (!holder.iFolder.IsSubscription)
+                     		           && (null != this.RemoveiFolderButton) )
+					{
+				        	this.RevertMenuItem.Sensitive = true;	
+						this.RemoveiFolderButton.Sensitive = true;
+					}	
 					
 					if (args.Name != null )
 					{
-                         DomainInformation domain = domainController.GetDomain(args.ID);
-						 UpdateQoutaData(domain); 
+                         			DomainInformation domain = domainController.GetDomain(args.ID);
+					 	UpdateQoutaData(domain); 
 					}
-					//Activate the Revert Button
-				        this.RevertMenuItem.Sensitive = true;	
-					this.RemoveiFolderButton.Sensitive = true;
 					break;
 				}
 			}

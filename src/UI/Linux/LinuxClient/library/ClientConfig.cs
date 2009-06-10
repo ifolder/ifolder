@@ -53,11 +53,13 @@ namespace Novell.iFolder
 		///
 		public const string KEY_SHOW_CREATION = "/apps/ifolder3/notification/show_created_dialog";
 		public const string KEY_NOTIFY_IFOLDERS = "/apps/ifolder3/notification/new_ifolders";
+		public const string KEY_NOTIFY_POLICY_VOILATION = "/apps/ifolder3/notification/policy_violation";
 		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder3/notification/collisions";
 		public const string KEY_NOTIFY_USERS = "/apps/ifolder3/notification/new_users";
 //		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder3/notification/sync_errors";
 		public const string KEY_NOTIFY_MIGRATION_2_X = "/apps/ifolder3/notification/migrate2x";
 //		public const string KEY_SHOW_NETWORK_ERRORS = "/apps/ifolder3/notification/network";
+		public const string KEY_SHOW_SYNC_LOG = "/apps/ifolder3/notification/synclog";
 
 		///
 		/// /apps/ifolder3/synchronization
@@ -146,6 +148,8 @@ namespace Novell.iFolder
 					return true;
 
 				case KEY_IFOLDER_WINDOW_HIDE:
+				case KEY_SHOW_SYNC_LOG:
+				case KEY_NOTIFY_POLICY_VOILATION:		
 					return false;
 
 				case KEY_SYNC_UNIT:
