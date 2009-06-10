@@ -859,10 +859,9 @@ namespace Novell.iFolder.Web
 			ArrayList collectionList = null;
 			Simias.Discovery.DiscService.UpdateCollectionList();
 			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
-			if (collectionList != null ) //When domain/server is connected/online
+            if (collectionList != null && collectionList.Count != 0) //When domain/server is connected/online
 			{
-
-			        foreach ( CollectionInfo ci in collectionList ) 
+                foreach ( CollectionInfo ci in collectionList ) 
 				{
 					col = null;
 					if ((col = store.GetCollectionByID(ci.CollectionID)) != null)
@@ -878,15 +877,14 @@ namespace Novell.iFolder.Web
 			else //When domain/server is disconnected/offline
 			{
 				ICSList iFolderList = null;
-                                iFolderList = store.GetCollectionsByType(iFolderWeb.iFolderType);
-                        	foreach(ShallowNode sn in iFolderList)
-                        	{
-					col = null;
-                                	col = store.GetCollectionByID(sn.ID);
-                                	list.Add(new iFolderWeb(col));
-                        	}
+                iFolderList = store.GetCollectionsByType(iFolderWeb.iFolderType);
+                foreach(ShallowNode sn in iFolderList)
+                {
+					col = null;                         	
+                    col = store.GetCollectionByID(sn.ID);                                	
+                    list.Add(new iFolderWeb(col));
+                }
 			}	
-
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
@@ -984,12 +982,14 @@ namespace Novell.iFolder.Web
 		public iFolderWeb[] GetiFoldersForDomain( string DomainID )
 		{
 			ArrayList list = new ArrayList();
+            Hashtable ht = new Hashtable();
 
 			Store store = Store.GetStore();
 
 			ICSList iFolderList = 
 					store.GetCollectionsByDomain(DomainID);
 
+            /// Add all the local iFolders belonging to the domain
 			foreach(ShallowNode sn in iFolderList)
 			{
 				if (sn.Type.Equals(NodeTypes.CollectionType))
@@ -998,18 +998,21 @@ namespace Novell.iFolder.Web
 					if (col.IsType(col, iFolderWeb.iFolderType))
 					{
 						list.Add(new iFolderWeb(col));
+                        if( ht.ContainsKey( col.ID) == false)
+                            ht.Add(col.ID, "");
 					}
 				}
 			}
 
+            /// Add the server iFolders only if the added folder is not a local iFolder..
 			ArrayList collectionList = Simias.Discovery.CollectionList.GetCollectionList();
-
-		        foreach (CollectionInfo ci in collectionList)
-			{
-			        if ( ci.DomainID != DomainID)
-				        continue;
-				list.Add (new iFolderWeb (ci));
-			}
+            foreach (CollectionInfo ci in collectionList)
+            {
+                if ( ci.DomainID != DomainID)
+                    continue;
+                if( ht.ContainsKey(ci.ID) == false)                    
+                    list.Add (new iFolderWeb (ci));
+            }            
 
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}

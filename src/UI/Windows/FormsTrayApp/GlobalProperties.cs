@@ -2212,6 +2212,14 @@ namespace Novell.FormsTrayApp
                 this.menuActionOpen.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = this.menuActionProperties.Enabled =
 					this.menuActionRemove.Enabled = this.menuActionResolve.Enabled = this.menuActionRevert.Enabled =
 					this.menuActionShare.Enabled = this.menuActionSync.Enabled = false;
+
+                this.toolStripBtnDelete.Enabled = 
+                this.toolStripBtnDownload.Enabled = 
+                this.toolStripBtnMerge.Enabled = 
+                this.toolStripBtnResolve.Enabled = 
+                this.toolStripBtnRevert.Enabled = 
+                this.toolStripBtnShare.Enabled = 
+                this.toolStripBtnSyncNow.Enabled = false;
 			}
 		}
 
@@ -3162,7 +3170,7 @@ namespace Novell.FormsTrayApp
             {
                 if (comboBoxSelectedIndex > (domaincount - 1))
                 {
-                    if( domainListComboBox.Items.Count > 1)
+                    if( domainListComboBox.Items.Count >= 1)
                         domainListComboBox.SelectedIndex = 0;
                     comboBoxSelectedIndex = 0;
                 }
@@ -3173,7 +3181,7 @@ namespace Novell.FormsTrayApp
             }
             else
             {
-                if (domainListComboBox.Items.Count > 1)
+                if (domainListComboBox.Items.Count >= 1)
                     domainListComboBox.SelectedIndex = 0;
                 comboBoxSelectedIndex = 0;
             }
@@ -3239,6 +3247,7 @@ namespace Novell.FormsTrayApp
             if (simiasWebService.GetDomainInformation(selectedDomain.ID).Authenticated)
             {
                 preferences.logoutFromDomain(new Domain(selectedDomain));
+
                 showiFolderinListView();
             }
             else
