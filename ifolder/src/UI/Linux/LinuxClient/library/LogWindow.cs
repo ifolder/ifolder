@@ -59,7 +59,7 @@ namespace Novell.iFolder
 		private ToolButton			SaveButton;
 		private ToolButton			ClearButton;
 		private bool				ControlKeyPressed;
-//		private Manager				simiasManager;
+		private Manager				simiasManager;
 		private SimiasEventBroker	simiasEventBroker;
 		
 
@@ -69,7 +69,7 @@ namespace Novell.iFolder
 		public LogWindow(Manager simiasManager)
 			: base (Util.GS("iFolder Synchronization Log"))
 		{
-//			this.simiasManager = simiasManager;
+			this.simiasManager = simiasManager;
 
 			CreateWidgets();
 
@@ -343,6 +343,7 @@ namespace Novell.iFolder
         /// </summary>
         private void OniFolderFileSyncEvent(object o, FileSyncEventArgs args)
 		{
+			bool showSyncLog = false;	
 			if (args == null || args.CollectionID == null || args.Name == null)
 				return;	// Prevent a null object exception
 
@@ -465,6 +466,7 @@ namespace Novell.iFolder
 						message = string.Format(
 							Util.GS("File type restriction policy prevented synchronization: {0}"),
 							args.Name);
+						showSyncLog = true;
 						break;
 					case SyncStatus.DiskFull:
 						if (args.Direction == Simias.Client.Event.Direction.Uploading)
@@ -513,7 +515,18 @@ namespace Novell.iFolder
 				}
 
 				if (message != null && message.Length > 0)
+				{
 					LogMessage(message);
+
+					//auto pop-up for SyncLog window, based on below flag
+					if( showSyncLog 
+					&& (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_SYNC_LOG))
+					{
+						Util.ShowLogWindow(simiasManager);	
+					}
+								
+				}
+				
 			}
 			catch {}
 		}

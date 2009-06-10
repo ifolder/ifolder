@@ -807,7 +807,8 @@ namespace Novell.iFolder
 						// Conflicts are handled in the OniFolderChangedEvent method
 						break;
 					case SyncStatus.Policy:
-						message = Util.GS("A policy prevented complete synchronization.");
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
+							message = Util.GS("A policy prevented complete synchronization.");
 						break;
 					case SyncStatus.Access:
 						message = Util.GS("Insuficient rights prevented complete synchronization.");
@@ -820,10 +821,12 @@ namespace Novell.iFolder
 						message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
 					case SyncStatus.PolicySize:
-						message = Util.GS("A size restriction policy prevented complete synchronization.");
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
+							message = Util.GS("A size restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.PolicyType:
-						message = Util.GS("A file type restriction policy prevented complete synchronization.");
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
+							message = Util.GS("A file type restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.DiskFull:
 						if (args.Direction == Simias.Client.Event.Direction.Uploading)
@@ -916,22 +919,22 @@ namespace Novell.iFolder
 										string errMsg = (string) collectionSyncErrors[syncStatusKey];
 										if (errMsg != null && errMsg.Length > 0)
 										{
-											showErrorBaloon = true;
+												showErrorBaloon = true;
 										
-										// Shows baloon for every file not synced.....
-											NotifyWindow notifyWin = new NotifyWindow(
+										        	// Shows baloon for every file not synced..
+												NotifyWindow notifyWin = new NotifyWindow(
 												tIcon, string.Format(Util.GS("Incomplete Synchronization: {0}"), ifHolder.iFolder.Name),
 												errMsg,
 												Gtk.MessageType.Warning, 5000);
-											notifyWin.LinkClicked +=
+												notifyWin.LinkClicked +=
 												new LinkClickedEventHandler(OnNotifyWindowLinkClicked);
-											notifyWin.ShowAll();
-											showGenericBaloon = false;
+												notifyWin.ShowAll();
+												showGenericBaloon = false;
 											
-											// Set this message to "" so that
-											// the notification bubble isn't
-											// popped-up on every sync cycle.
-											keysToClear.Add(syncStatusKey);
+												// Set this message to "" so that
+												// the notification bubble isn't
+												// popped-up on every sync cycle.
+												keysToClear.Add(syncStatusKey);
 										}
 									}
 									if( showErrorBaloon == true)
