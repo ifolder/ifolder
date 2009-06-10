@@ -13,6 +13,7 @@ IMAGE_FILES =								\
 	$(IMAGE_DIR)/ifolder16.png				\
 	$(IMAGE_DIR)/ifolder22.png				\
 	$(IMAGE_DIR)/ifolder24.png				\
+	$(IMAGE_DIR)/ifolder32.png				\
 	$(IMAGE_DIR)/ifolder48.png				\
 	$(IMAGE_DIR)/ifolder128.png				\
 	$(IMAGE_DIR)/ifolder-add-account48.png	\

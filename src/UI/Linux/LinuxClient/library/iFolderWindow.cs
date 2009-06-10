@@ -1231,43 +1231,43 @@ namespace Novell.iFolder
 
 		private Gdk.Pixbuf GetImage(iFolderHolder holder)
 		{
-			Gdk.Pixbuf returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+			Gdk.Pixbuf returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder32.png"));
 			if (holder.iFolder.IsSubscription)
                         {
-				returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png"));
+				returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-download32.png"));
 			}
 			else
 			{
 				if (holder.State == iFolderState.Synchronizing ||
 					holder.State == iFolderState.SynchronizingLocal)
 				{
-					returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync48.png"));
+					returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync32.png"));
 				}
 				else
 				{
 					// Set the pixbufs based on current state
 					if (holder.iFolder.HasConflicts)
 					{
-						returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
+						returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning32.png"));
 					}
 					else
 					{
 						switch (holder.State)
 						{
 							case iFolderState.Disconnected:
-								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning48.png"));
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning32.png"));
 								break; 
 							case iFolderState.FailedSync:
-								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png"));
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-error32.png"));
 								break;
 							case iFolderState.Initial:
-								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting32.png"));
 								break;
 							case iFolderState.Normal:
 							default:
 								if (holder.ObjectsToSync > 0)
 								{
-									returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting48.png"));
+									returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-waiting32.png"));
 								}
 								else
 								{
@@ -1276,16 +1276,16 @@ namespace Novell.iFolder
 										// Not an encrypted file
 										if( holder.iFolder.shared == true)
 										{
-											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder_user_48.png"));
+											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder_user_32.png"));
 										}
 										else
 										{
-											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
+											returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder32.png"));
 										}
 									}
 									else
 									{
-										returnimg = new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock-48.png"));
+										returnimg = new Gdk.Pixbuf(Util.ImagesPath("encrypt-ilock32.png"));
 									}
 								}
 								break;
