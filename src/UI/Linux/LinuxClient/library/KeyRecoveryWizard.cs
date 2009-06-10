@@ -186,7 +186,7 @@ namespace Novell.iFolder
                         vbox.PackStart(KeyRecoveryDruid, false,false ,0);
 
                         KeyRecoveryDruid.ShowHelp = true;
-                        //KeyRecoveryDruid.Help += new EventHandler(OnKeyRecoveryWizardHelp);
+                        KeyRecoveryDruid.Help += new EventHandler(OnKeyRecoveryWizardHelp);
 
 			KeyRecoveryDruid.AppendPage(CreateDomainSelectionPage());
 			KeyRecoveryDruid.AppendPage(CreateEnterPassphrasePage());
@@ -202,6 +202,14 @@ namespace Novell.iFolder
                         return vbox;
                 }
 
+		
+		 ///
+                /// Event Handlers
+                ///
+                private void OnKeyRecoveryWizardHelp(object o, EventArgs args)
+                {
+                        Util.ShowHelp("managingpassphrse.html", this);
+                }
 
 
 		public string selectedDomainName
