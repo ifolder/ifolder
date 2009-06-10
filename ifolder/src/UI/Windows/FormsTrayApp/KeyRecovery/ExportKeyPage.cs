@@ -56,7 +56,6 @@ namespace Novell.Wizard
         private System.Windows.Forms.Label recoveryAgentLabel;
         private Label label1;
         private System.Windows.Forms.TextBox recoveryAgent;
-        private string domainID;
         private string emailAddress;
 
         
@@ -114,13 +113,15 @@ namespace Novell.Wizard
             // Enable/disable the buttons.
             wizard = (KeyRecoveryWizard)this.Parent;
 
-            selectedDomain = wizard.DomainSelectionPage.SelectedDomain;
-            this.accountBox.Text = selectedDomain.Name;
+            selectedDomain = wizard.DomainSelectionPage.SelectedDomain ;
+            this.accountBox.Text = wizard.DomainSelectionPage.SelectedDomain.Name +"-"+ wizard.DomainSelectionPage.SelectedDomain.Host;
+
             DisplayRAName(selectedDomain);
+
+            this.filePath.Text = GetDefaultPath(selectedDomain.Name);
            
             UpdateSensitivity();
-           //domainComboBox.Focus();
-          
+                     
         }
 
         /// <summary>
@@ -140,17 +141,23 @@ namespace Novell.Wizard
         /// <param name="currentIndex">current index</param>
         internal override int ValidatePage(int currentIndex)
         {
-            bool result = false;
-            result = Export_func();
-
-            if (result == false)
+            if (!filePath.Text.EndsWith(".xml"))
             {
+                MessageBox.Show(TrayApp.Properties.Resources.oldDataFileError, TrayApp.Properties.Resources.oldDataFileNotSend, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return currentIndex;
+           }
+           
+              
+             if (Export_func())
+            {
+                return base.ValidatePage(currentIndex);
             }
-            
-            return base.ValidatePage(currentIndex);
+
+             return currentIndex;
         }
 
+
+     
         /// <summary>
         /// The core function calling simiaswebservice for export
         /// </summary>
@@ -158,25 +165,23 @@ namespace Novell.Wizard
 
         private bool Export_func()
         {
-            bool result = true;
+
+           /* if (!File.Exists(this.filePath.Text))
+                File.Create(this.filePath.Text); */
             try
             {
                 this.simiasWebService.ExportiFoldersCryptoKeys(selectedDomain.ID, this.filePath.Text);
                 
+                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MyMessageBox mmb = 
-                    new MyMessageBox(TrayApp.Properties.Resources.unableToExportMesg, 
-                    TrayApp.Properties.Resources.wizardText,
-                    null,MyMessageBoxButtons.OK, 
-                    MyMessageBoxIcon.Error);//"Unable to Export keys");
-                    mmb.ShowDialog();
-                    result = false;           
+                MessageBox.Show(TrayApp.Properties.Resources.unableToExportMesg, TrayApp.Properties.Resources.oldDataFileNotSend, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;     
                 
             }
 
-            return result;
+            return true;
         }
         
         
@@ -186,7 +191,7 @@ namespace Novell.Wizard
         private void UpdateSensitivity()
         {
             if (
-               this.filePath.Text.Length > 0 && this.filePath.Text.EndsWith(".xml") 
+               this.filePath.Text.Length > 0 
                )
             {
                 ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Next | KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Cancel;
@@ -237,7 +242,7 @@ namespace Novell.Wizard
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                // MessageBox.Show("DisplayRAName : {0}", ex.Message);
             }
@@ -251,7 +256,7 @@ namespace Novell.Wizard
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog fileDlg = new SaveFileDialog();
-            fileDlg.Filter = "XML Files|*.xml";
+           fileDlg.Filter = "XML Files|*.xml";
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
                this.filePath.Text = fileDlg.FileName;

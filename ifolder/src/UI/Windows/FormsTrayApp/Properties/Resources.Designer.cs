@@ -617,7 +617,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email adress:.
+        ///   Looks up a localized string similar to Email address:.
         /// </summary>
         internal static string emailAddress {
             get {

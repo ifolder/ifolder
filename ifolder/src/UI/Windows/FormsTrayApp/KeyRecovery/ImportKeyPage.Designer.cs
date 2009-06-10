@@ -59,7 +59,7 @@ namespace Novell.Wizard
             this.filePathLabel.Name = "filePathLabel";
             this.filePathLabel.Size = new System.Drawing.Size(144, 13);
             this.filePathLabel.TabIndex = 2;
-            this.filePathLabel.Text = TrayApp.Properties.Resources.importPageFilePathOne;
+            this.filePathLabel.Text = TrayApp.Properties.Resources.importPageFilePathOne+":";
             // 
             // LocationEntry
             // 

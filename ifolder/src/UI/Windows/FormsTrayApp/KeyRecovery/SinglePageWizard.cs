@@ -54,15 +54,13 @@ namespace Novell.Wizard
     {
                 
         private DomainItem selectedDomain = null;
-        private string recoveryAgent;
         private iFolderWebService ifWebService = null;
         private SimiasWebService simiasWebService = null;
         private KeyRecoveryWizard wizard;
 
         private Button browse;
-        private string domainID;
-        private string inputFilePath;
-        private string outputFilePath;
+        private string inputFilePath = null;
+        private string outputFilePath = null;
         
         /// <summary>
         /// Required design variable
@@ -94,9 +92,9 @@ namespace Novell.Wizard
             wizard = (KeyRecoveryWizard)this.Parent;
 
             selectedDomain = wizard.DomainSelectionPage.SelectedDomain;
-            this.accountBox.Text = selectedDomain.Name;
+            this.accountBox.Text = wizard.DomainSelectionPage.SelectedDomain.Name +"-"+ wizard.DomainSelectionPage.SelectedDomain.Host;
 
-                 
+            //InitialForExport();    
             ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Cancel;
              UpdateSensitivity();
              p12TextBox.Focus();
@@ -110,17 +108,22 @@ namespace Novell.Wizard
         /// <returns></returns>
         internal override int ValidatePage(int currentIndex)
         {
-            
+            if (this.newPassphrase.Text != this.confirmPassphrase.Text)
+            {
+                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, TrayApp.Properties.Resources.resetPassphraseError);
+                return currentIndex;
+            }
 
             if (Export_func())
                 if (KeyRecovery_func())
                     if (Import_func())
                     {
+                        // if all fine, move to final page
                         currentIndex = wizard.MaxPages - 4;
                         return base.ValidatePage(currentIndex);
-                        // if all fine, move to final page
+
                     }
-           return currentIndex;
+          return currentIndex;
         }
 
 
@@ -129,7 +132,7 @@ namespace Novell.Wizard
         internal override int DeactivatePage()
         {
 
-            try
+          try
             {   if(File.Exists(inputFilePath))
                 File.Delete(inputFilePath);
 
@@ -137,14 +140,14 @@ namespace Novell.Wizard
                 File.Delete(outputFilePath);
             }
               
-            catch(Exception e)
+            catch(Exception)
             {}
 
             return base.DeactivatePage();
 
         }
 
-       
+             
        
         /// <summary>
         /// obtain default path to perform operations on user box
@@ -158,6 +161,10 @@ namespace Novell.Wizard
             appdata = appdata.Substring(0, i);
             inputFilePath = appdata + "\\" + domainName + "_encry.xml";
             outputFilePath = appdata + "\\" + domainName + "_decry.xml";
+          /*  if (!File.Exists(inputFilePath))
+                File.Create(inputFilePath);
+            if(!File.Exists(outputFilePath))
+                File.Create(outputFilePath);*/
 
         }
 
@@ -168,19 +175,17 @@ namespace Novell.Wizard
             try
             {
                 GetDefaultPath(selectedDomain.Name);
+               
                 this.simiasWebService.ExportiFoldersCryptoKeys(selectedDomain.ID, inputFilePath);
                 result = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(TrayApp.Properties.Resources.unableToExportMesg);
-
+                MessageBox.Show(TrayApp.Properties.Resources.unableToExportMesg, TrayApp.Properties.Resources.resetPassphraseError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 return false;
 
             }
-            finally
-            { result = false;
            
-            }
 
             return result;
         }
@@ -212,7 +217,7 @@ namespace Novell.Wizard
             if ((!File.Exists(certname)) || (!certname.EndsWith(".p12")))
             {
 
-                MessageBox.Show(TrayApp.Properties.Resources.secretPathInvalid);
+                MessageBox.Show(TrayApp.Properties.Resources.secretPathInvalid,TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return false;
             }
 
@@ -221,31 +226,22 @@ namespace Novell.Wizard
             X509Certificate2 xcert;
             try
             {
-                if (pass.Length > 0)
-
-                    xcert = new X509Certificate2(certname, pass);
-                else
-
-                    throw new ArgumentNullException("pass");
-
-
-
+                xcert = new X509Certificate2(certname, pass);
+              
+                
                 Inner_keyRecovery inner = new Inner_keyRecovery();
-
-
-                bool flag = false;
-                inner.ProcessInputKeyFile(this.inputFilePath, this.outputFilePath, pass, xcert, flag, null);
+                inner.ProcessInputKeyFile(this.inputFilePath, this.outputFilePath, pass, xcert, false, null);
                 result = true;
             }
 
             catch
             {
-                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg);
+                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.resetPassphraseError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
 
             }
-            finally { result = false; }
+           
             
-
             return result;
         }
 
@@ -257,34 +253,30 @@ namespace Novell.Wizard
                 string onetimepp = null;
 
                 this.simiasWebService.ImportiFoldersCryptoKeys(selectedDomain.ID, this.newPassphrase.Text, onetimepp, this.outputFilePath);
-                result = true;
-               // bool rememberOption = this.simiasWebService.GetRememberOption(selectedDomain.ID);
+             
+                bool rememberOption = this.simiasWebService.GetRememberOption(selectedDomain.ID);
                 //clear the values
-               // this.simiasWebService.StorePassPhrase(selectedDomain.ID, "", CredentialType.None, false);
+               this.simiasWebService.StorePassPhrase(selectedDomain.ID, "", CredentialType.None, false);
                 //set the values
-               // this.simiasWebService.StorePassPhrase(selectedDomain.ID, this.newPassphrase.Text, CredentialType.Basic, rememberOption);
-
+                this.simiasWebService.StorePassPhrase(selectedDomain.ID, this.newPassphrase.Text, CredentialType.Basic, rememberOption);
+                result = true;
             
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg);
-
+               MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                 return false;
                 
             }
-            finally { 
-                result = false;
-               
-            }
+           
             return result;
         }
 
         private void UpdateSensitivity()
         {
-            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0 && this.newPassphrase.Text == this.newPassphrase.Text)
+            if (this.newPassphrase.Text.Length > 0 && this.confirmPassphrase.Text.Length > 0)
 
-                if (this.p12TextBox.Text.Length > 0 && this.passwdDomainTextBox.Text.Length >= 0)
+                if (this.p12TextBox.Text.Length > 0 && this.passwdDomainTextBox.Text.Length > 0)
                 {
                     ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Next | KeyRecoveryWizardButtons.Back | KeyRecoveryWizardButtons.Cancel;
                 }

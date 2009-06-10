@@ -567,8 +567,7 @@ namespace Novell.FormsTrayApp
 			this.pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
 			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
 			this.btnReset.Enabled = false;
-            this.buttonHelp.Enabled = false;
-			this.btnCancel.Select();
+           	this.btnCancel.Select();
 			try
 			{
 				if( this.DomainComboBox.Items.Count > 0)
@@ -683,7 +682,7 @@ namespace Novell.FormsTrayApp
 				System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
                 this.PerformResetPassword(this.domainID, this.oldpassword.Text, this.newPassword.Text);
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				MessageBox.Show(Resource.GetString("ResetError")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
 				this.success = false;
@@ -735,12 +734,12 @@ namespace Novell.FormsTrayApp
 				{
 					if( di.Authenticated)
 					{
-						DomainItem domainItem = new DomainItem(di.Name, di.ID);
+						DomainItem domainItem = new DomainItem(di.Name, di.ID, di.Host);
 						this.DomainComboBox.Items.Add(domainItem);
 					}
 				}
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 			}
 		}

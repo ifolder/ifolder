@@ -41,7 +41,7 @@ namespace Novell.Wizard
             this.domainSelectionFirst.Name = "domainSelectionFirst";
             this.domainSelectionFirst.Size = new System.Drawing.Size(299, 13);
             this.domainSelectionFirst.TabIndex = 2;
-            this.domainSelectionFirst.Text = "Select the account for which the passphrase must to be reset.";
+            this.domainSelectionFirst.Text = TrayApp.Properties.Resources.domainSelectionFirst;// "Select the account for which the passphrase must to be reset.";
             // 
             // label2
             // 
@@ -50,7 +50,7 @@ namespace Novell.Wizard
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(86, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "iFolder account :";
+            this.label2.Text = TrayApp.Properties.Resources.iFolderAcc;// "iFolder account :";
             // 
             // domainComboBox
             // 
@@ -68,7 +68,7 @@ namespace Novell.Wizard
             this.recoveryAgent.Name = "recoveryAgent";
             this.recoveryAgent.Size = new System.Drawing.Size(112, 13);
             this.recoveryAgent.TabIndex = 6;
-            this.recoveryAgent.Text = "Click Next to proceed.";
+            this.recoveryAgent.Text = TrayApp.Properties.Resources.domainSelectionPageSecond;
             // 
             // DomainSelectionPage
             // 

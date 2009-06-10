@@ -48,7 +48,7 @@ namespace Novell.Wizard
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "iFolder account :";
+            this.label1.Text = TrayApp.Properties.Resources.iFolderAcc;// "iFolder account :";
             // 
             // label2
             // 
@@ -57,7 +57,7 @@ namespace Novell.Wizard
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "New passphrase:";
+            this.label2.Text = TrayApp.Properties.Resources.newPassphrase;// "New passphrase:";
             // 
             // newPassphrase
             // 
@@ -84,7 +84,7 @@ namespace Novell.Wizard
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Confirm passphrase:";
+            this.label3.Text = TrayApp.Properties.Resources.confirmPassphrase;// "Confirm passphrase:";
             // 
             // iFolderAcc
             // 
@@ -109,12 +109,13 @@ namespace Novell.Wizard
             this.userNameLabel.Name = "userNameLabel";
             this.userNameLabel.Size = new System.Drawing.Size(61, 13);
             this.userNameLabel.TabIndex = 10;
-            this.userNameLabel.Text = "User name:";
+            this.userNameLabel.Text = TrayApp.Properties.Resources.userNameText;//"User name:";
             // 
             // userName
             // 
             this.userName.Location = new System.Drawing.Point(188, 194);
             this.userName.Name = "userName";
+            this.userName.ReadOnly = true;
             this.userName.Size = new System.Drawing.Size(211, 20);
             this.userName.TabIndex = 11;
             this.userName.TextChanged += new System.EventHandler(this.userName_TextChanged);
@@ -126,7 +127,7 @@ namespace Novell.Wizard
             this.passwordLabel.Name = "passwordLabel";
             this.passwordLabel.Size = new System.Drawing.Size(56, 13);
             this.passwordLabel.TabIndex = 12;
-            this.passwordLabel.Text = "Password:";
+            this.passwordLabel.Text = TrayApp.Properties.Resources.passwordText;//"Password:";
             // 
             // password
             // 
