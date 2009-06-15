@@ -203,7 +203,7 @@ namespace Novell.iFolder
 		public VBox packListView;
 		public string diskQuotaUsed = Util.GS("N/A");	
 		public string diskQuotaAvailable = Util.GS("N/A");	
-	
+
 
 		public int LastXPos
 		{
@@ -1325,8 +1325,6 @@ namespace Novell.iFolder
 				}
                         }while ((iFolderFilter).IterNext(ref iter));
 			}
-			tv.Model = viewstore;
-                        tv.HeadersVisible = true;
 		}
 
 		private Widget CreateListViewPane()
@@ -1338,7 +1336,7 @@ namespace Novell.iFolder
 			tv = new ListTreeView(this);
 			store = ifdata.iFolders;
 			viewstore = new ListStore(typeof (Gdk.Pixbuf), typeof (string), typeof (string), typeof (string), typeof (string), typeof (iFolderHolder));
-			tv.Model = iFolderFilter;
+			tv.Model = viewstore;
 			UpdateListViewItems();
                         tv.HeadersVisible = true;
 			tv.HeadersClickable = true;
@@ -1605,7 +1603,7 @@ namespace Novell.iFolder
 					{
 						iFoldersScrolledWindow.Visible = true;	
 						ifolderlistview.Visible = false;
-						UpdateLocalViewItemsMainThread();
+						GLib.Idle.Add(UpdateLocalViewItemsMainThread);
 					}
 						break;	
 
@@ -1614,7 +1612,7 @@ namespace Novell.iFolder
 					{
 						ifolderlistview.Visible = true;
 						iFoldersScrolledWindow.Visible = false;
-						UpdateListViewItems();
+						GLib.Idle.Add(UpdateListViewItemsMainThread);
 					}
 						break;	
 						
@@ -2032,9 +2030,15 @@ namespace Novell.iFolder
 		{
 			// Do the work on the main UI thread so that stuff isn't corrupted.
 			if( ifolderlistview.Visible )
-				UpdateListViewItems();
+				GLib.Idle.Add(UpdateListViewItemsMainThread);
 			else
 				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+		}
+
+		private bool UpdateListViewItemsMainThread()
+		{
+			UpdateListViewItems();
+			return false;
 		}
 		
 		private bool UpdateLocalViewItemsMainThread()
@@ -2399,6 +2403,7 @@ namespace Novell.iFolder
 		
 		private void OnRowActivated(object o, RowActivatedArgs args)
                 {
+			Console.WriteLine("OnRowActivated");
 			iFolderHolder ifolderholder = iFolderIconView.SelectedFolder;
                         if (ifolderholder == null || ifolderholder.iFolder == null) return;
                         
@@ -2819,7 +2824,7 @@ namespace Novell.iFolder
 			OniFolderIconViewSelectionChanged(null, EventArgs.Empty);
 			PopulateCombobox();
 			if( ifolderlistview.Visible )
-                                UpdateListViewItems();
+                                GLib.Idle.Add(UpdateListViewItemsMainThread);
 
 		}
 
@@ -3194,10 +3199,12 @@ namespace Novell.iFolder
 			// Update the item on the main thread
 			if( ifolderlistview.Visible )
 			{
-				UpdateListViewItems(true);
+				GLib.Idle.Add(UpdateListViewItemsMainThread);
 			}
 			else
+			{
 				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
+			}
 			UpdateCurrentServer();
 		}
 		
@@ -3452,8 +3459,7 @@ namespace Novell.iFolder
 		                                                ifdata.AcceptiFolderInvitation( holder.iFolder.ID, holder.iFolder.DomainID, downloadpath);
 						}
 						if( ifolderlistview.Visible )
-                            				UpdateListViewItems();
-                        			else
+                            				GLib.Idle.Add(UpdateListViewItemsMainThread);                        					  else
 							iFoldersIconView.UnselectAll();
 						rc = 0;
 
@@ -3503,7 +3509,7 @@ namespace Novell.iFolder
 
 					ifdata.DeleteiFolder(holder.iFolder.ID);
 					if( ifolderlistview.Visible )
-                                		UpdateListViewItems();
+                                		GLib.Idle.Add(UpdateListViewItemsMainThread);
                         		else
 						iFoldersIconView.UnselectAll();
 					
@@ -3541,7 +3547,7 @@ namespace Novell.iFolder
 				{
 					ifdata.DeleteiFolder(holder.iFolder.ID);
 					if( ifolderlistview.Visible )
-                            		        UpdateListViewItems();
+                            		        GLib.Idle.Add(UpdateListViewItemsMainThread);
                         		else
 						iFoldersIconView.UnselectAll();
 				}
@@ -3575,7 +3581,7 @@ namespace Novell.iFolder
 		private void RefilterListView()
 		{
 			iFolderFilter.Refilter();
-			UpdateListViewItems();
+			GLib.Idle.Add(UpdateListViewItemsMainThread);
 		}
 		
 		private void RefilterServerGroups()
@@ -4277,7 +4283,7 @@ namespace Novell.iFolder
 						}
 						
 						if( ifolderlistview.Visible )
-                            		    	        UpdateListViewItems();
+                            		    	        GLib.Idle.Add(UpdateListViewItemsMainThread);
                         			else
 							iFoldersIconView.UnselectAll();
 					}
