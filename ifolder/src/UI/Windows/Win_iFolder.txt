@@ -73,25 +73,42 @@
 				blank.html
 				bottomnav.js
 				collapsed.gif
+				config.js
 				defaultmenu.js
 				docnav.js
+				dom.js
 				expandable.css
 				expandable.js
 				expanded.gif
 				frameset.js
 				hdr_doc.html
+				helpidmap.js
 				index.html
 				jsglobal.js
+				leftnav.css
+				leftnav.html
+				leftnav.js
 				menu.css
 				menu.htm
 				menu.js
+				profiling.js
 				prototype.js
 				resource.js
+				rtlindex.html
 				search.js
 				search_set.js
 				search.xml
 				spacer.gif
 				styles.css
+				toc.js
+				toc_accountsprefs.xml
+				toc_bookinfo.xml
+				toc_coexistmig.xml
+				toc_myifolders.xml
+				toc_overview.xml
+				topic.js
+				topicidmap.js
+				topicsfound.html
 				topnav.js
 				<images>
 					blank.gif
@@ -133,6 +150,7 @@
 					t2_arrow_1.gif
 					t2_bg_1.gif
 					transparent.gif
+					tab_bottom.gif
 					virt_dot-line.gif
 			<images>
 				a_mig_asst1.png
@@ -155,6 +173,7 @@
 				if3_sharing_a.png
 				if3_upload.png
 				if_apbrmenu_a.png
+				if_conflict.png
 				if_menu_a.png
 				ifold36_encrypt_recover_a.png
 				ifolder22.png
