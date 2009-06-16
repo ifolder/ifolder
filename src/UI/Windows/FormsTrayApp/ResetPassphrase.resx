@@ -582,9 +582,6 @@
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Change password</value>
-  </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>ResetPassphrase</value>
   </data>

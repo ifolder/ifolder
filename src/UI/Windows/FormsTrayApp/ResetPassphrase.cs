@@ -169,6 +169,9 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResetPassphrase));
+            System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
+
+            this.Text = Resource.GetString("ResetTitle");
             this.panel = new System.Windows.Forms.Panel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.waterMark = new System.Windows.Forms.PictureBox();
