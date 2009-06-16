@@ -1638,7 +1638,8 @@ namespace Novell.iFolder
 				&& labeliDiskAvailable != null /*&& labeliDiskQouta != null */
 				&& currentDomain != null)
 			 {
-		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), currentDomain.Name);
+			     UriBuilder serverUri = new UriBuilder(currentDomain.HostUrl);	
+		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
 		     	     labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
 		     	   //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
 		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaUsed);
@@ -1685,7 +1686,8 @@ namespace Novell.iFolder
 
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"),domain.Name);
+			     UriBuilder serverUri = new UriBuilder(domain.HostUrl);	
+	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"),serverUri.Host);
 			
 				string iftype = null;	
 				if( (null == holder.iFolder.encryptionAlgorithm) || ("" == holder.iFolder.encryptionAlgorithm) )
@@ -1785,7 +1787,6 @@ namespace Novell.iFolder
 			//	return false;
 			
 			int domaincount = 0;
-			string domainName = null;
 			ViewUserDomainList.Clear();
 			CellRendererText cell = new CellRendererText();
 	        ViewUserDomainList.PackStart(cell, false);
@@ -1794,22 +1795,13 @@ namespace Novell.iFolder
 		    ViewUserDomainList.Model = store;
 			DomainInformation[] domains = domainController.GetDomains();
 
-
-			
-			//UriBuilder serverUri = null;
-        	//	store = new ListStore(typeof (string));
-			//ViewUserDomainList.Model = store;
 		
-		    //TODO: Move this code in a function and make call from on domain add and delete event as well as here/startup
 		    foreach (DomainInformation domain in domains)
 		    {
 		    	UriBuilder serverUri = new UriBuilder(domain.HostUrl); 
-		    	domainName = domain.Name + "-" + serverUri.Host; 
-		    	//domainName =  serverUri.Host; 
-		    	store.AppendValues(domainName);
+		    	store.AppendValues(domain.Name);
 		    	domaincount++;
 		    }
-		//	ViewUserDomainList.Active = 0;
 
 			
 			if(ComboBoxSelectionIndex >= 0)
