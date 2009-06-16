@@ -130,13 +130,16 @@ namespace Novell.Wizard
         }
 
         private void UpdateSensitivity()
-        { 
-          
+        {
+
             if ((ifWebService.GetSecurityPolicy(this.SelectedDomain.ID) != 0) && simiasWebService.IsPassPhraseSet(this.SelectedDomain.ID))
             {
-               ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel|KeyRecoveryWizardButtons.Next;
+                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Next;
             }
-           
+
+            else
+
+                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
         }
 
 
