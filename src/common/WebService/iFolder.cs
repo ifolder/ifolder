@@ -248,11 +248,15 @@ namespace Novell.iFolder.Web
 			this.ManagedPath = collection.ManagedPath;
 			this.MasterIncarnation = collection.MasterIncarnation;
 			this.Name = collection.Name;
-       		tmpMember = collection.Owner;
+       			tmpMember = collection.Owner;
+			
         		if (tmpMember != null)
 			{
-				this.Owner = tmpMember.Name;
 				this.OwnerID = tmpMember.UserID;
+				Domain domain = Store.GetStore().GetDomain(this.DomainID);
+				Member domainMember = domain.GetMemberByID(this.OwnerID);
+				string fullName = domainMember.FN;
+				this.Owner = (fullName != null) ? fullName : tmpMember.Name;
 			}
 			else
 			{
