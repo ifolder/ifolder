@@ -689,6 +689,7 @@ namespace Novell.iFolder
 			hbox = new HBox(false, 0);
 			ShowHideAllFoldersButton = new Button(hbox);
 			vbox.PackStart(ShowHideAllFoldersButton, false, false, 0);
+			//set relief style of the edges of the button
 			//ShowHideAllFoldersButton.Relief = ReliefStyle.None;
 
 			ShowHideAllFoldersButtonText = new Label(
@@ -703,6 +704,136 @@ namespace Novell.iFolder
 			ShowHideAllFoldersButton.Clicked +=
 				new EventHandler(ShowHideAllFoldersHandler);
 			buttontips.SetTip(ShowHideAllFoldersButton, Util.GS("Show or Hide iFolder"),"");	
+			///
+			/// DownloadAvailableiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			DownloadAvailableiFolderButton = new Button(hbox);
+			vbox.PackStart(DownloadAvailableiFolderButton, false, false, 0);
+	                //DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Download...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DownloadAvailableiFolderButton.Sensitive = false;
+			DownloadAvailableiFolderButton.Image= new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
+			DownloadAvailableiFolderButton.Clicked +=
+				new EventHandler(DownloadAvailableiFolderHandler);
+			buttontips.SetTip(DownloadAvailableiFolderButton, Util.GS("Download"),"");	
+
+		        ///
+			/// MergeAvailableiFolderButton
+			///
+			hbox = new HBox(false, 0);
+			MergeAvailableiFolderButton = new Button(hbox);
+			vbox.PackStart(MergeAvailableiFolderButton, false, false, 0);
+		        //MergeAvailableiFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Merge")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			MergeAvailableiFolderButton.Sensitive = false;
+			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("merge48.png")));
+			MergeAvailableiFolderButton.Clicked +=
+				new EventHandler(MergeAvailableiFolderHandler);
+			buttontips.SetTip(MergeAvailableiFolderButton, Util.GS("Merge"),"");	
+			///
+			/// RemoveMembershipButton
+			///
+			hbox = new HBox(false, 0);
+			RemoveMembershipButton = new Button(hbox);
+			vbox.PackStart(RemoveMembershipButton, false, false, 0);
+		        //RemoveMembershipButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Remove My Membership")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			RemoveMembershipButton.Sensitive = false;
+			RemoveMembershipButton.Visible = false;
+			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
+			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
+			buttontips.SetTip(RemoveMembershipButton, Util.GS("Remove My Membership"),"");	
+
+			///
+			/// DeleteFromServerButton
+			///
+			hbox = new HBox(false, 0);
+			DeleteFromServerButton = new Button(hbox);
+			vbox.PackStart(DeleteFromServerButton, false, false, 0);
+		        //DeleteFromServerButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Delete from server")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			DeleteFromServerButton.Sensitive = false;
+			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("delete_48.png")));
+			DeleteFromServerButton.Clicked +=
+				new EventHandler(DeleteFromServerHandler);
+			buttontips.SetTip(DeleteFromServerButton, Util.GS("Delete from server"),"");	
+			///
+			/// ShareSynchronizedFolderButton
+			///
+			hbox = new HBox(false, 0);
+			ShareSynchronizedFolderButton = new Button(hbox);
+			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
+                        //hareSynchronizedFolderButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Share with...")));
+			hbox.PackStart(buttonText, true, true, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+
+			ShareSynchronizedFolderButton.Sensitive= false;
+		        ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_share48.png")));
+			ShareSynchronizedFolderButton.Clicked +=
+				new EventHandler(OnShareSynchronizedFolder);
+			buttontips.SetTip(ShareSynchronizedFolderButton, Util.GS("Share with"),"");	
+
+			///
+			/// ResolveConflictsButton
+			///
+			hbox = new HBox(false, 0);
+			ResolveConflictsButton = new Button(hbox);
+			vbox.PackStart(ResolveConflictsButton, false, false, 0);
+		        //ResolveConflictsButton.Relief = ReliefStyle.None;
+
+			buttonText = new Label(
+				string.Format("<span>{0}</span>",
+							  Util.GS("Resolve conflicts...")));
+			hbox.PackStart(buttonText, false, false, 4);
+			buttonText.UseMarkup = true;
+			buttonText.UseUnderline = false;
+			buttonText.Xalign = 0;
+			
+			ResolveConflictsButton.Sensitive = false;
+			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-conflict48.png")));
+			ResolveConflictsButton.Clicked +=
+				new EventHandler(OnResolveConflicts);
+			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve conflicts"),"");	
+
+
 			///
 			/// Folder Actions
 			///
@@ -732,27 +863,6 @@ namespace Novell.iFolder
 			OpenSynchronizedFolderButton.Clicked +=
 				new EventHandler(OnOpenSynchronizedFolder);
 			buttontips.SetTip(OpenSynchronizedFolderButton, Util.GS("Open iFolder"),"");	
-			///
-			/// ResolveConflictsButton
-			///
-			hbox = new HBox(false, 0);
-			ResolveConflictsButton = new Button(hbox);
-			vbox.PackStart(ResolveConflictsButton, false, false, 0);
-		//	ResolveConflictsButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Resolve conflicts...")));
-			hbox.PackStart(buttonText, false, false, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			
-			ResolveConflictsButton.Sensitive = false;
-			ResolveConflictsButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-conflict48.png")));
-			ResolveConflictsButton.Clicked +=
-				new EventHandler(OnResolveConflicts);
-			buttontips.SetTip(ResolveConflictsButton, Util.GS("Resolve conflicts"),"");	
 
 			///
 			/// SynchronizeNowButton
@@ -777,27 +887,6 @@ namespace Novell.iFolder
 			buttontips.SetTip(SynchronizeNowButton, Util.GS("Synchronize Now"),"");	
 			
 
-			///
-			/// ShareSynchronizedFolderButton
-			///
-			hbox = new HBox(false, 0);
-			ShareSynchronizedFolderButton = new Button(hbox);
-			vbox.PackStart(ShareSynchronizedFolderButton, false, false, 0);
-//			ShareSynchronizedFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Share with...")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			ShareSynchronizedFolderButton.Sensitive= false;
-		    ShareSynchronizedFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_share48.png")));
-			ShareSynchronizedFolderButton.Clicked +=
-				new EventHandler(OnShareSynchronizedFolder);
-			buttontips.SetTip(ShareSynchronizedFolderButton, Util.GS("Share with"),"");	
 
 
 			///
@@ -846,94 +935,12 @@ namespace Novell.iFolder
 
 
 
-			///
-			/// DownloadAvailableiFolderButton
-			///
-			hbox = new HBox(false, 0);
-			DownloadAvailableiFolderButton = new Button(hbox);
-			vbox.PackStart(DownloadAvailableiFolderButton, false, false, 0);
-	//		DownloadAvailableiFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Download...")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			DownloadAvailableiFolderButton.Sensitive = false;
-			DownloadAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-download48.png")));
-			DownloadAvailableiFolderButton.Clicked +=
-				new EventHandler(DownloadAvailableiFolderHandler);
-			buttontips.SetTip(DownloadAvailableiFolderButton, Util.GS("Download"),"");	
 
 
-			///
-			/// MergeAvailableiFolderButton
-			///
-			hbox = new HBox(false, 0);
-			MergeAvailableiFolderButton = new Button(hbox);
-			vbox.PackStart(MergeAvailableiFolderButton, false, false, 0);
-		//	MergeAvailableiFolderButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Merge")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			MergeAvailableiFolderButton.Sensitive = false;
-			MergeAvailableiFolderButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("merge48.png")));
-			MergeAvailableiFolderButton.Clicked +=
-				new EventHandler(MergeAvailableiFolderHandler);
-			buttontips.SetTip(MergeAvailableiFolderButton, Util.GS("Merge"),"");	
+	
 
 
-			///
-			/// DeleteFromServerButton
-			///
-			hbox = new HBox(false, 0);
-			DeleteFromServerButton = new Button(hbox);
-			vbox.PackStart(DeleteFromServerButton, false, false, 0);
-		//	DeleteFromServerButton.Relief = ReliefStyle.None;
 
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Delete from server")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-
-			DeleteFromServerButton.Sensitive = false;
-			DeleteFromServerButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("delete_48.png")));
-			DeleteFromServerButton.Clicked +=
-				new EventHandler(DeleteFromServerHandler);
-			buttontips.SetTip(DeleteFromServerButton, Util.GS("Delete from server"),"");	
-
-
-			///
-			/// RemoveMembershipButton
-			///
-			hbox = new HBox(false, 0);
-			RemoveMembershipButton = new Button(hbox);
-			vbox.PackStart(RemoveMembershipButton, false, false, 0);
-		//	RemoveMembershipButton.Relief = ReliefStyle.None;
-
-			buttonText = new Label(
-				string.Format("<span>{0}</span>",
-							  Util.GS("Remove My Membership")));
-			hbox.PackStart(buttonText, true, true, 4);
-			buttonText.UseMarkup = true;
-			buttonText.UseUnderline = false;
-			buttonText.Xalign = 0;
-			RemoveMembershipButton.Sensitive = false;
-			RemoveMembershipButton.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder-error48.png")));
-			RemoveMembershipButton.Clicked += new EventHandler(RemoveMembershipHandler);
-			buttontips.SetTip(RemoveMembershipButton, Util.GS("Remove My Membership"),"");	
 
 			///
 			/// Spacer
@@ -2395,7 +2402,6 @@ namespace Novell.iFolder
 		
 		private void OnRowActivated(object o, RowActivatedArgs args)
                 {
-			Console.WriteLine("OnRowActivated");
 			iFolderHolder ifolderholder = iFolderIconView.SelectedFolder;
                         if (ifolderholder == null || ifolderholder.iFolder == null) return;
                         
@@ -3755,12 +3761,16 @@ namespace Novell.iFolder
 			RemoveMembershipButton.Sensitive = false;
 			//SynchronizedFolderTasks.Visible = false;
 			ShowHideAllFoldersButton.Visible = false;
-			RemoveMembershipButton.Visible = false;
+		//	RemoveMembershipButton.Visible = false;
 
 				
 			if (holder == null)
 			{
 				SynchronizedFolderTasks.Visible = false;
+			        if(RemoveMembershipButton.Visible && DeleteFromServerButton.Visible) 
+				{	
+					RemoveMembershipButton.Visible = false;
+				}
 			}
 			else
 			{
