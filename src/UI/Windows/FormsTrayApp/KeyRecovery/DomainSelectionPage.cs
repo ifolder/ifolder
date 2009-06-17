@@ -83,6 +83,7 @@ namespace Novell.Wizard
             {
                 DomainInformation[] domains;
                 domains = this.simiasWebService.GetDomains(true);
+                this.domainComboBox.Items.Clear();
                 foreach (DomainInformation di in domains)
                 {
                     
@@ -117,6 +118,7 @@ namespace Novell.Wizard
                base.ActivatePage(previousIndex);
                wizard = (KeyRecoveryWizard)this.Parent;
                GetLoggedInDomains();
+           
                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
                domainComboBox.Focus();
                 UpdateSensitivity();
