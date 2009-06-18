@@ -1704,7 +1704,7 @@ namespace Novell.FormsTrayApp
                     case SyncStatus.FileNameConflict:
                         message = string.Format(resourceManager.GetString("conflictFailure"), syncEventArgs.Name);
                         errorSyncingCurrentCollection = true;
-			infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
+			            infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
                         break;
                     case SyncStatus.Policy:
                         message = string.Format(resourceManager.GetString("policyFailure"), syncEventArgs.Name);
@@ -1750,7 +1750,7 @@ namespace Novell.FormsTrayApp
                         notifyType = NotifyType.SyncError;
                         if (Preferences.HidePolicyVoilationNotification)
                         {
-                           shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("policyTypeFailure"), currentSyncCollectionName), " ", BalloonType.Error);
+                           shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName), string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name), BalloonType.Error);
                         }
                         break;
                     case SyncStatus.DiskFull:
@@ -1776,6 +1776,18 @@ namespace Novell.FormsTrayApp
                         {
                             syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Path is too long for the file \"{0}\" to be downloaded.", syncEventArgs.Name));
                         }
+                        break;
+                    case SyncStatus.Busy:
+                        syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Could not synchronize because the server is busy: {0}", syncEventArgs.Name));
+                        break;
+                    case SyncStatus.ClientError:
+                        syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Client sent bad data and could not synchronize: {0}", syncEventArgs.Name));
+                        break;
+                    case SyncStatus.InUse:
+                        syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Could not synchronize because this file is in use: {0}", syncEventArgs.Name));
+                        break;
+                    case SyncStatus.ServerFailure:
+                        syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Updating the metadata for this file failed: {0}", syncEventArgs.Name));
                         break;
                     default:
                         message = string.Format(resourceManager.GetString("genericFailure"), syncEventArgs.Name);
