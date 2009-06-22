@@ -472,7 +472,9 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripMenuLeftPane
             // 
+            this.toolStripMenuLeftPane.Checked = true;
             this.toolStripMenuLeftPane.CheckOnClick = true;
+            this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
             this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
@@ -577,6 +579,7 @@ namespace Novell.FormsTrayApp
             // 
             this.MenuRefresh.Name = "MenuRefresh";
             resources.ApplyResources(this.MenuRefresh, "MenuRefresh");
+            this.MenuRefresh.Click += new System.EventHandler(this.menuRefresh_Click);
             // 
             // panel3
             // 
