@@ -232,14 +232,7 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to acceptDescription	Download &quot;{0}&quot; to ...acceptDescription	Download &quot;{0}&quot; to ...	
-        ///acceptError	An exception occurred while attempting to download the iFolder.	
-        ///access	Access	
-        ///accessDenied	You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again.	
-        ///AlsoRemoveMembership	Also remove my membership	
-        ///authenticateError	Authentication failed	
-        ///autoSync	Automatic sync	
-        ///Availa [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Checing for new iFolders....
         /// </summary>
         internal static string checkingForiFolders {
             get {
@@ -262,6 +255,15 @@ namespace TrayApp.Properties {
         internal static string declineError {
             get {
                 return ResourceManager.GetString("declineError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string delete {
+            get {
+                return ResourceManager.GetString("delete", resourceCulture);
             }
         }
         
@@ -1153,6 +1155,15 @@ namespace TrayApp.Properties {
         internal static string regular {
             get {
                 return ResourceManager.GetString("regular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string remove {
+            get {
+                return ResourceManager.GetString("remove", resourceCulture);
             }
         }
         

@@ -1794,10 +1794,16 @@ namespace Novell.FormsTrayApp
 					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
 					{
 						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership;
+                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
+                        toolStripBtnDelete.Text = Resources.delete;
+                        toolStripBtnDelete.ToolTipText = Resources.menuActionRemove;
 					}
 					else
 					{
 						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\remove_share_48.png"));
+                        toolStripBtnDelete.Text = Resources.remove;
+                        toolStripBtnDelete.ToolTipText = Resources.RemoveMyMembership;
 					}
 					// Show the available iFolder buttons
                     enableRemoteFoldersButtons(true);

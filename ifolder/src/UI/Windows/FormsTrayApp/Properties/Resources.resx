@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -125,171 +125,6 @@
   </data>
   <data name="Available" xml:space="preserve">
     <value>Not set up</value>
-  </data>
-  <data name="checkingForiFolders" xml:space="preserve">
-    <value>acceptDescription	Download "{0}" to ...acceptDescription	Download "{0}" to ...	
-acceptError	An exception occurred while attempting to download the iFolder.	
-access	Access	
-accessDenied	You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again.	
-AlsoRemoveMembership	Also remove my membership	
-authenticateError	Authentication failed	
-autoSync	Automatic sync	
-Available	Not set up	
-availablefordownload	Available for download	
-availableQuota	Available	
-b	Bytes	
-back	back	
-backText	Back	
-browseText	Browse	
-cancel	cancel	
-cancelText	Cancel	
-cannotShareMessage	It is not possible to share an encrypted iFolder. Only regular folders can be shared	
-cannotShareTitle	Cannot share iFolder	
-checkingForiFolders	Checking for new iFolders...	
-confirmPassphrase	Confirm passphrase:	
-declineError	An error was encountered while removing the iFolder.	
-deleteAction	&amp;amp:Delete	
-deleteClientDir	Deleting directory: {0}	
-deleteClientFile	Deleting file:{0}	
-deleteiFolder	This deletes the iFolder and its files from the server. Are you sure you sure you want to remove "{0}" form the server?	
-deleteUnknown	Deleting on server: {0}	
-details	Details	
-disconnected	Server unavailable	
-diskQuota	Disk quota	
-domainSelectionFirst	Select the account for which the passphrase needs to be reset.	
-domainSelectionPageName	domainSelectionPage	
-domainSelectionPageTitle	Select account	
-doneCheckingForiFolders	Done checking for new iFolders	
-downloadDir	Downloading directory: {0}	
-downloadFile	Downloading file: {0}	
-emailAddress	Email adress:	
-emailPageFirst	The encrypted key file was successfully exported.	
-emailPageName	EmailPage	
-emailPageSecond	Send this file to the administrator who will decrypt the key file and send it back to you. You can then use the decrypted key file to reset your passphrase using the second option of the wizard.	
-emailPageTitle	Old data file sent successfully. 	
-encrypted	Encrypted	
-enterPassphrasePageName	enterPassphrasePage	
-errorTitle	iFolder Error	
-exitMessage	If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next ime you login, Novell iFolder will reconcile any differences between your iFolder and Server	
-exitTitle	Exit Application	
-exportPageFilePath	Location to save old data file:	
-exportPageFirst	Gets the encrypted key file from the server and stores it locally.	
-exportPageName	ExportPage	
-exportPageRA	Recovery agent :	
-exportPageTitle	Obtain old data file	
-filesnFolders	Files/Folders to sync	
-finalPageFirst	Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data.	
-finalPageName	finalPage	
-finalPageTitle	Passphrase is reset successfully.	
-finishText	Finish	
-FolderDoesNotExistError	Then name of folder and iFolder must be the same	
-FolderDoesNotExistErrorDesc	You can merge an iFolder only with a folder with same name. Select a folder with same name as the iFolder and try again	
-FolderDoesNotExistErrorTitle	Folder doesnot exist	
-freeSpaceUnits	MB	
-gb	GB	
-help	help	
-helpText	Help	
-iFolderAcc	iFolder account :	
-iFolderError	An error was encountered while reading iFolders	
-iFolderErrorTitle	Unable to read iFolders	
-iFolderErrorTittle	Unable to read iFolders	
-iFolderOpenError	Unable to open iFolder {0}.	
-iFolderRevertError	An error was encountered while reverting the iFolder.	
-importErrorMesg	Unable to import keys. Try again.	
-importPageEncryCheck	Is the above file encrypted?	
-importPageFilePathOne	Location of the new data file	
-importPageFirstLine	The Passphrase is reset using the Decrypted key file.	
-importPageName	ImportPage	
-importPageOTP	One time password : 	
-infoPageFirst	To recover a lost passphrase, you need the secret file (private key of the certificate) and the password to it or the data file from the administrator.	
-infoPageName	InfoPage	
-infoPageSecond	If you don't have these parameters, you can use this wizard to export the old data file, which you can mail to your administrator who will decrypt and send it back to you. You can then use this new data file to reset your passphrase.	
-infoPageTitle	Welcome to the Passphrase Recovery Wizard	
-kb	KB	
-lastSyncTime	Last sync time	
-localDir	Found change in directory: {0}	
-localFile	Found changes in file: {0}	
-localSync	Checking for changes: {0}	
-logEntriesCleared	Log entries cleared.	
-login	Connect	
-loginError	Unable to authenticate to the domain.You have logged out of the account. Please login and try again.	
-logoff	Disconnect	
-mb	MB	
-menuActionRemove	Delete from server	
-mergeDescription	Merge "{0}" to ...	
-na	N/A	Not Available
-name	Name	
-networkPath	The selected location is on a network or non-physical drive. iFolders must reside on a physical drive. Please select a different location and try again.	
-newPassphrase	New passphrase:	
-next	next	
-nextText	Next	
-noifolder	No of iFolders	
-notApplicable	N/A	
-openErrorTitle	iFolder Open Error	
-owner	Owner	
-passwordText	Password:	
-PathDoesNotExist	 contain a folder with the same name as the iFolder.	
-pathExistsError	The loation you selected already contains a folder with the same name as this iFolder. Please select a different location and try again.	
-PathIncludesProgFilesDirError	The selected location includes the Program Files folder. The Program Files folder cannot contain an iFolder. Please select a different location and try again.	
-pathIncludesWinDirError	The selected location includes the Windows folder. The Windows folder cannot contain an iFolder. Please select a different lcoation and try again.	
-pathIniFolderError	The selected location is inside another iFolder. iFolders connot exist inside other iFolders. Please select a different location and try again.	
-pathInStoreError	The selected location is inside the iFolder data folder. Please select a different location and try again.	
-pathInvalidErrorTitle	Invalid Location	
-preSync	Checking for changes	
-recoveryError	Cannot reset passphrase. You have been logged out of the account.Please login and try again.	
-regular	Regular	
-RemoveMembershipMesg	This removes membership from iFolder and removes the iFolder from the list 	
-RemoveMembershipTitle	Remove your membership from {0}	
-RemoveMyMembership	Remove My Membership	
-removeTitle	Delete iFolder	
-resetPassphraseError	Passphrase reset failed	
-revertErrorTitle	iFolder Revert Error	
-selectionPageFive	You can exit the wizard at any step and work on subsequent steps later by using this page         	
-selectionPageFour	I have no secret file or data file.	
-selectionPageName	SelectionPage	
-selectionPageOne	Select an option to recover your passphrase.	
-selectionPageSecond	I have the secret file and the password to it	
-selectionPageThird	I have the new data file sent by the administrator.	
-selectionPageTitle	Select Passphrase Recovery step	
-server	Server	
-serverDefaultRA	Server_Default	
-setNewPassphraseTitle	Set New Passphrase	
-showiFolders	Hide available iFolders	
-singleAccountText	You have a single account. Click Next to proceed.	
-singleWizName	SingleWizPage	
-singleWizP12File	Location  of secret file: 	
-singleWizPageFirst	Passphrase is reset using the secret file and its password.	
-singleWizPageName	SingleWizPage	
-singleWizPasswd	Secret file password:	
-statusConflicts	Has Conflicts	
-statusSynced	Synchronized: {0}	
-statusSyncFailure	Incomplete synchronization	
-statusSyncing	Synchronizing	
-statusSyncingItems	{0} items to synchronize	
-statusSyncItemsFailed	{0} items not synchronized	
-statusUnknown	Unknown	
-successPageName	SuccessPage	
-syncComplete	Started synchronization: {0}	
-syncError	An error was encountered while synchronizing the iFolder.	
-syncErrorTitle	iFolder Synchronization Error	
-syncErrorTittle	iFolder Synchronization Error	
-synciFolder	Started synchronization: {0}	
-syncingDir	Synchronizing directory: {0}	
-syncingFile	Synchronizing file: {0}	
-thumbnails	Thumbnails	
-type	Type	
-unableToExportMesg	Unable to export keys.Try again	
-uploadDir	Uploading directory: {0}	
-uploadFile	Uploading file: {0}	
-usedQuota	Used	
-user	User	
-userNameText	User name:	
-verifyText	Verify	
-viewAvailableiFolders	View available iFolders	
-WaitConnect	Waiting to Connect	
-WaitSync	Waiting to synchronize	
-wizardName	passphraseRecoveryWizard	
-wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="declineError" xml:space="preserve">
     <value>An error was encountered while removing the iFolder.</value>
@@ -807,5 +642,14 @@ wizardText	Passphrase Recovery Wizard</value>
   </data>
   <data name="used" xml:space="preserve">
     <value>used</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Checing for new iFolders...</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Remove</value>
   </data>
 </root>
