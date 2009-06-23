@@ -1649,6 +1649,7 @@ namespace Novell.iFolder
 		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
 		     	     labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
 		     	   //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+			     PopulateUsedAvailableQuotaData(currentDomain);
 		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaAvailable);
   	         	     labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), diskQuotaUsed); 
 
@@ -3620,6 +3621,19 @@ namespace Novell.iFolder
 				iFoldersIconView.AddGroup(group);
 		}
 
+		public void PopulateUsedAvailableQuotaData(DomainInformation domain)
+		{
+			if (domain == null ) return;
+			try{
+				diskQuotaUsed = CalculateDiskUsed(domain.MemberUserID);
+				diskQuotaAvailable = CalculateDiskQouta(domain.MemberUserID);
+			   }
+			   catch
+			   {
+				diskQuotaUsed = Util.GS("N/A");	
+				diskQuotaAvailable = Util.GS("N/A");	
+			   }	
+		}		
 
 	   //Update the DiskQouta Value for all Listed Domain in iFolder List
        private void UpdateQoutaData(DomainInformation domain)
@@ -3629,8 +3643,9 @@ namespace Novell.iFolder
 		  if (domain == null) return;
 	      try 
 		  {		 
-			diskQuotaUsed = CalculateDiskUsed(domain.MemberUserID);
-			diskQuotaAvailable = CalculateDiskQouta(domain.MemberUserID);
+			//diskQuotaUsed = CalculateDiskUsed(domain.MemberUserID);
+			//diskQuotaAvailable = CalculateDiskQouta(domain.MemberUserID);
+			PopulateUsedAvailableQuotaData(domain);
 		  	str = string.Format(Util.GS("Disk Space Available: {0}"), diskQuotaAvailable );
 		  	str1 = string.Format(Util.GS("Disk Space Used: {0}"), diskQuotaUsed ) ;
 		  	str = str + "            " + str1;
