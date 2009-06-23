@@ -1649,8 +1649,8 @@ namespace Novell.iFolder
 		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
 		     	     labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
 		     	   //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
-		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaUsed);
-  	         	     labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), diskQuotaAvailable); 
+		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaAvailable);
+  	         	     labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), diskQuotaUsed); 
 
 			 }
 
