@@ -1079,10 +1079,10 @@ namespace Novell.iFolder
 				{
 					PassPhraseSet = false;
 				       string[] list = domainController.GetRAList (ConnectedDomain.ID);
-
+					
+					 RATreeStore.AppendValues( Util.GS("Server_Default"));
 				       foreach (string raagent in list )
 					       RATreeStore.AppendValues (raagent);
-					RATreeStore.AppendValues( Util.GS("None"));
 
 				}
 				else
@@ -1389,6 +1389,7 @@ namespace Novell.iFolder
 		{
 			bool NextPage = true;
 			string publicKey = null;
+			string memberUID = null;
 			iFolderData ifdata = iFolderData.GetData();
 			
 			try
@@ -1420,10 +1421,10 @@ namespace Novell.iFolder
 							TreeIter iter;
 							tSelect.GetSelected(out tModel, out iter);
 							recoveryAgentName = (string) tModel.GetValue(iter, 0);
-							if( recoveryAgentName == Util.GS("None"))
-								recoveryAgentName = null;
+							//if( recoveryAgentName == Util.GS("None"))
+							//	recoveryAgentName = null;
 						}
-						if( recoveryAgentName != null && recoveryAgentName != Util.GS("None") )
+						if( recoveryAgentName != null && recoveryAgentName != Util.GS("Server_Default") )
 						{
 							// Show Certificate..
 							byte [] RACertificateObj = domainController.GetRACertificate(ConnectedDomain.ID, recoveryAgentName);
@@ -1450,7 +1451,7 @@ namespace Novell.iFolder
 								}
 							}
 						}
-                        else
+                     /*   else
                         {
                             iFolderMsgDialog dg = new iFolderMsgDialog(
                                 this, 
@@ -1466,7 +1467,28 @@ namespace Novell.iFolder
                                 {
                                     NextPage = false;
                                 }
-                        }
+                        }*/
+
+
+			else
+			{
+				recoveryAgentName = "DEFAULT";
+				DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(ConnectedDomain.ID);
+				memberUID = domainInfo.MemberUserID;
+				iFolderWebService ifws = DomainController.GetiFolderService();
+				try{
+					publicKey = ifws.GetDefaultServerPublicKey(ConnectedDomain.ID,memberUID);
+				}
+				catch
+				{
+					return false;
+				}	
+				
+			}
+
+	
+
+	
 						if( NextPage)
 						{
 							Status passPhraseStatus = simws.SetPassPhrase (ConnectedDomain.ID, PassPhraseEntry.Text, recoveryAgentName, publicKey);
