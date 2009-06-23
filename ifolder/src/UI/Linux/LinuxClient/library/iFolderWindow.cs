@@ -133,7 +133,7 @@ namespace Novell.iFolder
 		private ScrolledWindow		iFoldersScrolledWindow,ifolderlistview;
 		private iFolderIconView	iFoldersIconView;
 		private HBox 				viewpane;
-		private ListTreeView 			tv;
+		public ListTreeView 			tv;
 		private static iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter,iFolderFilter,treeModelFilter;
 		private Timer				updateStatusTimer;
@@ -1348,7 +1348,7 @@ namespace Novell.iFolder
                         tv.HeadersVisible = true;
 			tv.HeadersClickable = true;
 			tv.Reorderable = true;
-			tv.Selection.Changed  +=  new EventHandler(OnSelectionChanged);
+		//	tv.Selection.Changed  +=  new EventHandler(OnSelectionChanged);
                         tv.RowActivated +=  OnRowActivated;
                         tv.AppendColumn ("", new CellRendererPixbuf(), "pixbuf", 0);
                         tv.AppendColumn (Util.GS("iFolder"), new CellRendererText (), "text", 1);
@@ -2826,7 +2826,7 @@ namespace Novell.iFolder
 
 		}
 
-		private void RefreshiFoldersHandler(object o, EventArgs args)
+		public void RefreshiFoldersHandler(object o, EventArgs args)
 		{
 			RefreshiFolders(true);
 		}
@@ -5282,24 +5282,30 @@ namespace Novell.iFolder
 
         	protected override bool OnButtonPressEvent (Gdk.EventButton evnt)
 		{
+			bool retValue = false;	
 			iFolderHolder holder = null;
 			Gtk.TreePath path = new Gtk.TreePath();
                         GetPathAtPos (System.Convert.ToInt16 (evnt.X), System.Convert.ToInt16 (evnt.Y), out path);
                         Gtk.TreeIter iter;
 			if( path != null )
 			{
-                        if ( this.Model.GetIter(out iter,path) ) 
+                        	if ( this.Model.GetIter(out iter,path) ) 
+				{
+                                	holder = (iFolderHolder) this.Model.GetValue (iter, 5);
+                        	}
+			        this.ifwin.tv.Selection.SelectIter(iter);		
+			}			
+			else
 			{
-                                holder = (iFolderHolder) this.Model.GetValue (iter, 5);
-                        }
+				this.ifwin.tv.Selection.UnselectAll();
+			}
 			iFolderIconView.SelectedFolder = holder;
-			this.ifwin.UpdateSensitivity();
 			switch(evnt.Button)
 			{
 				case 3:	// right-click 
 					Menu menu = new Menu();
 
-					if (holder.iFolder.IsSubscription)
+					if ( path != null &&  holder.iFolder.IsSubscription)
 					{
 						MenuItem item_download =
 							new MenuItem(Util.GS("Download..."));
@@ -5335,7 +5341,7 @@ namespace Novell.iFolder
 							item_remove_membership.Activated += this.ifwin.RemoveMembershipHandler;
 						}
 					}
-					else
+					else if (path != null && !holder.iFolder.IsSubscription)
 					{
 						MenuItem item_open =
 							new MenuItem (Util.GS("Open..."));
@@ -5420,19 +5426,36 @@ namespace Novell.iFolder
 						else
 							item_sync.Sensitive = false; 	*/
 					}
+					else
+					{
+						MenuItem item_refresh =
+						new MenuItem(Util.GS("Refresh"));
+						menu.Append(item_refresh);
+						item_refresh.Activated +=  this.ifwin.RefreshiFoldersHandler;
+						menu.ShowAll();
+						menu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+					}	
 
 					menu.ShowAll();
 
 					menu.Popup(null, null, null, 
 						IntPtr.Zero, 3, 
 						Gtk.Global.CurrentEventTime); 
-					return true; 
+					this.ifwin.UpdateSensitivity();
+					retValue = true; 
 					break;
+				
+				case 1:
+				case 2:
+					this.ifwin.UpdateSensitivity();
+					break;
+					retValue = true; 
+
 				default: return base.OnButtonPressEvent(evnt); 
 					break; 
 			}
-			}
-			return false;  
+
+			return retValue;  
 
 		}
 							
