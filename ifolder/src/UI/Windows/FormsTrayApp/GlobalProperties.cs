@@ -1023,6 +1023,11 @@ namespace Novell.FormsTrayApp
 									int imageIndex;
 									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 									tlvi.ImageIndex = imageIndex;
+                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    //FIXME: remove hardcode value 3
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    
 								}
 							}
 						}
@@ -1051,6 +1056,9 @@ namespace Novell.FormsTrayApp
 									int imageIndex;
 									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 									tlvi.ImageIndex = imageIndex;
+                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 								}
 							}
 						}
@@ -1089,6 +1097,9 @@ namespace Novell.FormsTrayApp
 								tlvi.Status = getItemState( ifolderObject, objectsToSync2, out imageIndex );
 								tlvi.ImageIndex = imageIndex;
 								tlvi.Tag = ifolderObject;
+                                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                listView1.Items[item.Index].ImageIndex = imageIndex;
+                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 							}
 
 							objectsToSync = 0;
@@ -1450,6 +1461,9 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				tlvi.Status = getItemState( ifolderObject, objectsToSync, out imageIndex );
 				tlvi.ImageIndex = imageIndex;
+                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                listView1.Items[item.Index].ImageIndex = imageIndex;
+                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 			}
 		}
 
@@ -2144,10 +2158,6 @@ namespace Novell.FormsTrayApp
          */ 
 		}
         private void iFolderContextMenu_Popup(object sender, CancelEventArgs e)
-        /*{
-
-        }
-		private void iFolderContextMenu_Popup(object sender, System.EventArgs e)*/
 		{
 			if ( selectedItem == null )
 			{
@@ -3161,6 +3171,7 @@ namespace Novell.FormsTrayApp
             DomainInformation[] domains;
             //Reading and Initilizing the Domain List.
             domains = this.simiasWebService.GetDomains(false);
+            LoginLogoff.Enabled = domains.Length > 0 ? true:false;
             domainListComboBox.Items.Clear();
             foreach (DomainInformation dw in domains)
             {
@@ -3264,21 +3275,21 @@ namespace Novell.FormsTrayApp
             setAuthState(simiasWebService.GetDomainInformation(selectedDomain.ID));
         }
 
-        private void setThumbnailView(bool visible)
+        private void setThumbnailView(bool value)
         {
             updateChangeViewMenuText();
             //show/hide panel2 that contains thumnail view.
-            this.iFolderView.Visible = visible;
-            this.localiFoldersHeading.Visible = visible;
-            panel2.Visible = visible;
+            this.iFolderView.Visible = value;
+            this.localiFoldersHeading.Visible = value;
+            panel2.Visible = value;
 
             //show/hide panel2 that contains detial view.
-            panel1.Visible = !visible;
-            listView1.Visible = !visible;
+            panel1.Visible = !value;
+            listView1.Visible = !value;
 
             //need to refresh when the view change from list to thumbnail
             //and set focus on listview when changed to listview.
-            if (visible)
+            if (value)
                 refreshAllInvoke();
             else  
                 setListViewItemSelected();
@@ -3286,6 +3297,7 @@ namespace Novell.FormsTrayApp
 
         private void showiFolderinListView()
         {
+            listView1.SuspendLayout();
             //do not want to refresh when in other view
             if (thumbnailView) return; 
             listView1.Items.Clear();
@@ -3314,16 +3326,17 @@ namespace Novell.FormsTrayApp
                     listView1.Items.Add(listViewItem1);
                 }
             }
-            this.ResumeLayout();
+            setListViewItemSelected();
+            listView1.ResumeLayout();
         }
 
         private void toolStripMenuThumbnails_Click(object sender, EventArgs e)
         {
             thumbnailView = !thumbnailView;
-            updateChangeViewMenuText();
-            showiFolderinListView();
             if (!thumbnailView)
-                setListViewItemSelected();
+            {
+                showiFolderinListView();
+            }
             setThumbnailView(thumbnailView);
         }
 
