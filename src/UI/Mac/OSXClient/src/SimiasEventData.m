@@ -79,6 +79,7 @@ static SimiasEventData	*sharedSimiasEventData = nil;
 {
 	[simiasEventDataLock lock];
 	[simiasEventQueue push:event];
+	[simiasHasDataLock tryLock];		
 	[simiasHasDataLock unlockWithCondition:HAS_EVENTS];
 	[simiasEventDataLock unlock];
 }
