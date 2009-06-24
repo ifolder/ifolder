@@ -344,6 +344,36 @@ namespace Novell.iFolder
 			
 			this.RefreshAvailableiFolderTimer = new Timer(new TimerCallback(RefreshAvailableiFolderTimer_click), null , 300000, 300000 );   //  5 mins default
 		}
+
+		private void UpdateRowInListView(string id)
+                {
+                        TreeIter iters;
+                        iFolderHolder holder = null;
+
+                        if( viewstore.GetIterFirst( out iters ))
+                        {
+                                do
+                                {
+                                        try
+                                        {
+                                                holder = (iFolderHolder)viewstore.GetValue(iters, 5);
+                                                if (holder != null)
+                                                {
+                                                        if( holder.iFolder.ID == id)
+                                                        {
+                                                                viewstore.SetValue(iters,0,(Gdk.Pixbuf)GetImage(holder));
+								viewstore.SetValue(iters,4,(string)holder.StateString);
+                                                                break;
+                                                        }
+                                                }
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                        }
+                                }while( viewstore.IterNext(ref iters) );
+                        }
+
+                }	
 		
 		///
 		/// Normal Page
@@ -4807,7 +4837,8 @@ namespace Novell.iFolder
 						UpdateStatus(string.Format(Util.GS(
 									"Checking for changes: {0}"), args.Name));
 					}
-
+					if( ifolderlistview.Visible )
+                                               UpdateRowInListView(args.ID);
 					break;
 				}
 				case Simias.Client.Event.Action.StartSync:
@@ -4828,6 +4859,8 @@ namespace Novell.iFolder
 						UpdateStatus(string.Format(Util.GS(
 										"Synchronizing: {0}"), args.Name));
 					}
+					if( ifolderlistview.Visible )
+                                               UpdateRowInListView(args.ID);
 					break;
 				}
 				case Simias.Client.Event.Action.StopSync:
@@ -4855,6 +4888,8 @@ namespace Novell.iFolder
 					 	UpdateQoutaData(domain); 
 					        UpdateServerInfoForSelectedDomain();	
 					}
+					if( ifolderlistview.Visible )
+                                               UpdateRowInListView(args.ID);
 					break;
 				}
 			}
