@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="iFolder.snk" />
+    <None Include="KeyRecovery" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -118,6 +119,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>if not exist C:\iFolder_stage mkdir C:\iFolder_stage
-copy $(TargetFileName) C:\iFolder_stage</PostBuildEvent>
+copy $(TargetFileName) C:\iFolder_stage
+copy $(ProjectDir)$(TargetName) C:\iFolder_stage</PostBuildEvent>
   </PropertyGroup>
 </Project>
