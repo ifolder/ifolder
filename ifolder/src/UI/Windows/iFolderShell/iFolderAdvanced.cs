@@ -2896,15 +2896,17 @@ namespace Novell.iFolderCom
 					ifWebService.SetiFolderSyncInterval(currentiFolder.ID, autoSync.Checked ? (int)syncInterval.Value : Timeout.Infinite);
 				}
 
+				// Since thick client user cannot set disk quota policy, so commenting the code. 
+
 				// Update the disk quota policy.
-				if (setLimit.Checked)
-				{
-					ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, (long)(long.Parse(limitEdit.Text) * megaByte));
-				}
-				else
-				{
-					ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, 0);
-				}
+				//if (setLimit.Checked)
+				//{
+				//	ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, (long)(long.Parse(limitEdit.Text) * megaByte));
+				//}
+				//else
+				//{
+				//	ifWebService.SetiFolderDiskSpaceLimit(currentiFolder.ID, 0);
+				//}
 
 				updateDiskQuotaDisplay();
 

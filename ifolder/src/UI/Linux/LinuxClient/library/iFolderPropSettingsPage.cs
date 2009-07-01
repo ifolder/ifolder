@@ -632,7 +632,8 @@ namespace Novell.iFolder
 				// read value, we need to save the currrent value
 				if(GetCurrentLimit() != ds.Limit)
 				{
-					SaveLimit();
+					// thick client user does not have right to set disk quota policy, so commenting the code.
+					//SaveLimit();
 				}
 			}
 		}
