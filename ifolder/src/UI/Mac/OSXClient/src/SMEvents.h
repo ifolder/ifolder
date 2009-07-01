@@ -44,6 +44,7 @@
 #define SYNC_ACTION_START		1
 #define SYNC_ACTION_STOP		2
 #define SYNC_ACTION_LOCAL		3
+#define SYNC_ACTION_NOPASSPHRASE        4
 
 #define NODE_CREATED			1
 #define NODE_DELETED			2

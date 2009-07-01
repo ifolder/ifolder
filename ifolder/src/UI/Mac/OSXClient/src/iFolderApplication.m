@@ -1097,6 +1097,18 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 			break;
 		}
+		case SYNC_ACTION_NOPASSPHRASE:
+		{
+			if(ifolder != nil)
+			{
+				[ifolder setSyncState:SYNC_STATE_NOPASSPHRASE];
+				itemSyncCount = 0;
+				NSString* syncMessage = [NSString stringWithFormat:NSLocalizedString(@"Passphrase not provided, will not sync the folder \"%@\"",@"No passphrase set"),[cse name]];
+				[self addLogTS:syncMessage];
+				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
+			}
+			break;
+		}
 		case SYNC_ACTION_START:
 		{
 			if(ifolder != nil)
