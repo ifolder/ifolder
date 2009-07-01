@@ -579,6 +579,10 @@ namespace Novell.iFolder
 
 								}*/	
 								break; 
+							case iFolderState.NoPassphrase:
+								newNormalPixbuf = WarningPixbuf;
+								newSpotlightPixbuf = WarningPixbufSpotlight;
+								break;
 							case iFolderState.FailedSync:
 								newNormalPixbuf = ErrorPixbuf;
 								newSpotlightPixbuf = ErrorPixbufSpotlight;

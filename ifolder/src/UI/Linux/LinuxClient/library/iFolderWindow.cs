@@ -1289,6 +1289,9 @@ namespace Novell.iFolder
 							case iFolderState.Disconnected:
 								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning32.png"));
 								break; 
+							case iFolderState.NoPassphrase:
+								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning32.png"));
+								break; 
 							case iFolderState.FailedSync:
 								returnimg = new Gdk.Pixbuf(Util.ImagesPath("ifolder-error32.png"));
 								break;
@@ -4870,6 +4873,36 @@ namespace Novell.iFolder
 					 	UpdateQoutaData(domain); 
 					        UpdateServerInfoForSelectedDomain();	
 					}
+					if( ifolderlistview.Visible )
+                                                UpdateRowInListView(args.ID);
+					break;
+				}
+				case Simias.Client.Event.Action.NoPassphrase:
+				{
+					if(SyncBar != null)
+						SyncBar.Hide();
+		
+					UpdateStatus(Util.GS("Idle..."));
+
+                                       //Activate the Revert Button
+					iFolderHolder holder = null;
+                   			holder = iFolderIconView.SelectedFolder;
+					if ( (holder != null)
+                     			   &&  (holder.iFolder != null)
+                     			   && (!holder.iFolder.IsSubscription)
+                     		           && (null != this.RemoveiFolderButton) )
+					{
+				        	this.RevertMenuItem.Sensitive = true;	
+						this.RemoveiFolderButton.Sensitive = true;
+						holder.State = iFolderState.NoPassphrase;
+					}	
+					
+					/*if (args.Name != null )
+					{
+                         			DomainInformation domain = domainController.GetDomain(args.ID);
+					 	UpdateQoutaData(domain); 
+					        UpdateServerInfoForSelectedDomain();	
+					}*/
 					if( ifolderlistview.Visible )
                                                 UpdateRowInListView(args.ID);
 					break;
