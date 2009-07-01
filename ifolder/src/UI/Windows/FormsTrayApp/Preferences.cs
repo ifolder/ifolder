@@ -1950,6 +1950,7 @@ namespace Novell.FormsTrayApp
                 domain.DomainInfo.Authenticated = true;
                 FormsTrayApp.globalProp().updateifListViewDomainStatus(domain.DomainInfo.ID, true);
                 FormsTrayApp.globalProp().AddDomainToUIList(domain.DomainInfo);
+                FormsTrayApp.globalProp().UpdateiFolderStatus(domain.DomainInfo.Authenticated, domain.DomainInfo.ID);
             }
             return result;
         }
@@ -1990,6 +1991,7 @@ namespace Novell.FormsTrayApp
                     }
                     FormsTrayApp.globalProp().updateifListViewDomainStatus(domain.DomainInfo.ID, false);
                     (FormsTrayApp.globalProp()).RemoveDomainFromUIList(domain.DomainInfo.ID, null);
+                    FormsTrayApp.globalProp().UpdateiFolderStatus(domain.DomainInfo.Authenticated, domain.DomainInfo.ID); 
                 }
             }
             return result;
