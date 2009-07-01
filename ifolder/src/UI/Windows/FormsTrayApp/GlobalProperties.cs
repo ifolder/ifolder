@@ -1064,7 +1064,7 @@ namespace Novell.FormsTrayApp
 						}
 						break;
 					}
-					case Action.StopSync:
+                    case Action.NoPassphrase:
 					{
 						lock(ht)
 						{
@@ -1074,38 +1074,23 @@ namespace Novell.FormsTrayApp
 							{
 								iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
 
-								uint objectsToSync2 = 0;
-								try
-								{
-									SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
-									objectsToSync2 = syncSize.SyncNodeCount;
-								}
-								catch {}
+								ifolderObject.iFolderState = iFolderState.NoPassphrase;
 
-								if (objectsToSync2 == 0)
-								{
-									ifolderObject.iFolderState = syncEventArgs.Yielded? iFolderState.Synchronizing: syncEventArgs.Connected ? 
-										iFolderState.Normal : 
-										iFolderState.Disconnected;
-								}
-								else
-								{
-									ifolderObject.iFolderState = iFolderState.FailedSync;
-								}
-
-								int imageIndex;
-								tlvi.Status = getItemState( ifolderObject, objectsToSync2, out imageIndex );
+                                int imageIndex;
+								tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 								tlvi.ImageIndex = imageIndex;
 								tlvi.Tag = ifolderObject;
                                 ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
                                 listView1.Items[item.Index].ImageIndex = imageIndex;
                                 listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 							}
-
-							objectsToSync = 0;
+                           objectsToSync = 0;
 						}
 
 						statusBar1.Text = resourceManager.GetString("statusBar1.Text");
+                        syncLog.AddMessageToLog(DateTime.Now,
+                            string.Format("Passphrase not provided, will not sync the folder \"{0}\""));
+
 						if (initialConnect)
 						{
 							initialConnect = false;
@@ -1116,9 +1101,63 @@ namespace Novell.FormsTrayApp
                         this.MenuRevert.Enabled = true;
                         this.menuActionRevert.Enabled = true;
 
-
 						break;
 					}
+                    case Action.StopSync:
+                    {
+                        lock (ht)
+                        {
+                            TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
+
+                            if (tlvi != null)
+                            {
+                                iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+
+                                uint objectsToSync2 = 0;
+                                try
+                                {
+                                    SyncSize syncSize = ifWebService.CalculateSyncSize(syncEventArgs.ID);
+                                    objectsToSync2 = syncSize.SyncNodeCount;
+                                }
+                                catch { }
+
+                                if (objectsToSync2 == 0)
+                                {
+                                    ifolderObject.iFolderState = syncEventArgs.Yielded ? iFolderState.Synchronizing : syncEventArgs.Connected ?
+                                        iFolderState.Normal :
+                                        iFolderState.Disconnected;
+                                }
+                                else
+                                {
+                                    ifolderObject.iFolderState = iFolderState.FailedSync;
+                                }
+
+                                int imageIndex;
+                                tlvi.Status = getItemState(ifolderObject, objectsToSync2, out imageIndex);
+                                tlvi.ImageIndex = imageIndex;
+                                tlvi.Tag = ifolderObject;
+                                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                listView1.Items[item.Index].ImageIndex = imageIndex;
+                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                            }
+
+                            objectsToSync = 0;
+                        }
+
+                        statusBar1.Text = resourceManager.GetString("statusBar1.Text");
+                        if (initialConnect)
+                        {
+                            initialConnect = false;
+                            updateEnterpriseTimer.Start();
+                        }
+
+                        //turing Revert Option to Active
+                        this.MenuRevert.Enabled = true;
+                        this.menuActionRevert.Enabled = true;
+
+
+                        break;
+                    }
 				}
 			}
 			catch {}
@@ -1554,6 +1593,10 @@ namespace Novell.FormsTrayApp
 						imageIndex = 1;
 						status = TrayApp.Properties.Resources.preSync;
 						break;
+                    case iFolderState.NoPassphrase:
+                        imageIndex = 9;  //FIXME : need to get new image for this.
+                        status = TrayApp.Properties.Resources.noPassphrase;
+                        break;
 					default:
 						// TODO: what icon to use for unknown status?
 						imageIndex = 0;

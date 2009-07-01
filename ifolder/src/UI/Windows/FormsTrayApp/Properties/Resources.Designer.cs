@@ -995,6 +995,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passphrase not provided.
+        /// </summary>
+        internal static string noPassphrase {
+            get {
+                return ResourceManager.GetString("noPassphrase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to N/A.
         /// </summary>
         internal static string notApplicable {
