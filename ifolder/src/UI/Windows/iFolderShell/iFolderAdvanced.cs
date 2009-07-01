@@ -3252,7 +3252,9 @@ namespace Novell.iFolderCom
                 this.Text = this.currentiFolder.Name + " " + resourceManager.GetString("properties");
 				this.Icon = new Icon(Path.Combine(basePath, @"ifolder_16.ico"));
 				this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine(loadPath, @"res\ifolder48.png"));
-				this.iFolderName.Text = this.currentiFolder.Name;
+                this.iFolderName.Text = this.currentiFolder.Name;
+                if (this.currentiFolder.Name.Length > 20)
+                    this.iFolderName.Text = this.currentiFolder.Name.Substring(0,20) + "...";
                 if (this.currentiFolder.UnManagedPath.ToString().Length > 30)
 				    this.iFolderLocation.Text = ((string)this.currentiFolder.UnManagedPath).Substring(0,30);
                 else
