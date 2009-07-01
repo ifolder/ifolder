@@ -3355,6 +3355,12 @@ namespace Novell.FormsTrayApp
                     iFolderObject ifObj = (iFolderObject)tlvi.Tag;
                     int imageIndex;
                     tlvi.Status = getItemState(ifObj, 0, out imageIndex);
+                    //Fix: Getting random exception while removing last domain when ifolder is syncing.
+                    if ((simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)) == null)
+                    {
+                        //don't perform any action
+                        continue;
+                    }
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,
