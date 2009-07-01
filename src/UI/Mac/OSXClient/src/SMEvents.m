@@ -267,6 +267,8 @@
 		return SYNC_ACTION_START;
 	else if([actStr compare:@"StartLocalSync"] == 0)
 		return SYNC_ACTION_LOCAL;
+	else if([actStr compare:@"NoPassphrase"] == 0)
+		return SYNC_ACTION_NOPASSPHRASE;
 	else
 		return SYNC_ACTION_STOP;
 }

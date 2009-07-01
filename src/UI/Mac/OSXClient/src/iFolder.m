@@ -409,6 +409,13 @@
 			//Set the status
 			[properties setObject:NSLocalizedString(@"Preparing to synchronize", @"iFolder Status Message") forKey:@"Status"];
 		}
+		else if([self syncState] == SYNC_STATE_NOPASSPHRASE)
+		{
+			//Set the image
+			statusImage = [NSImage imageNamed:@"ifolder-warning48"];
+			//Set the status
+			[properties setObject:NSLocalizedString(@"Passphrase not provided", @"No passphrase iFolder Status Message") forKey:@"Status"];
+		}
 		else if([ [properties objectForKey:@"HasConflicts"] boolValue])
 		{
 			//Set the image
