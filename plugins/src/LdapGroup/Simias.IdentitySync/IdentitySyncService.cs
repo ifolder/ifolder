@@ -623,7 +623,11 @@ namespace Simias.IdentitySynchronization
 						{
 							bool IsChildGroup = false;
 							Member GroupAsMember = domain.GetMemberByID(GroupID);
-							string ParentGroups = GroupAsMember.Properties.GetSingleProperty( "UserGroups" ).Value as string;
+                                                        string ParentGroups = null;
+							Property p = GroupAsMember.Properties.GetSingleProperty( "UserGroups" );
+							if(p != null)
+								ParentGroups = p.Value as string;
+
 							if(ParentGroups != null && ParentGroups != String.Empty)
 							{
 								// no point in 
@@ -811,6 +815,11 @@ namespace Simias.IdentitySynchronization
 
                         foreach(string memberDn in memberArray)
                         {
+				if(memberDn.Equals(String.Empty))
+				{
+					// in case of empty string,continue
+					continue;
+				}
 				Simias.Storage.Member member = null;
 				bool CreateTempUserGroups = false;
 				try
@@ -1188,7 +1197,7 @@ namespace Simias.IdentitySynchronization
 					Member member = c.GetMemberByID( Zombie.UserID );
 					if (member != null && member.IsOwner == true )
 					{
-						if( CheckForSecondaryAdmin = true && GroupIDs.Length > 0 ) //make sure this cond gets executed only once, even if collections change
+						if( CheckForSecondaryAdmin = true && GroupIDs != null && GroupIDs.Length > 0 ) //make sure this cond gets executed only once, even if collections change
 						{
 							// foreach group this zombie user belongs to, check if the group has a right secondary admin
 							foreach( string groupID in GroupIDs)
@@ -1367,7 +1376,7 @@ namespace Simias.IdentitySynchronization
 								// OK, this guy has been disabled past
 								// the policy time so delete him from the
 								// domain roster
-								if ( dt.AddSeconds( Service.deleteGracePeriod ) < DateTime.Now )
+								if ( dt.AddSeconds( DeleteGracePeriod ) < DateTime.Now )
 								{
 									string group = null;
 									string [] groupIDs = null;
@@ -1424,7 +1433,6 @@ namespace Simias.IdentitySynchronization
 										}
 									}
 									DeletePOBox( State, cMember );
-									log.Debug("tmp calling OrphanCollections with groupIDs length :"+groupIDs.Length);
 									OrphanCollections( State, cMember, groupIDs );
 									RemoveMemberships( State, cMember );
 
@@ -1860,11 +1868,11 @@ namespace Simias.IdentitySynchronization
 								
 								memObject.Properties.DeleteSingleProperty("TempUserGroups");
 								domain.Commit( memObject );
-								log.Debug("The user was disabled because he was removed from group (not from e-dir), so tempgrouplist prop is not useful going forward so it was deleted, For this user, disabledAt prop was null , user id :"+memObject.UserID);
+								log.Debug("The user was disabled because he was removed from group (not from e-dir), so tempgrouplist prop is not useful going forward so it was deleted, For this user, disabledAt prop was null , userDN :"+dn);
 							}
 						}
 						else
-							log.Debug("The user was disabled by ldapsync (because he was deleted in e-dir), so tempgrouplist prop would not be deleted , userid :"+memObject.UserID);												
+							log.Debug("The user was disabled by ldapsync (because he was deleted in e-dir), so if user has tempgrouplist prop, then it would not be deleted , userDN :"+dn);												
 		
 
                                         }
