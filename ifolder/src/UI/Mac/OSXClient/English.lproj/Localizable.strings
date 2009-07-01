@@ -412,7 +412,8 @@
 /* Confirmation dialog button to remove users from an iFolder
    Dialog button when a user selects to share with more than 20 users in Properties/Sharing
    Initial Setup Dialog Button
-    No Certificate Alert panel button */
+    No Certificate Alert panel button 
+	Negative confiramtion to download default ifolder and merge */
 "No" = "No";
 
 /* No Encryption Certificate Title */
@@ -1006,3 +1007,15 @@
 
 /*Dont support message*/
 "This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu." = "This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu.";
+
+/*Folder already exists*/
+"A folder with the name you specified already exists" = "A folder with the name you specified already exists";
+
+/*Download default ifolder merge option*/
+"Click Yes to merge or No to select a different location" = "Click Yes to merge or No to select a different location";
+
+/*No passphrase set*/
+"Passphrase not provided, will not sync the folder \"%@\"" = "Passphrase not provided, will not sync the folder \"%@\"";
+
+/*No passphrase iFolder Status Message*/
+"Passphrase not provided" = "Passphrase not provided";

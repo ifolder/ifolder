@@ -39,6 +39,7 @@
 #define SYNC_STATE_OK				3
 #define SYNC_STATE_OUT_OF_SYNC		4
 #define SYNC_STATE_DISCONNECTED		5
+#define SYNC_STATE_NOPASSPHRASE     6
 
 
 /*
