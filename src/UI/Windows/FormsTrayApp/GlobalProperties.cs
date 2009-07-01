@@ -1929,8 +1929,9 @@ namespace Novell.FormsTrayApp
         private void populateLocaliFolderInfo(iFolderWeb ifolderWeb)
         {
             enableLocalFoldersLabels(true);
-            
-            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
+            //TODO: considring for now, 20 as displayable name lenght, to be changed appropriately
+            int displayableLength = 20;
+            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + FormatString(ifolderWeb.Name, displayableLength);
             this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
             iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
             foreach (iFolderUser ifolderUser in ifolderUsers)
@@ -1951,7 +1952,8 @@ namespace Novell.FormsTrayApp
         private void populateServeriFolderInfo(iFolderWeb ifolderWeb)
         {
             enableServerFolderLabels(true);
-            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
+            int displayableLength = 20;
+            this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + FormatString(ifolderWeb.Name, displayableLength);
             this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
 
             if (ifolderWeb.encryptionAlgorithm != null && ifolderWeb.encryptionAlgorithm != "")
@@ -3502,7 +3504,16 @@ namespace Novell.FormsTrayApp
                 mmb.Dispose();
             }
         }
+
+        public string FormatString(string original, int displaySize)
+        {
+            string formated = original;
+            if (original.Length > 20)
+                formated = original.Substring(0, displaySize) + "...";
+
+            return formated;
         }
+      }
 	}
 
 
