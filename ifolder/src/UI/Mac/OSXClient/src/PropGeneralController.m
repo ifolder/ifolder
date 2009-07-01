@@ -223,7 +223,8 @@
 		@try
 		{
 			NSLog(@"Saving the disk space settings");
-			[ifolderService SetiFolderDiskSpace:limitValue oniFolder:[curiFolder ID]];
+			// thick client user does not have right to set disk quota policy so commenting the code
+			//[ifolderService SetiFolderDiskSpace:limitValue oniFolder:[curiFolder ID]];
 		}
 		@catch (NSException *e)
 		{
