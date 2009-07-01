@@ -1613,6 +1613,32 @@ namespace Novell.FormsTrayApp
             }
         }
 
+        public void UpdateiFolderStatus(bool IsDomainAuthenticated, string domainID)
+        {
+            TileListViewItem tlvi;
+            iFolderObject ifolderObject;
+            int imageIndex;
+            foreach (iFolderWeb ifolder in ifolderArray)
+            {
+                if (ifolder.DomainID == domainID && !ifolder.IsSubscription)
+                {
+                    tlvi = (TileListViewItem)ht[ifolder.ID];
+                    ifolderObject = (iFolderObject)tlvi.Tag;
+                    if (IsDomainAuthenticated)
+                    {
+                        ifolderObject.iFolderState = iFolderState.Normal;
+                        ifolderObject.iFolderWeb.State = "WaitSync";
+                    }
+                    else
+                    {
+                        ifolderObject.iFolderState = iFolderState.Disconnected;
+                    }
+                    tlvi.Status = getItemState(ifolderObject, 0, out imageIndex);
+                    tlvi.ImageIndex = imageIndex;
+                }
+            }
+        }
+
 		public void refreshiFolders(string search/*Domain domain*/)
 		{
             if (search == null) search = "";
@@ -1903,7 +1929,7 @@ namespace Novell.FormsTrayApp
         private void populateLocaliFolderInfo(iFolderWeb ifolderWeb)
         {
             enableLocalFoldersLabels(true);
-
+            
             this.titleName.Text = TrayApp.Properties.Resources.name + ":  " + ifolderWeb.Name;
             this.titleOwner.Text = TrayApp.Properties.Resources.owner + ":  " + ifolderWeb.Owner;
             iFolderUser[] ifolderUsers = ifWebService.GetiFolderUsers(ifolderWeb.ID);
@@ -3476,7 +3502,7 @@ namespace Novell.FormsTrayApp
                 mmb.Dispose();
             }
         }
+        }
 	}
-}
 
 
