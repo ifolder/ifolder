@@ -1694,6 +1694,7 @@ namespace Novell.iFolder
 			DomainInformation dom = addDomainThread.Domain;
 			string serverName = addDomainThread.ServerName;
 			Exception e = addDomainThread.Exception;
+			Gdk.Pixbuf certPixbuf1 = new Gdk.Pixbuf(Util.ImagesPath("ifolder-application-x-x509-ca-cert_48.png"));
 			if (dom == null && e != null)
 			{
 				if (e is DomainAccountAlreadyExistsException)
@@ -1770,7 +1771,6 @@ namespace Novell.iFolder
 							string.Format(Util.GS("Certificate Expired! for \"{0}\" iFolder server.  You should examine this server's identity certificate carefully.Do you still want to continue?"), serverName),
 							cert.ToString(true));
 						
-						Gdk.Pixbuf certPixbuf1 = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
 						if (certPixbuf1 != null && dialog1.Image != null)
 							dialog1.Image.Pixbuf = certPixbuf1;
 						
@@ -1788,9 +1788,8 @@ namespace Novell.iFolder
 								string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), serverName),
 								cert.ToString(true));
 		
-							Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
-							if (certPixbuf != null && dialog.Image != null)
-								dialog.Image.Pixbuf = certPixbuf;
+							if (certPixbuf1 != null && dialog.Image != null)
+								dialog.Image.Pixbuf = certPixbuf1;
 		
 							int rc = dialog.Run();
 							dialog.Hide();
@@ -1832,9 +1831,8 @@ namespace Novell.iFolder
 								string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), serverName),
 								cert.ToString(true));
 		
-							Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
-							if (certPixbuf != null && dialog.Image != null)
-								dialog.Image.Pixbuf = certPixbuf;
+							if (certPixbuf1 != null && dialog.Image != null)
+								dialog.Image.Pixbuf = certPixbuf1;
 		
 							int rc = dialog.Run();
 							dialog.Hide();

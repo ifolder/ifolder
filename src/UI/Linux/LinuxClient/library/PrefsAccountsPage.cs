@@ -712,7 +712,7 @@ namespace Novell.iFolder
 							string.Format(Util.GS("iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."), dom.Host),
 							cert.ToString(true));
 
-						Gdk.Pixbuf certPixbuf = Util.LoadIcon("gnome-mime-application-x-x509-ca-cert", 48);
+						Gdk.Pixbuf certPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder-application-x-x509-ca-cert_48.png"));
 						if (certPixbuf != null && dialog.Image != null)
 							dialog.Image.Pixbuf = certPixbuf;
 
