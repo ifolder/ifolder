@@ -62,6 +62,7 @@ IMAGE_FILES =								\
 	$(IMAGE_DIR)/ifolder-upload32.png         \
 	$(IMAGE_DIR)/ifolder-waiting32.png         \
 	$(IMAGE_DIR)/ifolder-warning32.png         \
+	$(IMAGE_DIR)/ifolder-application-x-x509-ca-cert_48.png   \
 	$(IMAGE_DIR)/ifolder_user_32.png		
 
 
