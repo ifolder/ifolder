@@ -75,7 +75,13 @@
 
 					[self addUser:newUser];
 					if([[curiFolder OwnerUserID] compare:[newUser UserID]] == 0)
+					{
 						[ownerName setStringValue:[newUser FN]];
+					}
+					if([[curiFolder CurrentUserID] compare:[newUser UserID]] == 0)
+					{
+						currentUser = newUser;
+					}
 				}
 			}
 			isOwner = ([[curiFolder OwnerUserID] compare:[curiFolder CurrentUserID]] == 0);
@@ -140,28 +146,38 @@
 //============================================================
 - (IBAction)addSelectedUsers:(id)sender
 {
-	if(!hasAdminRights)
+	BOOL sharingIsEnabled = [ifolderService GetDisableSharingPolicy:[currentUser UserID] foriFolderID:[curiFolder ID] whoseOwnerIs:[curiFolder OwnerUserID] inDomain:[curiFolder DomainID]];
+	if(sharingIsEnabled)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"You do not have access to add users to this iFolder", @"Error dialog title when users attempt to share and they don't have access"), 
-		NSLocalizedString(@"OK", @"Error dialog button when users attempt to share and they don't have access"), nil, nil, 
-		propertiesWindow, nil, nil, nil, nil, 
-		NSLocalizedString(@"Contact the owner of the iFolder if changes need to be made.", @"Error dialog message when users attempt to share and they don't have access"));
-	}
-	else
-	{
-		if([searchedUsers numberOfSelectedRows] > 20)
+		if(!hasAdminRights)
 		{
-			NSBeginAlertSheet([NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", @"Dialog title when a user selects to share with more than 20 users in Properties/Sharing"), [searchedUsers numberOfSelectedRows]], 
-				NSLocalizedString(@"Yes", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"), NSLocalizedString(@"No", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"),
-				nil, propertiesWindow, self, 
-				@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
-				nil, nil, 
-				NSLocalizedString(@"A large number of users is selected.", @"Dialog question when a user selects to share with more than 20 users in Properties/Sharing"));
+			NSBeginAlertSheet(NSLocalizedString(@"You do not have access to add users to this iFolder", @"Error dialog title when users attempt to share and they don't have access"), 
+			NSLocalizedString(@"OK", @"Error dialog button when users attempt to share and they don't have access"), nil, nil, 
+			propertiesWindow, nil, nil, nil, nil, 
+			NSLocalizedString(@"Contact the owner of the iFolder if changes need to be made.", @"Error dialog message when users attempt to share and they don't have access"));
 		}
 		else
 		{
-			[self addAllSelectedUsers];
+			if([searchedUsers numberOfSelectedRows] > 20)
+			{
+				NSBeginAlertSheet([NSString stringWithFormat:NSLocalizedString(@"Do you want to share with all %d selected users?", @"Dialog title when a user selects to share with more than 20 users in Properties/Sharing"), [searchedUsers numberOfSelectedRows]], 
+					NSLocalizedString(@"Yes", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"), NSLocalizedString(@"No", @"Dialog button when a user selects to share with more than 20 users in Properties/Sharing"),
+					nil, propertiesWindow, self, 
+					@selector(addSelectedUsersResponse:returnCode:contextInfo:), 
+					nil, nil, 
+					NSLocalizedString(@"A large number of users is selected.", @"Dialog question when a user selects to share with more than 20 users in Properties/Sharing"));
+			}
+			else
+			{
+				[self addAllSelectedUsers];
+			}
 		}
+	}
+	else
+	{
+		NSRunAlertPanel(NSLocalizedString(@"Policy Vilolation",@"Policy violation title"),
+						NSLocalizedString(@"Sharing is disabled so this iFolder cannot be shared",@"Policy violation message"),
+						NSLocalizedString(@"OK",@"OKButton Text"),nil,nil);
 	}
 }
 

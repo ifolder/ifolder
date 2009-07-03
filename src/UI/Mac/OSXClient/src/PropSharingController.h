@@ -49,6 +49,7 @@
 	BOOL						hasAdminRights;
 	BOOL						isOwner;
 	NSString					*searchAttribute;
+	User                        *currentUser;
 
     IBOutlet NSArrayController	*usersController;
     IBOutlet NSTableView		*currentUsers;

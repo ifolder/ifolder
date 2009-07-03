@@ -120,6 +120,7 @@
 -(BOOL) RunClientUpdate:(NSString*)domainID withDownloadPath:(NSString*)path;
 -(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd;
 -(NSString*)GetDefaultServerPublicKey:(NSString*)domainID forUser:(NSString*)userID;
+-(BOOL)GetDisableSharingPolicy:(NSString*)userID foriFolderID:(NSString*)ifolderID whoseOwnerIs:(NSString*)ownerID inDomain:(NSString*)domainID;
 @end
 
 #endif // __iFolderService__
