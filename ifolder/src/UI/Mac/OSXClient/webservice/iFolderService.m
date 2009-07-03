@@ -1840,7 +1840,40 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 
 
 
+-(BOOL)GetDisableSharingPolicy:(NSString*)userID foriFolderID:(NSString*)ifolderID whoseOwnerIs:(NSString*)ownerID inDomain:(NSString*)domainID
+{
+	BOOL status;
+	
+	struct soap *pSoap = lockSoap(soapData);
+	
+	NSAssert((userID != nil),@"userID was nil");
+	NSAssert((ifolderID != nil),@"ifolderID was nil");
+	NSAssert((ownerID != nil),@"ownerID was nil");
+	NSAssert((domainID != nil),@"domainID was nil");
+	
+	struct _ns1__GetDisableSharingPolicy  getDisableSharingPolicyInput;
+	struct _ns1__GetDisableSharingPolicyResponse getDisableSharingPolicyResponse;
+	
+	getDisableSharingPolicyInput.currentUserID = (char*)[userID UTF8String];
+	getDisableSharingPolicyInput.iFolderID = (char*)[ifolderID UTF8String];
+	getDisableSharingPolicyInput.OwnerID = (char*)[ownerID UTF8String];
+	getDisableSharingPolicyInput.DomainID = (char*)[domainID UTF8String];
+	
+	int err_code =  soap_call___ns1__GetDisableSharingPolicy(
+				pSoap,
+				[simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+				NULL,
+				&getDisableSharingPolicyInput,
+				&getDisableSharingPolicyResponse);
+		
+	handle_soap_error(soapData,@"iFolderService.GetDisableSharingPolicy");
 
+	status = (BOOL)getDisableSharingPolicyResponse.GetDisableSharingPolicyResult;
+	
+	unlockSoap(soapData);
+	
+	return status;
+}
 
 
 -(NSNumber*) ChangePassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd

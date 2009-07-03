@@ -1019,3 +1019,9 @@
 
 /*No passphrase iFolder Status Message*/
 "Passphrase not provided" = "Passphrase not provided";
+
+/*Policy violation title*/
+"Policy Vilolation" = "Policy Vilolation";
+
+/*Policy violation message*/
+"Sharing is disabled so this iFolder cannot be shared" = "Sharing is disabled so this iFolder cannot be shared";
