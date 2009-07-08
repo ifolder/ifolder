@@ -502,12 +502,15 @@ namespace Novell.iFolder
 		if(result)
 		{
 		 string memberUID = domainInfo.MemberUserID;
-	         string publicKey = null;
+	        // string publicKey = null;
 
 		try{	
-			//Console.WriteLine("Inside recover");
                     this.simws.ExportRecoverImport(domainInfo.ID, memberUID, this.newPassphrase.Text);
-			KeyRecoveryDruid.Page = FinishPage;
+		   //set the values
+                         this.simws.StorePassPhrase(domainInfo.ID, this.newPassphrase.Text, CredentialType.Basic,this.simws.GetRememberOption(domainInfo.ID));
+			
+
+		KeyRecoveryDruid.Page = FinishPage;
 			}
 			catch(Exception)
 			{
