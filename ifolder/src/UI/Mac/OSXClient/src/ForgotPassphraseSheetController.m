@@ -118,6 +118,9 @@
 			if(statusCode == 0/*ns1__StatusCodes__Success*/ || statusCode == 1/*ns1__StatusCodes__SuccessInGrace*/)
 			{
 				[[iFolderData sharedInstance] exportRecoverImport:[domainID stringValue] forUser:[domID userID] withPassphrase:[enterNewPP stringValue]];
+				
+				[[iFolderData sharedInstance] clearPassPhrase: [domainID stringValue]];
+				[[iFolderData sharedInstance] storePassPhrase: [domainID stringValue] PassPhrase:[enterNewPP stringValue]  andRememberPP:[rememberPP state]];				
 				[[iFolderData sharedInstance] refresh:NO];
 				[forgotPPSheet orderOut:nil];
 				[NSApp endSheet:forgotPPSheet];
