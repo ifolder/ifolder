@@ -124,7 +124,6 @@ namespace Novell.Wizard
         /// <param name="currentIndex">current index</param>
         internal override int ValidatePage(int currentIndex)
         {
-
             DomainInformation[] domains;
             DomainInformation selectedDomainInfo = null;
             domains = this.simiasWebService.GetDomains(true);
@@ -133,21 +132,20 @@ namespace Novell.Wizard
             //check for equality
             if (this.newPassphrase.Text != this.confirmPassphrase.Text)
             {
-                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, 
+                    TrayApp.Properties.Resources.resetPassphraseError,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return currentIndex;
             }
-
             //obtain domain information
             foreach (DomainInformation di in domains)
             {
-
                 if (di.Authenticated && di.ID == wizard.DomainSelectionPage.SelectedDomain.ID)
                 {
                     selectedDomainInfo = (DomainInformation)di;
-
                 }
             }
-
             bool result = false;
             Domain domain = new Domain(selectedDomainInfo);
 
@@ -161,9 +159,11 @@ namespace Novell.Wizard
 
                     if (status.statusCode != StatusCodes.Success)
                     {
-                        MessageBox.Show(Resources.loginError,TrayApp.Properties.Resources.authenticateError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        MessageBox.Show(Resources.loginError,
+                            TrayApp.Properties.Resources.authenticateError,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                         return -999;
-                      
                     }
 
                     result = true;
@@ -171,57 +171,37 @@ namespace Novell.Wizard
                 }
             }
             catch (Exception)
-
             {
-                MessageBox.Show(Resources.loginError, TrayApp.Properties.Resources.authenticateError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.loginError, 
+                    TrayApp.Properties.Resources.authenticateError, 
+                    MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
                            
                     return -999;
-               
-            
             }
-        
-
             if (result)
             {
-
                 string memberUID = selectedDomainInfo.MemberUserID;
-                string publicKey = null;
-
+                
                 try
                 {
-                    publicKey = this.ifolderWebService.GetDefaultServerPublicKey(selectedDomainInfo.ID, memberUID);
                     this.simiasWebService.ExportRecoverImport(selectedDomainInfo.ID, memberUID, this.newPassphrase.Text);
-                    passPhraseStatus = null;
-
-                    passPhraseStatus = this.simiasWebService.SetPassPhrase(selectedDomainInfo.ID, this.newPassphrase.Text, "DEFAULT", publicKey);
-                    result = true;
+                    //set the values
+                    this.simiasWebService.StorePassPhrase(selectedDomainInfo.ID, 
+                                                              this.newPassphrase.Text, 
+                                                              CredentialType.Basic,
+                                                             this.simiasWebService.GetRememberOption(selectedDomainInfo.ID)); 
                 }
                 catch (Exception )
                 {
-
                    MessageBox.Show(Resources.recoveryError,
                      Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
-                   
                      return -999;
-                  
                 }
-
-
             }
-
-            if (passPhraseStatus.statusCode != StatusCodes.Success)
-            {
-               MessageBox.Show(Resources.recoveryError,
-                        Resources.resetPassphraseError, MessageBoxButtons.OK,MessageBoxIcon.Error);
-              
-                return currentIndex;
-               
-               
-            }
-                currentIndex = wizard.MaxPages - 4;
-                return base.ValidatePage(currentIndex);
-
-                        
+          
+            currentIndex = wizard.MaxPages - 4;
+            return base.ValidatePage(currentIndex);
         }
 
         private void userName_TextChanged(object sender, EventArgs e)
