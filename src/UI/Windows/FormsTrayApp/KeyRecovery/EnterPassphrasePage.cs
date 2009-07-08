@@ -185,16 +185,17 @@ namespace Novell.Wizard
             {
 
                 string memberUID = selectedDomainInfo.MemberUserID;
-                string publicKey = null;
-
+                
                 try
                 {
-                    publicKey = this.ifolderWebService.GetDefaultServerPublicKey(selectedDomainInfo.ID, memberUID);
+                   
                     this.simiasWebService.ExportRecoverImport(selectedDomainInfo.ID, memberUID, this.newPassphrase.Text);
-                    passPhraseStatus = null;
-
-                    passPhraseStatus = this.simiasWebService.SetPassPhrase(selectedDomainInfo.ID, this.newPassphrase.Text, "DEFAULT", publicKey);
-                    result = true;
+                    //set the values
+                    this.simiasWebService.StorePassPhrase(selectedDomainInfo.ID,
+                                                              this.newPassphrase.Text,
+                                                              CredentialType.Basic,
+                                                             this.simiasWebService.GetRememberOption(selectedDomainInfo.ID)); 
+                    
                 }
                 catch (Exception )
                 {
@@ -209,15 +210,7 @@ namespace Novell.Wizard
 
             }
 
-            if (passPhraseStatus.statusCode != StatusCodes.Success)
-            {
-               MessageBox.Show(Resources.recoveryError,
-                        Resources.resetPassphraseError, MessageBoxButtons.OK,MessageBoxIcon.Error);
-              
-                return currentIndex;
-               
-               
-            }
+          
                 currentIndex = wizard.MaxPages - 4;
                 return base.ValidatePage(currentIndex);
 
