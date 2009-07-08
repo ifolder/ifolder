@@ -395,9 +395,16 @@ namespace Simias.IdentitySynchronization
 			if ( member != null )
 			{
 				bool timeStampPresent = false;
+				string CurrentDn = null;
+				try
+				{
+					CurrentDn = member.Properties.GetSingleProperty( "DN" ).Value as string;
+				}
+				catch{}
 
 				if(UserGuid != null && String.Compare(member.UserID, UserGuid) != 0)
-					return;
+					if(CurrentDn != null && DN != null && String.Compare(CurrentDn.ToLower(), DN.ToLower()) != 0)
+						return;
 					
 				if ( Properties != null )
 				{
