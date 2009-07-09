@@ -130,12 +130,33 @@ NSString* defiFolderID;
 	}
 	else
 	{
-		//download the default iFolder
-		iFolder* tempiFolder = nil;
-		tempiFolder = [[iFolderData sharedInstance] getiFolder:defiFolderID];
-		if(tempiFolder != nil)
+		BOOL isDir;
+		int option;
+		//int merge = NO;
+		if([[NSFileManager defaultManager] fileExistsAtPath:[ifolderPath stringValue] isDirectory:&isDir] && isDir)
 		{
-			[[iFolderWindowController sharedInstance] acceptiFolderInvitation:defiFolderID InDomain:domID toPath:[ifolderPath stringValue] canMerge:NO];
+			 option = NSRunAlertPanel(NSLocalizedString(@"A folder with the name you specified already exists",@"Folder already exists"),NSLocalizedString(@"Click Yes to merge or No to select a different location",@"Download default ifolder merge option"),NSLocalizedString(@"Yes",@"   Confirmation dialog to download default ifolder and merge"),NSLocalizedString(@"No",@"Negative confiramtion to download default ifolder and merge"),nil);
+			
+			if(option != NSAlertDefaultReturn)
+			{
+				return;
+			}
+			else
+			{
+				//iFolder* tempiFolder = [[iFolderData sharedInstance] mergeiFolder:defiFolderID InDomain:domID toPath:[ifolderPath stringValue]];
+				[[iFolderWindowController sharedInstance] acceptiFolderInvitation:defiFolderID InDomain:domID toPath:[ifolderPath stringValue] canMerge:YES];
+				//merge = YES;
+			}
+		}
+		else
+		{
+			//download the default iFolder
+			//iFolder* tempiFolder = nil;
+			//tempiFolder = [[iFolderData sharedInstance] getiFolder:defiFolderID];
+			//if(tempiFolder != nil)
+			//{
+				[[iFolderWindowController sharedInstance] acceptiFolderInvitation:defiFolderID InDomain:domID toPath:[ifolderPath stringValue] canMerge:NO];
+			//}			
 		}
 	}
 	
@@ -188,8 +209,11 @@ NSString* defiFolderID;
 	//Set the default iFolder path
 	NSString* homeDir = NSHomeDirectory();
 	iFolderDomain* dom = [[iFolderData sharedInstance] getDomain:domainID];
-
 	homeDir = [homeDir stringByAppendingFormat:@"/ifolder/%@/%@",[dom name],[dom userName]];
+	homeDir = [homeDir stringByAppendingFormat:@"/%@",NSLocalizedString(@"Default",@"DefaultDirName")];
+	homeDir = [homeDir stringByAppendingFormat:@"_%@",[dom userName]];
+	[ifolderPath setStringValue:homeDir];
+
 	[security setEnabled:NO];
 	
 	defiFolderID = [[[iFolderData sharedInstance] getDefaultiFolder:[dom ID]] retain];
@@ -205,14 +229,9 @@ NSString* defiFolderID;
 		[security setState:1 atRow:0 column:0]; //Set Encryption
 		secPolicy = [[iFolderData sharedInstance] getSecurityPolicy:domainID];
 		[self setSecurityButtonState];
-		
-		//homeDir = [homeDir stringByAppendingFormat:@"/%@",[dom userName]];
-		homeDir = [homeDir stringByAppendingFormat:@"/%@",NSLocalizedString(@"Default",@"DefaultDirName")];
-		homeDir = [homeDir stringByAppendingFormat:@"_%@",[dom userName]];
-
 		[createDefaultiFolder setTitle:NSLocalizedString(@"Create Default iFolder",@"To Upload default iFolder Text")];
 		[createButton setTitle:NSLocalizedString(@"Create",@"Create Default iFolder Text")];
-		
+
 		if([[dom hostURL] hasPrefix:@"https"])
 		{
 			[defaultSecureSync setEnabled:NO];
@@ -234,8 +253,7 @@ NSString* defiFolderID;
 		[createDefaultiFolder setTitle:NSLocalizedString(@"Download Default iFolder",@"To download default iFolder Text")];
 		[createButton setTitle:NSLocalizedString(@"Download",@"Download Default iFolder Text")];		
 	}
-	[ifolderPath setStringValue:homeDir];
-		
+	
 	[createDefaultiFolder setState:NSOnState];
 	[createButton setEnabled:YES];
 	
