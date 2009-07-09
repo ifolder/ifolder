@@ -567,18 +567,13 @@ namespace Novell.iFolder
 						switch (holder.State)
 						{
 							case iFolderState.Disconnected:
-//			                  		        if (networkDetect.Connected)
-//								{
-									newNormalPixbuf = WarningPixbuf;
-									newSpotlightPixbuf = WarningPixbufSpotlight;
-/*								}
-								else
-								{
-									newNormalPixbuf = NwDisconnectPixBuf;
-									newSpotlightPixbuf = NwDisconnectPixbufSpotlight;
-
-								}*/	
+								newNormalPixbuf = WarningPixbuf;
+								newSpotlightPixbuf = WarningPixbufSpotlight;
 								break; 
+							case iFolderState.NoPassphrase:
+								newNormalPixbuf = ErrorPixbuf;
+								newSpotlightPixbuf = ErrorPixbufSpotlight;
+								break;
 							case iFolderState.FailedSync:
 								newNormalPixbuf = ErrorPixbuf;
 								newSpotlightPixbuf = ErrorPixbufSpotlight;
@@ -587,10 +582,6 @@ namespace Novell.iFolder
 								newNormalPixbuf = WaitPixbuf;
 								newSpotlightPixbuf = WaitPixbufSpotlight;
 								break;
-/*							case iFolderState.NetworkCableDisc:	
-							       newNormalPixbuf = NwDisconnectPixBuf;
-							       newSpotlightPixbuf = NwDisconnectPixbufSpotlight;
-							       break;*/
 							case iFolderState.Normal:
 							default:
 								if (holder.ObjectsToSync > 0)

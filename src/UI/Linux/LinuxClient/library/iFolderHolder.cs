@@ -83,6 +83,11 @@ namespace Novell.iFolder
 		/// </summary>
 		Disconnected,
 
+		/// <summary>
+		/// Passphrase not provided. 
+		/// </summary>
+		NoPassphrase
+
 		///<summary>
 		/// Network Cable Disconnected.
 		/// </summmary>
@@ -313,6 +318,9 @@ namespace Novell.iFolder
 							break;
 						case iFolderState.FailedSync:
 							stateString = Util.GS("Incomplete synchronization");
+							break;
+						case iFolderState.NoPassphrase:
+							stateString = Util.GS("Passphrase not provided");
 							break;
 						case iFolderState.Disconnected:
 							stateString = Util.GS("Server unavailable");
