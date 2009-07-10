@@ -973,7 +973,7 @@ namespace Simias.ADLdapProvider
                                                 {
                                                         while (enumVals.MoveNext())
                                                         {
-								if(isGropuAlreadyprocessed(groupList, distinguishedName) == false)
+								if(isGropuAlreadyprocessed(groupList, (System.String) enumVals.Current) == false)
 								{
                                                                 	groupmembers += (System.String) enumVals.Current;
                                                                 	groupmembers += ";";
