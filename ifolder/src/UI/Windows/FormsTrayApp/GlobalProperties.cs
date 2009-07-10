@@ -1025,6 +1025,9 @@ namespace Novell.FormsTrayApp
 									tlvi.ImageIndex = imageIndex;
                                     ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
                                     listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    //FIXME: remove hardcode value 3
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    
 								}
 							}
 						}
@@ -1055,9 +1058,48 @@ namespace Novell.FormsTrayApp
 									tlvi.ImageIndex = imageIndex;
                                     ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
                                     listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 								}
 							}
 						}
+						break;
+					}
+                    case Action.NoPassphrase:
+					{
+						lock(ht)
+						{
+							TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
+
+							if (tlvi != null)
+							{
+								iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+
+								ifolderObject.iFolderState = iFolderState.NoPassphrase;
+
+                                int imageIndex;
+								tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
+								tlvi.ImageIndex = imageIndex;
+								tlvi.Tag = ifolderObject;
+                                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                listView1.Items[item.Index].ImageIndex = imageIndex;
+                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+							}
+						}
+
+						statusBar1.Text = resourceManager.GetString("statusBar1.Text");
+                        syncLog.AddMessageToLog(DateTime.Now,
+                            string.Format("Passphrase not provided, will not sync the folder \"{0}\""));
+
+						if (initialConnect)
+						{
+							initialConnect = false;
+							updateEnterpriseTimer.Start();
+						}
+
+                        //turing Revert Option to Active
+                        this.MenuRevert.Enabled = true;
+                        this.menuActionRevert.Enabled = true;
+
 						break;
 					}
 					case Action.StopSync:
@@ -1095,6 +1137,7 @@ namespace Novell.FormsTrayApp
 								tlvi.Tag = ifolderObject;
                                 ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
                                 listView1.Items[item.Index].ImageIndex = imageIndex;
+                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 							}
 
 							objectsToSync = 0;
@@ -1458,6 +1501,7 @@ namespace Novell.FormsTrayApp
 				tlvi.ImageIndex = imageIndex;
                 ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
                 listView1.Items[item.Index].ImageIndex = imageIndex;
+                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
 			}
 		}
 
@@ -1548,6 +1592,10 @@ namespace Novell.FormsTrayApp
 						imageIndex = 1;
 						status = TrayApp.Properties.Resources.preSync;
 						break;
+                    case iFolderState.NoPassphrase:
+                        imageIndex = 9;  //FIXME : need to get new image for this.
+                        status = TrayApp.Properties.Resources.noPassphrase;
+                        break;
 					default:
 						// TODO: what icon to use for unknown status?
 						imageIndex = 0;
@@ -3339,6 +3387,12 @@ namespace Novell.FormsTrayApp
                     iFolderObject ifObj = (iFolderObject)tlvi.Tag;
                     int imageIndex;
                     tlvi.Status = getItemState(ifObj, 0, out imageIndex);
+                    //Fix: Getting random exception while removing last domain when ifolder is syncing.
+                    if ((simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)) == null)
+                    {
+                        //don't perform any action
+                        continue;
+                    }
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,

@@ -66,7 +66,12 @@ namespace Novell.FormsTrayApp
 		/// <summary>
 		/// Unable to connect to the server.
 		/// </summary>
-		Disconnected
+		Disconnected,
+
+        /// <summary>
+        /// Passphrase not provided, encrypted folder wont sync.
+        /// </summary>
+        NoPassphrase
 	}
 
 	/// <summary>
