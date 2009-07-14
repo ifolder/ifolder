@@ -48,13 +48,13 @@
 //=======================================================================
 -(void)awakeFromNib
 {
-	[domainID bind:@"value" toObject:[[iFolderData sharedInstance] domainArrayController]
+	[domainID bind:@"value" toObject:[[iFolderData sharedInstance] loggedDomainArrayController]
 	   withKeyPath:@"selection.properties.ID" options:nil];
 	
-	[ifolderAccount bind:@"contentValues" toObject:[[iFolderData sharedInstance] domainArrayController]
+	[ifolderAccount bind:@"contentValues" toObject:[[iFolderData sharedInstance] loggedDomainArrayController]
 			 withKeyPath:@"arrangedObjects.properties.name" options:nil];
 	
-	[ifolderAccount bind:@"selectedIndex" toObject:[[iFolderData sharedInstance] domainArrayController]
+	[ifolderAccount bind:@"selectedIndex" toObject:[[iFolderData sharedInstance] loggedDomainArrayController]
 			 withKeyPath:@"selectionIndex" options:nil];	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:)  name:NSControlTextDidChangeNotification object:enterPassphrase];

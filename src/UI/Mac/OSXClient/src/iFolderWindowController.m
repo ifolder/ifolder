@@ -799,12 +799,13 @@ static iFolderWindowController *sharedInstance = nil;
 	else if( (action == @selector(exportKeys:)) ||
 			 (action == @selector(importKeys:)) ||
 			 (action == @selector(forgotPassphrase:)) || 
-			 (action == @selector(resetPassPhrase:)) )
+			 (action == @selector(resetPassPhrase:)) ||
+			 (action == @selector(changePassword:)) )
 	{
 		if([[NSApp delegate] simiasIsRunning] == NO)
 			return NO;
 		
-		if([[iFolderData sharedInstance] getDomainCount] > 0)
+		if([[iFolderData sharedInstance] getLoggedDomainCount] > 0)
 		{
 			return YES;
 		}
