@@ -82,6 +82,8 @@ namespace Novell.iFolder
 		private Label				DiskUsageEmptyLabel;
 
 		private Button				SyncNowButton;
+		private int displayName = 20;	
+		private int displayableLocation = 30;	
 
 /*        	public bool EnableSync
                 {
@@ -145,9 +147,23 @@ namespace Novell.iFolder
 
 			SyncIntervalValue.Text = syncInterval + " " + Util.GS("minute(s)");
 			
-			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", GLib.Markup.EscapeText(ifolder.Name));
+			string ifolderName = null, ifolderLocation = null;		
+			ifolderName = ifolder.Name;
+			ifolderLocation = ifolder.UnManagedPath;
+			if(ifolder.Name.Length > displayName)
+			{
+			    ifolderName = ifolder.Name.Substring(0,displayName) + "..."  ;	
+			}
+			if(ifolder.UnManagedPath.Length > displayableLocation)
+			{
+			    ifolderLocation = ifolder.UnManagedPath.Substring(0,displayableLocation) + "..."  ;	
+			}
+
+
+	
+			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", GLib.Markup.EscapeText(ifolderName));
 			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.Owner));
-			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.UnManagedPath));
+			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolderLocation));
 			AccountLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(domain.Name));
 			
 			try
@@ -155,7 +171,7 @@ namespace Novell.iFolder
 				SyncSize ss = ifws.CalculateSyncSize(ifolder.ID);
 				FFSyncValue.Text = string.Format("{0}", ss.SyncNodeCount);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				FFSyncValue.Text = Util.GS("N/A");
 
@@ -171,7 +187,7 @@ namespace Novell.iFolder
 			{
 				ds = ifws.GetiFolderDiskSpace(ifolder.ID);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				ds = null;
 //				iFolderExceptionDialog ied = new iFolderExceptionDialog(
@@ -732,8 +748,7 @@ namespace Novell.iFolder
 			}
 			catch(Exception e)
 			{
-				iFolderExceptionDialog ied = new iFolderExceptionDialog(
-												topLevelWindow, e);
+				iFolderExceptionDialog ied = new iFolderExceptionDialog( topLevelWindow, e);
 				ied.Run();
 				ied.Hide();
 				ied.Destroy();
@@ -758,7 +773,7 @@ namespace Novell.iFolder
 				{
 					sizeLimit = (long)System.UInt64.Parse(LimitEntry.Text);
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					sizeLimit = 0;
 				}

@@ -83,7 +83,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
 		private MenuItem                RecoveryMenuItem;
-		private MenuItem		ExportMenuSubItem;
+//		private MenuItem		ExportMenuSubItem;
 		private MenuItem 		ImportMenuSubItem;
 	        private MenuItem                ResetPassMenuItem;
 		private MenuItem		ResetPasswordMenuItem;
@@ -196,14 +196,14 @@ namespace Novell.iFolder
 		public Label labeliFolderServer = null;
 		public Label labeliFolderType = null;
 		private Tooltips buttontips;
-	    private	VBox actionsVBox ;
-        private ComboBoxEntry viewList; 
+	   	private	VBox actionsVBox ;
+        	private ComboBoxEntry viewList; 
 			
 		public VBox packIconView;
 		public VBox packListView;
 		public string diskQuotaUsed = Util.GS("N/A");	
 		public string diskQuotaAvailable = Util.GS("N/A");	
-
+		private int displayableName = 20; //Initilizing it to 20 char	
 
 		public int LastXPos
 		{
@@ -367,7 +367,7 @@ namespace Novell.iFolder
                                                         }
                                                 }
                                         }
-                                        catch(Exception ex)
+                                        catch(Exception)
                                         {
                                         }
                                 }while( viewstore.IterNext(ref iters) );
@@ -1354,13 +1354,19 @@ namespace Novell.iFolder
                         {
 				try
 				{
+					string displayName = null;
                                 	iFolderHolder holder = (iFolderHolder)(iFolderFilter).GetValue(iter, 0);
                                 	if (holder != null)
                                 	{
-                                        	viewstore.AppendValues(GetImage(holder),holder.iFolder.Name,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+						displayName = holder.iFolder.Name;
+						if(displayName.Length > displayableName)
+						{
+						    displayName = displayName.Substring(0,displayableName) + "...";
+						}
+                                        	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
                                 	}
 				}
-				catch(Exception ex)
+				catch(Exception)
 				{
 				}
                         }while ((iFolderFilter).IterNext(ref iter));
@@ -1444,23 +1450,13 @@ namespace Novell.iFolder
 
            //################ADDED COMBOX BOX
 			string lable = null;
-			string domainName = null;
-
-	        //cell = new CellRendererText();
-        	//store = new ListStore(typeof (string));
 			ViewUserDomainList = ComboBox.NewText();
 			actionsVBox.PackStart(ViewUserDomainList, false, true, 0);
-        	//ViewUserDomainList.PackStart(cell, false);
 
 			//Event handler for Combobox
 			ViewUserDomainList.Changed += new EventHandler(OnComboBoxIndexChange);
-			//ViewUserDomainList.Clear();
-        	//ViewUserDomainList.AddAttribute(cell, "text", 0);
-		
-		
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 4);
-
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("User: {0}"),lable); 
@@ -1470,8 +1466,6 @@ namespace Novell.iFolder
 		    labelUser.UseMarkup = true;
 			labelUser.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
 		    labelUser.Xalign = 0.0F;
-
-
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Server: {0}"),lable); 
@@ -1665,9 +1659,6 @@ namespace Novell.iFolder
 
 		public void UpdateSelectedServerDetails(DomainInformation domain)
 		{
-	             string QoutaAvailable = null;
-	             int count=0, index = 0, tmpValue = 0;
-	             DiskSpace ds = null;
 		     DomainInformation currentDomain = domain;
 
 	             if(labelUser != null && currentDomain != null)
@@ -1765,22 +1756,27 @@ namespace Novell.iFolder
 		public bool UpdateiFolderDetails(iFolderHolder holder)
 		{
 
-			if(holder != null && labelName != null)	
+		    if(holder != null && labelName != null)	
+		    {
+			string ifolderName = holder.iFolder.Name;
+			if(holder.iFolder.Name.Length > displayableName)
 			{
-	     		labelName.Text = string.Format(Util.GS("Name:     {0}"),holder.iFolder.Name);
+			    ifolderName = ifolderName.Substring(0,displayableName) + "..."  ;	
+			}
+	     		labelName.Text = string.Format(Util.GS("Name:     {0}"), ifolderName);
 	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),holder.iFolder.Owner);
 	     		labelAccess.Text = string.Format(Util.GS("Access:   {0}"),holder.iFolder.CurrentUserRights);
 
            		if(holder.iFolder.IsSubscription) 
-				{
-					labelOwner.Hide();	
-				}
-				else
-				{
-					labelOwner.Show();
-				}
-
+			{
+			    labelOwner.Hide();	
 			}
+			else
+			{
+			    labelOwner.Show();
+			}
+
+		   }
 
 			return true;
 		}	
@@ -1839,7 +1835,6 @@ namespace Novell.iFolder
 		
 		    foreach (DomainInformation domain in domains)
 		    {
-		    	UriBuilder serverUri = new UriBuilder(domain.HostUrl); 
 		    	store.AppendValues(domain.Name);
 		    	domaincount++;
 		    }
@@ -2298,7 +2293,7 @@ namespace Novell.iFolder
 					dialog.Destroy();
 					dialog = null;
 				}
-				catch(Exception ex)
+				catch(Exception)
 				{
 					// show an error message
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -2465,8 +2460,6 @@ namespace Novell.iFolder
 					{
 						if (holder.iFolder.IsSubscription)
 						{
-							DomainInformation domain =
-								domainController.GetDomain(holder.iFolder.DomainID);
 							if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
 							{
 								// The current user is the owner
@@ -2515,8 +2508,6 @@ namespace Novell.iFolder
 
 						menu.Append(new SeparatorMenuItem());
 
-						DomainInformation domain =
-							domainController.GetDomain(holder.iFolder.DomainID);
 						
 						if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
 						{
@@ -2741,7 +2732,7 @@ namespace Novell.iFolder
 											{
 					                                                	passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 											}
-											catch(Exception ex)
+											catch(Exception)
 											{
 												DisplayLoginMesg();
 												continue;
@@ -3016,7 +3007,7 @@ namespace Novell.iFolder
 
 		private void OnResetPasswordMenuItem(object o, EventArgs args)
 		{
-			string DomainID, oldPassword, newPassword;
+			string DomainID, newPassword;
 			bool rememberOption;
 			bool status = false;
 			int result =0;
@@ -3081,8 +3072,6 @@ namespace Novell.iFolder
 
 		private void OnResetPassMenuItem(object o, EventArgs args)
 		{
-			string DomainID, oldPassphrase, newPassphrase, RAName, publicKey;
-			bool rememberOption;
 			bool status = false;
 			int result =0;
 			do
@@ -3107,10 +3096,6 @@ namespace Novell.iFolder
 				resetDialog.Domains = domains;
 				resetDialog.TransientFor = this;
 				result = resetDialog.Run();
-				DomainID = resetDialog.Domain;
-				oldPassphrase = resetDialog.OldPassphrase;
-				newPassphrase = resetDialog.NewPassphrase;
-				rememberOption = resetDialog.SavePassphrase;
 				status = resetDialog.Status;
 				resetDialog.Hide();
 				resetDialog.Destroy();
@@ -3122,7 +3107,6 @@ namespace Novell.iFolder
 				}		 
 				else if( status == true)
 				{
-					//simws.StorePassPhrase(DomainID, newPassphrase, CredentialType.Basic, rememberOption);
 					iFolderMsgDialog dialog = new iFolderMsgDialog(
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Info,
@@ -4097,7 +4081,7 @@ namespace Novell.iFolder
 				{
 					Util.OpenInBrowser(holder.iFolder.UnManagedPath);
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					iFolderMsgDialog dg = new iFolderMsgDialog(
 						this,
@@ -4315,15 +4299,12 @@ namespace Novell.iFolder
 						
 						if (deleteFromServerCB.Active)
 						{
-							string defaultiFolder = "";
 							if (subHolder == null)
 							{
-								defaultiFolder = holder.iFolder.ID;
 								ifdata.DeleteiFolder(holder.iFolder.ID);
 							}
 							else
 							{
-								defaultiFolder = subHolder.iFolder.ID;
 								ifdata.DeleteiFolder(subHolder.iFolder.ID);
 							}
 							if( removeDefault )
@@ -4521,7 +4502,7 @@ namespace Novell.iFolder
 								{
 		                        				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 								}
-								catch(Exception ex)
+								catch(Exception)
 								{
 									DisplayLoginMesg();	
 									continue;
@@ -5283,7 +5264,7 @@ namespace Novell.iFolder
 					simws.StorePassPhrase(DomainID, "", CredentialType.None, false);
 					status = false;
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					return false;
 				}
@@ -5295,13 +5276,13 @@ namespace Novell.iFolder
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = true;
 				}
-				catch(Exception ex) 
+				catch(Exception) 
 				{
 					return false;
 				}
 			}
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				return false;
 			}
@@ -5317,7 +5298,7 @@ namespace Novell.iFolder
 			{
 				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				DisplayLoginMesg();	
 				return false;
@@ -5396,10 +5377,6 @@ namespace Novell.iFolder
 						item_merge.Activated += this.ifwin.MergeAvailableiFolderHandler;
 
 						menu.Append(new SeparatorMenuItem());
-
-						DomainInformation domain =
-							this.ifwin.domainController.GetDomain(holder.iFolder.DomainID);
-						
 						if ( holder.iFolder.CurrentUserID== holder.iFolder.OwnerID)
 						{
 							// The current user is the owner
@@ -5524,11 +5501,11 @@ namespace Novell.iFolder
 				case 1:
 				case 2:
 					this.ifwin.UpdateSensitivity();
-					break;
 					retValue = true; 
+					break;
 
 				default: return base.OnButtonPressEvent(evnt); 
-					break; 
+				//	break; 
 			}
 
 			return retValue;  
