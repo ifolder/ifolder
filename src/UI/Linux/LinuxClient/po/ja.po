@@ -1,130 +1,113 @@
-# English translations for ifolder-build package.
-# Copyright (C) 2005 THE ifolder-build'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the ifolder-build package.
-# Automatically generated, 2005.
+# Copyright (C) 2006 SuSE Linux Products GmbH, Nuernberg
+# This file is distributed under the same license as the package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: ifolder-build 0.1\n"
+"Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2005-11-09 12:01-0700\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2009-07-06 10:54\n"
+"Last-Translator: Novell Language <language@novell.com>\n"
+"Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/LinuxClient/application/iFolderApplication.cs:377
-msgid ""
-"The iFolder is full.\n"
-"\n"
-"Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+#: src/LinuxClient/application/iFolderApplication.cs:377 
+msgid "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
 msgstr "iFolderがいっぱいです。\n\n同期ログを表示するには<a href=\"ShowSyncLog\">ここ</a>をクリックしてください。"
 
-#: src/LinuxClient/application/iFolderApplication.cs:396
-msgid ""
-"You have Read-only access to this iFolder.  Files that you place in this "
-"iFolder will not be synchronized.\n"
-"\n"
-"Click <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+#: src/LinuxClient/application/iFolderApplication.cs:396 
+msgid "You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
 msgstr "このiFolderへのアクセス権は読み込み専用です。このiFolder内のファイルは同期されません。\n\n同期ログを表示するには<a href=\"ShowSyncLog\">ここ</a>をクリックしてください。"
 
-#: src/LinuxClient/application/iFolderApplication.cs:466
+#: src/LinuxClient/application/iFolderApplication.cs:466 
 #, csharp-format
 msgid "Incomplete Synchronization: {0}"
 msgstr "不完全な同期: {0}"
 
-#: src/LinuxClient/application/iFolderApplication.cs:533
+#: src/LinuxClient/application/iFolderApplication.cs:533 
 #, csharp-format
 msgid "New iFolder \"{0}\""
 msgstr "新しいiFolder \"{0}\""
 
-#: src/LinuxClient/application/iFolderApplication.cs:535
+#: src/LinuxClient/application/iFolderApplication.cs:535 
 #, csharp-format
-msgid ""
-"{0} has invited you to participate in this shared iFolder.\n"
-"\n"
-"Click <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
+msgid "{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
 msgstr "{0} がこの共有iFolderへの参加を招待しました。\n\nこのiFolderをセットアップするには<a href=\"SetUpiFolder:{1}\">ここ</a>をクリックします。"
 
-#: src/LinuxClient/application/iFolderApplication.cs:591
+#: src/LinuxClient/application/iFolderApplication.cs:591 
 #, csharp-format
-msgid ""
-"A conflict has been detected in this iFolder.\n"
-"\n"
-"Click <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the "
-"conflicts.\n"
-"What is a <a href=\"ShowConflictHelp\">conflict</a>?"
+msgid "A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"
 msgstr "このiFolder内で競合が検出されました。\n\n<a href=\"ResolveiFolderConflicts:{0}\">ここ</a>をクリックして競合を解決してください。\n<a href=\"ShowConflictHelp\">競合</a>についての説明"
 
-#: src/LinuxClient/application/iFolderApplication.cs:650
+#: src/LinuxClient/application/iFolderApplication.cs:650 
 msgid "New iFolder User"
 msgstr "新しいiFolderユーザ"
 
-#: src/LinuxClient/application/iFolderApplication.cs:651
+#: src/LinuxClient/application/iFolderApplication.cs:651 
 #, csharp-format
 msgid "{0} has joined the iFolder \"{1}\""
 msgstr "{0} がiFolder 「{1}」へ参加しました"
 
-#: src/LinuxClient/application/iFolderApplication.cs:757
+#: src/LinuxClient/application/iFolderApplication.cs:757 
 msgid "Welcome to iFolder"
 msgstr "iFolderへようこそ"
 
-#: src/LinuxClient/application/iFolderApplication.cs:826
+#: src/LinuxClient/application/iFolderApplication.cs:826 
 msgid "iFolder is starting"
 msgstr "iFolderを開始しています"
 
-#: src/LinuxClient/application/iFolderApplication.cs:839
+#: src/LinuxClient/application/iFolderApplication.cs:839 
 msgid "iFolder is shutting down"
 msgstr "iFolderをシャットダウンしています"
 
-#: src/LinuxClient/application/iFolderApplication.cs:879
+#: src/LinuxClient/application/iFolderApplication.cs:879 
 #: src/LinuxClient/library/iFolderWindow.cs:290
 msgid "iFolders"
 msgstr "iFolder"
 
-#: src/LinuxClient/application/iFolderApplication.cs:886
+#: src/LinuxClient/application/iFolderApplication.cs:886 
 msgid "Accounts"
 msgstr "アカウント"
 
 msgid "General"
 msgstr "一般"
 
-#: src/LinuxClient/application/iFolderApplication.cs:893
+#: src/LinuxClient/application/iFolderApplication.cs:893 
 msgid "Synchronization Log"
 msgstr "同期ログ"
 
-#: src/LinuxClient/application/iFolderApplication.cs:903
+#: src/LinuxClient/application/iFolderApplication.cs:903 
 msgid "Preferences"
 msgstr "初期設定"
 
-#: src/LinuxClient/application/iFolderApplication.cs:912
+#: src/LinuxClient/application/iFolderApplication.cs:912 
 msgid "Help"
 msgstr "ヘルプ"
 
-#: src/LinuxClient/application/iFolderApplication.cs:921
+#: src/LinuxClient/application/iFolderApplication.cs:921 
 msgid "About"
 msgstr "バージョン情報"
 
-#: src/LinuxClient/application/iFolderApplication.cs:949
+#: src/LinuxClient/application/iFolderApplication.cs:949 
 msgid "Quit"
 msgstr "終了"
 
-#: src/LinuxClient/library/AccountDialog.cs:54
+#: src/LinuxClient/library/AccountDialog.cs:54 
 msgid "Details"
 msgstr "詳細"
 
-#: src/LinuxClient/library/AccountDialog.cs:65
+#: src/LinuxClient/library/AccountDialog.cs:65 
 msgid "Close"
 msgstr "閉じる"
 
-#: src/LinuxClient/library/AccountDialog.cs:108
+#: src/LinuxClient/library/AccountDialog.cs:108 
 msgid "System Information"
 msgstr "システム情報"
 
-#: src/LinuxClient/library/AccountDialog.cs:140
+#: src/LinuxClient/library/AccountDialog.cs:140 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:340
 #: src/LinuxClient/library/iFolderConflictDialog.cs:387
 #: src/LinuxClient/library/iFolderConflictDialog.cs:431
@@ -132,12 +115,12 @@ msgstr "システム情報"
 msgid "Name:"
 msgstr "名前:"
 
-#: src/LinuxClient/library/AccountDialog.cs:150
+#: src/LinuxClient/library/AccountDialog.cs:150 
 #: src/LinuxClient/library/CreateDialog.cs:139
 msgid "Description:"
 msgstr "説明:"
 
-#: src/LinuxClient/library/AccountDialog.cs:181
+#: src/LinuxClient/library/AccountDialog.cs:181 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:372
 msgid "Disk Space on Server"
 msgstr "サーバ上のディスクスペース"
@@ -146,12 +129,12 @@ msgstr "サーバ上のディスクスペース"
 msgid "0"
 msgstr "0"
 
-#: src/LinuxClient/library/AccountDialog.cs:201
+#: src/LinuxClient/library/AccountDialog.cs:201 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "割り当て量:"
+msgstr "割り当て量: "
 
-#: src/LinuxClient/library/AccountDialog.cs:209
+#: src/LinuxClient/library/AccountDialog.cs:209 
 #: src/LinuxClient/library/AccountDialog.cs:221
 #: src/LinuxClient/library/AccountDialog.cs:233
 #: src/LinuxClient/library/AccountDialog.cs:294
@@ -163,27 +146,27 @@ msgstr "割り当て量:"
 msgid "MB"
 msgstr "MB"
 
-#: src/LinuxClient/library/AccountDialog.cs:213
+#: src/LinuxClient/library/AccountDialog.cs:213 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:394
 msgid "Used:"
-msgstr "使用済み:"
+msgstr "使用済み: "
 
-#: src/LinuxClient/library/AccountDialog.cs:225
+#: src/LinuxClient/library/AccountDialog.cs:225 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:412
 msgid "Available:"
-msgstr "使用可能:"
+msgstr "使用可能: "
 
-#: src/LinuxClient/library/AccountDialog.cs:258
+#: src/LinuxClient/library/AccountDialog.cs:258 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
 msgid "full"
 msgstr "フル"
 
-#: src/LinuxClient/library/AccountDialog.cs:263
+#: src/LinuxClient/library/AccountDialog.cs:263 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
 msgid "empty"
 msgstr "空"
 
-#: src/LinuxClient/library/AccountDialog.cs:273
+#: src/LinuxClient/library/AccountDialog.cs:273 
 #: src/LinuxClient/library/AccountDialog.cs:275
 #: src/LinuxClient/library/AccountDialog.cs:277
 #: src/LinuxClient/library/AccountDialog.cs:287
@@ -193,72 +176,69 @@ msgstr "空"
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:128
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:490
 msgid "N/A"
-msgstr "N/A"
+msgstr "該当なし"
 
-#: src/LinuxClient/library/CreateDialog.cs:81
+#: src/LinuxClient/library/CreateDialog.cs:81 
 msgid "New iFolder..."
 msgstr "新しいiFolder..."
 
-#: src/LinuxClient/library/CreateDialog.cs:105
+#: src/LinuxClient/library/CreateDialog.cs:105 
 msgid "More options"
 msgstr "詳細オプション"
 
-#: src/LinuxClient/library/CreateDialog.cs:114
+#: src/LinuxClient/library/CreateDialog.cs:114 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:176
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "iFolderサーバ:"
 
-#: src/LinuxClient/library/FileRenameDialog.cs:57
+#: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
 msgstr "ファイルのリネーム"
 
-#: src/LinuxClient/library/FileRenameDialog.cs:68
+#: src/LinuxClient/library/FileRenameDialog.cs:68 
 msgid "File name:"
 msgstr "ファイル名:"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:65
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
 msgid "Set Up iFolder: "
 msgstr "iFolderのセットアップ: "
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:78
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
 msgid "Details:"
-msgstr "詳細:"
+msgstr "詳細: "
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:88
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:88 
 #, csharp-format
-msgid ""
-"Name: {0}\n"
-"Shared by: {1}\n"
-"Access: {2}"
+msgid "Name: {0}\nShared by: {1}\nAccess: {2}"
 msgstr "名前: {0}\n共有者: {1}\nアクセス: {2}"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:96
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:96 
 msgid "The iFolder will be set up here:"
 msgstr "iFolderはここに作成されます:"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:142
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:142 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:114
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:628
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:702
 msgid "Read/Write"
 msgstr "読書き可能"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:144
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:144 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:111
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:630
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:697
 msgid "Full Control"
 msgstr "フル制御"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:146
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:146 
 #: src/LinuxClient/library/iFolderAccessDialog.cs:117
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:632
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:707
 msgid "Read Only"
 msgstr "読み込み専用"
 
-#: src/LinuxClient/library/iFolderAcceptDialog.cs:148
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:148 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:634
 #: src/LinuxClient/library/iFolderUserSelector.cs:738
 #: src/LinuxClient/library/iFolderWindow.cs:166
@@ -266,193 +246,191 @@ msgstr "読み込み専用"
 msgid "Unknown"
 msgstr "不明"
 
-#: src/LinuxClient/library/iFolderAccessDialog.cs:75
+#: src/LinuxClient/library/iFolderAccessDialog.cs:75 
 msgid "Access for Multiple Users"
 msgstr "複数ユーザのアクセス"
 
-#: src/LinuxClient/library/iFolderAccessDialog.cs:77
+msgid "Access Rights for Multiple Users"
+msgstr "複数ユーザのアクセス権"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:77 
 #, csharp-format
 msgid "Access for {0}"
 msgstr "{0} のアクセス"
 
-#: src/LinuxClient/library/iFolderAccessDialog.cs:93
+msgid "Access Rights for {0}"
+msgstr "{0} のアクセス権"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:93 
 #: src/LinuxClient/library/iFolderPropSharingPage.cs:144
 msgid "Access"
 msgstr "ACCESS"
 
-#: src/LinuxClient/library/iFolderAccessDialog.cs:124
+msgid "Access Rights"
+msgstr "アクセス権"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:124 
 msgid "Make this user the owner of the iFolder."
 msgstr "このユーザをiFolderの所有者にします。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:152
+#: src/LinuxClient/library/iFolderConflictDialog.cs:152 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:521
 #: src/LinuxClient/library/iFolderWindow.cs:688
 msgid "Name"
 msgstr "名前"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:154
+#: src/LinuxClient/library/iFolderConflictDialog.cs:154 
 msgid "File"
 msgstr "ファイル"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:275
+#: src/LinuxClient/library/iFolderConflictDialog.cs:275 
 msgid "Resolve Conflicts"
 msgstr "競合の解消"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:327
+#: src/LinuxClient/library/iFolderConflictDialog.cs:327 
 msgid "This iFolder contains conflicts"
 msgstr "このiFolderで競合が見つかりました。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:350
+#: src/LinuxClient/library/iFolderConflictDialog.cs:350 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:350
 msgid "Location:"
-msgstr "場所:"
+msgstr "位置: "
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:380
+#: src/LinuxClient/library/iFolderConflictDialog.cs:380 
 msgid "Local Version"
 msgstr "ローカルバージョン"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:397
+#: src/LinuxClient/library/iFolderConflictDialog.cs:397 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:441
 msgid "Date:"
 msgstr "日付:"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:406
+#: src/LinuxClient/library/iFolderConflictDialog.cs:406 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:450
 msgid "Size:"
 msgstr "サイズ:"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:424
+#: src/LinuxClient/library/iFolderConflictDialog.cs:424 
 msgid "Server Version"
 msgstr "サーババージョン"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:479
+#: src/LinuxClient/library/iFolderConflictDialog.cs:479 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:504
 msgid "Rename"
-msgstr "名前変更"
+msgstr "リネーム"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:482
+#: src/LinuxClient/library/iFolderConflictDialog.cs:482 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:773
 msgid "Enter a new name and click Rename to resolve the conflict."
 msgstr "競合を解決するには、新しい名前を入力して［リネーム］をクリックします。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:533
+#: src/LinuxClient/library/iFolderConflictDialog.cs:533 
 msgid "Folder"
 msgstr "フォルダ"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:546
+#: src/LinuxClient/library/iFolderConflictDialog.cs:546 
 msgid "Conflict Type"
 msgstr "競合するタイプ"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:646
+#: src/LinuxClient/library/iFolderConflictDialog.cs:646 
 msgid "You have read only access"
 msgstr "読み込み専用アクセスのみができます"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:647
-msgid ""
-"Your ability to resolve conflicts is limited because you have read-only "
-"access to this iFolder.  Name conflicts must be renamed locally.  File "
-"conflicts will be overwritten by the version of the file on the server."
+#: src/LinuxClient/library/iFolderConflictDialog.cs:647 
+msgid "Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."
 msgstr "このiFolderへのアクセス権が読み込み専用であるため、競合の解決が制限されます。名前の競合はローカルで変更する必要があります。ファイルの競合は、サーバ上のファイルバージョンによって上書きされます。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:823
+#: src/LinuxClient/library/iFolderConflictDialog.cs:823 
 msgid "Name conflicts must be resolved individually."
 msgstr "名前の競合は個別に解決する必要があります。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:854
+#: src/LinuxClient/library/iFolderConflictDialog.cs:854 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:858
 msgid "Multiple selected"
 msgstr "複数選択"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1006
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1006 
 msgid "iFolder Conflict Error"
 msgstr "iFolder競合エラー"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1007
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1007 
 msgid "An error was encountered while resolving the conflict."
 msgstr "競合の解決中にエラーが発生しました。"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1011
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1011 
 msgid "Invalid Characters in Name"
 msgstr "名前に無効な文字が含まれています"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1012
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1012 
 #, csharp-format
-msgid ""
-"The specified name contains invalid characters.  Please choose a different "
-"name and try again.\n"
-"\n"
-"Names must not contain any of these characters: {0}"
+msgid "The specified name contains invalid characters.  Please choose a different name and try again.\n\nNames must not contain any of these characters: {0}"
 msgstr "指定された名前には無効な文字が含まれています。別の名前を選択し、再度実行してください。\n\n名前に次の文字を含めないでください: {0}"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1017
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1017 
 msgid "Name Already Exists"
 msgstr "名前がすでに存在しています"
 
-#: src/LinuxClient/library/iFolderConflictDialog.cs:1018
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1018 
 msgid "The specified name already exists.  Please choose a different name."
 msgstr "指定された名前はすでに存在します。別の名前を選択してください。"
 
-#: src/LinuxClient/library/iFolderCrashDialog.cs:50
+#: src/LinuxClient/library/iFolderCrashDialog.cs:50 
 msgid "iFolder crashed because of an unhandled exception"
 msgstr "未処理の例外が原因でiFolderがクラッシュしました"
 
-#: src/LinuxClient/library/iFolderCreationDialog.cs:70
+#: src/LinuxClient/library/iFolderCreationDialog.cs:70 
 msgid "iFolder Created"
 msgstr "iFolderが作成されました"
 
-#: src/LinuxClient/library/iFolderCreationDialog.cs:79
-msgid ""
-"The folder you selected is now an iFolder.  To learn more about using "
-"iFolder and sharing iFolders with other users, see \"Managing iFolders\" in "
-"iFolder Help."
+#: src/LinuxClient/library/iFolderCreationDialog.cs:79 
+msgid "The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."
 msgstr "選択されたフォルダはこれでiFolderになりました。iFolderの使用方法とiFolderを他のユーザと共有する方法については、iFolderヘルプの「Managing iFolders」を参照してください。"
 
-#: src/LinuxClient/library/iFolderCreationDialog.cs:92
+#: src/LinuxClient/library/iFolderCreationDialog.cs:92 
 msgid "Do not show this message again."
 msgstr "今後このメッセージを表示しない"
 
-#: src/LinuxClient/library/iFolderExceptionDialog.cs:39
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:39 
 msgid "iFolder Error"
 msgstr "iFolderエラー"
 
-#: src/LinuxClient/library/iFolderExceptionDialog.cs:70
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:70 
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:91
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:99
 msgid "Show Details"
 msgstr "詳細を表示"
 
-#: src/LinuxClient/library/iFolderExceptionDialog.cs:76
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:76 
 #: src/LinuxClient/library/iFolderExceptionDialog.cs:98
-msgid ""
-"Click \"Show Details\" below to get the full message returned with this error"
+msgid "Click \"Show Details\" below to get the full message returned with this error"
 msgstr "このエラーで返される完全なメッセージを表示するには、下の［詳細を表示］をクリックしてください"
 
-#: src/LinuxClient/library/iFolderExceptionDialog.cs:94
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:94 
 msgid "Hide Details"
 msgstr "(詳細を非表示)"
 
-#: src/LinuxClient/library/iFolderLoginDialog.cs:116
+#: src/LinuxClient/library/iFolderLoginDialog.cs:116 
 msgid "iFolder Login"
 msgstr "iFolderログイン"
 
-#: src/LinuxClient/library/iFolderLoginDialog.cs:153
+#: src/LinuxClient/library/iFolderLoginDialog.cs:153 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:209
 #: src/LinuxClient/library/RemoveAccountDialog.cs:104
 msgid "Username:"
 msgstr "ユーザ名:"
 
-#: src/LinuxClient/library/iFolderLoginDialog.cs:164
+#: src/LinuxClient/library/iFolderLoginDialog.cs:164 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:221
 #: src/LinuxClient/library/PrefsAccountsPage.cs:275
 msgid "Password:"
 msgstr "パスワード:"
 
-#: src/LinuxClient/library/iFolderLoginDialog.cs:189
+#: src/LinuxClient/library/iFolderLoginDialog.cs:189 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
 msgstr "パスワードを保存する(_R)"
 
-#: src/LinuxClient/library/iFolderLoginDialog.cs:245
+#: src/LinuxClient/library/iFolderLoginDialog.cs:245 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:327
 #: src/LinuxClient/library/PrefsAccountsPage.cs:633
 #: src/LinuxClient/library/PrefsAccountsPage.cs:899
@@ -464,2356 +442,2370 @@ msgstr "パスワードを保存する(_R)"
 msgid "_Log In"
 msgstr "ログインしてください。(_L)"
 
-#: src/LinuxClient/library/iFolderMsgDialog.cs:142
+#: src/LinuxClient/library/iFolderMsgDialog.cs:142 
 #: src/LinuxClient/library/iFolderMsgDialog.cs:197
 #: src/LinuxClient/library/iFolderMsgDialog.cs:204
 msgid "Show _Details"
 msgstr "詳細を表示(_D)"
 
-#: src/LinuxClient/library/iFolderMsgDialog.cs:199
+#: src/LinuxClient/library/iFolderMsgDialog.cs:199 
 msgid "Hide _Details"
 msgstr "詳細を非表示(_D)"
 
-#: src/LinuxClient/library/iFolderPropertiesDialog.cs:109
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:109 
 #: src/LinuxClient/library/iFolderPropertiesDialog.cs:159
 msgid "iFolder Properties"
 msgstr "iFolderのプロパティ"
 
-#: src/LinuxClient/library/iFolderPropertiesDialog.cs:208
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:208 
 #: src/LinuxClient/library/PreferencesWindow.cs:107
 msgid "_General"
 msgstr "一般(_G)"
 
-#: src/LinuxClient/library/iFolderPropertiesDialog.cs:213
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:213 
 msgid "_Sharing"
 msgstr "共有(_S)"
 
-#: src/LinuxClient/library/iFolderPropertiesDialog.cs:249
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:249 
 msgid "This iFolder contains conflicts."
 msgstr "このiFolderで競合が見つかりました。"
 
-#: src/LinuxClient/library/iFolderPropertiesDialog.cs:256
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:256 
 msgid "_Resolve conflicts"
 msgstr "競合の解消(_R)"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:115
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:115 
 msgid "minute(s)"
 msgstr "分"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:158
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
 msgid "Set _Quota:"
 msgstr "割り当て量を指定(_S):"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:337
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:337 
 msgid "Owner:"
 msgstr "所有者:"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:461
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:461 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:198
 msgid "Synchronization"
 msgstr "同期化"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:486
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:486 
 msgid "Last Successful Synchronization:"
 msgstr "最後に成功した同期処理:"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:495
+msgid "Last successful synchronization:"
+msgstr "最後に成功した同期処理:"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:495 
 msgid "Files/Folders to Synchronize:"
 msgstr "同期するファイル/フォルダ数:"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:504
+msgid "Files/Folders to synchronize:"
+msgstr "同期するファイル/フォルダ数:"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:504 
 msgid "Automatically Synchronizes Every:"
 msgstr "次の間隔で自動的に同期する:"
 
-#: src/LinuxClient/library/iFolderPropSettingsPage.cs:516
+msgid "Automatically synchronizes every:"
+msgstr "次の間隔で自動的に同期する:"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:516 
 msgid "Synchronize _Now"
 msgstr "いますぐ同期化(_N)"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:128
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:128 
 msgid "User"
 msgstr "ユーザ"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:135
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:135 
 msgid "State"
-msgstr "都道府県"
+msgstr "状態"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:189
+msgid "Role"
+msgstr "役割"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:189 
 msgid "Acc_ess..."
 msgstr "アクセス(_E)..."
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:272
+msgid "R_ights..."
+msgstr "権利(_I)..."
+
+msgid "Rights"
+msgstr "権利"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:272 
 msgid "Owner"
 msgstr "所有者"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:274
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:274 
 msgid "Invited User"
 msgstr "招待ユーザ"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:276
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:276 
 msgid "iFolder User"
 msgstr "iFolderユーザ"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:320
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:320 
 msgid "Remove the selected users?"
 msgstr "選択されたユーザを削除しますか?"
 
-#: src/LinuxClient/library/iFolderPropSharingPage.cs:321
-msgid ""
-"This will remove the selected users from this iFolder.  They will no longer "
-"be able to synchronize files with this iFolder."
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:321 
+msgid "This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder."
 msgstr "選択されたユーザをこのiFolderから削除します。削除されたユーザはこのiFolderとファイルを同期させることはできなくなります。"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:91
+#: src/LinuxClient/library/iFolderUserSelector.cs:91 
 msgid "Select Users"
 msgstr "ユーザの選択"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:148
+#: src/LinuxClient/library/iFolderUserSelector.cs:148 
 msgid "Find:"
 msgstr "検索:"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:154
+#: src/LinuxClient/library/iFolderUserSelector.cs:154 
 msgid "First Name"
 msgstr "名"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:155
+#: src/LinuxClient/library/iFolderUserSelector.cs:155 
 msgid "Last Name"
 msgstr "姓"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:156
+#: src/LinuxClient/library/iFolderUserSelector.cs:156 
 msgid "Full Name"
 msgstr "フルネーム"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:162
+#: src/LinuxClient/library/iFolderUserSelector.cs:162 
 #: src/LinuxClient/library/iFolderUserSelector.cs:393
 msgid "<Enter text to find a user>"
 msgstr "<検索するユーザのテキストを入力してください>"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:169
+#: src/LinuxClient/library/iFolderUserSelector.cs:169 
 msgid "(Full or partial name)"
 msgstr "(フルネームまたは名前の一部)"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:207
+#: src/LinuxClient/library/iFolderUserSelector.cs:207 
 msgid "_Add >>"
 msgstr "追加(_A) >>"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:211
+#: src/LinuxClient/library/iFolderUserSelector.cs:211 
 msgid "_Remove"
 msgstr "削除(_R)"
 
-#: src/LinuxClient/library/iFolderUserSelector.cs:239
+#: src/LinuxClient/library/iFolderUserSelector.cs:239 
 msgid "Selected Users"
 msgstr "選択されたユーザ"
 
-#: src/LinuxClient/library/iFolderWindow.cs:144
+#: src/LinuxClient/library/iFolderWindow.cs:144 
 msgid "Has conflicts"
 msgstr "競合あり"
 
-#: src/LinuxClient/library/iFolderWindow.cs:154
+#: src/LinuxClient/library/iFolderWindow.cs:154 
 msgid "Not set up"
 msgstr "セットアップされていません"
 
-#: src/LinuxClient/library/iFolderWindow.cs:157
+#: src/LinuxClient/library/iFolderWindow.cs:157 
 msgid "Waiting to connect"
 msgstr "接続待機中"
 
-#: src/LinuxClient/library/iFolderWindow.cs:160
+#: src/LinuxClient/library/iFolderWindow.cs:160 
 msgid "Waiting to synchronize"
 msgstr "同期待機中"
 
-#: src/LinuxClient/library/iFolderWindow.cs:163
+#: src/LinuxClient/library/iFolderWindow.cs:163 
 #: src/LinuxClient/library/iFolderWindow.cs:174
 msgid "OK"
 msgstr "OK"
 
-#: src/LinuxClient/library/iFolderWindow.cs:172
+#: src/LinuxClient/library/iFolderWindow.cs:172 
 #, csharp-format
 msgid "{0} items not synchronized"
 msgstr "{0} 項目が同期していません"
 
-#: src/LinuxClient/library/iFolderWindow.cs:178
+#: src/LinuxClient/library/iFolderWindow.cs:178 
 #, csharp-format
 msgid "{0} items to synchronize"
 msgstr "{0} 項目を同期します"
 
-#: src/LinuxClient/library/iFolderWindow.cs:180
+#: src/LinuxClient/library/iFolderWindow.cs:180 
 msgid "Synchronizing"
 msgstr "同期中"
 
-#: src/LinuxClient/library/iFolderWindow.cs:183
+#: src/LinuxClient/library/iFolderWindow.cs:183 
 msgid "Incomplete synchronization"
 msgstr "不完全な同期"
 
-#: src/LinuxClient/library/iFolderWindow.cs:186
+#: src/LinuxClient/library/iFolderWindow.cs:186 
 msgid "Checking for changes"
 msgstr "変更を確認しています"
 
-#: src/LinuxClient/library/iFolderWindow.cs:189
+#: src/LinuxClient/library/iFolderWindow.cs:189 
 msgid "Server unavailable"
 msgstr "サーバは使用できません"
 
-#: src/LinuxClient/library/iFolderWindow.cs:369
+#: src/LinuxClient/library/iFolderWindow.cs:369 
 #: src/LinuxClient/library/iFolderWindow.cs:1828
 msgid "Idle..."
 msgstr "Idle..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:416
+#: src/LinuxClient/library/iFolderWindow.cs:416 
 msgid "New"
-msgstr "新規作成"
+msgstr "新規"
 
-#: src/LinuxClient/library/iFolderWindow.cs:417
+#: src/LinuxClient/library/iFolderWindow.cs:417 
 msgid "Create a new iFolder"
 msgstr "iFolderを新規に作成する"
 
-#: src/LinuxClient/library/iFolderWindow.cs:423
+#: src/LinuxClient/library/iFolderWindow.cs:423 
 msgid "Set Up"
 msgstr "セットアップ"
 
-#: src/LinuxClient/library/iFolderWindow.cs:424
+#: src/LinuxClient/library/iFolderWindow.cs:424 
 msgid "Set up the selected iFolder"
 msgstr "選択されたiFolderをセットアップする"
 
-#: src/LinuxClient/library/iFolderWindow.cs:432
+#: src/LinuxClient/library/iFolderWindow.cs:432 
 msgid "Synchronize"
 msgstr "同期"
 
-#: src/LinuxClient/library/iFolderWindow.cs:433
+#: src/LinuxClient/library/iFolderWindow.cs:433 
 msgid "Synchronize the selected iFolder"
 msgstr "選択されたiFolderを同期する"
 
-#: src/LinuxClient/library/iFolderWindow.cs:439
+#: src/LinuxClient/library/iFolderWindow.cs:439 
 msgid "Share"
 msgstr "共用"
 
-#: src/LinuxClient/library/iFolderWindow.cs:440
+#: src/LinuxClient/library/iFolderWindow.cs:440 
 msgid "Share the selected iFolder"
 msgstr "選択されたiFolderを共有する"
 
-#: src/LinuxClient/library/iFolderWindow.cs:446
+#: src/LinuxClient/library/iFolderWindow.cs:446 
 msgid "Resolve"
 msgstr "解決"
 
-#: src/LinuxClient/library/iFolderWindow.cs:447
+#: src/LinuxClient/library/iFolderWindow.cs:447 
 msgid "Resolve conflicts in the selected iFolder"
 msgstr "選択されたiFolderの競合を解決する"
 
-#: src/LinuxClient/library/iFolderWindow.cs:457
+#: src/LinuxClient/library/iFolderWindow.cs:457 
 msgid "Filter the list of iFolders by server"
 msgstr "iFolderリストをサーバ別にフィルタ処理する"
 
-#: src/LinuxClient/library/iFolderWindow.cs:460
+#: src/LinuxClient/library/iFolderWindow.cs:460 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:248
 #: src/LinuxClient/library/RemoveAccountDialog.cs:91
 msgid "Server:"
 msgstr "サーバ:"
 
-#: src/LinuxClient/library/iFolderWindow.cs:515
+#: src/LinuxClient/library/iFolderWindow.cs:515 
 msgid "_New"
 msgstr "新規作成(_N)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:525
+#: src/LinuxClient/library/iFolderWindow.cs:525 
 msgid "_Set Up..."
 msgstr "セットアップ(_S)..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:530
+#: src/LinuxClient/library/iFolderWindow.cs:530 
 msgid "_Delete"
 msgstr "削除(_D)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:536
+#: src/LinuxClient/library/iFolderWindow.cs:536 
 msgid "Re_move"
 msgstr "削除(_M)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:546
+#: src/LinuxClient/library/iFolderWindow.cs:546 
 msgid "Share _with..."
 msgstr "共有(_W)..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:550
+#: src/LinuxClient/library/iFolderWindow.cs:550 
 msgid "Resolve conflic_ts"
 msgstr "競合の解消(_T)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:555
+#: src/LinuxClient/library/iFolderWindow.cs:555 
 msgid "S_ynchronize now"
 msgstr "いますぐ同期(_Y)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:560
+#: src/LinuxClient/library/iFolderWindow.cs:560 
 msgid "_Revert to a Normal Folder"
 msgstr "標準フォルダに戻す(_R)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:578
+#: src/LinuxClient/library/iFolderWindow.cs:578 
 msgid "i_Folder"
 msgstr "iFolder(_F)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:586
+#: src/LinuxClient/library/iFolderWindow.cs:586 
 msgid "_Preferences"
 msgstr "初期設定(_P)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:591
+#: src/LinuxClient/library/iFolderWindow.cs:591 
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:609
+#: src/LinuxClient/library/iFolderWindow.cs:609 
 msgid "_Accounts"
 msgstr "アカウント(_A)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:614
+#: src/LinuxClient/library/iFolderWindow.cs:614 
 msgid "Synchronization _Log"
 msgstr "同期ログ(_L)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:618
+#: src/LinuxClient/library/iFolderWindow.cs:618 
 msgid "_View"
 msgstr "表示(_V)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:633
+#: src/LinuxClient/library/iFolderWindow.cs:633 
 msgid "A_bout"
 msgstr "バージョン情報_"
 
-#: src/LinuxClient/library/iFolderWindow.cs:641
+#: src/LinuxClient/library/iFolderWindow.cs:641 
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: src/LinuxClient/library/iFolderWindow.cs:700
+#: src/LinuxClient/library/iFolderWindow.cs:700 
 msgid "Location"
-msgstr "場所"
+msgstr "位置"
 
-#: src/LinuxClient/library/iFolderWindow.cs:713
+#: src/LinuxClient/library/iFolderWindow.cs:713 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:199
 msgid "Status"
 msgstr "ステータス"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1049
+#: src/LinuxClient/library/iFolderWindow.cs:1049 
 msgid "Open"
 msgstr "開く"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1057
+#: src/LinuxClient/library/iFolderWindow.cs:1057 
 msgid "Share with..."
 msgstr "共有..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:1065
+#: src/LinuxClient/library/iFolderWindow.cs:1065 
 msgid "Resolve conflicts"
 msgstr "競合の解消"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1074
+#: src/LinuxClient/library/iFolderWindow.cs:1074 
 msgid "Synchronize Now"
 msgstr "いますぐ同期化"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1082
+#: src/LinuxClient/library/iFolderWindow.cs:1082 
 msgid "Revert to a Normal Folder"
 msgstr "標準フォルダに戻す"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1092
+#: src/LinuxClient/library/iFolderWindow.cs:1092 
 #: src/LinuxClient/library/iFolderWindow.cs:1127
 msgid "Delete"
 msgstr "削除"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1100
+#: src/LinuxClient/library/iFolderWindow.cs:1100 
 #: src/LinuxClient/library/iFolderWindow.cs:1135
 #: src/LinuxClient/library/iFolderWindow.cs:1144
 msgid "Remove"
 msgstr "削除"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1110
+#: src/LinuxClient/library/iFolderWindow.cs:1110 
 msgid "Properties"
 msgstr "プロパティ"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1118
+#: src/LinuxClient/library/iFolderWindow.cs:1118 
 msgid "Set Up..."
 msgstr "セットアップ..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:1154
+#: src/LinuxClient/library/iFolderWindow.cs:1154 
 msgid "New..."
 msgstr "新規作成..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:1160
+#: src/LinuxClient/library/iFolderWindow.cs:1160 
 msgid "Refresh"
 msgstr "更新"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1228
+#: src/LinuxClient/library/iFolderWindow.cs:1228 
 #, csharp-format
 msgid "Unable to open iFolder \"{0}\""
 msgstr "iFolder {0} を開けません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1229
-msgid ""
-"iFolder could not open the Nautilus File Manager or the Konquerer File "
-"Manager."
+#: src/LinuxClient/library/iFolderWindow.cs:1229 
+msgid "iFolder could not open the Nautilus File Manager or the Konquerer File Manager."
 msgstr "iFolderはNautilus File ManagerまたはKonquerer File Managerを開けませんでした。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1387
+#: src/LinuxClient/library/iFolderWindow.cs:1387 
 msgid "Revert this iFolder to a normal folder?"
 msgstr "このiFolderを標準フォルダに戻しますか?"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1388
-msgid ""
-"This reverts the iFolder back to a normal folder and leaves the files "
-"intact.  The iFolder is then available from the server and must be set up in "
-"a different location to synchronize."
+#: src/LinuxClient/library/iFolderWindow.cs:1388 
+msgid "This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."
 msgstr "この操作を実行すると、iFolderは標準のフォルダに戻りますが、ファイルはそのまま維持されます。このiFolderはサーバからは使用可能ですが、同期を実行するには別の場所にiFolderをセットアップする必要があります。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1497
+#: src/LinuxClient/library/iFolderWindow.cs:1497 
 #: src/LinuxClient/library/iFolderWindow.cs:1513
 #: src/LinuxClient/library/iFolderWindow.cs:1527
 #, csharp-format
 msgid "Remove iFolder {0}?"
 msgstr "iFolder {0} を削除しますか?"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1499
-msgid ""
-"This removes the iFolder from your local computer.  Because you are the "
-"owner, the iFolder is removed from all member computers.  The iFolder cannot "
-"be recovered or re-shared on another computer.  The files are not deleted "
-"from your local hard drive."
+#: src/LinuxClient/library/iFolderWindow.cs:1499 
+msgid "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
 msgstr "この操作を実行すると、iFolderはローカルコンピュータから削除されます。所有者による削除であるため、iFolderはすべてのメンバーのコンピュータから削除されます。削除されたiFolderは元に戻したり、他のコンピュータと再度共有したりできません。ローカルハードドライブ上のファイルは削除されません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1515
-msgid ""
-"This removes the iFolder from your local computer.  Because you are the "
-"owner, the iFolder is removed from the server and all member computers.  The "
-"iFolder cannot be recovered or re-shared on another computer.  The files are "
-"not deleted from your local hard drive."
+#: src/LinuxClient/library/iFolderWindow.cs:1515 
+msgid "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
 msgstr "この操作を実行すると、iFolderはローカルコンピュータから削除されます。所有者による削除であるため、iFolderはサーバおよびすべてのメンバーのコンピュータから削除されます。削除されたiFolderは元に戻したり、他のコンピュータと再度共有したりできません。ローカルハードドライブ上のファイルは削除されません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1529
-msgid ""
-"This removes you as a member of the iFolder.  You cannot access the iFolder "
-"unless the owner re-invites you.  The files are not deleted from your local "
-"hard drive."
+#: src/LinuxClient/library/iFolderWindow.cs:1529 
+msgid "This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive."
 msgstr "この操作を実行すると、iFolderのメンバーから削除されます。このiFolderの所有者が再度招待しない限り、このiFolderにはアクセスできなくなります。ローカルハードドライブ上のファイルは削除されません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1743
+#: src/LinuxClient/library/iFolderWindow.cs:1743 
 #: src/LinuxClient/library/iFolderWindow.cs:1769
 #: src/LinuxClient/library/LogWindow.cs:251
 #, csharp-format
 msgid "Checking for new iFolders: {0}"
 msgstr "新しいiFolderを確認しています: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1745
+#: src/LinuxClient/library/iFolderWindow.cs:1745 
 #: src/LinuxClient/library/iFolderWindow.cs:1771
 #: src/LinuxClient/library/LogWindow.cs:253
 msgid "Checking for new iFolders..."
 msgstr "新しいiFolderを確認しています..."
 
-#: src/LinuxClient/library/iFolderWindow.cs:1750
+#: src/LinuxClient/library/iFolderWindow.cs:1750 
 #: src/LinuxClient/library/LogWindow.cs:258
 #, csharp-format
 msgid "Checking for changes: {0}"
 msgstr "変更を確認しています: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1776
+#: src/LinuxClient/library/iFolderWindow.cs:1776 
 #, csharp-format
 msgid "Synchronizing: {0}"
 msgstr "同期中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1908
+#: src/LinuxClient/library/iFolderWindow.cs:1908 
 #: src/LinuxClient/library/LogWindow.cs:310
 #, csharp-format
 msgid "Deleting file: {0}"
 msgstr "ファイルを削除します: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1916
+#: src/LinuxClient/library/iFolderWindow.cs:1916 
 #: src/LinuxClient/library/LogWindow.cs:338
 #, csharp-format
 msgid "Uploading file: {0}"
 msgstr "ファイルをアップロードしています: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1921
+#: src/LinuxClient/library/iFolderWindow.cs:1921 
 #: src/LinuxClient/library/LogWindow.cs:342
 #, csharp-format
 msgid "Downloading file: {0}"
 msgstr "ファイルをダウンロードしています: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1926
+#: src/LinuxClient/library/iFolderWindow.cs:1926 
 #: src/LinuxClient/library/LogWindow.cs:315
 #, csharp-format
 msgid "Found changes in file: {0}"
 msgstr "ファイルに変更が見つかりました: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1931
+#: src/LinuxClient/library/iFolderWindow.cs:1931 
 #, csharp-format
 msgid "Synchronizing file: {0}"
 msgstr "ファイルを同期中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1940
+#: src/LinuxClient/library/iFolderWindow.cs:1940 
 #: src/LinuxClient/library/LogWindow.cs:350
 #, csharp-format
 msgid "Deleting directory: {0}"
 msgstr "ディレクトリを削除中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1948
+#: src/LinuxClient/library/iFolderWindow.cs:1948 
 #: src/LinuxClient/library/LogWindow.cs:363
 #, csharp-format
 msgid "Uploading directory: {0}"
 msgstr "ディレクトリをアップロード中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1953
+#: src/LinuxClient/library/iFolderWindow.cs:1953 
 #: src/LinuxClient/library/LogWindow.cs:367
 #, csharp-format
 msgid "Downloading directory: {0}"
 msgstr "ディレクトリをダウンロード中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1958
+#: src/LinuxClient/library/iFolderWindow.cs:1958 
 #: src/LinuxClient/library/LogWindow.cs:356
 #, csharp-format
 msgid "Found changes in directory: {0}"
 msgstr "ディレクトリに変更が見つかりました: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1963
+#: src/LinuxClient/library/iFolderWindow.cs:1963 
 #, csharp-format
 msgid "Synchronizing directory: {0}"
 msgstr "ディレクトリを同期中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:1971
+#: src/LinuxClient/library/iFolderWindow.cs:1971 
 #: src/LinuxClient/library/LogWindow.cs:373
 #, csharp-format
 msgid "Deleting on server: {0}"
 msgstr "サーバ上で削除中: {0}"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2131
+#: src/LinuxClient/library/iFolderWindow.cs:2131 
 msgid "Set up an iFolder account?"
 msgstr "iFolderアカウントをセットアップしますか?"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2132
+#: src/LinuxClient/library/iFolderWindow.cs:2132 
 msgid "To begin using iFolder, you must first set up an iFolder account."
 msgstr "iFolderの使用を開始するには、最初にiFolderアカウントをセットアップする必要があります。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2179
+#: src/LinuxClient/library/iFolderWindow.cs:2179 
 #: src/LinuxClient/library/iFolderWindow.cs:2195
 #: src/LinuxClient/library/iFolderWindow.cs:2211
 #: src/LinuxClient/library/iFolderWindow.cs:2357
 msgid "Invalid folder specified"
 msgstr "無効なフォルダが指定されました"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2180
+#: src/LinuxClient/library/iFolderWindow.cs:2180 
 msgid "An invalid folder was specified."
 msgstr "無効なフォルダが指定されました"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2196
+#: src/LinuxClient/library/iFolderWindow.cs:2196 
 msgid "An invalid folder was specified"
 msgstr "無効なフォルダが指定されました"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2212
-msgid ""
-"The folder you've specified is invalid.  Please remove the trailing "
-"separator character (/) and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2212 
+msgid "The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."
 msgstr "指定したフォルダは無効です。末尾の区切り文字(/) を削除し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2338
+#: src/LinuxClient/library/iFolderWindow.cs:2338 
 msgid "Show All"
 msgstr "-- すべてを表示 --"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2358
-msgid ""
-"The folder you've specified does not exist.  Please select an existing "
-"folder and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2358 
+msgid "The folder you've specified does not exist.  Please select an existing folder and try again."
 msgstr "指定したフォルダは存在しません。既存のフォルダを選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2362
+#: src/LinuxClient/library/iFolderWindow.cs:2362 
 msgid "A folder with the same name already exists."
 msgstr "同じ名前のフォルダがすでに存在します。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2363
-msgid ""
-"The location you selected already contains a folder with the same name as "
-"this iFolder.  Please select a different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2363 
+msgid "The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again."
 msgstr "選択した場所には、すでにこのiFolderと同じ名前のフォルダがあります。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2367
+#: src/LinuxClient/library/iFolderWindow.cs:2367 
 msgid "iFolders cannot exist at the drive level."
 msgstr "iFolderはドライブレベルでは存在できません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2368
-msgid ""
-"The location you selected is at the root of the drive.  Please select a "
-"location that is not at the root of a drive and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2368 
+msgid "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again."
 msgstr "選択された場所はドライブのルートです。ドライブのルートでない場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2372
+#: src/LinuxClient/library/iFolderWindow.cs:2372 
 msgid "The selected location contains invalid characters."
 msgstr "選択された場所には無効な文字が含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2373
-msgid ""
-"The characters \\:*?\"<>| cannot be used in an iFolder. Please select a "
-"different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2373 
+msgid "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again."
 msgstr "\\:*?\"<>| などの文字はiFolderでは使用できません。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2377
+#: src/LinuxClient/library/iFolderWindow.cs:2377 
 msgid "The selected location is inside the iFolder data folder."
 msgstr "選択された場所はiFolderデータフォルダ内にあります。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2378
-msgid ""
-"The iFolder data folder is normally located in your home folder in the "
-"folder \".local/share\".  Please select a different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2378 
+msgid "The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
 msgstr "iFolderデータフォルダは通常、\".local/share\"フォルダ内のホームフォルダにあります。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2382
+#: src/LinuxClient/library/iFolderWindow.cs:2382 
 msgid "The selected location contains the iFolder data files."
 msgstr "選択された場所にはiFolderデータファイルが含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2383
-msgid ""
-"The location you have selected contains the iFolder data files.  These are "
-"normally located in your home folder in the folder \".local/share\".  Please "
-"select a different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2383 
+msgid "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
 msgstr "選択した場所には、iFolderデータファイルが含まれています。これらのデータファイルは通常、\".local/share\"フォルダ内のホームフォルダにあります。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2387
+#: src/LinuxClient/library/iFolderWindow.cs:2387 
 msgid "The selected location is on a network or non-physical drive."
 msgstr "選択された場所はネットワーク上または非物理ドライブです。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2388
-msgid ""
-"iFolders must reside on a physical drive.  Please select a different "
-"location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2388 
+msgid "iFolders must reside on a physical drive.  Please select a different location and try again."
 msgstr "iFolderは物理ドライブ上に存在する必要があります。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2392
+#: src/LinuxClient/library/iFolderWindow.cs:2392 
 msgid "The selected location contains a system folder."
 msgstr "選択された場所にはシステムフォルダが含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2393
-msgid ""
-"System folders cannot be contained in an iFolder.  Please select a different "
-"location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2393 
+msgid "System folders cannot be contained in an iFolder.  Please select a different location and try again."
 msgstr "システムフォルダをiFolderに含めることはできません。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2397
+#: src/LinuxClient/library/iFolderWindow.cs:2397 
 msgid "The selected location is a system drive."
 msgstr "選択された場所はシステムドライブです。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2398
-msgid ""
-"System drives cannot be contained in an iFolder.  Please select a different "
-"location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2398 
+msgid "System drives cannot be contained in an iFolder.  Please select a different location and try again."
 msgstr "システムドライブをiFolderに含めることはできません。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2402
+#: src/LinuxClient/library/iFolderWindow.cs:2402 
 msgid "The selected location includes the Windows folder."
 msgstr "選択された場所にはWindowsフォルダが含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2403
-msgid ""
-"The Windows folder cannot be contained in an iFolder.  Please select a "
-"different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2403 
+msgid "The Windows folder cannot be contained in an iFolder.  Please select a different location and try again."
 msgstr "WindowsフォルダをiFolderに含めることはできません。別の場所を選択して、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2407
+#: src/LinuxClient/library/iFolderWindow.cs:2407 
 msgid "The selected location includes the Program Files folder."
 msgstr "選択された場所にはProgram Filesフォルダが含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2408
-msgid ""
-"The Program Files folder cannot be contained in an iFolder.  Please select a "
-"different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2408 
+msgid "The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again."
 msgstr "Program FilesフォルダはiFolderに含めることはできません。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2412
+#: src/LinuxClient/library/iFolderWindow.cs:2412 
 msgid "The selected location does not exist."
 msgstr "選択された場所は存在しません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2413
-msgid ""
-"iFolders can only be created from folders that exist.  Please select a "
-"different location and try again."
+#: src/LinuxClient/library/iFolderWindow.cs:2413 
+msgid "iFolders can only be created from folders that exist.  Please select a different location and try again."
 msgstr "iFolderが作成できるのは、存在するフォルダからのみです。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2417
+#: src/LinuxClient/library/iFolderWindow.cs:2417 
 msgid "You do not have access to read files in the selected location."
 msgstr "選択された場所内のファイルに対する読み込み権がありません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2418
+#: src/LinuxClient/library/iFolderWindow.cs:2418 
 #: src/LinuxClient/library/iFolderWindow.cs:2423
-msgid ""
-"iFolders can only be created from folders where you have access to read and "
-"write files.  Please select a different location and try again."
+msgid "iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again."
 msgstr "iFolderは、ファイルへの読み込み権と書き込み権があるフォルダからのみ作成できます。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2422
+#: src/LinuxClient/library/iFolderWindow.cs:2422 
 msgid "You do not have access to write files in the selected location."
 msgstr "選択された場所内のファイルに対する書き込み権がありません。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2427
+#: src/LinuxClient/library/iFolderWindow.cs:2427 
 msgid "The selected location already contains an iFolder."
 msgstr "選択された場所にはiFolderがすでに含まれています。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2428
+#: src/LinuxClient/library/iFolderWindow.cs:2428 
 #: src/LinuxClient/library/iFolderWindow.cs:2433
-msgid ""
-"iFolders cannot exist inside other iFolders.  Please select a different "
-"location and try again."
+msgid "iFolders cannot exist inside other iFolders.  Please select a different location and try again."
 msgstr "iFolderは他のiFolder内には存在できません。別の場所を選択し、再度実行してください。"
 
-#: src/LinuxClient/library/iFolderWindow.cs:2432
+#: src/LinuxClient/library/iFolderWindow.cs:2432 
 msgid "The selected location is inside another iFolder."
 msgstr "選択された場所は他のiFolder内にあります。"
 
-#: src/LinuxClient/library/LogWindow.cs:60
+#: src/LinuxClient/library/LogWindow.cs:60 
 msgid "iFolder Synchronization Log"
 msgstr "iFolder同期ログ"
 
-#: src/LinuxClient/library/LogWindow.cs:158
+#: src/LinuxClient/library/LogWindow.cs:158 
 msgid "Save the synchronization log"
 msgstr "同期ログを保存する"
 
-#: src/LinuxClient/library/LogWindow.cs:163
+#: src/LinuxClient/library/LogWindow.cs:163 
 msgid "Clear the synchronization log"
 msgstr "同期ログをクリアする"
 
-#: src/LinuxClient/library/LogWindow.cs:195
+#: src/LinuxClient/library/LogWindow.cs:195 
 msgid "Log"
 msgstr "ログ"
 
-#: src/LinuxClient/library/LogWindow.cs:268
+#: src/LinuxClient/library/LogWindow.cs:268 
 #, csharp-format
 msgid "Started synchronization: {0}"
 msgstr "同期を開始しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:279
+#: src/LinuxClient/library/LogWindow.cs:279 
 #, csharp-format
 msgid "Done checking for new iFolders: {0}"
 msgstr "新しいiFolderの確認を終了しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:281
+#: src/LinuxClient/library/LogWindow.cs:281 
 msgid "Done checking for new iFolders"
 msgstr "新しいiFolder の確認を終了しました"
 
-#: src/LinuxClient/library/LogWindow.cs:286
+#: src/LinuxClient/library/LogWindow.cs:286 
 #, csharp-format
 msgid "Finished synchronization: {0}"
 msgstr "同期を完了しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:325
+#: src/LinuxClient/library/LogWindow.cs:325 
 #, csharp-format
 msgid "Uploading file: {0}.  Synchronizing changes only: {1}% savings."
 msgstr "ファイルをアップロード中: {0}。 変更のみを同期中: {1}% 保存しました。"
 
-#: src/LinuxClient/library/LogWindow.cs:330
+#: src/LinuxClient/library/LogWindow.cs:330 
 #, csharp-format
 msgid "Downloading file: {0}.  Synchronizing changes only: {1}% savings."
 msgstr "ファイルをダウンロード中: {0}。  変更のみを同期中: {1}% 保存しました。"
 
-#: src/LinuxClient/library/LogWindow.cs:383
+#: src/LinuxClient/library/LogWindow.cs:383 
 #, csharp-format
 msgid "Conflict occurred: {0}"
 msgstr "競合が発生しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:388
+#: src/LinuxClient/library/LogWindow.cs:388 
 #, csharp-format
 msgid "Policy prevented synchronization: {0}"
 msgstr "ポリシーによって同期が中止されました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:393
+#: src/LinuxClient/library/LogWindow.cs:393 
 #, csharp-format
 msgid "Insuficient rights prevented synchronization: {0}"
 msgstr "権利が不十分なため同期できません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:398
+#: src/LinuxClient/library/LogWindow.cs:398 
 #, csharp-format
 msgid "Locked iFolder prevented synchronization: {0}"
 msgstr "iFolderがロックされているため同期できません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:403
+#: src/LinuxClient/library/LogWindow.cs:403 
 #, csharp-format
 msgid "Full iFolder prevented synchronization: {0}"
 msgstr "iFolderが一杯なため同期できません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:408
+#: src/LinuxClient/library/LogWindow.cs:408 
 #, csharp-format
 msgid "Size restriction policy prevented synchronization: {0}"
 msgstr "サイズ制限ポリシーによって同期が中止されました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:413
+#: src/LinuxClient/library/LogWindow.cs:413 
 #, csharp-format
 msgid "File type restriction policy prevented synchronization: {0}"
 msgstr "ファイルタイプの制限ポリシーによって同期が中止されました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:420
+#: src/LinuxClient/library/LogWindow.cs:420 
 #, csharp-format
 msgid "Insufficient disk space on the server prevented synchronization: {0}"
 msgstr "サーバのディスクスペースが十分でないため同期できません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:426
+#: src/LinuxClient/library/LogWindow.cs:426 
 #, csharp-format
 msgid "Insufficient disk space on this computer prevented synchronization: {0}"
 msgstr "このコンピュータのディスクスペースが十分でないため同期できません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:432
+#: src/LinuxClient/library/LogWindow.cs:432 
 #, csharp-format
 msgid "Read-only iFolder prevented synchronization: {0}"
 msgstr "読み込み専用のiFolderは同期されません: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:437
+#: src/LinuxClient/library/LogWindow.cs:437 
 #, csharp-format
 msgid "iFolder failed synchronization: {0}"
 msgstr "iFolderの同期に失敗しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:463
+#: src/LinuxClient/library/LogWindow.cs:463 
 msgid "Save iFolder Log..."
 msgstr "iFolderログを保存..."
 
-#: src/LinuxClient/library/LogWindow.cs:485
+#: src/LinuxClient/library/LogWindow.cs:485 
 msgid "Overwrite the existing file?"
 msgstr "既存のファイルへ上書きします"
 
-#: src/LinuxClient/library/LogWindow.cs:486
-msgid ""
-"The file you selected exists.  Selecting yes will overwrite the contents of "
-"this file."
+#: src/LinuxClient/library/LogWindow.cs:486 
+msgid "The file you selected exists.  Selecting yes will overwrite the contents of this file."
 msgstr "選択したファイルが存在します。［はい］を選択すると、このファイルの内容は上書きされます。"
 
-#: src/LinuxClient/library/LogWindow.cs:511
+#: src/LinuxClient/library/LogWindow.cs:511 
 msgid "Insufficient access"
 msgstr "必要なアクセス権がありません"
 
-#: src/LinuxClient/library/LogWindow.cs:512
-msgid ""
-"You do not have access to save the file in the location you specified.  "
-"Please select a different location."
+#: src/LinuxClient/library/LogWindow.cs:512 
+msgid "You do not have access to save the file in the location you specified.  Please select a different location."
 msgstr "指定した場所にファイルを保存するためのアクセス権がありません。別の場所を選択してください。"
 
-#: src/LinuxClient/library/LogWindow.cs:526
+#: src/LinuxClient/library/LogWindow.cs:526 
 #: src/LinuxClient/library/LogWindow.cs:570
 msgid "Error saving the log file"
 msgstr "ログファイルの保存中にエラーが発生しました"
 
-#: src/LinuxClient/library/LogWindow.cs:527
+#: src/LinuxClient/library/LogWindow.cs:527 
 #, csharp-format
 msgid "An exception occurred trying to save the log: {0}"
 msgstr "ログの保存を試みましたがエラーが発生しました: {0}"
 
-#: src/LinuxClient/library/LogWindow.cs:571
-msgid ""
-"The iFolder Client experienced an error trying to save the log.  Please "
-"report this bug."
+#: src/LinuxClient/library/LogWindow.cs:571 
+msgid "The iFolder Client experienced an error trying to save the log.  Please report this bug."
 msgstr "ログの保存を試行中にiFolder Clientでエラーが発生しました。このバグは報告してください。"
 
-#: src/LinuxClient/library/PreferencesWindow.cs:66
+#: src/LinuxClient/library/PreferencesWindow.cs:66 
 msgid "iFolder Preferences"
 msgstr "iFolderの初期設定"
 
-#: src/LinuxClient/library/PreferencesWindow.cs:111
+#: src/LinuxClient/library/PreferencesWindow.cs:111 
 msgid "Accou_nts"
 msgstr "アカウント(_N)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:176
+#: src/LinuxClient/library/PrefsAccountsPage.cs:176 
 msgid "System Name"
 msgstr "システム名"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:188
+#: src/LinuxClient/library/PrefsAccountsPage.cs:188 
 msgid "Username"
 msgstr "ユーザ名"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:226
+#: src/LinuxClient/library/PrefsAccountsPage.cs:188 
+msgid "Server Name"
+msgstr "サーバ名"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:226 
 msgid "_Details"
 msgstr "詳細(_D)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:231
+#: src/LinuxClient/library/PrefsAccountsPage.cs:231 
 msgid "Account Settings"
 msgstr "アカウントの設定"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:261
-msgid "User Name:"
+#: src/LinuxClient/library/PrefsAccountsPage.cs:261 
+msgid "User name:"
 msgstr "ユーザ名:"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:295
+#: src/LinuxClient/library/PrefsAccountsPage.cs:295 
 msgid "Remember _password"
 msgstr "パスワードを保存する(_P)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:303
+#: src/LinuxClient/library/PrefsAccountsPage.cs:303 
 msgid "_Enable account"
 msgstr "アカウントを有効にする(_E)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:310
+#: src/LinuxClient/library/PrefsAccountsPage.cs:310 
 msgid "De_fault account"
 msgstr "デフォルトアカウント(_F)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:431
+#: src/LinuxClient/library/PrefsAccountsPage.cs:431 
 msgid "Logged in"
 msgstr "ログイン"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:435
+#: src/LinuxClient/library/PrefsAccountsPage.cs:435 
 msgid "Logged out"
 msgstr "ログアウト済"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:440
+#: src/LinuxClient/library/PrefsAccountsPage.cs:440 
 msgid "Disabled"
-msgstr "使用不可"
+msgstr "使用不可 "
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:582
+#: src/LinuxClient/library/PrefsAccountsPage.cs:582 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1320
 msgid "Lose current settings?"
 msgstr "現在の設定を廃棄しますか?"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:583
-msgid ""
-"You are currently creating a new account.  By selecting a different account "
-"you cancel the operation."
+#: src/LinuxClient/library/PrefsAccountsPage.cs:583 
+msgid "You are currently creating a new account.  By selecting a different account you cancel the operation."
 msgstr "現在、新しいアカウントを作成中です。別のアカウントを選択すると操作をキャンセルします。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:674
+#: src/LinuxClient/library/PrefsAccountsPage.cs:674 
 msgid "Unable to log out of the iFolder Server"
 msgstr "iFolder サーバからログアウトできません"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:675
-msgid ""
-"An error was encountered while logging out of the iFolder Server.  If the "
-"problem persists, please contact your network administrator."
+#: src/LinuxClient/library/PrefsAccountsPage.cs:675 
+msgid "An error was encountered while logging out of the iFolder Server.  If the problem persists, please contact your network administrator."
 msgstr "iFolder サーバからのログアウト中にエラーが発生しました。問題が解決しない場合は、ネットワーク管理者に連絡してください。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:705
-msgid ""
-"An account for this server already exists on the local machine.  Only one "
-"account per server is allowed."
+#: src/LinuxClient/library/PrefsAccountsPage.cs:705 
+msgid "An account for this server already exists on the local machine.  Only one account per server is allowed."
 msgstr "このサーバのアカウントはローカルコンピュータ上にすでに存在します。サーバごとに許可されるアカウントは1つだけです。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:717
+#: src/LinuxClient/library/PrefsAccountsPage.cs:717 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:739
 #: src/LinuxClient/library/Util.cs:348
 msgid "Unable to connect to the iFolder Server"
 msgstr "iFolderサーバに接続できません"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:718
+#: src/LinuxClient/library/PrefsAccountsPage.cs:718 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:740
 #: src/LinuxClient/library/Util.cs:349
-msgid ""
-"An error was encountered while connecting to the iFolder server.  Please "
-"verify the information entered and try again.  If the problem persists, "
-"please contact your network administrator."
+msgid "An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
 msgstr "iFolderサーバへの接続中にエラーが発生しました。入力した情報を確認し、再度実行してください。それでも問題が解決しない場合は、ネットワーク管理者に連絡してください。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:762
+#: src/LinuxClient/library/PrefsAccountsPage.cs:762 
 #, csharp-format
 msgid "iFolder cannot verify the identity of the iFolder Server \"{0}\"."
 msgstr "iFolderはiFolderサーバ「{0}」のIDを確認できません。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:763
+#: src/LinuxClient/library/PrefsAccountsPage.cs:763 
 #, csharp-format
-msgid ""
-"The certificate for this iFolder Server was signed by an unknown certifying "
-"authority.  You might be connecting to a server that is pretending to be "
-"\"{0}\" which could put your confidential information at risk.   Before "
-"accepting this certificate, you should check with your system "
-"administrator.  Do you want to accept this certificate permanently and "
-"continue to connect?"
+msgid "The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"
 msgstr "このiFolderサーバの証明書は不明な認証局によって署名されています。「{0}」になりすましているサーバに接続している可能性があり、機密情報が危険にさらされるおそれがあります。この証明書を受け入れる前に、管理者に確認する必要があります。この証明書を永続的に受け入れて、接続を続行しますか?"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:894
+#: src/LinuxClient/library/PrefsAccountsPage.cs:894 
 msgid "_Log Out"
 msgstr "ログアウト(_L)"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:1275
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1275 
 msgid "Your password has expired"
 msgstr "パスワードの期限が切れました!"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:1276
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1276 
 #, csharp-format
 msgid "You have {0} grace logins remaining."
 msgstr "猶予ログインは {0} 回あります。"
 
-#: src/LinuxClient/library/PrefsAccountsPage.cs:1321
-msgid ""
-"You are currently creating a new account.  By closing the window or changing "
-"to a different page you cancel the operation."
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1321 
+msgid "You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."
 msgstr "現在、新しいアカウントを作成中です。ウィンドウを閉じるか別のページへ移動すると操作をキャンセルします。"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:102
+#: src/LinuxClient/library/PrefsGeneralPage.cs:102 
 msgid "Application"
 msgstr "アプリケーション"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:122
+#: src/LinuxClient/library/PrefsGeneralPage.cs:122 
 msgid "_Show Confirmation dialog when creating iFolders"
 msgstr "iFolderの作成時に確認ダイアログを表示(_S)"
+
+msgid "_Display confirmation dialog on successful creation of iFolder"
+msgstr "iFolderが正常に作成されたら確認ダイアログを表示(_D)"
 
 msgid "Show _Network Events  messages when iFolder is started"
 msgstr "iFolderの起動時にネットワークイベントメッセージを表示する(_N)"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:127
-msgid ""
-"To start up iFolder at login, leave iFolder running when you log out and "
-"save your current setup."
+#: src/LinuxClient/library/PrefsGeneralPage.cs:127 
+msgid "To start up iFolder at login, leave iFolder running when you log out and save your current setup."
 msgstr "ログイン時にiFolderを起動するには、ログアウトするときにiFolderを実行したままにして、現在の設定を保存します。"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:142
+#: src/LinuxClient/library/PrefsGeneralPage.cs:142 
 msgid "Notification"
 msgstr "通知"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:163
+#: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "共有されたiFolderの通知(_D)"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:170
-msgid "Notify of conflic_ts"
-msgstr "競合の通知(_T)"
+msgid "Notify when iFolders are _shared"
+msgstr "iFoldersが共有されたときに通知(_S)"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:176
-msgid "Notify when a _user joins"
-msgstr "ユーザが参加したときに通知する(_U)"
+#: src/LinuxClient/library/PrefsGeneralPage.cs:170 
+msgid "Notify when conflic_ts arise"
+msgstr "競合が発生したときに通知(_T)"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:219
+#: src/LinuxClient/library/PrefsGeneralPage.cs:176 
+msgid "Notify when a _user joins the iFolder domain"
+msgstr "iFolderドメインにユーザが参加したときに通知(_U)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
 msgstr "iFolderの自動同期(_S)"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:229
+#: src/LinuxClient/library/PrefsGeneralPage.cs:229 
 msgid "Synchronize iFolders Every"
 msgstr "iFolderを指定間隔で同期する"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:240
+#: src/LinuxClient/library/PrefsGeneralPage.cs:240 
 msgid "seconds"
 msgstr "秒"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:241
+#: src/LinuxClient/library/PrefsGeneralPage.cs:241 
 msgid "minutes"
 msgstr "分"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:242
+#: src/LinuxClient/library/PrefsGeneralPage.cs:242 
 msgid "hours"
 msgstr "時間"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:243
+#: src/LinuxClient/library/PrefsGeneralPage.cs:243 
 msgid "days"
 msgstr "日"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:501
+#: src/LinuxClient/library/PrefsGeneralPage.cs:501 
 msgid "Synchronization Interval Limit"
 msgstr "同期間隔の制限"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:502
-msgid ""
-"The synchronization interval cannot be set to less than one minute.  It was "
-"automatically changed to 60 seconds."
+#: src/LinuxClient/library/PrefsGeneralPage.cs:502 
+msgid "The synchronization interval cannot be set to less than one minute.  It was automatically changed to 60 seconds."
 msgstr "同期間隔を1分未満に設定することはできません。指定した値は自動的に60秒に変更されました。"
 
-#: src/LinuxClient/library/RemoveAccountDialog.cs:61
+#: src/LinuxClient/library/RemoveAccountDialog.cs:61 
 msgid "Remove this iFolder account?"
 msgstr "このiFolderアカウントを削除しますか?"
 
-#: src/LinuxClient/library/RemoveAccountDialog.cs:77
+msgid "Remove this iFolder Account?"
+msgstr "このiFolderアカウントを削除しますか?"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:77 
 msgid "System Name:"
 msgstr "システム名:"
 
-#: src/LinuxClient/library/RemoveAccountDialog.cs:121
+msgid "iFolder server name:"
+msgstr "iFolderサーバ名:"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:121 
 msgid "_Remove my iFolders and files from the server"
 msgstr "サーバからiFolderとファイルを削除する(_R)"
 
-#: src/LinuxClient/library/RemoveAccountDialog.cs:163
+#: src/LinuxClient/library/RemoveAccountDialog.cs:163 
 msgid "Removing iFolders from Server"
 msgstr "サーバからiFolderを削除しています"
 
-#: src/LinuxClient/library/RemoveAccountDialog.cs:164
-msgid ""
-"Removing iFolders from the server will delete the files stored on the "
-"server.  Your files will remain intact on this computer.\n"
-"\n"
-"If you've shared any iFolders with other users, they will no longer be able "
-"to synchronize them with the server.  Additionally, you will no longer be "
-"able to access these iFolders from any other computer."
+#: src/LinuxClient/library/RemoveAccountDialog.cs:164 
+msgid "Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."
 msgstr "サーバからiFolderを削除すると、サーバに保存されたファイルが削除されます。このコンピュータ上のファイルはそのまま残ります。\n\niFolderを他のユーザと共有している場合、それらのユーザはサーバとの同期が実行できなくなります。また、iFolderへは他のコンピュータからアクセスできなくなります。"
 
-#: src/LinuxClient/library/Util.cs:167
+#: src/LinuxClient/library/Util.cs:167 
 #, csharp-format
 msgid "Error displaying help file \"{0}\""
 msgstr "ヘルプファイル「{0}」を表示中にエラーが発生しました"
 
-#: src/LinuxClient/library/Util.cs:168
+#: src/LinuxClient/library/Util.cs:168 
 msgid "iFolder could not open the default web browser to show the help file."
 msgstr "iFolderはデフォルトのWebブラウザを開いてヘルプファイルを表示できませんでした。"
 
-#: src/LinuxClient/library/Util.cs:180
+#: src/LinuxClient/library/Util.cs:180 
 msgid "iFolder 3 Team"
 msgstr "iFolder 3チーム"
 
-#: src/LinuxClient/library/Util.cs:182
+#: src/LinuxClient/library/Util.cs:182 
 msgid "Developers:"
 msgstr "開発者:"
 
-#: src/LinuxClient/library/Util.cs:194
+#: src/LinuxClient/library/Util.cs:194 
 msgid "Quality Assurance:"
 msgstr "品質保証:"
 
-#: src/LinuxClient/library/Util.cs:201
+#: src/LinuxClient/library/Util.cs:201 
 msgid "Product Management:"
 msgstr "製品管理:"
 
-#: src/LinuxClient/library/Util.cs:205
+#: src/LinuxClient/library/Util.cs:205 
 msgid "Documentation:"
 msgstr "マニュアル:"
 
-#: src/LinuxClient/library/Util.cs:208
+#: src/LinuxClient/library/Util.cs:208 
 msgid "Special Thanks"
 msgstr "謝意"
 
-#: src/LinuxClient/library/Util.cs:210
+#: src/LinuxClient/library/Util.cs:210 
 msgid "Retired Contributers:"
 msgstr "退職された貢献者:"
 
-#: src/LinuxClient/library/Util.cs:216
+#: src/LinuxClient/library/Util.cs:216 
 msgid "Organizations:"
 msgstr "組織:"
 
-#: src/LinuxClient/library/Util.cs:220
+#: src/LinuxClient/library/Util.cs:220 
 msgid "Code Contributors:"
 msgstr "開発コードの貢献者:"
 
-#: src/LinuxClient/library/Util.cs:226
+#: src/LinuxClient/library/Util.cs:226 
 msgid "Other Contributors:"
 msgstr "その他の貢献者:"
 
-#: src/LinuxClient/library/Util.cs:231
-msgid "Copyright (C) 2004-2009 Novell, Inc."
-msgstr "Copyright (C) 2004-2009 Novell, Inc."
+#: src/LinuxClient/library/Util.cs:231 
+msgid "Copyright (C) 2008 Novell, Inc."
+msgstr "Copyright (C) 2008 Novell, Inc."
 
-#: src/LinuxClient/library/Util.cs:232
-msgid ""
-"The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system. This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."
+#: src/LinuxClient/library/Util.cs:232 
+msgid "The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system. This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."
 msgstr "iFolder Projectは、ユーザが同じオペレーティングシステムを使用していてもいなくても、フォルダおよびどのタイプのファイルも簡単に他のユーザと共有できるようにする、ファイル共有ソリューションです。このプロジェクトはmono/.NETフレームワークで構築されており、既存のデスクトップ環境にシームレスに統合されます。"
 
-#: src/LinuxClient/library/Util.cs:332
+#: src/LinuxClient/library/Util.cs:332 
 msgid "The username or password is invalid"
 msgstr "ユーザ名またはパスワードが無効です"
 
-#: src/LinuxClient/library/Util.cs:333
+#: src/LinuxClient/library/Util.cs:333 
 msgid "Please try again."
 msgstr "再度実行してください。"
 
-#: src/LinuxClient/library/Util.cs:336
+#: src/LinuxClient/library/Util.cs:336 
 msgid "The user account is disabled"
 msgstr "ユーザアカウントが無効です"
 
-#: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341
+#: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341 
 msgid "Please contact your network administrator for assistance."
 msgstr "ネットワーク管理者に連絡して支援を求めてください。"
 
-#: src/LinuxClient/library/Util.cs:340
+#: src/LinuxClient/library/Util.cs:340 
 msgid "The user account is locked"
 msgstr "ユーザアカウントはロックされています"
 
-#: src/LinuxClient/library/Util.cs:344
+#: src/LinuxClient/library/Util.cs:344 
 msgid "Unable to contact the specified server"
 msgstr "指定されたサーバに接続できません"
 
-#: src/LinuxClient/library/Util.cs:345
-msgid ""
-"Please verify the information entered and try again.  If the problem "
-"persists, please contact your network administrator."
+#: src/LinuxClient/library/Util.cs:345 
+msgid "Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
 msgstr "入力した情報を確認し、再度実行してください。それでも問題が解決しない場合は、ネットワーク管理者に連絡してください。"
 
-#: src/LinuxClient/library/Util.cs:350
+#: src/LinuxClient/library/Util.cs:350 
 msgid "Authentication Status Code"
 msgstr "認証ステータスコード"
 
-#: src/LinuxClient/library/Util.cs:460
+#: src/LinuxClient/library/Util.cs:460 
 msgid "Unable to locate the Simias process"
 msgstr "Simiasプロセスが見つかりません"
 
-#: src/LinuxClient/library/Util.cs:461
-msgid ""
-"The Simias process must be running for iFolder to work.  Restart iFolder.  "
-"If the problem persists, please contact your network administrator for "
-"assistance."
+#: src/LinuxClient/library/Util.cs:461 
+msgid "The Simias process must be running for iFolder to work.  Restart iFolder.  If the problem persists, please contact your network administrator for assistance."
 msgstr "iFolderを動作させるにはSimiasプロセスが実行中である必要があります。iFolderを再起動してください。それでも問題が解決しない場合は、ネットワーク管理者に連絡して支援を求めてください。"
 
-msgid ""
-"Configure an iFolder Account"
+msgid "Configure an iFolder Account"
 msgstr "iFolderアカウントの環境設定"
 
-msgid ""
-"Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."
+msgid "Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."
 msgstr "iFolderアカウントアシスタントにようこそ\n\n［転送］をクリックして開始します。"
 
-msgid ""
-"iFolder Server"
-msgstr "iFolderサーバ"
+msgid "Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."
+msgstr "iFolderアカウント作成ウィザードにようこそ\n\n［転送］をクリックして開始します。"
 
-msgid ""
-"Enter the name of your iFolder Server (for example, \"ifolder.example.net\")."
+msgid "iFolder Server"
+msgstr "iFolderサーバ:"
+
+msgid "Enter the name of your iFolder Server (for example, \"ifolder.example.net\")."
 msgstr "iFolderサーバの名前を入力してください(たとえば、［ifolder.example.net］)。"
 
-msgid ""
-"Server _Address:"
+msgid "Server _Address:"
 msgstr "サーバアドレス(_A):"
 
-msgid ""
-"Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
+msgid "Server _address:"
+msgstr "サーバアドレス(_A):"
+
+msgid "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
 msgstr "このiFolderサーバをデフォルトサーバに設定することで、新しいフォルダを追加するとき、iFolderで自動的にこのサーバが選択されるようになります。"
 
-msgid ""
-"Make this my _default server"
+msgid "Setting this iFolder Server as your default server will enable iFolder to automatically select this server when adding new folders."
+msgstr "このiFolderサーバをデフォルトサーバに設定することで、新しいフォルダを追加するとき、iFolderで自動的にこのサーバが選択されるようになります。"
+
+msgid "Make this my _default server"
 msgstr "このサーバをデフォルトサーバにする(_D)"
 
-msgid ""
-"Identity"
+msgid "Set this as my _default server"
+msgstr "このサーバをデフォルトサーバとして設定する(_D)"
+
+msgid "Identity"
 msgstr "識別子"
 
-msgid ""
-"Enter your iFolder user name and password (for example, \"jsmith\")."
+msgid "iFolder Account Information"
+msgstr "iFolderアカウント情報"
+
+msgid "Enter your iFolder user name and password (for example, \"jsmith\")."
 msgstr "iFolderユーザ名とパスワードを入力(例:「jsmith」)。"
 
-msgid ""
-"_User Name:"
+msgid "_User Name:"
 msgstr "ユーザ名(_U):"
 
-msgid ""
-"_Password:"
+msgid "_User name:"
+msgstr "ユーザ名(_U):"
+
+msgid "_Password:"
 msgstr "パスワード(_P):"
 
-msgid ""
-"_Remember my password"
+msgid "_Remember my password"
 msgstr "パスワードを保存(_R)"
 
-msgid ""
-"Verify and Connect"
+msgid "_Remember password on this computer"
+msgstr "このコンピュータにパスワードを保存(_R)"
+
+msgid "Verify and Connect"
 msgstr "検証して接続"
 
-msgid ""
-"Please verify that the information you have entered is correct."
+msgid "Please verify that the information you have entered is correct."
 msgstr "入力した情報が正しいことを確認してください。"
 
-msgid ""
-"Server Address:"
+msgid "Please verify the information you have entered."
+msgstr "入力した情報を確認してください。"
+
+msgid "Server Address:"
 msgstr "サーバアドレス:"
 
-msgid ""
-"Remember password:"
+msgid "Server address:"
+msgstr "サーバアドレス:"
+
+msgid "Remember password:"
 msgstr "パスワードを保存する:"
 
-msgid ""
-"Make default account:"
+msgid "_Remember password:"
+msgstr "パスワードを保存する(_R):"
+
+msgid "Make default account:"
 msgstr "デフォルトアカウントにする:"
 
-msgid ""
-"Click \"Connect\" to validate your connection with the server."
-msgstr "［接続］をクリックし、サーバとの接続を確認します。"
+msgid "Click \"Connect\" to test your connection with the server."
+msgstr "［接続］をクリックし、サーバとの接続をテストします。"
 
-msgid ""
-"Encryption"
+msgid "Click \"Connect\" to proceed."
+msgstr "続行するには、［接続］をクリックします。"
+
+msgid "Unable to Verify Identity"
+msgstr "IDを確認できません"
+
+msgid "Encryption"
 msgstr "暗号化"
 
-msgid ""
-"Enter the Passphrase"
+msgid "Enter the passphrase"
 msgstr "パスフレーズを入力"
 
-msgid ""
-"_Passphrase:"
+msgid "_Passphrase:"
 msgstr "パスフレーズ(_P):"
 
-msgid ""
-"R_etype the Passphrase:"
+msgid "R_etype the Passphrase:"
 msgstr "パスフレーズを再度入力(_E):"
 
-msgid ""
-"_Remember the Passphrase"
+msgid "_Remember the Passphrase"
 msgstr "パスフレーズを保存する(_R)"
 
-msgid ""
-"Select the Passphrase Recovery Agent"
+msgid "Select the Passphrase Recovery Agent"
 msgstr "パスフレーズ回復エージェントを選択"
 
-msgid ""
-"Passphrase Recovery Agents"
+msgid "Passphrase Recovery Agents"
 msgstr "パスフレーズ回復エージェント"
 
-msgid ""
-"Congratulations!"
+msgid "Congratulations!"
 msgstr "おめでとうございます"
 
-msgid ""
-"iFolder Account Assistant"
+msgid "iFolder Account Assistant"
 msgstr "iFolderアカウントアシスタント"
 
-msgid ""
-"iFolder Account Assistant - (1 of 5)"
+msgid "iFolder Account Creation Wizard"
+msgstr "iFolderアカウント作成ウィザード"
+
+msgid "iFolder Account Assistant - (1 of 5)"
 msgstr "iFolderアカウントアシスタント - (1 / 5)"
 
-msgid ""
-"iFolder Account Assistant - (2 of 5)"
+msgid "iFolder Account Assistant - (2 of 5)"
 msgstr "iFolderアカウントアシスタント - (2 / 5)"
 
-msgid ""
-"iFolder Account Assistant - (3 of 5)"
+msgid "iFolder Account Assistant - (3 of 5)"
 msgstr "iFolderアカウントアシスタント - (3 / 5)"
 
-msgid ""
-"iFolder Account Assistant - (4 of 5)"
+msgid "iFolder Account Assistant - (4 of 5)"
 msgstr "iFolderアカウントアシスタント - (4 / 5)"
 
-msgid ""
-"iFolder Account Assistant - (5 of 5)"
+msgid "iFolder Account Assistant - (5 of 5)"
 msgstr "iFolderアカウントアシスタント - (5 / 5)"
 
-msgid ""
-"_Skip"
+msgid "_Skip"
 msgstr "スキップ(_S)"
 
-msgid ""
-"Yes"
+msgid "Yes"
 msgstr "はい"
 
-msgid ""
-"No"
+msgid "No"
 msgstr "いいえ"
 
-msgid ""
-"Co_nnect"
+msgid "Co_nnect"
 msgstr "接続(_N)"
 
-msgid ""
-"Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
+msgid "Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
 msgstr "接続に成功しました。\n接続情報:\n\nアカウント名: {0}\nサーバアドレス: {1}\nユーザ名: {2}\n\n［終了］をクリックしてこのウィンドウを閉じます。"
 
-msgid ""
-"_Finish"
+msgid "You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."
+msgstr "接続しました。接続情報:\n\nサーバ名: \t{0}\nサーバアドレス: \t{1}\nユーザ名: \t{2}\n\n［終了］をクリックしてこのウィザードを閉じます。"
+
+msgid "_Finish"
 msgstr "終了(_F)"
 
-msgid ""
-"PassPhrase mismatch"
+msgid "Passphrase mismatch"
 msgstr "パスフレーズが一致していません"
 
-msgid ""
-"The PassPhrase and retyped PassPhrase are not same"
-msgstr "パスフレーズと入力されたパスフレーズが一致しません"
+msgid "The passphrase and retyped passphrase are not same"
+msgstr "パスフレーズと再入力されたパスフレーズが一致していません"
 
-msgid ""
-"None"
+msgid "None"
 msgstr "なし"
 
-msgid ""
-"Error setting the Passphrase"
+msgid "Error setting the passphrase"
 msgstr "パスフレーズの設定中にエラーが発生しました"
 
-msgid ""
-"Unable to change the Passphrase"
+msgid "Unable to change the Passphrase"
 msgstr "パスフレーズを変更できません"
 
-msgid ""
-"PassPhrase Invalid"
+msgid "PassPhrase Invalid"
 msgstr "パスフレーズが無効です"
 
-msgid ""
-"Invalid PassPhrase"
+msgid "Invalid PassPhrase"
 msgstr "無効なパスフレーズ"
 
-msgid ""
-"The PassPhrase entered is not valid"
+msgid "The PassPhrase entered is not valid"
 msgstr "入力されたパスフレーズは無効です"
 
-msgid ""
-"The Current PassPhrase entered is not valid"
+msgid "The Current PassPhrase entered is not valid"
 msgstr "入力した現在のパスフレーズが無効です"
 
-msgid ""
-"Unable to set the passphrase"
+msgid "Unable to set the passphrase"
 msgstr "パスフレーズを設定できません"
 
-msgid ""
-"Please enter the passphrase again"
+msgid "Please enter the passphrase again"
 msgstr "パスフレーズを再度入力してください"
 
-msgid ""
-"gtk-go-back"
+msgid "gtk-go-back"
 msgstr "gtk-go-back"
 
-msgid ""
-"Connecting..."
+msgid "Connecting..."
 msgstr "接続中..."
 
-msgid ""
-"Please wait while your iFolder account is connecting."
+msgid "Please wait while your iFolder account is connecting."
 msgstr "iFolderアカウントが接続している間、お待ちください"
 
-msgid ""
-"An account already exists"
+msgid "An account already exists"
 msgstr "アカウントはすでに存在します"
 
-msgid ""
-"Accept the certificate of this server?"
+msgid "Accept the certificate of this server?"
 msgstr "このサーバの証明書を受け入れますか?"
 
-msgid ""
-"iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."
+msgid "iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."
 msgstr "iFolderは「{0}」を信頼するサーバとして確認できません。このサーバのID証明書を慎重に検証してください。"
 
-msgid ""
-"Certificate"
+msgid "Certificate"
 msgstr "証明書"
 
-msgid ""
-"Click Ok to accept the certificate and Cancel to return"
+msgid "Click Ok to accept the certificate and Cancel to return"
 msgstr "証明書を受け入れるには［OK］を、戻るには［キャンセル］をクリックします"
 
-msgid ""
-"Select a folder..."
+msgid "Select a folder..."
 msgstr "フォルダの選択..."
 
-msgid ""
-"Passphrase Encryption"
+msgid "Passphrase Encryption"
 msgstr "パスフレーズ暗号化"
 
-msgid ""
-"Regular"
+msgid "Regular"
 msgstr "通常"
 
-msgid ""
-"Type"
-msgstr "種類"
+msgid "Type"
+msgstr "タイプ"
 
-msgid ""
-"Unable to Reset the passphrase"
+msgid "Unable to reset the passphrase"
 msgstr "パスフレーズをリセットできません"
 
-msgid ""
-"Unable to remove the account"
+msgid "Unable to remove the account"
 msgstr "アカウントを削除できません"
 
-msgid ""
-"iFolder encountered a problem removing the account.  Please restart iFolder and try again."
+msgid "iFolder encountered a problem removing the account.  Please restart iFolder and try again."
 msgstr "iFolderはアカウントの削除中に問題を検出しました。 iFolderを再起動して、再度実行してください。"
 
-msgid ""
-"iFolder Passphrase"
+msgid "iFolder passphrase"
 msgstr "iFolderパスフレーズ"
 
-msgid ""
-"_Re-type Passphrase:"
+msgid "_Re-type passphrase:"
 msgstr "パスフレーズの再入力(_R):"
 
-msgid ""
-"Remember Passphrase"
-msgstr "パスフレーズを保存する"
+msgid "Re-type passphrase:"
+msgstr "パスフレーズの再入力:"
 
-msgid ""
-"Select Passphrase Recovery Agent"
+msgid "Select Passphrase Recovery Agent"
 msgstr "パスフレーズ回復エージェントの選択"
 
-msgid ""
-"Recovery Agents"
+msgid "Recovery Agents"
 msgstr "回復エージェント"
 
-msgid ""
-"Server"
+msgid "Server"
 msgstr "サーバ"
 
-msgid ""
-"Disk Space"
+msgid "Disk Space"
 msgstr "ディスクスペース"
 
-msgid ""
-"_Automatically connect"
+msgid "_Automatically connect"
 msgstr "自動接続(_A)"
 
-msgid ""
-"Account is _default"
+msgid "Account is _default"
 msgstr "アカウントはデフォルトです(_D)"
 
-msgid ""
-"Address:"
+msgid "Address:"
 msgstr "アドレス:"
 
-msgid ""
-"(You can change the address if you are offline)"
+msgid "(You can change the address if you are offline)"
 msgstr "(オフラインの場合はアドレスを変更できます)"
 
-msgid ""
-"Server address cannot be empty"
+msgid "Server address cannot be empty"
 msgstr "サーバアドレスは空にできません"
 
-msgid ""
-"Please enter an address for the server."
+msgid "Please enter an address for the server."
 msgstr "サーバのアドレスを入力してください。"
 
-msgid ""
-"Please enter your password"
+msgid "Please enter your password"
 msgstr "パスワードを入力してください"
 
-msgid ""
-"Your password is required to change the address of the server."
+msgid "Your password is required to change the address of the server."
 msgstr "サーバのアドレスを変更するにはパスワードが必要です。"
 
-msgid ""
-"Unable to modify the server address"
+msgid "Unable to modify the server address"
 msgstr "サーバアドレスを変更できません"
 
-msgid ""
-"An error was encountered while attempting to modify the server address.  Please verify the address and your password are correct."
+msgid "An error was encountered while attempting to modify the server address.  Please verify the address and your password are correct."
 msgstr "サーバのアドレスを変更しようとしている間にエラーが発生しました。アドレスとパスワードが正しいことを確認してください。"
 
-msgid ""
-"Unable to modify the password"
+msgid "Unable to modify the password"
 msgstr "パスワードを変更できません"
 
-msgid ""
-"An error was encountered while attempting to modify the password."
+msgid "An error was encountered while attempting to modify the password."
 msgstr "パスワードを変更しようとしている間にエラーが発生しました。"
 
-msgid ""
-"Could not enable this account"
+msgid "Could not enable this account"
 msgstr "このアカウントを有効にできませんでした"
 
-msgid ""
-"There was an error enabling this account."
+msgid "There was an error enabling this account."
 msgstr "このアカウントを有効にしようとしているときにエラーが発生しました。"
 
-msgid ""
-"Could not disable this account"
+msgid "Could not disable this account"
 msgstr "このアカウントを無効にできませんでした"
 
-msgid ""
-"There was an error disabling this account."
+msgid "There was an error disabling this account."
 msgstr "このアカウントを無効にしようとしているときにエラーが発生しました。"
 
-msgid ""
-"Could not make this account the default"
+msgid "Could not make this account the default"
 msgstr "このアカウントをデフォルトにできませんでした"
 
-msgid ""
-"There was an error making this account the default."
+msgid "There was an error making this account the default."
 msgstr "このアカウントをデフォルトにしようとしているときにエラーが発生しました。"
 
-msgid ""
-"Export Encrypted Keys"
+msgid "Export Encrypted Keys"
 msgstr "暗号化キーのエクスポート"
 
-msgid ""
-"File Path"
+msgid "File path"
 msgstr "ファイルパス"
 
-msgid ""
-"Recovery Agent"
+msgid "Recovery agent"
 msgstr "回復エージェント"
 
-msgid ""
-"E-Mail ID"
+msgid "Recovery _agent"
+msgstr "回復エージェント(_A)"
+
+msgid "E-Mail ID"
 msgstr "電子メールID"
 
-msgid ""
-"Download \"{0}\" to..."
+msgid "Download \"{0}\" to..."
 msgstr "あて先を指定して「{0}」をダウンロード..."
 
-msgid ""
-"_Download"
+msgid "_Download"
 msgstr "ダウンロード(_D)"
 
-msgid ""
-"The iFolder Web Service returned a null object when calling RevertiFolder().  You may want to restart your iFolder Client and attempt this operation again."
+msgid "The iFolder Web Service returned a null object when calling RevertiFolder().  You may want to restart your iFolder Client and attempt this operation again."
 msgstr "RevertiFolder()の呼び出し中に、iFolder WebサービスからNullオブジェクトが返されました。iFolder Clientを再起動し、この操作を再度実行してください。"
 
-msgid ""
-"An exception occurred while attempting to revert the iFolder to a normal folder.  Exception message: "
+msgid "An exception occurred while attempting to revert the iFolder to a normal folder.  Exception message: "
 msgstr "iFolderを通常のフォルダに復元しようとしている間に例外が発生しました。例外メッセージ: "
 
-msgid ""
-"Less than a minute ago"
+msgid "Less than a minute ago"
 msgstr "1分以内"
 
-msgid ""
-"1 minute ago"
+msgid "1 minute ago"
 msgstr "1分前"
 
-msgid ""
-"{0} minutes ago"
+msgid "{0} minutes ago"
 msgstr "{0} 分前"
 
-msgid ""
-"1 hour ago"
+msgid "1 hour ago"
 msgstr "1時間前"
 
-msgid ""
-"{0} hours ago"
+msgid "{0} hours ago"
 msgstr "{0} 時間前"
 
-msgid ""
-"{0} hours, 1 minute ago"
+msgid "{0} hours, 1 minute ago"
 msgstr "{0} 時間、1分前"
 
-msgid ""
-"1 hour, 1 minute ago"
+msgid "1 hour, 1 minute ago"
 msgstr "1時間、1分前"
 
-msgid ""
-"1 hour, {0} minutes ago"
+msgid "1 hour, {0} minutes ago"
 msgstr "1時間、{0} 分前"
 
-msgid ""
-"{0} hour, {1} minutes ago"
+msgid "{0} hour, {1} minutes ago"
 msgstr "{0} 時間、{1} 分前"
 
-msgid ""
-"Yesterday"
+msgid "Yesterday"
 msgstr "昨日"
 
-msgid ""
-"Connect iFolder Account"
+msgid "Connect iFolder Account"
 msgstr "iFolderアカウントに接続"
 
-msgid ""
-"Unable to launch File Browser"
+msgid "Unable to launch File Browser"
 msgstr "ファイルブラウザを起動できません"
 
-msgid ""
-"iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."
+msgid "iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."
 msgstr "iFolderがNautilus File ManagerとKonqueror File Managerを開こうとしましたが、どちらも起動できませんでした。"
 
-msgid ""
-"Account:"
+msgid "Account:"
 msgstr "アカウント:"
 
-msgid ""
-"Add Users"
+msgid "Add Users"
 msgstr "ユーザの追加"
 
-msgid ""
-"Add users to this iFolder"
+msgid "Add users to this iFolder"
 msgstr "このiFolderにユーザを追加する"
 
-msgid ""
-"_Find:"
+msgid "_Find:"
 msgstr "検索(_F):"
 
-msgid ""
-"_Add"
+msgid "_Add"
 msgstr "追加(_A)"
 
-msgid ""
-"_Users to add:"
+msgid "_Users to add:"
 msgstr "追加するユーザ(_U):"
 
-msgid ""
-"Users to Add..."
+msgid "Users to Add..."
 msgstr "追加するユーザ..."
 
-msgid ""
-"iFolder"
+msgid "iFolder"
 msgstr "iFolder"
 
-msgid ""
-"_Upload a folder..."
+msgid "_Upload a folder..."
 msgstr "フォルダをアップロード(_U)..."
 
-msgid ""
-"_Download..."
+msgid "_Upload a Folder..."
+msgstr "フォルダをアップロード(_U)..."
+
+msgid "_Download..."
 msgstr "ダウンロード(_D)..."
 
-msgid ""
-"Dele_te from server"
+msgid "Dele_te from server"
 msgstr "サーバから削除(_T)"
 
-msgid ""
-"Re_move my membership"
+msgid "Dele_te From Server"
+msgstr "サーバから削除(_T)"
+
+msgid "Re_move my membership"
 msgstr "メンバーシップの削除(_M)"
 
-msgid ""
-"_Migrate iFolder"
+msgid "_Migrate iFolder"
 msgstr "iFolderの移行(_M)"
 
-msgid ""
-"Migrate from 2.x"
+msgid "Migrate from 2.x"
 msgstr "2.xからの移行"
 
-msgid ""
-"_Account Settings..."
+msgid "_Account Settings..."
 msgstr "アカウントの設定(_A)..."
 
-msgid ""
-"View _available iFolders"
+msgid "View _available iFolders"
 msgstr "利用可能なiFolderを表示(_A)"
 
-msgid ""
-"_Migrate"
+msgid "_Migrate"
 msgstr "移行(_M)"
 
-msgid ""
-"_Key Recovery"
-msgstr "キーの回復(_K)"
+msgid "_Forgot Passphrase"
+msgstr "パスフレーズを忘れた場合(_F)"
 
-msgid ""
-"Import Decrypted Keys"
+msgid "Import Decrypted Keys"
 msgstr "暗号解除されたキーのインポート"
 
-msgid ""
-"Reset _Passphrase"
-msgstr "パスフレーズのリセット(_P)"
+msgid "Change _Passphrase"
+msgstr "パスフレーズの変更(_P)"
 
-msgid ""
-"_Security"
+msgid "_Security"
 msgstr "セキュリティ(_S)"
 
-msgid ""
-"Filter"
+msgid "Filter"
 msgstr "フィルタ"
 
-msgid ""
-"General Actions"
+msgid "General Actions"
 msgstr "一般的なアクション"
 
-msgid ""
-"Upload a folder..."
+msgid "Upload a folder..."
 msgstr "フォルダをアップロード..."
 
-msgid ""
-"View available iFolders"
+msgid "View available iFolders"
 msgstr "利用可能なiFolderを表示"
 
-msgid ""
-"iFolder Actions"
+msgid "iFolder Actions"
 msgstr "iFolderアクション"
 
-msgid ""
-"Open..."
+msgid "Open..."
 msgstr "開く..."
 
-msgid ""
-"Resolve conflicts..."
+msgid "Resolve conflicts..."
 msgstr "競合の解消..."
 
-msgid ""
-"Properties..."
+msgid "Properties..."
 msgstr "プロパティ..."
 
-msgid ""
-"Download..."
+msgid "Download..."
 msgstr "ダウンロード..."
 
-msgid ""
-"Delete from server"
+msgid "Delete from server"
 msgstr "サーバから削除"
 
-msgid ""
-"Remove my membership"
+msgid "Delete from Server"
+msgstr "サーバから削除"
+
+msgid "Remove my membership"
 msgstr "メンバーシップの削除"
 
-msgid ""
-"iFolders on This Computer"
+msgid "Remove my Membership"
+msgstr "メンバーシップの削除"
+
+msgid "iFolders on This Computer"
 msgstr "このコンピュータ上のiFolder"
 
-msgid ""
-"There are no iFolders on this computer.  To set up an iFolder, do one of the following:"
+msgid "There are no iFolders on this computer.  To set up an iFolder, do one of the following:"
 msgstr "このコンピュータにはiFolderがありません。iFolderをセットアップするには、次のいずれかを実行してください:"
 
-msgid ""
-"Select an existing folder on this computer to upload to an iFolder Server"
+msgid "Select an existing folder on this computer to upload to an iFolder Server"
 msgstr "このコンピュータの既存のフォルダを選択して、iFolderサーバにアップロードする"
 
-msgid ""
-"Select an iFolder on the server to download to this computer"
+msgid "Select an iFolder on the server to download to this computer"
 msgstr "サーバでiFolderを選択し、このコンピュータにダウンロード"
 
-msgid ""
-"No matches found"
+msgid "No matches found"
 msgstr "一致するものが見つかりません"
 
-msgid ""
-"Invalid Passphrase"
-msgstr "無効なパスフレーズ"
+msgid "Invalid passphrase"
+msgstr "無効なパスフレーズです"
 
-msgid ""
-"Passphrase entered is wrong"
+msgid "Passphrase entered is wrong"
 msgstr "入力されたパスフレーズは誤っています"
 
-msgid ""
-"Passphrase Reset"
+msgid "Passphrase Reset"
 msgstr "パスフレーズのリセット"
 
-msgid ""
-"Successfully changed the passphrase"
+msgid "Successfully changed the passphrase"
 msgstr "パスフレーズを正常に変更しました"
 
-msgid ""
-"Use your new passphrase from now"
+msgid "Use your new passphrase from now"
 msgstr "今後は新しいパスフレーズを使用する"
 
-msgid ""
-"Hide available iFolders"
+msgid "Hide available iFolders"
 msgstr "使用可能なiFolderを隠す"
 
-msgid ""
-"iFolders on {0}"
+msgid "iFolders on {0}"
 msgstr "{0} のiFolder"
 
-msgid ""
-"Unable to open folder \"{0}\""
+msgid "Unable to open folder \"{0}\""
 msgstr "フォルダ「{0}」を開けません"
 
-msgid ""
-"Revert this iFolder back to a normal folder?"
+msgid "Revert this iFolder back to a normal folder?"
 msgstr "このiFolderを標準フォルダに戻しますか?"
 
-msgid ""
-"The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
+msgid "The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
 msgstr "フォルダはユーザのコンピュータ上に存在したままですが、iFolderサーバと同期されなくなります。"
 
-msgid ""
-"Also _delete this iFolder from the server"
+msgid "Also _delete this iFolder from the server"
 msgstr "サーバからもこのiFolderを削除する(_D)"
 
-msgid ""
-"Also _remove my membership from this iFolder"
+msgid "_Delete this iFolder from the server"
+msgstr "サーバからこのiFolderを削除する(_D)"
+
+msgid "Also _remove my membership from this iFolder"
 msgstr "このiFolderからメンバーシップも削除する(_R)"
 
-msgid ""
-"Delete \"{0}\" from the server?"
+msgid "_Remove my membership from this iFolder"
+msgstr "このiFolderからメンバーシップを削除する(_R)"
+
+msgid "Revert to Normal Folder"
+msgstr "標準フォルダに戻す"
+
+msgid "Delete \"{0}\" from the server?"
 msgstr "サーバから「{0}」を削除しますか?"
 
-msgid ""
-"This deletes the iFolder and its files from the server."
+msgid "This deletes the iFolder and its files from the server."
 msgstr "iFolderとその中に含まれるファイルをサーバから削除します。"
 
-msgid ""
-"Remove your membership from \"{0}\"?"
+msgid "Remove your membership from \"{0}\"?"
 msgstr "「{0}」からメンバーシップを削除しますか?"
 
-msgid ""
-"This removes your membership from the iFolder and removes the iFolder from your list."
+msgid "This removes your membership from the iFolder and removes the iFolder from your list."
 msgstr "iFolderからユーザのメンバーシップを削除し、ユーザのリストからiFolderを削除します。"
 
-msgid ""
-"Error creating iFolder"
+msgid "Error creating iFolder"
 msgstr "iFolderの作成中にエラーが発生しました"
 
-msgid ""
-"You should be logged-in to the domain for creating encrypted iFolders."
+msgid "You should be logged-in to the domain for creating encrypted iFolders."
 msgstr "暗号化されたiFolderを作成するために、ドメインにログインする必要があります。"
 
-msgid ""
-"One Time Passphrase"
+msgid "One time passphrase"
 msgstr "使い捨てパスフレーズ"
 
-msgid ""
-"New Passphrase"
+msgid "New passphrase"
 msgstr "新しいパスフレーズ"
 
-msgid ""
-"Re-type Passphrase"
+msgid "Re-type passphrase"
 msgstr "パスフレーズの再入力"
 
-msgid ""
-"iFolder Migration"
+msgid "iFolder Migration"
 msgstr "iFolder移行"
 
-msgid ""
-"User Name"
+msgid "User Name"
 msgstr "ユーザ名"
 
-msgid ""
-"Home Location"
+msgid "_User name"
+msgstr "ユーザ名(_U)"
+
+msgid "Home Location"
 msgstr "ホームの場所"
 
-msgid ""
-"Not encrypted"
+msgid "Not encrypted"
 msgstr "暗号化しない"
 
-msgid ""
-"iFolder Migration Assistant"
+msgid "iFolder Migration Assistant"
 msgstr "iFolder移行アシスタント"
 
-msgid ""
-"Migrate the iFolder "
+msgid "Migrate the iFolder "
 msgstr "iFolderを移行 "
 
-msgid ""
-"Welcome to iFolder Migration Assistant.\nThe next few screens will let you,\nmigrate your data to iFolder 3.x.\n\nClick \"Forward\" to continue."
+msgid "Welcome to iFolder Migration Assistant.\nThe next few screens will let you,\nmigrate your data to iFolder 3.x.\n\nClick \"Forward\" to continue."
 msgstr "iFolder移行アシスタントへようこそ。\n続く画面で、データの\niFolder 3.xへの移行をガイドします。\n\n［転送］をクリックして続行してください。"
 
-msgid ""
-"Migration Options"
+msgid "Migration Options"
 msgstr "移行オプション"
 
-msgid ""
-"Select one of the following options"
+msgid "Select one of the following options"
 msgstr "次のオプションを1つ選択する"
 
-msgid ""
-"Migrate the iFolder and disconnect it from 2.x domain"
+msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "iFolderを移行し、2.xドメインから切断する"
 
-msgid ""
-"Create a copy of the iFolder and migrate"
+msgid "Create a copy of the iFolder and migrate"
 msgstr "iFolderのコピーを作成して移行する"
 
-msgid ""
-"Copy the parent folder"
+msgid "Copy the parent folder"
 msgstr "親フォルダをコピーする"
 
-msgid ""
-"Server Information"
+msgid "Server Information"
 msgstr "サーバ情報"
 
-msgid ""
-"Select the server "
+msgid "Select the server "
 msgstr "サーバの選択 "
 
-msgid ""
-"Select Security options"
+msgid "Select Security options"
 msgstr "セキュリティオプションを選択する"
 
-msgid ""
-"Passphrase"
+msgid "Passphrase"
 msgstr "パスフレーズ"
 
-msgid ""
-"Verify and Migrate"
+msgid "Verify and Migrate"
 msgstr "確認して移行"
 
-msgid ""
-"Please verify that the information you've entered is correct"
+msgid "Please verify that the information you've entered is correct"
 msgstr "入力した情報が正しいことを確認してください"
 
-msgid ""
-"Migration Option"
+msgid "Migration Option"
 msgstr "移行オプション"
 
-msgid ""
-"Security"
+msgid "Security"
 msgstr "セキュリティ"
 
-msgid ""
-"Click \"Migrate\" to migrate your folder to the server specified"
+msgid "Click \"Migrate\" to migrate your folder to the server specified"
 msgstr "［移行］をクリックして、フォルダを指定したサーバに移行する"
 
-msgid ""
-"iFolder Migration Assistant - (1 of 5)"
+msgid "iFolder Migration Assistant - (1 of 5)"
 msgstr "iFolder移行アシスタント - (1/5)"
 
-msgid ""
-"iFolder Migration Assistant - (2 of 5)"
+msgid "iFolder Migration Assistant - (2 of 5)"
 msgstr "iFolder移行アシスタント - (2/5)"
 
-msgid ""
-"iFolder Migration Assistant - (3 of 5)"
+msgid "iFolder Migration Assistant - (3 of 5)"
 msgstr "iFolder移行アシスタント - (3/5)"
 
-msgid ""
-"iFolder Migration Assistant - (4 of 5)"
+msgid "iFolder Migration Assistant - (4 of 5)"
 msgstr "iFolder移行アシスタント - (4/5)"
 
-msgid ""
-"iFolder Migration Assistant - (5 of 5)"
+msgid "iFolder Migration Assistant - (5 of 5)"
 msgstr "iFolder移行アシスタント - (5/5)"
 
-msgid ""
-"Migration"
-msgstr "移行"
+msgid "Migration"
+msgstr "マイグレーション"
 
-msgid ""
-"User not Logged-in to the domain"
+msgid "User not Logged-in to the domain"
 msgstr "ドメインにログインしていないユーザ"
 
-msgid ""
-"For creating an encrypted iFolder you should be connected to the domain."
+msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "暗号化されたiFolderを作成するには、ドメインに接続する必要があります。"
 
-msgid ""
-"Delete from iFolder2.X server"
+msgid "Delete from iFolder2.X server"
 msgstr "iFolder2.Xサーバから削除"
 
-msgid ""
-"Create a copy and migrate to iFolder3.x"
+msgid "Create a copy and migrate to iFolder3.x"
 msgstr "コピーを作成して、iFolder 3.xに移行する"
 
-msgid ""
-"Encrypt the iFolder "
+msgid "Encrypt the iFolder "
 msgstr "iFolderを暗号化 "
 
-msgid ""
-"Regular iFolder"
+msgid "Regular iFolder"
 msgstr "通常のiFolder"
 
-msgid ""
-"Migrate"
+msgid "Migrate"
 msgstr "移行"
 
-msgid ""
-"Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\nIt is recommended to \ndisconnect from 2.x server to \n avoid multiple synchronizations.\n\nClick \"Finish\" to close this window."
+msgid "Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\nIt is recommended to \ndisconnect from 2.x server to \n avoid multiple synchronizations.\n\nClick \"Finish\" to close this window."
 msgstr "おめでとうございます。フォルダは正常に\niFolderの最新バージョンに\n移行されました。\n同期が重複して行われないように、\niFolder 2.xサーバから切断することを\nお勧めします。\n\n［終了］をクリックしてクこのウィンドウを閉じます。"
 
-msgid ""
-"Error in Migration"
+msgid "Error in Migration"
 msgstr "移行時にエラーが発生しました"
 
-msgid ""
-"Sorry! The iFolder cannot be migrated to the specified account.\n\nPlease try again."
+msgid "Sorry! The iFolder cannot be migrated to the specified account.\n\nPlease try again."
 msgstr "iFolderを指定されたアカウントに移行できませんでした。\n\n再度実行してください。"
 
-msgid ""
-"Online"
+msgid "Online"
 msgstr "オンライン"
 
-msgid ""
-"Account Name:"
+msgid "Account Name:"
 msgstr "アカウント名:"
 
-msgid ""
-"Reset Passphrase"
-msgstr "パスフレーズのリセット"
+msgid "Change Passphrase"
+msgstr "パスフレーズの変更"
 
-msgid ""
-"Enter Present Passphrase"
-msgstr "現在のパスフレーズの入力"
+msgid "Enter passphrase"
+msgstr "パスフレーズの入力"
 
-msgid ""
-"Enter New Passphrase"
+msgid "Enter new passphrase"
 msgstr "新しいパスフレーズの入力"
 
+msgid "_Enter passphrase"
+msgstr "パスフレーズの入力(_E)"
 
-msgid ""
-"Reset"
+msgid "Enter new _passphrase"
+msgstr "新しいパスフレーズの入力(_P)"
+
+msgid "Reset"
 msgstr "リセット"
 
-msgid ""
-"_Remember Passphrase"
+msgid "_Remember passphrase"
 msgstr "パスフレーズを保存する(_R)"
 
-msgid ""
-"iFolder Server Older"
+msgid "Remember passphrase"
+msgstr "パスフレーズを保存する"
+
+msgid "iFolder Server Older"
 msgstr "iFolderサーバが古くなっています"
 
-msgid ""
-"The server is running an older version."
+msgid "The server is running an older version."
 msgstr "サーバは古いバージョンで稼働しています。"
 
-msgid ""
-"The server needs to be upgraded to be connected from this client"
+msgid "The server needs to be upgraded to be connected from this client"
 msgstr "このクライアントから接続するには、サーバをアップグレードする必要があります"
 
-msgid ""
-"iFolder Client Upgrade"
+msgid "iFolder Client Upgrade"
 msgstr "iFolderクライアントのアップグレード"
 
-msgid ""
-"The client needs to be upgraded to be connected to the server"
+msgid "The client needs to be upgraded to be connected to the server"
 msgstr "サーバに接続するにはクライアントをアップグレードする必要があります"
 
-msgid ""
-"Would you like to download new iFolder Client?"
+msgid "Would you like to download new iFolder Client?"
 msgstr "新しいiFolder Clientをダウンロードしますか?"
 
-msgid ""
-"A newer version \"{0}\" of the iFolder Client is available."
+msgid "A newer version \"{0}\" of the iFolder Client is available."
 msgstr "新しいバージョン「{0}」のiFolder Clientが利用できます。"
 
-msgid ""
-"Download Complete..."
+msgid "Download Complete..."
 msgstr "ダウンロード完了..."
 
-msgid ""
-"Download Finished "
+msgid "Download Finished "
 msgstr "ダウンロードの完了 "
 
-msgid ""
-"The new client rpm's have been downloaded."
+msgid "The new client rpm's have been downloaded."
 msgstr "新しいクライアントのRPMをダウンロードしました。"
 
-msgid ""
-"Upgrade Failure"
+msgid "Upgrade Failure"
 msgstr "アップグレードの失敗"
 
-msgid ""
-"The iFolder client upgrade failed."
+msgid "The iFolder client upgrade failed."
 msgstr "iFolderクライアントのアップグレードが失敗しました。"
 
-msgid ""
-"Please contact your system administrator."
+msgid "Please contact your system administrator."
 msgstr "システム管理者に連絡してください。"
 
-msgid ""
-"Account Error"
+msgid "Account Error"
 msgstr "アカウントエラーです"
 
-msgid ""
-"This account has been removed from your computer."
+msgid "This account has been removed from your computer."
 msgstr "このアカウントはコンピュータから削除されています。"
 
-msgid ""
-"If you wish to connect to this account again, please add it in the Account Settings Dialog."
+msgid "If you wish to connect to this account again, please add it in the Account Settings Dialog."
 msgstr "このアカウントに再び接続するには、［アカウントの設定］ダイアログに追加してください。"
 
-msgid ""
-"Migration Alert"
+msgid "Migration Alert"
 msgstr "移行の警告"
 
-msgid ""
-"There are 2.x iFolders on this machine."
+msgid "There are 2.x iFolders on this machine."
 msgstr "このマシンには2.xのiFolderがあります。"
 
-msgid ""
-"Do you want to migrate them?"
+msgid "Do you want to migrate them?"
 msgstr "移行しますか?"
 
-msgid ""
-"Don't show this message again"
+msgid "Don't show this message again"
 msgstr "今後このメッセージを表示しない"
 
-msgid ""
-"Default iFolder"
+msgid "Default iFolder"
 msgstr "デフォルトiFolder"
 
-msgid ""
-"Create default iFolder."
+msgid "Create default iFolder."
 msgstr "デフォルトのiFolderを作成します。"
 
-msgid ""
-"Browse"
+msgid "Browse"
 msgstr "参照"
 
-msgid ""
-"Security:"
+msgid "Security:"
 msgstr "セキュリティ:"
 
-msgid ""
-"Select Location..."
+msgid "Select Location..."
 msgstr "場所を選択する..."
 
-msgid ""
-"Download Default iFolder:"
+msgid "Download Default iFolder:"
 msgstr "デフォルトのiFolderのダウンロード:"
 
-msgid ""
-"Next"
+msgid "Download default iFolder"
+msgstr "デフォルトのiFolderのダウンロード"
+
+msgid "Next"
 msgstr "次へ"
 
-msgid ""
-"iFolder Account"
+msgid "iFolder account"
 msgstr "iFolderアカウント"
 
-msgid ""
-"Convert to an iFolder..."
+msgid "Convert to an iFolder..."
 msgstr "iFolderに変換する..."
 
-msgid ""
-"_Browse"
+msgid "_Browse"
 msgstr "参照(_B)"
 
-msgid ""
-"Synchronized: {0}"
+msgid "Synchronized: {0}"
 msgstr "同期化済み: {0}"
 
-msgid ""
-"No Logged-In domains"
+msgid "No Logged-In domains"
 msgstr "ログインドメインがありません"
 
-msgid ""
-"There are no logged-in domains for importing keys."
+msgid "There are no logged-in domains for importing keys."
 msgstr "キーをインポートするためのログインドメインがありません。"
 
-msgid ""
-"For importing keys the domain should be connected. Log on to the domain and try."
-msgstr "キーをインポートするには、ドメインに接続する必要があります。ドメインにログインしてから、やり直してください。"
+msgid "For resetting keys the domain should be connected. Log on to the domain and try."
+msgstr "キーをリセットするにはドメインに接続する必要があります。ドメインにログインしてから、やり直してください。"
 
-msgid ""
-"Successfully imported the keys and changed the passphrase"
+msgid "Successfully imported the keys and changed the passphrase"
 msgstr "キーを正常にインポートし、パスフレーズを変更しました"
 
-msgid ""
-"Error importing the keys."
+msgid "Error importing the keys."
 msgstr "キーをインポート中にエラーが起こりました。"
 
-msgid ""
-"There are no logged-in domains for changing the passphrase."
+msgid "There are no logged-in domains for changing the passphrase."
 msgstr "パスフレーズを変更するためのログインドメインがありません。"
 
-msgid ""
-"For changing passphrase the domain should be connected. Log on to the domain and try."
+msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "パスフレーズを変更するにはドメインに接続する必要があります。ドメインにログインしてから、やり直してください。"
 
-msgid ""
-"Successfully exported the keys."
+msgid "Successfully exported the keys."
 msgstr "キーを正常にエクスポートしました。"
 
-msgid ""
-"There is no iFolder 2.x data present on this computer."
+msgid "There is no iFolder 2.x data present on this computer."
 msgstr "このコンピュータにはiFolder 2.xデータはありません。"
 
-msgid ""
-"The client tarball {0} is downlaoded to the location {1}. Run the script {2} from the downloaded location with root permissions to install the new client."
+msgid "The client tarball {0} is downlaoded to the location {1}. Run the script {2} from the downloaded location with root permissions to install the new client."
 msgstr "クライアントのtarballファイル「{0}」が場所「{1}」にダウンロードされました。ダウンロードされた場所から、root権限のあるユーザでスクリプト「{2}」を実行し、新しいクライアントをインストールしてください。"
 
-msgid ""
-"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
+msgid "There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
 msgstr "回復エージェントが選択されていません。パスフレーズを紛失すると、暗号化データを後で回復できなくなります。続行しますか?"
 
-msgid ""
-"Recovery Agent Not Selected"
+msgid "Recovery Agent Not Selected"
 msgstr "回復エージェントが選択されていません"
 
-msgid ""
-"Policy Violation"
+msgid "Policy Violation"
 msgstr "ポリシー違反"
 
-msgid ""
-"Sharing is disabled so this iFolder can not be shared."
+msgid "Sharing is disabled so this iFolder can not be shared."
 msgstr "共有が無効であるため、このiFolderは共有できません。"
 
-msgid ""
-"Save to Conflict Bin"
+msgid "Save to Conflict Bin"
 msgstr "競合ファイルに保存"
 
-msgid ""
-"Save to iFolder"
+msgid "Save to iFolder"
 msgstr "iFolderに保存"
 
-msgid ""
-"Action"
+msgid "Action"
 msgstr "アクション"
 
-msgid ""
-":"
-msgstr ""
-":"
+msgid ":"
+msgstr ": "
 
-msgid ""
-"/"
-msgstr ""
-"/"
+msgid "/"
+msgstr "/"
 
-msgid ""
-"Enable"
+msgid "Enable"
 msgstr "有効"
 
-msgid ""
-"No Password"
+msgid "No Password"
 msgstr "パスワードなし"
 
-msgid ""
-"Entering password is cancelled. If password is not provided, Automatic Account creation will fail. Do you want to continue?"
+msgid "Entering password is cancelled. If password is not provided, Automatic Account creation will fail. Do you want to continue?"
 msgstr "パスワードの入力が取り消されました。パスワードを指定しないと自動アカウント作成が失敗します。続行しますか?"
 
-msgid ""
-"No Passphrase"
+msgid "No Passphrase"
 msgstr "パスフレーズなし"
 
-msgid ""
-"Entering Passphrase is cancelled. If Passphrase is not provided, Default iFolder creation/download will fail. Do you want to continue?"
+msgid "Entering Passphrase is cancelled. If Passphrase is not provided, Default iFolder creation/download will fail. Do you want to continue?"
 msgstr "パスフレーズの入力が取り消されました。パスフレーズを指定しないと、デフォルトのiFolderの作成とダウンロードが失敗します。続行しますか?"
 
-msgid ""
-"Entering Passphrase is cancelled"
+msgid "Entering Passphrase is cancelled"
 msgstr "パスフレーズの入力が取り消されました"
 
-msgid ""
-"Entering password is cancelled"
+msgid "Entering password is cancelled"
 msgstr "パスワードの入力が取り消されました"
 
-msgid ""
-"Exit Novell iFolder"
+msgid "Exit Novell iFolder"
 msgstr "Novell iFolderを終了する"
 
-msgid  ""
-"If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked.\nThe next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application ?"
+msgid "If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked.\nThe next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application ?"
 msgstr "Novell iFolderアプリケーションを終了すると、iFolderで行った変更はトラッキングされません。\n次回ログイン時に、Novell iFolderによって、iFolderとサーバ間の相違が調整されます。\n\n本当にアプリケーションを終了しますか?"
 
-msgid ""
-"Novell iFolder does not currently support this machine's Network card to detect Network events. DBus failed to initialize for the Network card."
+msgid "Novell iFolder does not currently support this machine's Network card to detect Network events. DBus failed to initialize for the Network card."
 msgstr "Novell iFolderは、このマシンのネットワークカードをサポートしていません。このカードは、ネットワークイベントの検出に必要です。DBusはネットワークカードの初期化で失敗しました。"
 
-msgid ""
-"Network Events"
+msgid "Network Events"
 msgstr "ネットワークイベント"
 
-msgid ""
-"Specify a valid path for the Conflict Bin"
+msgid "Specify a valid path for the Conflict Bin"
 msgstr "競合ファイルの表示に有効なパスを指定"
 
-msgid ""
-"Path field is Empty"
+msgid "Path field is Empty"
 msgstr "パスフィールドが空です"
 
-msgid ""
-"Invalid Conflict Bin Directory"
+msgid "Invalid Conflict Bin Directory"
 msgstr "競合ファイルの表示ディレクトリが無効です"
 
-msgid ""
-"Merge"
+msgid "Merge"
 msgstr "マージ"
 
-msgid ""
-"_Merge"
+msgid "Merge to Folder"
+msgstr "フォルダにマージ"
+
+msgid "_Merge"
 msgstr "マージ(_M)"
 
-msgid ""
-"Merge \"{0}\" to..."
+msgid "Merge \"{0}\" to..."
 msgstr "\"{0}\"をマージ中..."
 
-msgid ""
-"Domain Name"
+msgid "Domain Name"
 msgstr "ドメイン名"
 
-msgid ""
-"Enter your iFolder password"
+msgid "Enter your iFolder password"
 msgstr "iFolderのパスワードの入力"
 
-msgid ""
-"The name of folder and iFolder must be the same"
+msgid "The name of folder and iFolder must be the same"
 msgstr "フォルダとiFolderは同じ名前にしてください"
 
-msgid ""
-"You can merge an iFolder only with a folder with same name. Select a folder with the same name as the iFolder and try again."
+msgid "You can merge an iFolder only with a folder with same name. Select a folder with the same name as the iFolder and try again."
 msgstr "iFolderとマージできるのは同じ名前のフォルダだけです。iFolderと同じ名前のフォルダを選択して、やりなおしてください。"
 
-msgid ""
-"The iFolder does not exist."
+msgid "The iFolder does not exist."
 msgstr "iFolderが存在しません。"
 
-msgid ""
-"The iFolder you have chosen could not be found on the server."
+msgid "The iFolder you have chosen could not be found on the server."
 msgstr "選択したiFolderはサーバ上で見つかりませんでした。"
 
-msgid ""
-"iFolder could not be created as you are exceeding the limit of ifolders set by your Administrator."
+msgid "iFolder could not be created as you are exceeding the limit of ifolders set by your Administrator."
 msgstr "管理者が設定したiFolderの制限数を超えているため、iFolderを作成できませんでした。"
 
-msgid ""
-"Please Re-login to iFolder and web client to continue the encrypted iFolder processing"
+msgid "Please Re-login to iFolder and web client to continue the encrypted iFolder processing"
 msgstr "暗号化されたiFolderの処理を続行するには、iFolderとWebクライアントに再ログインしてください"
 
-msgid ""
-"OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating the limit of iFolder's set by the Administrator."
+msgid "OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating the limit of iFolder's set by the Administrator."
 msgstr "管理者が設定したiFolderの制限に違反しているため、iFolder {0} の所有権を {1} に移動できませんでした。"
 
-msgid ""
-"Certificate Expired! for \"{0}\" server. Unable to verify \"{0}\" as a trusted server. You should examine this server's identity certificate carefully. Do you still want to continue?"
+msgid "Ownership of the iFolder {0} could not be transferred to {1} as it is violating the limit of iFolders set by the Administrator."
+msgstr "管理者が設定したiFolderの制限に違反しているため、iFolder {0} の所有権を {1} に移動できませんでした。"
+
+msgid "Certificate Expired! for \"{0}\" server. Unable to verify \"{0}\" as a trusted server. You should examine this server's identity certificate carefully. Do you still want to continue?"
 msgstr "「{0}」サーバの証明書の有効期限が切れています!  「{0}」を信頼されたサーバとして確認できません。このサーバの識別証明書をよく調べる必要があります。このまま続行しますか?"
 
-msgid ""
-"Secure Sync"
+msgid "Secure Sync"
 msgstr "セキュア同期"
 
-msgid ""
-"port"
+msgid "Secure sync:"
+msgstr "セキュア同期:"
+
+msgid "port"
 msgstr "ポート"
 
-msgid ""
-"Disk Space Available: {0}"
+msgid "Disk Space Available: {0}"
 msgstr "使用可能ディスク容量: {0}"
 
-msgid ""
-"The iFolder you have selected for downloading is a migrated iFolder."
+msgid "The iFolder you have selected for downloading is a migrated iFolder."
 msgstr "ダウンロードするために選択したiFolderは移行されたiFolderです。"
 
-msgid ""
-"There are 2.x iFolders on your local machine. Do you want to merge this iFolder with any of the 2.x iFolders?"
+msgid "There are 2.x iFolders on your local machine. Do you want to merge this iFolder with any of the 2.x iFolders?"
 msgstr "ローカルコンピュータに2.xのiFolderがあります。 他の2.xのiFolderとともに、このiFolderを移行しますか?"
 
-msgid ""
-"The name of the iFolder on the server and on your local machine are different."
+msgid "The name of the iFolder on the server and on your local machine are different."
 msgstr "サーバのiFolderの名前と、ローカルマシンのiFolderの名前が異なります。"
 
-msgid ""
-"Do you want to rename the iFolder on the server to the name of iFolder on your local machine?"
+msgid "Do you want to rename the iFolder on the server to the name of iFolder on your local machine?"
 msgstr "サーバのiFolderの名前をローカルマシンのiFolderの名前に変更しますか?"
 
-msgid ""
-"Unlimited"
+msgid "Unlimited"
 msgstr "無制限"
 
-msgid ""
-"Deny"
+msgid "Deny"
 msgstr "拒否"
 
-msgid ""
-"Accept"
+msgid "Accept"
 msgstr "受諾"
 
-msgid ""
-"Information Not Available"
+msgid "Information Not Available"
 msgstr "情報がありません"
 
-msgid ""
-"Disk Space Used: {0}"
+msgid "Disk Space Used: {0}"
 msgstr "使用済みディスク容量: {0}"
+
+msgid "Cannot share iFolder"
+msgstr "iFolderを共有できません"
+
+msgid "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared"
+msgstr "暗号化されたiFolderを共有することはできません。共有できるのは、通常のiFolderだけです"
+
+msgid "Incorrect old password."
+msgstr "古いパスワードが正しくありません。"
+
+msgid "Failed to reset password."
+msgstr "パスワードをリセットできませんでした。"
+
+msgid "Login disabled."
+msgstr "ログインが無効になっています。"
+
+msgid "User account expired."
+msgstr "ユーザアカウントの有効期限が切れました。"
+
+msgid "User can not change password."
+msgstr "ユーザはパスワードを変更できません。"
+
+msgid "User password expired."
+msgstr "ユーザパスワードの有効期限が切れました。"
+
+msgid "Minimum password length restriction not met."
+msgstr "最小パスワード長の制限が満たされていません。"
+
+msgid "User not found in simias."
+msgstr "simiasにユーザが見つかりません。"
+
+msgid "Could not change password, "
+msgstr "パスワードを変更できませんでした。"
+
+msgid "Change password"
+msgstr "パスワードの変更"
+
+msgid "_Change Password"
+msgstr "パスワードの変更(_C)"
+
+msgid "Successfully changed the password. Log on to the domain with new password."
+msgstr "パスワードが正常に変更されました。新しいパスワードを使用してドメインにログインしてください。"
+
+msgid "_Current password"
+msgstr "現在のパスワード(_C)"
+
+msgid "_New password"
+msgstr "新しいパスワード(_N)"
+
+msgid "Confirm new _password"
+msgstr "新しいパスワードの確認(_P)"
+
+msgid "Current password"
+msgstr "現在のパスワード"
+
+msgid "New password"
+msgstr "新しいパスワード"
+
+msgid "Confirm new password"
+msgstr "新しいパスワードの確認"
+
+msgid "There are no logged-in domains for changing the password."
+msgstr "パスワードを変更するためのログインドメインがありません。"
+
+msgid "For changing password the domain should be connected. Log on to the domain and try."
+msgstr "パスワードを変更するにはドメインに接続する必要があります。ドメインにログインしてから、やり直してください。"
+
+msgid "Old password and new password should not be same."
+msgstr "古いパスワードと新しいパスワードを同じにすることはできません。"
+
+msgid "New password and confirm password do not match."
+msgstr "新しいパスワードと確認パスワードが一致していません。"
+
+msgid "Click Ok to merge the folder or Cancel to select a different location"
+msgstr "［OK］をクリックしてフォルダをマージするか、［キャンセル］をクリックして別の場所を選択します"
+
+msgid "Size"
+msgstr "サイズ"
+
+msgid "Upload a folder"
+msgstr "フォルダのアップロード"
+
+msgid "Create iFolder"
+msgstr "iFolderの作成"
+
+msgid "Share with"
+msgstr "共有"
+
+msgid "Download"
+msgstr "ダウンロード"
+
+msgid "Open Panel"
+msgstr "パネルを開く"
+
+msgid "Close Panel"
+msgstr "パネルを閉じる"
+
+msgid "Thumbnail View"
+msgstr "サムネイル表示"
+
+msgid "List View"
+msgstr "リスト表示"
+
+msgid "Name: {0}"
+msgstr "名前: {0}"
+
+msgid "Owner: {0}"
+msgstr "所有者: {0}"
+
+msgid "Access: {0}"
+msgstr "アクセス: {0}"
+
+msgid "Server: {0}"
+msgstr "サーバ: {0}"
+
+msgid "Last Successfull Sync time: {0}"
+msgstr "最終同期時刻: {0}"
+
+msgid "File/Folder to synchronize: {0}"
+msgstr "同期するファイル/フォルダ数: {0}"
+
+msgid "iFolder Size: {0}"
+msgstr "iFolderのサイズ: {0}"
+
+msgid "iFolder Type: {0}"
+msgstr "iFolderのタイプ: {0}"
+
+msgid "Domain List"
+msgstr "ドメインリスト"
+
+msgid "User: {0}"
+msgstr "ユーザ: {0}"
+
+msgid "No. of iFolder: {0}"
+msgstr "iFolderの数: {0}"
+
+msgid "Disk Quota: {0}"
+msgstr "ディスク割り当て量: {0}"
+
+msgid "Disk Used: {0}"
+msgstr "使用済みディスク容量: {0}"
+
+msgid "Disk Available: {0}"
+msgstr "使用可能なディスク容量: {0}"
+
+msgid "Disconnect"
+msgstr "接続解除"
+
+msgid "Connect"
+msgstr "接続"
+
+msgid "Encrypted"
+msgstr "暗号化"
+
+msgid "iFolder Type:    {0}"
+msgstr "iFolderのタイプ:    {0}"
+
+msgid "Welcome to the Passphrase Recovery Wizard"
+msgstr "パスフレーズ回復ウィザードへようこそ"
+
+msgid "Select the account for which the passphrase must to be reset."
+msgstr "パスフレーズをリセットする必要があるアカウントを選択してください。"
+
+msgid "Click Next to proceed."
+msgstr "続行するには、［次へ］をクリックします。"
+
+msgid "_New passphrase"
+msgstr "新しいパスフレーズ(_N)"
+
+msgid "_Confirm passphrase"
+msgstr "パスフレーズの確認(_C)"
+
+msgid "To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."
+msgstr "忘れたパスフレーズを回復するには、秘密ファイル(証明書の秘密鍵)とそのパスワード、または管理者からのデータファイルが必要です。"
+
+msgid "If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."
+msgstr "この情報がない場合は、このウィザードを使用して古いデータファイルを取得し、管理者にそのファイルをメールで送信します。管理者から、パスフレーズのリセットに使用できる新しいデータファイルが返送されます。"
+
+msgid "I have the secret file and it password, I have the new data file sent by the administrator, I have no secret or data file."
+msgstr "秘密ファイルとそのパスワードがある、管理者から送信された新しいデータファイルがある、秘密ファイルもデータファイルもない。"
+
+msgid "_iFolder account"
+msgstr "iFolderアカウント(_I)"
+
+msgid "_Location of secret file"
+msgstr "秘密ファイルの場所(_L)"
+
+msgid "_Secret password"
+msgstr "秘密パスワード(_S)"
+
+msgid "_Location of new data file"
+msgstr "新しいデータファイルの場所(_L)"
+
+msgid "_One time password"
+msgstr "使い捨てパスワード(_O)"
+
+msgid "Passphrase is reset using the new data file obtained from the administrator."
+msgstr "管理者から取得した新しいデータファイルを使用して、パスフレーズがリセットされます。"
+
+msgid "Send this file to the administrator to obtain the new data file. You must then use the new data file to reset your passphrase using the second option of the wizard. "
+msgstr "このファイルを管理者に送信して、新しいデータファイルを取得します。ウィザードの2番目のオプションを利用してパスフレーズをリセットするには、新しいデータファイルを使用する必要があります。 "
+
+msgid "The old data file was successfully stored at the following path"
+msgstr "古いデータファイルは、次のパスに正常に保存されました"
+
+msgid "_Location to save old data file"
+msgstr "古いデータファイルを保存する場所(_L)"
+
+msgid "Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data."
+msgstr "おめでとうございます。パスフレーズは正常にリセットされました。新しいパスフレーズを使用して、データにアクセスできるようになりました。"
+
+msgid "Set new passphrase"
+msgstr "新しいパスフレーズを設定する"
+
+msgid "Old data file sent successfully"
+msgstr "古いデータファイルは正常に送信されました"
+
+msgid "Obtain old data file"
+msgstr "古いデータファイルを取得する"
+
+msgid "Select passphrase recovery step"
+msgstr "パスフレーズ回復手順を選択する"
+
+msgid "Select account"
+msgstr "アカウントを選択する"
+
+msgid "Select an option to recover your passphrase."
+msgstr "パスフレーズを回復するためのオプションを選択します。"
+
+msgid "I have the _secret file and its password"
+msgstr "秘密ファイルとそのパスワードがある(_S)"
+
+msgid "I have the new _data file sent by the administrator"
+msgstr "管理者から送信された新しいデータファイルがある(_D)"
+
+msgid "_I have no secret or data file"
+msgstr "秘密ファイルもデータファイルもない(_I)"
+
+msgid "Select a file ...."
+msgstr "ファイルの選択..."
+
+msgid "Is the _above file encrypted?"
+msgstr "上のファイルは暗号化されていますか?(_A)"
+
+msgid "Finish"
+msgstr "終了"
+
+msgid "Passphrase reset failed"
+msgstr "パスフレーズをリセットできませんでした"
+
+msgid "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
+msgstr "ドメインに対して認証できません。アカウントからログアウトしています。ログインしてからやり直してください"
+
+msgid "You have been logged out of the account.Please login and try again."
+msgstr "アカウントからログアウトしています。ログインしてからやり直してください。"
+
+msgid "Passphrase reset successfully"
+msgstr "パスフレーズは正常にリセットされました"
+
+msgid "Server_Default"
+msgstr "サーバのデフォルト(_D)"
+
+msgid "The values in the new and confirm passphrase fields do not match"
+msgstr "新しいパスフレーズと確認パスフレーズのフィールドの値が一致していません"
+
+msgid "New data location is invalid"
+msgstr "新しいデータの場所が無効です"
+
+msgid "Enter the location of an xml file"
+msgstr "xml ファイルの場所を入力してください"
+
+msgid "Unable to send old data file"
+msgstr "古いデータファイルを送信できません"
+
+msgid "Display synchronization _logs"
+msgstr "同期ログを表示する(_L)"
+
+msgid "Display notifications for _policy violations"
+msgstr "ポリシー違反の通知を表示する(_P)"
+
+msgid "Hide ifolder _main window at startup"
+msgstr "起動時にiFolderメインウィンドウを表示しない(_M)"
