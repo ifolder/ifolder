@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SecureSync">
-    <value>安全同步</value>
+    <value>安全同步(&amp;S)</value>
   </data>
   <data name="menuHideTrayIcon.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -130,18 +130,18 @@
     <value>True</value>
   </data>
   <data name="DownloadDefaultiFolder">
-    <value>下载默认 iFolder</value>
+    <value>下载默认 iFolder(&amp;O)</value>
   </data>
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
-  </data>
-  <data name="&gt;&gt;syncAnimateTimer.Type">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MigrateNCopy">
     <value>创建拷贝并将其连接到 3.x 服务器</value>
   </data>
   <data name="menuPreferences.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Text">
@@ -207,8 +207,11 @@
   <data name="&gt;&gt;menuProperties.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="SkipText">
+    <value>跳过(&amp;S)</value>
+  </data>
+  <data name="UNameTextbox">
+    <value>用户名(&amp;U)</value>
   </data>
   <data name="menuHideTrayIcon.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -243,8 +246,8 @@
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
-  <data name="CongratsDescription">
-    <value>您现在可以添加要与服务器同步的文件夹。您还可以从服务器下载文件夹，并将它们与计算机同步。</value>
+  <data name="menuExit.Text">
+    <value>退出</value>
   </data>
   <data name="&gt;&gt;menuHelp.Name">
     <value>menuHelp</value>
@@ -342,20 +345,17 @@
   <data name="uploading">
     <value>正在上载：{0}</value>
   </data>
-  <data name="menuExit.Text">
-    <value>退出</value>
+  <data name="CongratsDescription">
+    <value>您现在可以添加要与服务器同步的文件夹。您还可以从服务器下载文件夹，并将它们与计算机同步。</value>
   </data>
-  <data name="actionRequiredTitle">
-    <value>必需的操作</value>
-  </data>
-  <data name="ResetSuccess">
-    <value>成功重设置了通行口令 </value>
+  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
   </data>
   <data name="menuPreferences.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="&gt;&gt;menuEventLogReader.Name">
-    <value>menuEventLogReader</value>
+  <data name="selectoption">
+    <value>单击“确定”进行合并或单击“取消”选择其他位置</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -390,6 +390,9 @@
   <data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
   <data name="&gt;&gt;menuItem1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -408,14 +411,17 @@
   <data name="VerifyPP">
     <value>校验通行口令</value>
   </data>
+  <data name="ServerNameTextbox">
+    <value>域地址(&amp;D)</value>
+  </data>
   <data name="VerifyPageHeaderTitle">
     <value>校验 iFolder 帐户信息</value>
   </data>
   <data name="menuProperties.Text">
     <value>iFolder</value>
   </data>
-  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="ResetSuccess">
+    <value>成功重设置了通行口令 </value>
   </data>
   <data name="subscriptionMessage">
     <value>{0} 已邀请您加入此共享 iFolder。请单击此处设置 iFolder。</value>
@@ -450,14 +456,17 @@
   <data name="UpgradeClientMsg">
     <value>是否要将客户端升级到 {0}。如果单击“是”将自动关闭客户端。</value>
   </data>
-  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="InvalidCurrentPPText">
+    <value>当前输入的通行口令无效。</value>
   </data>
   <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="menuExit.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -477,14 +486,17 @@
   <data name="PassStoreErr">
     <value>无法储存通行口令</value>
   </data>
+  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
   <data name="menuHideTrayIcon.Text">
     <value>隐藏</value>
   </data>
   <data name="MigrationWelcomeTitle">
     <value>欢迎使用 iFolder 迁移助理</value>
   </data>
-  <data name="PasswordTxt">
-    <value>口令</value>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ConnectText">
     <value>连接(&amp;O)</value>
@@ -510,8 +522,8 @@
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="WelcomePageAction">
-    <value>要继续，单击“下一步”。</value>
+  <data name="RecoveryAgent">
+    <value>恢复代理：</value>
   </data>
   <data name="menuAbout.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -540,8 +552,8 @@
   <data name="EncryptTotext">
     <value>原始的 3.x ifolder 已加密且您选择将其转换为解密版。是否要继续？</value>
   </data>
-  <data name="InvalidCurrentPPText">
-    <value>当前输入的通行口令无效。</value>
+  <data name="VerifyPageName">
+    <value>verifyPage</value>
   </data>
   <data name="Security">
     <value>安全性</value>
@@ -558,8 +570,8 @@
   <data name="syncingFile">
     <value>正在同步文件：{0}</value>
   </data>
-  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="quotaFailure">
+    <value>完整的 iFolder 阻止同步：{0}</value>
   </data>
   <data name="createAccountTitle">
     <value>欢迎使用 iFolder</value>
@@ -570,6 +582,9 @@
   <data name="ErrDirCreate">
     <value>创建目录时出错</value>
   </data>
+  <data name="WelcomePageAction">
+    <value>要继续，单击“下一步”。</value>
+  </data>
   <data name="UName">
     <value>用户名</value>
   </data>
@@ -579,20 +594,23 @@
   <data name="ServerOldTitle">
     <value>服务器版本低</value>
   </data>
+  <data name="NoLoggedInDomainsPasswordText">
+    <value>要更改口令，应连接域。请登录域，然后重试。</value>
+  </data>
   <data name="CreateDefaultiFolder">
-    <value>创建默认的 iFolder</value>
+    <value>创建默认的 iFolder(&amp;D)</value>
   </data>
   <data name="menuItem10.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
-  <data name="SelectSecurityOptions">
-    <value>选择安全性选项</value>
+  <data name="menuItem1.Text">
+    <value>-</value>
   </data>
   <data name="contextMenu1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="newMemberTitle">
-    <value>新建 iFolder 用户</value>
+  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="SetPassphraseSuccess">
     <value>成功设置了通行口令。 </value>
@@ -601,7 +619,7 @@
     <value>可用： </value>
   </data>
   <data name="SharableText">
-    <value>常规</value>
+    <value>常规(&amp;R)</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>iFolder 服务正在关闭...</value>
@@ -615,17 +633,20 @@
   <data name="ServerPagelbl2txt">
     <value>输入 iFolder 域的名称（例如，ifolder.example.net）。</value>
   </data>
+  <data name="ResetPasswordError">
+    <value>更改口令时出错</value>
+  </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
     <value>客户端需要升级。</value>
   </data>
+  <data name="&gt;&gt;menuEventLogReader.Name">
+    <value>menuEventLogReader</value>
+  </data>
   <data name="&gt;&gt;menuEventLogReader.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="quotaFailure">
-    <value>完整的 iFolder 阻止同步：{0}</value>
   </data>
   <data name="menuProperties.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -681,6 +702,9 @@
   <data name="lockFailure">
     <value>锁定的 iFolder 阻止同步：{0}</value>
   </data>
+  <data name="newMemberTitle">
+    <value>新建 iFolder 用户</value>
+  </data>
   <data name="syncAnimateTimer.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>139, 17</value>
   </data>
@@ -691,19 +715,22 @@
     <value>此向导将引导您将 iFolder 帐户迁移至 3.x。</value>
   </data>
   <data name="RememberPassPhrase">
-    <value>在此计算机上保存通行口令</value>
+    <value>在此计算机上保存通行口令(&amp;R)</value>
   </data>
   <data name="menuEventLogReader.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value />
+  <data name="SelectSecurityOptions">
+    <value>选择安全性选项</value>
   </data>
-  <data name="VerifyPageName">
-    <value>verifyPage</value>
+  <data name="EnterPassPhrase">
+    <value>输入通行口令：</value>
   </data>
   <data name="YourFiles">
     <value>您的文件</value>
+  </data>
+  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuAccounts.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -805,14 +832,11 @@
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="menuItem1.Text">
-    <value>-</value>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="deleteClientFile">
-    <value>正在删除文件：{0}</value>
   </data>
   <data name="MigrationCompleteWT">
     <value>完成 iFolder 迁移向导</value>
@@ -913,9 +937,6 @@
   <data name="MigrationHT">
     <value>迁移 iFolder</value>
   </data>
-  <data name="RecoveryAgent">
-    <value>恢复代理：</value>
-  </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
   </data>
@@ -940,11 +961,8 @@
   <data name="newMemberMessage">
     <value>{0} 已加入 iFolder“{1}”。请单击此处查看 iFolder 的成员列表。</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>输入通行口令：</value>
-  </data>
-  <data name="SkipText">
-    <value>跳过(&amp;S)</value>
+  <data name="RememberPasswdCheckbox">
+    <value>在此计算机上记住口令(&amp;R)</value>
   </data>
   <data name="subscriptionTitle">
     <value>新建 iFolder“{0}”</value>
@@ -966,6 +984,9 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>292, 266</value>
+  </data>
+  <data name="DefaultiFolder">
+    <value>默认 iFolder</value>
   </data>
   <data name="syncAnimateTimer.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -994,14 +1015,17 @@
   <data name="menuHideTrayIcon.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+  <data name="DefaultServerCheckbox">
+    <value>将此服务器设置为我的默认服务器(&amp;D)</value>
   </data>
-  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>None</value>
+  <data name="deleteClientFile">
+    <value>正在删除文件：{0}</value>
   </data>
   <data name="MigrationTitle">
     <value>iFolder 迁移助理</value>
+  </data>
+  <data name="alreadyexists">
+    <value>已存在一个与您指定的名称相同的文件夹...</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1012,6 +1036,9 @@
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>FormsTrayApp</value>
+  </data>
+  <data name="actionRequiredTitle">
+    <value>必需的操作</value>
   </data>
   <data name="port">
     <value>端口</value>
@@ -1056,7 +1083,7 @@
     <value>已加密</value>
   </data>
   <data name="EncryptedText">
-    <value>已加密</value>
+    <value>已加密(&amp;E)</value>
   </data>
   <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1077,7 +1104,7 @@
     <value>磁盘空间 </value>
   </data>
   <data name="DefaultServer">
-    <value>将它设为我的默认服务器(&amp;D)。</value>
+    <value>将它设为我的默认服务器。</value>
   </data>
   <data name="policyFailure">
     <value>策略阻止同步：{0}</value>
@@ -1089,7 +1116,7 @@
     <value>Private</value>
   </data>
   <data name="LocationText">
-    <value>位置：</value>
+    <value>位置(&amp;L)：</value>
   </data>
   <data name="menuStoreBrowser.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1097,7 +1124,7 @@
   <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="PasswordTxt">
+    <value>口令(&amp;P)</value>
   </data>
 </root>

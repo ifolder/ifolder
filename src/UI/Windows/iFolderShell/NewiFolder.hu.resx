@@ -101,7 +101,7 @@
     <value>-1</value>
   </data>
   <data name="MigrationTitle.Text">
-    <value>Lemezterület</value>
+    <value>Átállási riasztás</value>
   </data>
   <data name="saveConfigError">
     <value>Hiba történt a konfiguráció mentésekor.</value>
