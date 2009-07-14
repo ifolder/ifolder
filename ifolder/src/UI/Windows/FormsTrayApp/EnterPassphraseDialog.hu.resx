@@ -413,7 +413,7 @@
     <value>lblRetypePassphrase</value>
   </data>
   <data name="lblPassphrase.Text">
-    <value>Azonosítási kifejezés megadása</value>
+    <value>Hozzáférési kód megadása:</value>
   </data>
   <data name="savePassphrase.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -596,7 +596,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblRetypePassphrase.Text">
-    <value>Azonosítási kifejezés ismételt beírása</value>
+    <value>Hozzáférési kód ismételt beírása:</value>
   </data>
   <data name="RetypePassphrase.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -737,7 +737,7 @@
     <value>75, 23</value>
   </data>
   <data name="$this.Text">
-    <value>Azonosítási kifejezés megadása</value>
+    <value>Hozzáférési kód megadása</value>
   </data>
   <data name="&gt;&gt;btnOk.Parent">
     <value>$this</value>

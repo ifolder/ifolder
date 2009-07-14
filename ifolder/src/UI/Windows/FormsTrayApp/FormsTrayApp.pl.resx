@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SecureSync">
-    <value>Bezpieczna synchronizacja</value>
+    <value>&amp;Bezpieczna synchronizacja</value>
   </data>
   <data name="menuHideTrayIcon.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -130,18 +130,18 @@
     <value>True</value>
   </data>
   <data name="DownloadDefaultiFolder">
-    <value>Pobierz domyślny iFolder</value>
+    <value>&amp;Pobierz domyślny iFolder</value>
   </data>
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
-  </data>
-  <data name="&gt;&gt;syncAnimateTimer.Type">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MigrateNCopy">
     <value>Utwórz kopię i połącz się z serwerem 3.x</value>
   </data>
   <data name="menuPreferences.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Text">
@@ -207,8 +207,11 @@
   <data name="&gt;&gt;menuProperties.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="SkipText">
+    <value>&amp;Pomiń</value>
+  </data>
+  <data name="UNameTextbox">
+    <value>&amp;Nazwa użytkownika</value>
   </data>
   <data name="menuHideTrayIcon.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -243,8 +246,8 @@
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
-  <data name="CongratsDescription">
-    <value>Możesz teraz dodać foldery w celu zsynchronizowania ich z serwerem. Możesz także pobrać foldery z serwera i zsynchronizować je z komputerem.</value>
+  <data name="menuExit.Text">
+    <value>Zakończ</value>
   </data>
   <data name="&gt;&gt;menuHelp.Name">
     <value>menuHelp</value>
@@ -342,20 +345,17 @@
   <data name="uploading">
     <value>Przesyłanie: {0}</value>
   </data>
-  <data name="menuExit.Text">
-    <value>Zakończ</value>
+  <data name="CongratsDescription">
+    <value>Możesz teraz dodać foldery w celu zsynchronizowania ich z serwerem. Możesz także pobrać foldery z serwera i zsynchronizować je z komputerem.</value>
   </data>
-  <data name="actionRequiredTitle">
-    <value>Wymagana interwencja</value>
-  </data>
-  <data name="ResetSuccess">
-    <value>Pomyślnie zresetowano zwrot szyfrowania </value>
+  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
   </data>
   <data name="menuPreferences.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="&gt;&gt;menuEventLogReader.Name">
-    <value>menuEventLogReader</value>
+  <data name="selectoption">
+    <value>Kliknij przycisk OK, aby scalić, lub przycisk Anuluj, aby wybrać inne położenie.</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -390,6 +390,9 @@
   <data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
   <data name="&gt;&gt;menuItem1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -408,14 +411,17 @@
   <data name="VerifyPP">
     <value>Zweryfikuj zwrot szyfrowania</value>
   </data>
+  <data name="ServerNameTextbox">
+    <value>Ad&amp;res domeny</value>
+  </data>
   <data name="VerifyPageHeaderTitle">
     <value>Zweryfikuj informacje konta programu iFolder</value>
   </data>
   <data name="menuProperties.Text">
     <value>iFoldery</value>
   </data>
-  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="ResetSuccess">
+    <value>Pomyślnie zresetowano zwrot szyfrowania </value>
   </data>
   <data name="subscriptionMessage">
     <value>{0} zaprosił Cię do korzystania z tego współużytkowanego iFolderu. Kliknij tutaj, aby skonfigurować iFolder.</value>
@@ -450,14 +456,17 @@
   <data name="UpgradeClientMsg">
     <value>Czy chcesz uaktualnić klienta do wersji {0}? Jeśli klikniesz przycisk Tak, klient zostanie automatycznie zamknięty.</value>
   </data>
-  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="InvalidCurrentPPText">
+    <value>Wprowadzony bieżący zwrot hasłowy jest nieprawidłowy.</value>
   </data>
   <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="menuExit.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -477,14 +486,17 @@
   <data name="PassStoreErr">
     <value>Nie można zapisać zwrotu szyfrowania</value>
   </data>
+  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
   <data name="menuHideTrayIcon.Text">
     <value>Ukryj</value>
   </data>
   <data name="MigrationWelcomeTitle">
     <value>Witamy w Asystencie migracji programu iFolder</value>
   </data>
-  <data name="PasswordTxt">
-    <value>Hasło</value>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ConnectText">
     <value>P&amp;ołącz</value>
@@ -510,8 +522,8 @@
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="WelcomePageAction">
-    <value>Aby kontynuować, kliknij przycisk Dalej.</value>
+  <data name="RecoveryAgent">
+    <value>Agent odzyskiwania:</value>
   </data>
   <data name="menuAbout.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -540,11 +552,11 @@
   <data name="EncryptTotext">
     <value>Oryginalny iFolder w wersji 3.x jest zaszyfrowany i zostanie przekształcony w niezaszyfrowany. Czy chcesz kontynuować?</value>
   </data>
-  <data name="InvalidCurrentPPText">
-    <value>Wprowadzony bieżący zwrot hasłowy jest nieprawidłowy.</value>
+  <data name="VerifyPageName">
+    <value>verifyPage</value>
   </data>
   <data name="Security">
-    <value>&amp;Bezpieczeństwo</value>
+    <value>Zabezpieczenia</value>
   </data>
   <data name="synciFolder">
     <value>Rozpoczęta synchronizacja: {0}</value>
@@ -558,17 +570,20 @@
   <data name="syncingFile">
     <value>Synchronizowanie pliku: {0}</value>
   </data>
-  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="quotaFailure">
+    <value>Pełny iFolder uniemożliwił synchronizację: {0}</value>
   </data>
   <data name="createAccountTitle">
     <value>Witamy w programie iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Dostępna jest aktualizacja klienta.</value>
+    <value>Dostępne jest uaktualnienie klienta.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Błąd podczas tworzenia katalogu</value>
+  </data>
+  <data name="WelcomePageAction">
+    <value>Aby kontynuować, kliknij przycisk Dalej.</value>
   </data>
   <data name="UName">
     <value>Nazwa użytkownika</value>
@@ -579,20 +594,23 @@
   <data name="ServerOldTitle">
     <value>Stara wersja serwera</value>
   </data>
+  <data name="NoLoggedInDomainsPasswordText">
+    <value>W celu zmiany hasła należy połączyć się z domeną. Zaloguj się do domeny i spróbuj ponownie.</value>
+  </data>
   <data name="CreateDefaultiFolder">
-    <value>Utwórz domyślny iFolder</value>
+    <value>&amp;Utwórz domyślny iFolder</value>
   </data>
   <data name="menuItem10.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
-  <data name="SelectSecurityOptions">
-    <value>Wybierz opcje zabezpieczeń</value>
+  <data name="menuItem1.Text">
+    <value>-</value>
   </data>
   <data name="contextMenu1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="newMemberTitle">
-    <value>Nowy użytkownik programu iFolder</value>
+  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="SetPassphraseSuccess">
     <value>Pomyślnie ustalono zwrot szyfrowania. </value>
@@ -601,7 +619,7 @@
     <value>Dostępne: </value>
   </data>
   <data name="SharableText">
-    <value>Regularny</value>
+    <value>&amp;Regularny</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>Zamykanie usług iFolder...</value>
@@ -615,17 +633,20 @@
   <data name="ServerPagelbl2txt">
     <value>Wprowadź nazwę domeny iFolder (np. ifolder.example.net)</value>
   </data>
+  <data name="ResetPasswordError">
+    <value>Błąd podczas zmiany hasła</value>
+  </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
     <value>Niezbędna aktualizacja klienta.</value>
   </data>
+  <data name="&gt;&gt;menuEventLogReader.Name">
+    <value>menuEventLogReader</value>
+  </data>
   <data name="&gt;&gt;menuEventLogReader.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="quotaFailure">
-    <value>Pełny iFolder uniemożliwił synchronizację: {0}</value>
   </data>
   <data name="menuProperties.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -681,6 +702,9 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="lockFailure">
     <value>Zablokowany iFolder uniemożliwił synchronizację: {0}</value>
   </data>
+  <data name="newMemberTitle">
+    <value>Nowy użytkownik programu iFolder</value>
+  </data>
   <data name="syncAnimateTimer.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>139, 17</value>
   </data>
@@ -691,19 +715,22 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Ten kreator przeprowadzi Cię przez proces migracji konta programu iFolder do wersji 3.x</value>
   </data>
   <data name="RememberPassPhrase">
-    <value>Zapamiętaj zwrot szyfrowania na tym komputerze</value>
+    <value>&amp;Zapamiętaj zwrot szyfrowania na tym komputerze</value>
   </data>
   <data name="menuEventLogReader.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value />
+  <data name="SelectSecurityOptions">
+    <value>Wybierz opcje zabezpieczeń</value>
   </data>
-  <data name="VerifyPageName">
-    <value>verifyPage</value>
+  <data name="EnterPassPhrase">
+    <value>Wprowadź zwrot szyfrowania:</value>
   </data>
   <data name="YourFiles">
     <value>Pliki użytkownika</value>
+  </data>
+  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuAccounts.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -749,7 +776,7 @@ Czy na pewno chcesz zakończyć program?</value>
     </value>
   </data>
   <data name="ClickConnect">
-    <value>Kliknij przycisk Połącz, aby sprawdzić poprawność połączenia z domeną.</value>
+    <value>Kliknij przycisk Połącz, aby kontynuować.</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -805,14 +832,11 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="menuItem1.Text">
-    <value>-</value>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="deleteClientFile">
-    <value>Usuwanie pliku: {0}</value>
   </data>
   <data name="MigrationCompleteWT">
     <value>Finalizowanie działania kreatora migracji programu iFolder</value>
@@ -913,9 +937,6 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="MigrationHT">
     <value>Migruj iFolder</value>
   </data>
-  <data name="RecoveryAgent">
-    <value>Agent odzyskiwania:</value>
-  </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
   </data>
@@ -926,7 +947,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Wystąpił konflikt: {0}</value>
   </data>
   <data name="AccountName">
-    <value>Nazwa konta</value>
+    <value>Nazwa domeny</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -940,11 +961,8 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="newMemberMessage">
     <value>{0} dołączył do iFolderu "{1}". Kliknij tutaj, aby wyświetlić listę członków przypisanych do tego iFolderu.</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Wprowadź zwrot szyfrowania:</value>
-  </data>
-  <data name="SkipText">
-    <value>&amp;Pomiń</value>
+  <data name="RememberPasswdCheckbox">
+    <value>Zapa&amp;miętaj hasło na tym komputerze</value>
   </data>
   <data name="subscriptionTitle">
     <value>Nowy iFolder "{0}"</value>
@@ -966,6 +984,9 @@ Czy na pewno chcesz zakończyć program?</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>292, 266</value>
+  </data>
+  <data name="DefaultiFolder">
+    <value>Domyślny folder iFolder</value>
   </data>
   <data name="syncAnimateTimer.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -994,14 +1015,17 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="menuHideTrayIcon.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+  <data name="DefaultServerCheckbox">
+    <value>&amp;Ustaw ten serwer jako domyślny</value>
   </data>
-  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>None</value>
+  <data name="deleteClientFile">
+    <value>Usuwanie pliku: {0}</value>
   </data>
   <data name="MigrationTitle">
     <value>Asystent migracji programu iFolder</value>
+  </data>
+  <data name="alreadyexists">
+    <value>Folder o podanej nazwie już istnieje.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1012,6 +1036,9 @@ Czy na pewno chcesz zakończyć program?</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>FormsTrayApp</value>
+  </data>
+  <data name="actionRequiredTitle">
+    <value>Wymagana interwencja</value>
   </data>
   <data name="port">
     <value>Port</value>
@@ -1056,13 +1083,13 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Zaszyfrowane</value>
   </data>
   <data name="EncryptedText">
-    <value>Zaszyfrowane</value>
+    <value>&amp;Zaszyfrowane</value>
   </data>
   <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="CompletionPageWT">
-    <value>Finalizowanie działania kreatora zaproszeń Folderu</value>
+    <value>Gratulacje!</value>
   </data>
   <data name="$this.Name">
     <value>FormsTrayApp</value>
@@ -1077,7 +1104,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Miejsce na dysku twardym </value>
   </data>
   <data name="DefaultServer">
-    <value>Ustaw go jako mój serwer &amp;domyślny.</value>
+    <value>Ustaw ten serwer jako domyślny</value>
   </data>
   <data name="policyFailure">
     <value>Założenia uniemożliwiły synchronizację: {0}</value>
@@ -1089,7 +1116,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Private</value>
   </data>
   <data name="LocationText">
-    <value>Lokalizacja:</value>
+    <value>&amp;Lokalizacja:</value>
   </data>
   <data name="menuStoreBrowser.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1097,7 +1124,7 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="PasswordTxt">
+    <value>&amp;Hasło</value>
   </data>
 </root>

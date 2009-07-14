@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SecureSync">
-    <value>Защищенная синхронизация</value>
+    <value>&amp;Защищенная синхронизация</value>
   </data>
   <data name="menuHideTrayIcon.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -130,18 +130,18 @@
     <value>True</value>
   </data>
   <data name="DownloadDefaultiFolder">
-    <value>Загрузка папки iFolder по умолчанию</value>
+    <value>&amp;Загрузка папки iFolder по умолчанию</value>
   </data>
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
-  </data>
-  <data name="&gt;&gt;syncAnimateTimer.Type">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MigrateNCopy">
     <value>Создание копии с подключением к серверу 3.x</value>
   </data>
   <data name="menuPreferences.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Text">
@@ -207,8 +207,11 @@
   <data name="&gt;&gt;menuProperties.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="menuSyncLog.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="SkipText">
+    <value>&amp;Пропустить</value>
+  </data>
+  <data name="UNameTextbox">
+    <value>&amp;Имя пользователя</value>
   </data>
   <data name="menuHideTrayIcon.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -243,8 +246,8 @@
   <data name="$this.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
   </data>
-  <data name="CongratsDescription">
-    <value>Теперь можно добавлять новые папки для синхронизации с сервером. Кроме того, можно загружать папки с сервера и синхронизировать их с компьютером.</value>
+  <data name="menuExit.Text">
+    <value>Выход</value>
   </data>
   <data name="&gt;&gt;menuHelp.Name">
     <value>menuHelp</value>
@@ -342,20 +345,17 @@
   <data name="uploading">
     <value>Отправка: {0}</value>
   </data>
-  <data name="menuExit.Text">
-    <value>Выход</value>
+  <data name="CongratsDescription">
+    <value>Теперь можно добавлять новые папки для синхронизации с сервером. Кроме того, можно загружать папки с сервера и синхронизировать их с компьютером.</value>
   </data>
-  <data name="actionRequiredTitle">
-    <value>Требуется действие</value>
-  </data>
-  <data name="ResetSuccess">
-    <value>Сброс контрольной фразы выполнен успешно </value>
+  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>None</value>
   </data>
   <data name="menuPreferences.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="&gt;&gt;menuEventLogReader.Name">
-    <value>menuEventLogReader</value>
+  <data name="selectoption">
+    <value>Щелкните кнопку "ОК" для объединения или "Отмена" для выбора другого расположения</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -390,6 +390,9 @@
   <data name="$this.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
+  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
+  </data>
   <data name="&gt;&gt;menuItem1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -408,14 +411,17 @@
   <data name="VerifyPP">
     <value>Проверка контрольной фразы</value>
   </data>
+  <data name="ServerNameTextbox">
+    <value>&amp;Адрес домена</value>
+  </data>
   <data name="VerifyPageHeaderTitle">
     <value>Проверьте информацию учетной записи iFolder</value>
   </data>
   <data name="menuProperties.Text">
     <value>Папки iFolder</value>
   </data>
-  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="ResetSuccess">
+    <value>Сброс контрольной фразы выполнен успешно </value>
   </data>
   <data name="subscriptionMessage">
     <value>{0} приглашен участвовать в совместном использовании данной папки iFolder. Щелкните здесь для настройки iFolder.</value>
@@ -450,14 +456,17 @@
   <data name="UpgradeClientMsg">
     <value>Обновить клиента до версии {0}? При нажатии "Да" клиент закроется автоматически.</value>
   </data>
-  <data name="menuAccounts.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="InvalidCurrentPPText">
+    <value>Введена недопустимая контрольная фраза.</value>
   </data>
   <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="menuExit.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </data>
+  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -477,14 +486,17 @@
   <data name="PassStoreErr">
     <value>Не удается сохранить контрольную фразу</value>
   </data>
+  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
   <data name="menuHideTrayIcon.Text">
     <value>Скрыть</value>
   </data>
   <data name="MigrationWelcomeTitle">
     <value>Вас приветствует мастер миграции iFolder</value>
   </data>
-  <data name="PasswordTxt">
-    <value>Пароль</value>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ConnectText">
     <value>Подк&amp;лючить</value>
@@ -510,8 +522,8 @@
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="WelcomePageAction">
-    <value>Для продолжения щелкните "Далее".</value>
+  <data name="RecoveryAgent">
+    <value>Агент восстановления:</value>
   </data>
   <data name="menuAbout.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -540,11 +552,11 @@
   <data name="EncryptTotext">
     <value>Исходная папка iFolder версии 3.x зашифрована, но Вы хотите преобразовать ее в незашифрованную. Продолжить?</value>
   </data>
-  <data name="InvalidCurrentPPText">
-    <value>Введена недопустимая контрольная фраза.</value>
+  <data name="VerifyPageName">
+    <value>verifyPage</value>
   </data>
   <data name="Security">
-    <value>&amp;Защита</value>
+    <value>Защита</value>
   </data>
   <data name="synciFolder">
     <value>Синхронизация начата: {0}</value>
@@ -558,8 +570,8 @@
   <data name="syncingFile">
     <value>Синхронизация файла: {0}</value>
   </data>
-  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="quotaFailure">
+    <value>Синхронизация запрещена из-за переполнения папки iFolder: {0}</value>
   </data>
   <data name="createAccountTitle">
     <value>Вас приветствует программа iFolder</value>
@@ -570,6 +582,9 @@
   <data name="ErrDirCreate">
     <value>Ошибка при создании каталога</value>
   </data>
+  <data name="WelcomePageAction">
+    <value>Для продолжения щелкните "Далее".</value>
+  </data>
   <data name="UName">
     <value>Имя пользователя</value>
   </data>
@@ -579,20 +594,23 @@
   <data name="ServerOldTitle">
     <value>Сервер устарел</value>
   </data>
+  <data name="NoLoggedInDomainsPasswordText">
+    <value>Для смены пароля необходимо подключение к домену. Войдите в систему домена и повторите попытку.</value>
+  </data>
   <data name="CreateDefaultiFolder">
-    <value>Создание папки iFolder по умолчанию</value>
+    <value>&amp;Создание папки iFolder по умолчанию</value>
   </data>
   <data name="menuItem10.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
-  <data name="SelectSecurityOptions">
-    <value>Выберите параметры защиты</value>
+  <data name="menuItem1.Text">
+    <value>-</value>
   </data>
   <data name="contextMenu1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="newMemberTitle">
-    <value>Новый пользователь iFolder</value>
+  <data name="menuHideTrayIcon.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="SetPassphraseSuccess">
     <value>Контрольная фраза установлена успешно. </value>
@@ -601,7 +619,7 @@
     <value>Доступно: </value>
   </data>
   <data name="SharableText">
-    <value>Обычный</value>
+    <value>&amp;Обычный</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>Закрытие сервисов iFolder...</value>
@@ -615,17 +633,20 @@
   <data name="ServerPagelbl2txt">
     <value>Введите имя домена iFolder (например iFolder.example.net).</value>
   </data>
+  <data name="ResetPasswordError">
+    <value>Ошибка смены пароля</value>
+  </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
     <value>Необходимо обновить клиента.</value>
   </data>
+  <data name="&gt;&gt;menuEventLogReader.Name">
+    <value>menuEventLogReader</value>
+  </data>
   <data name="&gt;&gt;menuEventLogReader.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="quotaFailure">
-    <value>Синхронизация запрещена из-за переполнения папки iFolder: {0}</value>
   </data>
   <data name="menuProperties.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -681,6 +702,9 @@
   <data name="lockFailure">
     <value>Синхронизация запрещена из-за блокировки iFolder: {0}</value>
   </data>
+  <data name="newMemberTitle">
+    <value>Новый пользователь iFolder</value>
+  </data>
   <data name="syncAnimateTimer.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>139, 17</value>
   </data>
@@ -691,19 +715,22 @@
     <value>Данный мастер поможет выполнить действия, необходимые для миграции учетной записи iFolder в версию 3.x.</value>
   </data>
   <data name="RememberPassPhrase">
-    <value>Запомнить контрольную фразу на этом компьютере</value>
+    <value>&amp;Запомнить контрольную фразу на этом компьютере</value>
   </data>
   <data name="menuEventLogReader.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value />
+  <data name="SelectSecurityOptions">
+    <value>Выберите параметры защиты</value>
   </data>
-  <data name="VerifyPageName">
-    <value>verifyPage</value>
+  <data name="EnterPassPhrase">
+    <value>Контрольная фраза:</value>
   </data>
   <data name="YourFiles">
     <value>Ваши файлы</value>
+  </data>
+  <data name="menuPreferences.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuAccounts.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -805,14 +832,11 @@
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="menuItem1.Text">
-    <value>-</value>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
   <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
-  </data>
-  <data name="deleteClientFile">
-    <value>Удаление файла: {0}</value>
   </data>
   <data name="MigrationCompleteWT">
     <value>Выполнение мастера миграции iFolder</value>
@@ -913,9 +937,6 @@
   <data name="MigrationHT">
     <value>Миграция iFolder</value>
   </data>
-  <data name="RecoveryAgent">
-    <value>Агент восстановления:</value>
-  </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
   </data>
@@ -940,11 +961,8 @@
   <data name="newMemberMessage">
     <value>{0} присоединился к папке iFolder "{1}". Щелкните здесь для просмотра списка членов папки iFolder.</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Контрольная фраза:</value>
-  </data>
-  <data name="SkipText">
-    <value>&amp;Пропустить</value>
+  <data name="RememberPasswdCheckbox">
+    <value>Запомни&amp;ть пароль на этом компьютере</value>
   </data>
   <data name="subscriptionTitle">
     <value>Новая папка iFolder "{0}"</value>
@@ -966,6 +984,9 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>292, 266</value>
+  </data>
+  <data name="DefaultiFolder">
+    <value>Папка iFolder по умолчанию</value>
   </data>
   <data name="syncAnimateTimer.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -994,14 +1015,17 @@
   <data name="menuHideTrayIcon.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
+  <data name="DefaultServerCheckbox">
+    <value>Выбрать этот сервер в качестве сервера по у&amp;молчанию</value>
   </data>
-  <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>None</value>
+  <data name="deleteClientFile">
+    <value>Удаление файла: {0}</value>
   </data>
   <data name="MigrationTitle">
     <value>Помощник по миграции iFolder</value>
+  </data>
+  <data name="alreadyexists">
+    <value>Папка с указанным именем уже существует...</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1012,6 +1036,9 @@
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>FormsTrayApp</value>
+  </data>
+  <data name="actionRequiredTitle">
+    <value>Требуется действие</value>
   </data>
   <data name="port">
     <value>Порт</value>
@@ -1056,7 +1083,7 @@
     <value>Зашифровано</value>
   </data>
   <data name="EncryptedText">
-    <value>Зашифровано</value>
+    <value>&amp;Зашифровано</value>
   </data>
   <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1077,7 +1104,7 @@
     <value>Дисковое пространство </value>
   </data>
   <data name="DefaultServer">
-    <value>&amp;Сделать этот сервер сервером по умолчанию.</value>
+    <value>Сделать этот сервер сервером по умолчанию.</value>
   </data>
   <data name="policyFailure">
     <value>Запрещенная политикой синхронизация: {0}</value>
@@ -1089,7 +1116,7 @@
     <value>Private</value>
   </data>
   <data name="LocationText">
-    <value>Расположение:</value>
+    <value>&amp;Расположение:</value>
   </data>
   <data name="menuStoreBrowser.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1097,7 +1124,7 @@
   <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="PasswordTxt">
+    <value>&amp;Пароль</value>
   </data>
 </root>

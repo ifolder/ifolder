@@ -106,6 +106,9 @@
   <data name="$this.Name">
     <value>Credits</value>
   </data>
+  <data name="close.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>MiddleCenter</value>
+  </data>
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -133,6 +136,9 @@
   <data name="close.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
   </data>
+  <data name="listBox1.Items67">
+    <value>	Ryan Collier</value>
+  </data>
   <data name="listBox1.Items64">
     <value>其它参与人员</value>
   </data>
@@ -143,6 +149,9 @@
     <value>0, 0</value>
   </data>
   <data name="listBox1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
+  <data name="close.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="listBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -196,6 +205,9 @@
   <data name="listBox1.Items13">
     <value>	Nitin Purswani</value>
   </data>
+  <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
+  </data>
   <data name="close.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
@@ -220,8 +232,8 @@
   <data name="listBox1.Items24">
     <value />
   </data>
-  <data name="listBox1.Items">
-    <value>			iFolder 3 小组</value>
+  <data name="listBox1.Items25">
+    <value>			特别感谢</value>
   </data>
   <data name="listBox1.Items22">
     <value>	Radhika</value>
@@ -234,9 +246,6 @@
   </data>
   <data name="listBox1.Items21">
     <value>文档编制</value>
-  </data>
-  <data name="listBox1.Items25">
-    <value>			特别感谢</value>
   </data>
   <data name="listBox1.Items28">
     <value>	Boyd Timothy</value>
@@ -271,20 +280,14 @@
   <data name="listBox1.Items58">
     <value>	Dave Camp</value>
   </data>
-  <data name="listBox1.Items29">
-    <value>	Brady Anderson</value>
-  </data>
-  <data name="listBox1.Items62">
-    <value>	Niel M. Bornstein</value>
-  </data>
   <data name="close.Text">
     <value>关闭(&amp;C)</value>
   </data>
   <data name="close.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
-  <data name="&gt;&gt;close.Name">
-    <value>close</value>
+  <data name="listBox1.Items62">
+    <value>	Niel M. Bornstein</value>
   </data>
   <data name="listBox1.Items63">
     <value />
@@ -295,8 +298,11 @@
   <data name="close.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="close.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>MiddleCenter</value>
+  <data name="listBox1.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="listBox1.Items69">
+    <value>	Vikash Mehta</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -310,8 +316,8 @@
   <data name="listBox1.Items41">
     <value>	Mike Lasky</value>
   </data>
-  <data name="listBox1.Items42">
-    <value>	Paul Thomas</value>
+  <data name="&gt;&gt;close.Name">
+    <value>close</value>
   </data>
   <data name="listBox1.Items43">
     <value>	Pete Mimmack</value>
@@ -319,8 +325,8 @@
   <data name="listBox1.Items36">
     <value>	Eric Ward</value>
   </data>
-  <data name="listBox1.IntegralHeight" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="listBox1.Items45">
+    <value>	Russ Young</value>
   </data>
   <data name="listBox1.Items46">
     <value>	Scott Reeves</value>
@@ -337,14 +343,8 @@
   <data name="close.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>75, 23</value>
   </data>
-  <data name="close.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
-  </data>
   <data name="listBox1.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
-  </data>
-  <data name="listBox1.Items3">
-    <value>	Anil Kumar</value>
   </data>
   <data name="listBox1.Items15">
     <value>	Sujatha Narasimhan</value>
@@ -358,8 +358,11 @@
   <data name="close.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="listBox1.Items4">
-    <value>	Arul Selvan</value>
+  <data name="listBox1.Items73">
+    <value>	GG Hegde</value>
+  </data>
+  <data name="listBox1.Items72">
+    <value>	Abhilash Gupta</value>
   </data>
   <data name="listBox1.Items5">
     <value>	Ashok Singh</value>
@@ -370,8 +373,8 @@
   <data name="listBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
+  <data name="listBox1.Items76">
+    <value />
   </data>
   <data name="listBox1.Items1">
     <value />
@@ -379,8 +382,8 @@
   <data name="listBox1.Items2">
     <value>开发人员</value>
   </data>
-  <data name="listBox1.HorizontalScrollbar" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
+  <data name="listBox1.Items3">
+    <value>	Anil Kumar</value>
   </data>
   <data name="close.Image" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -403,8 +406,11 @@
   <data name="listBox1.HorizontalExtent" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>0</value>
   </data>
-  <data name="listBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>392, 238</value>
+  <data name="close.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value />
+  </data>
+  <data name="listBox1.Items29">
+    <value>	Brady Anderson</value>
   </data>
   <data name="&gt;&gt;$this.Type">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -439,8 +445,8 @@
   <data name="listBox1.Items66">
     <value>	Ron Randquist</value>
   </data>
-  <data name="listBox1.Items67">
-    <value>	Ryan Collier</value>
+  <data name="listBox1.Items">
+    <value>			iFolder 3 小组</value>
   </data>
   <data name="&gt;&gt;listBox1.Name">
     <value>listBox1</value>
@@ -457,14 +463,14 @@
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="close.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="listBox1.Items42">
+    <value>	Paul Thomas</value>
   </data>
   <data name="listBox1.Items44">
     <value>	Rob Lyon</value>
   </data>
-  <data name="listBox1.Items45">
-    <value>	Russ Young</value>
+  <data name="listBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>392, 238</value>
   </data>
   <data name="listBox1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -478,11 +484,14 @@
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>CenterParent</value>
   </data>
+  <data name="listBox1.IntegralHeight" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </data>
   <data name="listBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Bottom, Left, Right</value>
   </data>
-  <data name="listBox1.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value />
+  <data name="close.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="&gt;&gt;listBox1.Type">
     <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -514,6 +523,9 @@
   <data name="listBox1.Items12">
     <value>质量保证</value>
   </data>
+  <data name="listBox1.Items4">
+    <value>	Arul Selvan</value>
+  </data>
   <data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>80</value>
   </data>
@@ -529,44 +541,26 @@
   <data name="listBox1.Items18">
     <value>	Biswajeet Mahapatra</value>
   </data>
-  <data name="listBox1.Items69">
-    <value>	Vikash Mehta</value>
-  </data>
-  <data name="listBox1.Items70">
-    <value>	Annapurna Lolla</value>
-  </data>
-  <data name="listBox1.Items71">
-    <value>	Jerry Griffis (Novell Production Deployment)</value>
-  </data>
-  <data name="listBox1.Items72">
-    <value>	Abhilash Gupta</value>
-  </data>
-  <data name="listBox1.Items73">
-    <value>	GG Hegde</value>
-  </data>
-  <data name="listBox1.Items74">
-    <value>Project Support</value>
-  </data>
-  <data name="listBox1.Items75">
-    <value>Deployment Readiness</value>
-  </data>
-  <data name="listBox1.Items76">
-    <value />
-  </data>
-  <data name="listBox1.Items77">
-    <value />
-  </data>
   <data name="listBox1.ScrollAlwaysVisible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
   <data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="close.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <data name="listBox1.Items71">
+    <value>	Jerry Griffis (Novell Production Deployment)</value>
+  </data>
+  <data name="listBox1.Items70">
+    <value>	Annapurna Lolla</value>
+  </data>
+  <data name="listBox1.Items77">
     <value />
   </data>
   <data name="$this.GridSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>8, 8</value>
+  </data>
+  <data name="listBox1.HorizontalScrollbar" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>False</value>
   </data>
   <data name="listBox1.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />

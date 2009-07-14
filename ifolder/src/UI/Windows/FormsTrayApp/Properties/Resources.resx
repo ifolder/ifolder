@@ -651,8 +651,5 @@
   </data>
   <data name="remove" xml:space="preserve">
     <value>Remove</value>
-   </data>
-  <data name="noPassphrase" xml:space="preserve">
-    <value>Passphrase not provided</value>
   </data>
 </root>
