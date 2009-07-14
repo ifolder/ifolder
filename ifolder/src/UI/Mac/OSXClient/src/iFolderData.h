@@ -63,6 +63,7 @@
 	NSMutableArray					*ifolders;
 	NSArrayController				*domainsController;
 	NSArrayController				*ifoldersController;
+	NSArrayController				*loggedDomainsController;
 	
 //	NSObjectController				*ifolderDataAlias;
 
@@ -76,6 +77,8 @@
 - (BOOL)ForceQuit;
 
 -(NSArrayController *)domainArrayController;
+-(NSArrayController *)loggedDomainArrayController;
+
 -(NSArrayController *)ifolderArrayController;
 //-(NSObjectController *)dataAlias;
 
@@ -155,4 +158,5 @@
 -(iFolderDomain*)connectToDomain:(NSString *)UserName 
 				   usingPassword:(NSString *)Password andHost:(NSString *)Host;
 -(AuthStatus *) logoutFromRemoteDomain:(NSString *)domainID;
+-(int)getLoggedDomainCount;
 @end

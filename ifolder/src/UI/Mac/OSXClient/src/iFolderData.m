@@ -92,6 +92,9 @@ static iFolderData *sharedInstance = nil;
 			
 			domainsController = [[NSArrayController alloc] init];
 			[domainsController setObjectClass:[iFolderDomain class]];
+			
+			loggedDomainsController = [[NSArrayController alloc] init];
+			[loggedDomainsController setObjectClass:[iFolderDomain class]];
 
 //			[domainsController bind:@"contentArray" toObject:ifolderDataAlias
 //					withKeyPath:@"selection.ifolderdomains" options:nil];
@@ -161,6 +164,16 @@ static iFolderData *sharedInstance = nil;
 	return domainsController;
 }
 
+//===================================================================
+// loggedDomainArrayController
+// returns the logged in domains NSArrayController for the GUI to bind to
+//===================================================================
+-(NSArrayController *)loggedDomainArrayController
+{
+	return loggedDomainsController;
+}
+
+
 
 //===================================================================
 // ifolderArrayController
@@ -206,6 +219,15 @@ static iFolderData *sharedInstance = nil;
 									NSMakeRange(0,[[domainsController arrangedObjects] count])];
 			[domainsController removeObjectsAtArrangedObjectIndexes:allIndexes];
 		}
+		
+		if([[loggedDomainsController arrangedObjects] count] > 0)
+		{
+			NSIndexSet *allLoggedIndexes = [[NSIndexSet alloc]
+									  initWithIndexesInRange:
+									  NSMakeRange(0,[[loggedDomainsController arrangedObjects] count])];
+			[loggedDomainsController removeObjectsAtArrangedObjectIndexes:allLoggedIndexes];
+		}
+		
 
 		NSArray *newDomains = [simiasService GetDomains:NO];
 		for(objCount = 0; objCount < [newDomains count]; objCount++)
@@ -281,6 +303,9 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock lock];
 	[domainsController addObject:domain];
 	[keyedDomains setObject:domain forKey:[domain ID]];
+	//Only if the domain is authenticated, add to logged doamins list
+	if([domain authenticated])
+		[loggedDomainsController addObject:domain];   
 	
 	[instanceLock unlock];	
 }
@@ -958,6 +983,30 @@ static iFolderData *sharedInstance = nil;
 }
 
 
+-(int)getLoggedDomainCount
+{
+	iFolderDomain* dom = nil;
+	int loggedDomainCount = 0;
+	
+	[instanceLock lock];
+	
+	NSArray* loggedDomains = [self getDomains];
+
+	NSEnumerator *enumerator = [loggedDomains objectEnumerator];
+	
+	while ((dom = [enumerator nextObject]))
+	{
+		if([dom authenticated])
+		{
+			loggedDomainCount++;
+		}
+	}
+	
+	[instanceLock unlock];
+	
+	return loggedDomainCount;
+	
+}
 
 
 //===================================================================
