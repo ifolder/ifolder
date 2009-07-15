@@ -1,4 +1,4 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -713,51 +713,38 @@
     <None Include="iFolder.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cs\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="de\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="es\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="fr\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="hu\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="it\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ja\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="pl\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="pt-BR\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ru\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="sk\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="zh-CN\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="zh-TW\iFolderShellRes.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\KeyRecovery\KeyRecovery.csproj">
       <Project>{6776A48D-FBA2-4545-B3DC-E8B95F7BE773}</Project>
       <Name>KeyRecovery</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\cs\iFolderShellRes.dll" />
+    <Content Include="x64\de\iFolderShellRes.dll" />
+    <Content Include="x64\es\iFolderShellRes.dll" />
+    <Content Include="x64\fr\iFolderShellRes.dll" />
+    <Content Include="x64\hu\iFolderShellRes.dll" />
+    <Content Include="x64\it\iFolderShellRes.dll" />
+    <Content Include="x64\ja\iFolderShellRes.dll" />
+    <Content Include="x64\pl\iFolderShellRes.dll" />
+    <Content Include="x64\pt-BR\iFolderShellRes.dll" />
+    <Content Include="x64\ru\iFolderShellRes.dll" />
+    <Content Include="x64\sk\iFolderShellRes.dll" />
+    <Content Include="x64\zh-CN\iFolderShellRes.dll" />
+    <Content Include="x64\zh-TW\iFolderShellRes.dll" />
+    <Content Include="x86\cs\iFolderShellRes.dll" />
+    <Content Include="x86\de\iFolderShellRes.dll" />
+    <Content Include="x86\es\iFolderShellRes.dll" />
+    <Content Include="x86\fr\iFolderShellRes.dll" />
+    <Content Include="x86\hu\iFolderShellRes.dll" />
+    <Content Include="x86\it\iFolderShellRes.dll" />
+    <Content Include="x86\ja\iFolderShellRes.dll" />
+    <Content Include="x86\pl\iFolderShellRes.dll" />
+    <Content Include="x86\pt-BR\iFolderShellRes.dll" />
+    <Content Include="x86\ru\iFolderShellRes.dll" />
+    <Content Include="x86\sk\iFolderShellRes.dll" />
+    <Content Include="x86\zh-CN\iFolderShellRes.dll" />
+    <Content Include="x86\zh-TW\iFolderShellRes.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -773,6 +760,7 @@ if not exist C:\iFolder_stage\etc\simias mkdir C:\iFolder_stage\etc\simias
 if not exist C:\iFolder_stage\lib\simias\web\modules mkdir C:\iFolder_stage\lib\simias\web\modules
 if $(PlatformName)==x64 %windir%\Microsoft.NET\Framework64\v2.0.50727\RegAsm.exe /tlb:$(TargetName).tlb $(TargetName).dll
 xcopy /E /Y $(TargetDir)* C:\iFolder_stage\
-copy $(TargetName).tlb $(ProjectDir)</PostBuildEvent>
+copy $(TargetName).tlb $(ProjectDir)
+xcopy /E /Y $(ProjectDir)\$(PlatformName)\* C:\iFolder_stage\</PostBuildEvent>
   </PropertyGroup>
 </Project>
