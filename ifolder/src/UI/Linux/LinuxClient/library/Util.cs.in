@@ -289,7 +289,7 @@ namespace Novell.iFolder
 				process.Start();
 				return;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 			}
 
@@ -301,7 +301,7 @@ namespace Novell.iFolder
 				process.Start();
 				return;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 			}
 
@@ -312,7 +312,7 @@ namespace Novell.iFolder
 				process.Start();
 				return;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 			}
 
@@ -323,7 +323,7 @@ namespace Novell.iFolder
 				process.Start();
 				return;
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 			}
 
@@ -604,9 +604,8 @@ namespace Novell.iFolder
 					}
 				}
 			}
-			ifwin.ShowIconView(false);
+			ifwin.UpdateToIconListView();
 		}
-		
         /// <summary>
         /// Show Login Error
         /// </summary>

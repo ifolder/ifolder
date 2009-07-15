@@ -1396,7 +1396,8 @@ namespace Novell.iFolder
 			tv.AppendColumn (Util.GS("Status"), new CellRendererText(), "text", 4);
 			ifolderlistview.Add(tv);
                         ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
-			
+		        //Initilizing it to false	
+			ifolderlistview.Visible = false;
                         ifolderlistview.Show();
 
 
@@ -1881,6 +1882,7 @@ namespace Novell.iFolder
 		{
 			iFoldersScrolledWindow = new ScrolledWindow();
 			iFoldersIconView = new iFolderIconView(iFoldersScrolledWindow);
+			iFoldersScrolledWindow.Visible = false;
 
 			///
 			/// iFolders on This Computer
@@ -5323,6 +5325,20 @@ namespace Novell.iFolder
 			}
 			return passPhraseStatus;
 		}
+
+
+
+		public void UpdateToIconListView()
+                {
+                        domainController = DomainController.GetDomainController();
+                        DomainInformation[] domains = domainController.GetDomains();
+			if( (domains.Length <= 0)
+			 || (!ifolderlistview.Visible && !iFoldersScrolledWindow.Visible)
+			 || (ifolderlistview.Visible && iFoldersScrolledWindow.Visible)   )
+			 {
+                               	ShowIconView(false);
+                         }
+                }
 
 	}
 
