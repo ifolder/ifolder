@@ -425,6 +425,7 @@ namespace Novell.FormsTrayApp
             catch { }
             listView1.LargeImageList = largeImageList;
             listView1.SmallImageList = smallImageList;
+            
         }
 
         void menuResetPassword_Click(object sender, EventArgs e)
@@ -1867,17 +1868,17 @@ namespace Novell.FormsTrayApp
 
 					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
 					{
-						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership;
-                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
-                        toolStripBtnDelete.Text = Resources.delete;
-                        toolStripBtnDelete.ToolTipText = Resources.menuActionRemove;
-					}
-					else
-					{
-						this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership; 
                         toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\remove_share_48.png"));
                         toolStripBtnDelete.Text = Resources.remove;
                         toolStripBtnDelete.ToolTipText = Resources.RemoveMyMembership;
+                    }
+					else
+					{
+                        this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
+                        toolStripBtnDelete.Text = Resources.delete;
+                        toolStripBtnDelete.ToolTipText = Resources.menuActionRemove;
 					}
 					// Show the available iFolder buttons
                     enableRemoteFoldersButtons(true);
