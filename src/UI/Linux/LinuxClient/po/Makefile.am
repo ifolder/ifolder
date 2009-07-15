@@ -33,15 +33,30 @@ POFILES = $(srcdir)/pt_BR.po \
 	 $(srcdir)/zh_CN.po \
 	 $(srcdir)/zh_TW.po
 
-CATALOGS := $(subst .po,.mo,$(POFILES))
+CATALOGS=$(srcdir)/pt_BR.mo \
+         $(srcdir)/cs.mo \
+         $(srcdir)/de.mo \
+         $(srcdir)/en.mo \
+         $(srcdir)/es.mo \
+         $(srcdir)/fi.mo \
+         $(srcdir)/fr.mo \
+         $(srcdir)/it.mo \
+         $(srcdir)/ja.mo \
+         $(srcdir)/hu.mo \
+         $(srcdir)/pl.mo \
+         $(srcdir)/pt.mo \
+         $(srcdir)/ru.mo \
+         $(srcdir)/sk.mo \
+         $(srcdir)/zh_CN.mo \
+         $(srcdir)/zh_TW.mo
 
 EXTRA_DIST = $(POFILES)
 
 update-po:
-	cd ../../../; \
+	cd ../../../../../; \
 	echo Updating pot file: $(PACKAGE).pot; \
-	xgettext --output-dir=src/LinuxClient/po/ \
-			--files-from=src/LinuxClient/po/POTFILES \
+	xgettext --output-dir=src/UI/Linux/LinuxClient/po/ \
+			--files-from=src/UI/Linux/LinuxClient/po/POTFILES \
 			--language=C# \
 			--join-existing \
 			--from-code=UTF-8 \
@@ -77,8 +92,7 @@ install-exec-local: all
 	    echo "installing $$cat as $(DESTDIR)$$dir/$(PACKAGE).mo"; \
 	  else \
 	    $(INSTALL_DATA) $(srcdir)/$$cat $(DESTDIR)$$dir/$(PACKAGE).mo; \
-	    echo "installing $(srcdir)/$$cat as" \
-		 "$(DESTDIR)$$dir/$(PACKAGE).mo"; \
+	    echo "installing $(srcdir)/$$cat as $(DESTDIR)$$dir/$(PACKAGE).mo"; \
 	  fi; \
 	done
 

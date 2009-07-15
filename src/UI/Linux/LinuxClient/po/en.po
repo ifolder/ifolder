@@ -1574,27 +1574,8 @@ msgstr ""
 msgid "Notification"
 msgstr "Notification"
 
-#: src/LinuxClient/library/PrefsGeneralPage.cs:163 
-msgid "Notify of share_d iFolders"
-msgstr "Notify of share_d iFolders"
-
 msgid "Notify when iFolders are _shared"
 msgstr "Notify when iFolders are _shared"
-
-msgid "Show _Network Events  messages when iFolder is started"
-msgstr "Show _Network Events  messages when iFolder is started"
-
-#: src/LinuxClient/library/PrefsGeneralPage.cs:127 
-msgid ""
-"To start up iFolder at login, leave iFolder running when you log out and "
-"save your current setup."
-msgstr ""
-"To start up iFolder at login, leave iFolder running when you log out and "
-"save your current setup."
-
-#: src/LinuxClient/library/PrefsGeneralPage.cs:142 
-msgid "Notification"
-msgstr "Notification"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
@@ -1871,11 +1852,6 @@ msgid ""
 "_User name:"
 msgstr ""
 "_User name:"
-
-msgid ""
-"User name:"
-msgstr ""
-"User name:"
 
 msgid ""
 "_Password:"
@@ -2417,12 +2393,6 @@ msgstr ""
 
 
 msgid ""
-"iFolder Login"
-msgstr ""
-"iFolder Login"
-
-
-msgid ""
 "Unable to launch File Browser"
 msgstr ""
 "Unable to launch File Browser"
@@ -2681,11 +2651,6 @@ msgid ""
 "Revert this iFolder back to a normal folder?"
 msgstr ""
 "Revert this iFolder back to a normal folder?"
-
-msgid ""
-"Revert this iFolder to a normal folder?"
-msgstr ""
-"Revert this iFolder to a normal folder?"
 
 msgid ""
 "The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
@@ -3594,11 +3559,6 @@ msgstr ""
 "Click Ok to merge the folder or Cancel to select a different location"
 
 msgid ""
-"iFolder"
-msgstr ""
-"iFolder"
-
-msgid ""
 "Size"
 msgstr ""
 "Size"
@@ -3612,11 +3572,6 @@ msgid ""
 "Create iFolder"
 msgstr ""
 "Create iFolder"
-
-msgid ""
-"Resolve conflicts"
-msgstr ""
-"Resolve conflicts"
 
 msgid ""
 "Share with"
@@ -3729,11 +3684,6 @@ msgstr ""
 "Connect"
 
 msgid ""
-"Regular"
-msgstr ""
-"Regular"
-
-msgid ""
 "Encrypted"
 msgstr ""
 "Encrypted"
@@ -3787,11 +3737,6 @@ msgid ""
 "_iFolder account"
 msgstr ""
 "_iFolder account"
-
-msgid ""
-"iFolder account"
-msgstr ""
-"iFolder account"
 
 msgid ""
 "_Location of secret file"

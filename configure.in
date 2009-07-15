@@ -1,7 +1,7 @@
 AC_INIT(src/common/WebService/iFolder.cs)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
-if test-d m4; then
+if test -d m4; then
 echo "adding m4"
 AC_CONFIG_MACRO_DIR([m4])
 fi
@@ -35,7 +35,8 @@ case $host_cpu in
 esac
 
 AC_SUBST(LIB64)
-
+PACKAGE=ifolder3
+AC_SUBST(PACKAGE)
 
 #
 # Check for a valid operating system and C# compiler
@@ -280,6 +281,13 @@ case $IFOLDER_OS in
 		#ALL_LINGUAS="pt_BR fr it de es ru ja"
 		#AM_GNU_GETTEXT_VERSION(0.10.40)
 		#AM_GNU_GETTEXT(external)
+		ALL_LINGUAS="cs de en es fi fr it ja hu pl pt pt_BR ru sk zh_CN zh_TW"
+		GETTEXT_PACKAGE=${PACKAGE}
+		AC_SUBST(GETTEXT_PACKAGE)
+		AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [gettext package name])
+		AM_GLIB_GNU_GETTEXT
+
+
     	libexecdir='${exec_prefix}/${LIB64}/simias'
 	libdir='${exec_prefix}/${LIB64}'
     ;;
