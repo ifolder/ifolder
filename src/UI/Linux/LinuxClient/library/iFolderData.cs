@@ -256,14 +256,18 @@ namespace Novell.iFolder
 				ClearOrphanediFolders();
 				
 				// Refresh the current iFolders
-				iFolderWeb[] ifolders;
+				iFolderWeb[] ifolders = null;
 				try
 				{
 					ifolders = ifws.GetAlliFolders();
 				}
 				catch(Exception e)
 				{
-					ifolders = null;
+				 //TODO: Exception was found when domain is disconnected, were as foudn that
+                                 // GetAlliFolders is returning exception, but not able locate as debugging shows 
+                                 // function is going throught	
+				
+					//ifolders = null;
 				}
 
 				if(ifolders != null && ifolders.Length >0)
