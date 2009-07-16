@@ -1,7 +1,7 @@
 body { 
 		margin-left: .2in;
 		padding:0;
-		font-family:arial, helvetica, sans-serif;
+		font-family:geneva, arial, helvetica, sans-serif;
 		font-size: 75%;
 		font-weight: normal;
 		color: #000000;
@@ -26,6 +26,8 @@ body {
 	div.msgexplan {margin: 0px 0px 7px 0px;}
 	div.msgexplan span.title {margin: 0px 7px 0px 0px; font-size: 100%; font-weight: bold; color: #000000;}
 	div.msgtext p.para {margin: 4px 0px 16px 0px; font-size: 100%; font-weight: bold; color: #b00000;}
+	
+	#tocref { display:inline; float:right; }
 
 /* links */
 	a {color:#0000cc;}
@@ -34,10 +36,13 @@ body {
 	li.listitem a:hover {color:#3366ff;}
 	a.ulink a:hover {text-decoration:none; color:#3366ff;}
 
-	a.nav:link,
-	a.nav:visited,
-	a.nav:active { vertical-align: middle; font-weight: bold; color: gray; text-decoration: none; font-size: 100%;}
-	a.nav:hover { vertical-align: middle; font-weight: bold; color: #999999; text-decoration: none; font-size: 100%;}  
+  .nav { vertical-align:middle; white-space:nowrap; }
+	.nav img { vertical-align:middle; border: none; padding:1px 3px 1px 3px; }
+/*	.nav img { vertical-align:middle; border: none; height:18px; width:18px; padding:1px 3px 1px 3px; } */
+	.nav a:link,
+	.nav a:visited,
+	.nav a:active { vertical-align: middle; font-weight: bold; color: gray; text-decoration: none; font-size: 100%;}
+	.nav a:hover { vertical-align: middle; font-weight: bold; color: #999999; text-decoration: none; font-size: 100%;}  
 
 /* paragraphs */	
 	p.para {font-weight: normal; color: #000000;}
@@ -46,7 +51,7 @@ body {
 	p.trademark {font-size: 75%; font-weight: normal; font-style: italic;}
 	/*p.entry {font-size: 95%; font-weight: normal; color: #000000; margin-top: -5px;}
 	p.table {font-weight: bold;}*/
-	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 110%;color: #000000;}
+	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 130%;color: #000000;}
 	p.glossterm {font-weight: bold;}
 	div.glossdef {margin:-10pt 0 0 0;}
 	
@@ -73,6 +78,7 @@ body {
 	div.informalfigure {margin:15px 0px 10px 0px;}
 	div.formalpara em.title {font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0 0;}
 	div.formalpara p.title {font-style: normal; font-weight: normal; color: #000000;}
+
 	
 /* tables */
 	div.table p.title em.num {font-size: 95%; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
@@ -128,17 +134,18 @@ body {
 	li.step {font-weight: bold;color: #000000;}
 	div.procedure h1.title {font-weight: bold; color: #000000; margin-top: 22px; margin-bottom: -4pt;}
 
-/* bold inlines */	
-	em.refclass,em.glossterm,em.option {font-weight: bold; font-style: normal}
-
 /* italic inlines */	
-	em.diskname,em.emphasis,em.variable,em.versionvariable {font-style: italic; font-weight: normal}
+	em {font-style: italic}
 	span.citetitle,span.guimenu,span.replaceable {font-style: italic;}
 	tt,span.command,span.literal,span.filename {font-family: monospace; font-size: 130%;}
 	
+/* bold inlines */	
+	em.refclass,em.glossterm,em.option {font-weight: bold}
+	span.strongemphasis {font-weight: bold;}
+
 /* other inlines */	
 	em.msgtext {font-weight: bold; font-style: italic}
-	span.emphasis {font-weight: bold;}
+	span.emphasis {font-style: italic}
 
 /* superscript and subscript */	
 	span.subscript,span.superscript {font-size: 80%;}
