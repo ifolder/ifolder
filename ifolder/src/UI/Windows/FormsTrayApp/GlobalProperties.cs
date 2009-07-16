@@ -981,7 +981,10 @@ namespace Novell.FormsTrayApp
              //   RemoveDomainFromUIList(ifolder.DomainID, null);
                 refreshAll();
             }
-            showiFolderinListView();
+            if (!thumbnailView)
+            {
+                showiFolderinListView();
+            }
 			updateView();
 		}
 
@@ -1024,10 +1027,13 @@ namespace Novell.FormsTrayApp
 									int imageIndex;
 									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 									tlvi.ImageIndex = imageIndex;
-                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
-                                    listView1.Items[item.Index].ImageIndex = imageIndex;
-                                    //FIXME: remove hardcode value 3
-                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    if (!thumbnailView)
+                                    {
+                                        ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                        listView1.Items[item.Index].ImageIndex = imageIndex;
+                                        //FIXME: remove hardcode value 3
+                                        listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    }
                                     
 								}
 							}
@@ -1057,9 +1063,12 @@ namespace Novell.FormsTrayApp
 									int imageIndex;
 									tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 									tlvi.ImageIndex = imageIndex;
-                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
-                                    listView1.Items[item.Index].ImageIndex = imageIndex;
-                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    if (!thumbnailView)
+                                    {
+                                        ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                        listView1.Items[item.Index].ImageIndex = imageIndex;
+                                        listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                    }
 								}
 							}
 						}
@@ -1081,9 +1090,12 @@ namespace Novell.FormsTrayApp
 								tlvi.Status = getItemState( ifolderObject, 0, out imageIndex );
 								tlvi.ImageIndex = imageIndex;
 								tlvi.Tag = ifolderObject;
-                                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
-                                listView1.Items[item.Index].ImageIndex = imageIndex;
-                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                if (!thumbnailView)
+                                {
+                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                }
 							}
 						}
 
@@ -1136,9 +1148,12 @@ namespace Novell.FormsTrayApp
 								tlvi.Status = getItemState( ifolderObject, objectsToSync2, out imageIndex );
 								tlvi.ImageIndex = imageIndex;
 								tlvi.Tag = ifolderObject;
-                                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
-                                listView1.Items[item.Index].ImageIndex = imageIndex;
-                                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                if (!thumbnailView)
+                                {
+                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                }
 							}
 
 							objectsToSync = 0;
@@ -1338,6 +1353,7 @@ namespace Novell.FormsTrayApp
 							}
 						}//*/
 					}
+
 				}
 				else
 				{
@@ -1348,7 +1364,7 @@ namespace Novell.FormsTrayApp
 						tlvi = (TileListViewItem)ht[ifolder.ID];
 					}
 
-					if (tlvi != null)
+                    if (tlvi != null)
 					{
 						// Update the tag data.
 						((iFolderObject)tlvi.Tag).iFolderWeb = ifolder;
@@ -1395,7 +1411,10 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-            showiFolderinListView();
+            if (!thumbnailView)
+            {
+                showiFolderinListView();
+            }
 			updateView();
 		}
 
@@ -1500,9 +1519,12 @@ namespace Novell.FormsTrayApp
 				int imageIndex;
 				tlvi.Status = getItemState( ifolderObject, objectsToSync, out imageIndex );
 				tlvi.ImageIndex = imageIndex;
-                ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
-                listView1.Items[item.Index].ImageIndex = imageIndex;
-                listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                if (!thumbnailView)
+                {
+                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                }
 			}
 		}
 
@@ -1783,7 +1805,10 @@ namespace Novell.FormsTrayApp
 			inRefresh = false;
             oldHt = null;
       	    Cursor.Current = Cursors.Default;
-            showiFolderinListView();
+            if (!thumbnailView)
+            {
+                showiFolderinListView();
+            }
 			this.refreshTimer.Start(); 
 		}
 
@@ -3342,14 +3367,19 @@ namespace Novell.FormsTrayApp
             if (simiasWebService.GetDomainInformation(selectedDomain.ID).Authenticated)
             {
                 preferences.logoutFromDomain(new Domain(selectedDomain));
-
-                showiFolderinListView();
+                //This changes is only added in case of Logout, as in case of Login
+                //Listview will be update only after login completed event. 
+                if (!thumbnailView)
+                {
+                    showiFolderinListView();
+                }
             }
             else
             {
                 preferences.loginToDomain(new Domain(selectedDomain));
             }
             setAuthState(simiasWebService.GetDomainInformation(selectedDomain.ID));
+            
         }
 
         private void setThumbnailView(bool value)
