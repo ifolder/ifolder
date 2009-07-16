@@ -112,22 +112,21 @@ processExpandableSection(_21[i]);
 }
 }
 }
-_LOADERS=Array();
-function callAllLoaders(){
-var i,_24;
-for(i=0;i<_LOADERS.length;i++){
-_24=_LOADERS[i];
-if(_24!=callAllLoaders){
+_E_LDRS=Array();
+function callExpandableLoaders(){
+for(var i=0;i<_E_LDRS.length;i++){
+var _24=_E_LDRS[i];
+if(_24!=callExpandableLoaders){
 _24();
 }
 }
 }
-function appendLoader(_25){
-if(window.onload&&window.onload!=callAllLoaders){
-_LOADERS[_LOADERS.length]=window.onload;
+function addExpandableLoader(_25){
+if(window.onload&&window.onload!=callExpandableLoaders){
+_E_LDRS[_E_LDRS.length]=window.onload;
 }
-window.onload=callAllLoaders;
-_LOADERS[_LOADERS.length]=_25;
+window.onload=callExpandableLoaders;
+_E_LDRS[_E_LDRS.length]=_25;
 }
-appendLoader(autoInit_collapsed_sections);
+addExpandableLoader(autoInit_collapsed_sections);
 

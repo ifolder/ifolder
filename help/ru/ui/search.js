@@ -1,8 +1,8 @@
 function get_search_regex(_1){
-if(WORDSEPREGEX&&WORDSEPREGEX.length>0){
-_1=_1.replace(new RegExp("^"+WORDSEPREGEX+"+"),"");
-_1=_1.replace(new RegExp(WORDSEPREGEX+"+$"),"");
-return new RegExp(WORDSEPREGEX+_1+WORDSEPREGEX,"i");
+if(RES_WORDSEPREGEX&&RES_WORDSEPREGEX.length>0){
+_1=_1.replace(new RegExp("^"+RES_WORDSEPREGEX+"+"),"");
+_1=_1.replace(new RegExp(RES_WORDSEPREGEX+"+$"),"");
+return new RegExp(RES_WORDSEPREGEX+_1,"i");
 }else{
 return new RegExp(_1,"i");
 }
@@ -33,7 +33,7 @@ b_t=bold_title;
 b_f=bold_footer;
 ct=context;
 ct_l=descriptive_length;
-c_w=COMMONWORDS;
+c_w=RES_COMMONWORDS;
 tr=new Array();
 co=0;
 nd=0;
@@ -41,23 +41,11 @@ nc=0;
 sp_l="";
 cw_l="";
 xmlPageArray=new Array();
-if(window.ActiveXObject){
-xmldoc=new ActiveXObject("Microsoft.XMLDOM");
-xmldoc.async=false;
-xmldoc.onreadystatechange=function(){
-if(xmldoc.readyState==4){
+xmldoc=dom_LoadXMLDoc(xml_index_file);
+if(xmldoc==null){
+return false;
+}
 get_xml();
-}
-};
-}else{
-if(document.implementation&&document.implementation.createDocument){
-xmldoc=document.implementation.createDocument("","",null);
-xmldoc.async=false;
-xmldoc.onload=get_xml;
-}else{
-}
-}
-xmldoc.load(data);
 theQuery=theQuery.replace(/\*/g,"");
 theQuery=theQuery.replace(/\(/g,"");
 theQuery=theQuery.replace(/\)/g,"");
@@ -103,8 +91,8 @@ emptyQuery=true;
 hd=theQuery;
 }
 }
-if(SPELLING.length>0){
-cw=SPELLING.split(" ");
+if(RES_SPELLING.length>0){
+cw=RES_SPELLING.split(" ");
 for(i=0;i<cw.length;i++){
 wt=cw[i].split("^");
 pat=new RegExp("\\b"+wt[0]+"\\b","i");
@@ -118,8 +106,8 @@ sp_l=sp_l.replace(pat,wt[1]);
 }
 }
 }
-if(STEMMING.length>0){
-cw=STEMMING.split(" ");
+if(RES_STEMMING.length>0){
+cw=RES_STEMMING.split(" ");
 for(i=0;i<cw.length;i++){
 wt=cw[i].split("^");
 pat=new RegExp("\\b"+wt[0]+"\\b","i");
@@ -165,7 +153,7 @@ if(w_in[i]==0){
 nh++;
 nt=0;
 pat=get_search_regex(wt[i]);
-rn=es[0].search(pat);
+rn=(" "+es[0]+" ").search(pat);
 if(rn!=-1){
 rk-=seed*3;
 rk-=parseInt(es[5]);
@@ -174,13 +162,13 @@ if(ct==1){
 ct_d=1;
 }
 }
-rn=es[2].search(pat);
+rn=(" "+es[2]+" ").search(pat);
 if(rn!=-1){
 rk-=seed;
 rk-=parseInt(es[5]);
 nt=1;
 }
-rn=es[3].search(pat);
+rn=(" "+es[3]+" ").search(pat);
 if(rn!=-1){
 rk-=seed;
 rk-=parseInt(es[5]);
@@ -192,15 +180,15 @@ pa++;
 }
 if(w_in[i]==1){
 pat=get_search_regex(wt[i]);
-rn=es[0].search(pat);
+rn=(" "+es[0]+" ").search(pat);
 if(rn!=-1){
 pa=0;
 }
-rn=es[2].search(pat);
+rn=(" "+es[2]+" ").search(pat);
 if(rn!=-1){
 pa=0;
 }
-rn=es[3].search(pat);
+rn=(" "+es[3]+" ").search(pat);
 if(rn!=-1){
 pa=0;
 }
@@ -211,8 +199,8 @@ nt=0;
 w_o=wt[i].split("~");
 pat=get_search_regex(w_o[0]);
 pat_2=get_search_regex(w_o[1]);
-rn=es[0].search(pat);
-rn_2=es[0].search(pat_2);
+rn=(" "+es[0]+" ").search(pat);
+rn_2=(" "+es[0]+" ").search(pat_2);
 if(rn!=-1||rn_2!=-1){
 rk-=seed/2;
 rk-=parseInt(es[5]);
@@ -221,15 +209,15 @@ if(ct==1){
 ct_d=1;
 }
 }
-rn=es[2].search(pat);
-rn_2=es[2].search(pat_2);
+rn=(" "+es[2]+" ").search(pat);
+rn_2=(" "+es[2]+" ").search(pat_2);
 if(rn!=-1||rn_2!=-1){
 rk-=seed/2;
 rk-=parseInt(es[5]);
 nt=1;
 }
-rn=es[3].search(pat);
-rn_2=es[3].search(pat_2);
+rn=(" "+es[3]+" ").search(pat);
+rn_2=(" "+es[3]+" ").search(pat_2);
 if(rn!=-1||rn_2!=-1){
 rk-=seed/2;
 rk-=parseInt(es[5]);
@@ -243,7 +231,7 @@ pa++;
 if(pa==nh&&nh!=0){
 if(ct==1&&ct_d==0){
 pat=get_search_regex(wt[0]);
-rn=es[3].search(pat);
+rn=(" "+es[3]+" ").search(pat);
 if(rn>50){
 t_1=es[3].substr(rn-49);
 rn=t_1.indexOf(". ");
@@ -334,6 +322,7 @@ co=a;
 if(emptyQuery==true){
 co=0;
 }
+return true;
 }
 function get_xml(){
 if(document.implementation&&document.implementation.createDocument){
@@ -377,7 +366,7 @@ xmlPageArray[c]=es_0+"^"+es_1+"^"+es_2+"^"+es_3+"^"+es_4+"^"+es_5;
 }
 function tip_query(){
 if(od!="undefined"&&od!=null){
-document.tipue.d.value=od;
+document.getElementById("query").value=od;
 }
 }
 function tip_header(){
@@ -386,9 +375,9 @@ ne=nr+tn;
 if(ne>co){
 ne=co;
 }
-results.push(ne," ",MSGRESULTS);
+results.push(ne," ",RES_MSGRESULTS);
 }else{
-results.push(MSGNOTFOUND);
+results.push(RES_MSGNOTFOUND);
 }
 }
 function tip_out(){

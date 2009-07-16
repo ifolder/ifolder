@@ -1,7 +1,7 @@
 var html2ui="ui/";
 var html2idx="./";
-var prevstr="előző";
-var nextstr="következő";
+var prevstr="previous";
+var nextstr="next";
 var synched=false;
 function syncTocPage(){
 if(synched===false&&parent.theMenu.amBusy===false){

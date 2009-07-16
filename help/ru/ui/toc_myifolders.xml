@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>Managing iFolders</title>
+ <entry leaf="true" id="locguide">Guidelines for the Location and Use of iFolders</entry>
+ <entry leaf="true" id="typeguide">Guidelines for File Types and Sizes to Not Synchronize</entry>
+ <entry leaf="true" id="nameconv">Naming Conventions for an iFolder and Its Folders and Files</entry>
+ <entry leaf="true" id="ificons">Understanding iFolder Icons</entry>
+ <entry leaf="true" id="bkjj1f9">iFolder Browser</entry>
+ <entry leaf="true" id="createifolder">Creating and Uploading an iFolder</entry>
+ <entry leaf="true" id="sharewith">Sharing an iFolder</entry>
+ <entry leaf="true" id="viewhide">Viewing and Hiding Available iFolders</entry>
+ <entry leaf="true" id="merge">Merging iFolders</entry>
+ <entry leaf="true" id="setupifolder">Downloading an Available iFolder</entry>
+ <entry leaf="true" id="propifolders">Viewing and Configuring Properties of an iFolder</entry>
+ <entry leaf="true" id="managingpassphrse">Managing Passphrases for Encrypted iFolders</entry>
+ <entry leaf="true" id="bkmgmdj">Changing the Password</entry>
+ <entry leaf="true" id="ifquota">Setting an iFolder Quota</entry>
+ <entry leaf="true" id="sync">Synchronizing Files</entry>
+ <entry leaf="true" id="conflicts">Resolving File Conflicts</entry>
+ <entry leaf="true" id="movelocation">Moving an iFolder</entry>
+ <entry leaf="true" id="reverting">Reverting an iFolder to a Normal Folder</entry>
+ <entry leaf="true" id="bbb7rj2">Removing Membership From a Shared iFolder</entry>
+ <entry leaf="true" id="deleting">Deleting an iFolder</entry>
+ <entry leaf="true" id="bbbcabq">What’s Next</entry>
+</tocsection>

@@ -1,7 +1,7 @@
 var html2ui="ui/";
 var html2idx="./";
-var prevstr="以前";
-var nextstr="次へ";
+var prevstr="previous";
+var nextstr="next";
 var synched=false;
 function syncTocPage(){
 if(synched===false&&parent.theMenu.amBusy===false){
