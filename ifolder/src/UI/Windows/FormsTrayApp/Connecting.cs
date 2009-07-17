@@ -1062,12 +1062,20 @@ namespace Novell.FormsTrayApp
                     if (!autoAccountEnabled)
                     {
                         BeginInvoke(displayMessageDelegate,
-                            new object[] { resourceManager.GetString("serverConnectError"), resourceManager.GetString("serverConnectErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error, MyMessageBoxDefaultButton.Button1 });
+                            new object[] { resourceManager.GetString("serverConnectError"), 
+                                resourceManager.GetString("serverConnectErrorTitle"),
+                                "", 
+                                MyMessageBoxButtons.OK, 
+                                MyMessageBoxIcon.Error, 
+                                MyMessageBoxDefaultButton.Button1 
+                        });
                         messageEvent.WaitOne();
+                        FormsTrayApp.log.Info("{0}:{1}", resourceManager.GetString("serverConnectError"), ex.Message);
                     }
                     else
                     {
-                        FormsTrayApp.log.Info("{0}:{1}", resourceManager.GetString("serverConnectErrorTitle"), resourceManager.GetString("serverConnectError"));
+                        FormsTrayApp.log.Info("{0}:{1}", resourceManager.GetString("serverConnectErrorTitle"), 
+                            resourceManager.GetString("serverConnectError"));
                     }
 
                 }
