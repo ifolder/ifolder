@@ -854,37 +854,35 @@ namespace Novell.iFolder.Web
 		{
 			Collection col = null;
 			ArrayList list = null;
+            ICSList iFolderList = null;
+            ArrayList collectionList = null;
+
 			list = new ArrayList();
 			Store store = Store.GetStore();
-			ArrayList collectionList = null;
 			Simias.Discovery.DiscService.UpdateCollectionList();
 			collectionList = Simias.Discovery.CollectionList.GetCollectionList();
+            
+            //Get all the iFolders that are downloaded and the info is present in the local store.
+            iFolderList = store.GetCollectionsByType(iFolderWeb.iFolderType);
+            foreach (ShallowNode sn in iFolderList)
+            {
+                col = null;
+                col = store.GetCollectionByID(sn.ID);
+                list.Add(new iFolderWeb(col));
+            }
+
             if (collectionList != null && collectionList.Count != 0) //When domain/server is connected/online
-			{
+            {
                 foreach ( CollectionInfo ci in collectionList ) 
 				{
 					col = null;
-					if ((col = store.GetCollectionByID(ci.CollectionID)) != null)
+                    // Add all the folders that are not local, leaving those that were added from local store.
+					if ((col = store.GetCollectionByID(ci.CollectionID)) == null)
 					{
-						list.Add( new iFolderWeb(col)); //adding ifolder on local box
-					}
-					else
-					{
-						list.Add(new iFolderWeb(ci));//adding ifolder on server
+						list.Add(new iFolderWeb(ci)); //adding ifolder on server
 					}
 				}
 			}
-			else //When domain/server is disconnected/offline
-			{
-				ICSList iFolderList = null;
-                iFolderList = store.GetCollectionsByType(iFolderWeb.iFolderType);
-                foreach(ShallowNode sn in iFolderList)
-                {
-					col = null;                         	
-                    col = store.GetCollectionByID(sn.ID);                                	
-                    list.Add(new iFolderWeb(col));
-                }
-			}	
 			return (iFolderWeb[])list.ToArray(typeof(iFolderWeb));
 		}
 
