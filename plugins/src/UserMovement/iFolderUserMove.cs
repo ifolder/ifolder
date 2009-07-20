@@ -369,32 +369,28 @@ namespace Simias.UserMovement
                 /// <returns> Nothing.</returns>
 		public static void UpdateUserMoveQueue()
 		{
-			log.Debug("UpdateUserMoveQueue: Updating user move queue");
                         Store store = Store.GetStore();
                         Domain domain = store.GetDomain(store.DefaultDomain);
-			Collection c = domain;
-			ICSList members = c.GetMemberList();	
+			ICSList members = domain.Search(PropertyTags.UserMoveState, 0, SearchOp.Exists);	
+			log.Debug("UpdateUserMoveQueue: Updating user Reprovision queue, There are {0} users to be Reprovisioned", members.Count);
 			foreach(ShallowNode sn in members)
 			{
-				Member member = new Member(c, sn);
-				if (!member.IsType("Host"))
+				Member member = new Member(domain, sn);
+				if( member.NewHomeServer != null )
 				{
-					if(member.UserMoveState >= 0  && member.NewHomeServer != null )
+					iFolderUserMove ifUserMove = new iFolderUserMove();
+					ifUserMove.SetCert();
+                               		ifUserMove.member = member;
+                               		ifUserMove.CurrentHomeServer = member.HomeServer;
+                               		ifUserMove.NewHomeServer = new HostNode(domain.GetMemberByID(member.NewHomeServer));
+                               		ifUserMove.MasterHomeServer = HostNode.GetMaster(domain.ID);
+					ifUserMove.logger = new SimiasAccessLogger(ifUserMove.member.Name, null);
+					if(member.HomeServer.UserID == HostNode.GetLocalHost().UserID)
 					{
-						iFolderUserMove ifUserMove = new iFolderUserMove();
-						ifUserMove.SetCert();
-                                		ifUserMove.member = member;
-                                		ifUserMove.CurrentHomeServer = member.HomeServer;
-                                		ifUserMove.NewHomeServer = new HostNode(domain.GetMemberByID(member.NewHomeServer));
-                                		ifUserMove.MasterHomeServer = HostNode.GetMaster(domain.ID);
-						ifUserMove.logger = new SimiasAccessLogger(ifUserMove.member.Name, null);
-						if(member.HomeServer.UserID == HostNode.GetLocalHost().UserID)
-						{
-							log.Debug("UpdateUserMoveQueue: Adding User {0} to queue ", member.UserID);
-                                			Simias.UserMovement.UserMove.Add(ifUserMove);
-						}
-					}	
-				}
+						log.Debug("UpdateUserMoveQueue: Adding User {0} to queue ", member.UserID);
+                               			Simias.UserMovement.UserMove.Add(ifUserMove);
+					}
+				}	
 			}	
 			return;
 		}
