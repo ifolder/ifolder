@@ -63,12 +63,13 @@ case $host_os in
 	fi
         test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: (g)mcs not found in \$PATH])
 	    PKG_CONFIG_DIR="$LIB64"
-
+	if test "$clientplugins" = "TRUE"; then	
         PKG_CHECK_MODULES(GTK_SHARP, gtk-sharp-2.0 >= $GTK_SHARP2_MINIMUM_VERSION)
         GTK_SHARP_PREFIX=`pkg-config --variable=prefix gtk-sharp-2.0`
         GTK_SHARP_VERSION=`pkg-config --modversion gtk-sharp-2.0`
         AC_SUBST(GTK_SHARP_PREFIX)
         AC_SUBST(GTK_SHARP_LIBS)
+	fi
 
     ;;
     darwin*)
@@ -221,6 +222,8 @@ SRCDIR='$(top_srcdir)/src'
 TOOLDIR='$(top_srcdir)/dependencies/external/tools'
 EXTERNAL_DIR='$(top_srcdir)/dependencies/external'
 DOCDIR="$SRCDIR/doc"
+
+PKG_PROG_PKG_CONFIG
 
 case $host_os in
     linux*)
