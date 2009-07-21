@@ -120,9 +120,9 @@ namespace Novell.Wizard
                     File.Delete(outKeyPath);
                 document.Save(outKeyPath);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //Console.WriteLine("Exception while processing" + e.Message + e.StackTrace);
+                throw new Exception("Exception while processing in Process inputkey file" + e.Message + e.StackTrace);
             }
         }
 
@@ -141,9 +141,9 @@ namespace Novell.Wizard
                 Console.WriteLine("encrypted mess {0}", Convert.ToBase64String(rsadec.Decrypt(rsaenc.Encrypt(Convert.FromBase64String(mess), false), false)));
 #endif
             }
-            catch (CryptographicException)
+            catch (Exception e)
             {
-                //Console.WriteLine("Crpto Error {0}", cExp.Message);
+                throw new Exception("Crpto Error in decode message with one parameter"+e.Message);
             }
             return mess;
         }
@@ -162,9 +162,9 @@ namespace Novell.Wizard
                 byte[] output = Transform(mess, tdesp.CreateEncryptor(input, IV));
                 retStr = Convert.ToBase64String(output);
             }
-            catch (CryptographicException)
+            catch (Exception e) 
             {
-                //Console.WriteLine("Crpto Error {0}", cryExp.Message);
+                throw new Exception("Crpto Error in decode message with 2 parameter"+e.Message);
             }
             return retStr;
         }
@@ -189,9 +189,9 @@ namespace Novell.Wizard
                 Array.Copy(data, 0, NewPassphrase, 0, data.Length);
                 Array.Copy(data, 0, NewPassphrase, 20, 4);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //Console.WriteLine("Exception {0}", exp.Message);
+                throw new Exception("Exception in hashpassphrase"+e.Message);
             }
 
             return NewPassphrase;
@@ -216,9 +216,9 @@ namespace Novell.Wizard
                 memStream.Close();
                 cryptStream.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-               // Console.WriteLine("Exception {0}", exp.Message);
+               throw new Exception("Exception in transform"+e.Message);
             }
             // hand back the encrypted buffer
             return result;
