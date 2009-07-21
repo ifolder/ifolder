@@ -46,6 +46,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.IO;
+using Novell.iFolder;
 
 
 namespace Novell.Wizard
@@ -61,6 +62,7 @@ namespace Novell.Wizard
         private Button browse;
         private string inputFilePath = null;
         private string outputFilePath = null;
+        public static IiFolderLog log;
         
         /// <summary>
         /// Required design variable
@@ -77,6 +79,7 @@ namespace Novell.Wizard
             InitializeComponent();
             this.ifWebService = ifws;
             this.simiasWebService = simws;
+           SinglePageWizard.log = iFolderLogManager.GetLogger(typeof(SinglePageWizard));
            
             
         }
@@ -182,7 +185,7 @@ namespace Novell.Wizard
             catch (Exception)
             {
                 MessageBox.Show(TrayApp.Properties.Resources.unableToExportMesg, TrayApp.Properties.Resources.resetPassphraseError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                 return false;
+                result = false;
 
             }
            
@@ -196,7 +199,7 @@ namespace Novell.Wizard
         private void browse_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDlg = new OpenFileDialog();
-            fileDlg.Filter = "PKCS12 Files|*.p12";
+            fileDlg.Filter = "PKCS12 Files|*.p12|PFX Files|*.pfx|All files|*.*";
 
             if (fileDlg.ShowDialog() == DialogResult.OK)
             {
@@ -214,9 +217,8 @@ namespace Novell.Wizard
 
             certname = Path.GetFullPath(p12TextBox.Text);
 
-            if ((!File.Exists(certname)) || (!certname.EndsWith(".p12")))
+            if (!File.Exists(certname)) 
             {
-
                 MessageBox.Show(TrayApp.Properties.Resources.secretPathInvalid,TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return false;
             }
@@ -228,16 +230,16 @@ namespace Novell.Wizard
             {
                 xcert = new X509Certificate2(certname, pass);
               
-                
                 Inner_keyRecovery inner = new Inner_keyRecovery();
                 inner.ProcessInputKeyFile(this.inputFilePath, this.outputFilePath, pass, xcert, false, null);
                 result = true;
             }
 
-            catch
+            catch(Exception e)
             {
+                log.Info("Message {0}, type {1}, trace {2} ", e.Message, e.GetType(), e.StackTrace);
                 MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.resetPassphraseError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+               result = false;
 
             }
            
@@ -265,7 +267,7 @@ namespace Novell.Wizard
             catch (Exception)
             {
                MessageBox.Show(TrayApp.Properties.Resources.importErrorMesg, TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
-                 return false;
+                 result = false;
                 
             }
            
