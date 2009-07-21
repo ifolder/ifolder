@@ -2504,6 +2504,7 @@ namespace Novell.iFolderCom
 			// Used to keep track of the new owner.
 			newOwnerLvi = null;
 
+            int tmpSyncVal = 0;
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
@@ -2532,7 +2533,20 @@ namespace Novell.iFolderCom
 					syncUnits.Visible = autoSync.Visible = syncInterval.Visible = false;
 					syncNow.Enabled = true;
 					string units;
-					decimal syncValue = ConvertSecondsToTimeUnit(currentiFolder.EffectiveSyncInterval, out units);
+                    if (currentiFolder.EffectiveSyncInterval <= 0)
+                    {
+                        try
+                        {
+                            tmpSyncVal = ifWebService.GetDefaultSyncInterval();
+                        }
+                        catch { }
+                    }
+                    else 
+                    {
+                        tmpSyncVal = currentiFolder.EffectiveSyncInterval;
+                    }
+                    decimal syncValue = ConvertSecondsToTimeUnit(tmpSyncVal, out units);
+
 					syncLabel.Text = string.Format(resourceManager.GetString("slaveSyncInterval"), syncValue, resourceManager.GetString(units));
 					break;
 			}
