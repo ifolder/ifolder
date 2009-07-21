@@ -211,6 +211,7 @@ namespace Novell.iFolder.Web
                 {
                     this.Owner = tmpMember.Name;
                     this.OwnerID = tmpMember.UserID;
+                    this.EffectiveSyncInterval = tmpMember.EffectiveSyncPolicy(collection);
                 }
                 else
                 {
@@ -257,6 +258,7 @@ namespace Novell.iFolder.Web
 				Member domainMember = domain.GetMemberByID(this.OwnerID);
 				string fullName = domainMember.FN;
 				this.Owner = (fullName != null) ? fullName : tmpMember.Name;
+                this.EffectiveSyncInterval = tmpMember.EffectiveSyncPolicy(collection);
 			}
 			else
 			{
