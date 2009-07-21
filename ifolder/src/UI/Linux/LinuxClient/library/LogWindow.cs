@@ -334,6 +334,14 @@ namespace Novell.iFolder
 					}
 					break;
 				}
+				case Simias.Client.Event.Action.DisabledSync:
+				{
+					if(args.Name != null)
+					{
+						LogMessage(string.Format(Util.GS("Synchronization Disable for: {0}"), args.Name));
+					}	
+					break;
+				}
 			}
 		}
 
