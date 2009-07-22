@@ -1518,6 +1518,8 @@ namespace Novell.iFolderCom
 						foreach (ListViewItem lvi in conflictsView.Items)
 						{
 							Conflicts conflicts = (Conflicts)lvi.Tag;
+                            if (conflicts.LocalConflict == null)
+                                continue;
 
 							if (lvi.Text.Equals(conflict.ServerName) && conflicts.LocalConflict.LocalFullPath.Equals(conflict.ServerFullPath))
 							{
