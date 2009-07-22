@@ -249,6 +249,7 @@ namespace Novell.EnhancedConflictResolution
             resources.ApplyResources(this.actionGroupBox, "actionGroupBox");
             this.actionGroupBox.Name = "actionGroupBox";
             this.actionGroupBox.TabStop = false;
+            this.actionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("actionGroupBox.Anchor")));
         }
 
         /// <summary>
