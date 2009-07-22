@@ -3677,12 +3677,15 @@ namespace Novell.iFolderCom
         /// </summary>
         private void conflicts_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
-			ConflictResolver conflictResolver = new ConflictResolver();
-			conflictResolver.iFolder = currentiFolder;
-			conflictResolver.iFolderWebService = ifWebService;
-			conflictResolver.LoadPath = loadPath;
-			conflictResolver.ConflictsResolved += new Novell.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
-			conflictResolver.ShowDialog();		
+            if( !iFolderComponent.AdvancedConflictResolver(ifWebService, currentiFolder))
+            {
+			    ConflictResolver conflictResolver = new ConflictResolver();
+			    conflictResolver.iFolder = currentiFolder;
+			    conflictResolver.iFolderWebService = ifWebService;
+			    conflictResolver.LoadPath = loadPath;
+			    conflictResolver.ConflictsResolved += new Novell.iFolderCom.ConflictResolver.ConflictsResolvedDelegate(conflictResolver_ConflictsResolved);
+			    conflictResolver.ShowDialog();		
+            }
 		}
 
 		/// <summary>
