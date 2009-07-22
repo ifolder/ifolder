@@ -812,6 +812,11 @@ namespace Novell.iFolderCom
 						else
 						{
 							// encrypted folder
+                            DomainInformation domainInfo = this.simws.GetDomainInformation(domainItem.ID);
+                            if (domainInfo.Authenticated == false)
+                            {
+                                throw new Exception("LoginRequired");
+                            }
 							string algorithm = (this.encryption.Checked)? "BlowFish" : null;
 							bool passPhraseStatus = false;
 							bool passphraseStatus = false;
@@ -928,6 +933,11 @@ namespace Novell.iFolderCom
 				{
 					message = resourceManager.GetString("networkPathError");
 				}
+                else if (ex.Message.IndexOf("LoginRequired") != -1)
+                {
+                    message = resourceManager.GetString("LoginToDomain");
+                    caption = resourceManager.GetString("errorTitle");
+                }
 				else
 				{
 					message = resourceManager.GetString("iFolderCreateError");
