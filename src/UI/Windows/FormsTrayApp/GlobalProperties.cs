@@ -572,7 +572,10 @@ namespace Novell.FormsTrayApp
                     }
 					else if ( result )
 					{
-						DownloadPath = browserDialog.SelectedPath + ifolder.Name;
+                        if (!mergeFolder)
+                            DownloadPath = browserDialog.SelectedPath + ifolder.Name;
+                        else
+                            DownloadPath = browserDialog.SelectedPath;
 						break;
 					}
 				}
@@ -1173,6 +1176,37 @@ namespace Novell.FormsTrayApp
 
 						break;
 					}
+                    
+                    case Action.DisabledSync:
+                    {
+                        lock (ht)
+                        {
+                            TileListViewItem tlvi = (TileListViewItem)ht[syncEventArgs.ID];
+                            if (tlvi != null)
+                            {
+                                iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
+                                ifolderObject.iFolderState = iFolderState.Normal;
+                                ifolderObject.iFolderWeb.State = "WaitSync";
+                                
+                                int imageIndex;
+                                tlvi.ItemLocation = ifolderObject.iFolderWeb.UnManagedPath;
+                                tlvi.Status = getItemState(ifolderObject, 0, out imageIndex);
+                                tlvi.ImageIndex = imageIndex;
+                                tlvi.Tag = ifolderObject;
+                                
+                                if (!thumbnailView)
+                                {
+                                    ListViewItem item = listView1.FindItemWithText(ifolderObject.iFolderWeb.ID);
+                                    listView1.Items[item.Index].ImageIndex = imageIndex;
+                                    listView1.Items[item.Index].SubItems[3].Text = tlvi.Status;
+                                }
+                                syncLog.AddMessageToLog(DateTime.Now,
+                                string.Format("Synchronization Disable for:{0}", ifolderObject.iFolderWeb.Name));
+                            }
+                        }
+                        break;
+                    }
+                                   
 				}
 			}
 			catch {}
@@ -1571,7 +1605,8 @@ namespace Novell.FormsTrayApp
 								else
 								{
 									imageIndex = 4;
-									status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+									//status = resourceManager.GetString(ifolderObject.iFolderWeb.State);
+                                    status = TrayApp.Properties.Resources.WaitSync;
 								}
 								break;
 							default:
