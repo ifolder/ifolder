@@ -2728,6 +2728,13 @@ namespace Novell.iFolder
 										if( algorithm != null)
 										{
 											// encryption is selected
+											/// Check if the user is logged-in or not...
+											DomainInformation domainInfo = domainController.GetDomain(selectedDomain);
+											if( !domainInfo.Authenticated)
+											{
+												DisplayLoginMesg();
+												continue;
+											}
 											bool passPhraseStatus = false;
 											bool passphraseStatus = false;
 											try
@@ -4500,6 +4507,12 @@ namespace Novell.iFolder
 								// encryption is selected
 								bool passPhraseStatus = false;
 								bool passphraseStatus = false;
+								DomainInformation domainInfo = domainController.GetDomain(selectedDomain);
+								if( !domainInfo.Authenticated)
+								{
+									DisplayLoginMesg();
+									continue;
+								}
 								try
 								{
 		                        				passphraseStatus = simws.IsPassPhraseSet(selectedDomain);
