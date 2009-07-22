@@ -45,6 +45,7 @@ using Microsoft.Win32;
 using Novell.Win32Util;
 using Simias.Client;
 using Novell.iFolder.Web;
+using System.Reflection;
 
 namespace Novell.iFolderCom
 {
@@ -408,6 +409,49 @@ namespace Novell.iFolderCom
 			}
 		}
 
+        public static bool AdvancedConflictResolver(iFolderWebService ifWebService, iFolderWeb selectedItem)
+        {
+            const string assemblyName = @"lib\plugins\EnhancedConflictResolution.dll";
+            const string enhancedConflictResolverClass = "Novell.EnhancedConflictResolution.EnhancedConflictResolver";
+            const string showConflictResolverMethod = "Show";
+            System.Object[] args = new System.Object[3];
+
+            try
+            {
+                if (assemblyName != null)
+                {
+                    Assembly idAssembly = Assembly.LoadFrom(assemblyName);
+                    if (idAssembly != null)
+                    {
+                        Type type = idAssembly.GetType(enhancedConflictResolverClass);
+                        if (null != type)
+                        {
+                            args[0] = ifWebService;
+                            args[1] = Application.StartupPath;
+                            args[2] = selectedItem;
+                            System.Object enhancedConflictResolver = Activator.CreateInstance(type, args);
+                            try
+                            {
+                                MethodInfo method = type.GetMethod(showConflictResolverMethod, Type.EmptyTypes);
+                                if (null != method)
+                                {
+                                    method.Invoke(enhancedConflictResolver, null);
+                                    return true;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
+        }
+
 		/// <summary>
 		/// Displays the Conflict Resolver dialog for the specified iFolder.
 		/// </summary>
@@ -417,12 +461,15 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
-				ConflictResolver conflictResolver = new ConflictResolver();
-				conflictResolver.iFolder = ifolder;
-				conflictResolver.iFolderWebService = ifWebService;
-				conflictResolver.LoadPath = dllPath;
-				conflictResolver.Show();		
+                iFolderWeb ifolder = ifWebService.GetiFolderByLocalPath(path);
+                if (!iFolderComponent.AdvancedConflictResolver(ifWebService, ifolder))
+                {                    
+                    ConflictResolver conflictResolver = new ConflictResolver();
+                    conflictResolver.iFolder = ifolder;
+                    conflictResolver.iFolderWebService = ifWebService;
+                    conflictResolver.LoadPath = dllPath;
+                    conflictResolver.Show();
+                }
 			}
 			catch (Exception ex)
 			{

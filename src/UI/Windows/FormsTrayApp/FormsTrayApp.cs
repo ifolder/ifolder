@@ -697,14 +697,17 @@ namespace Novell.FormsTrayApp
 			switch (notifyType)
 			{
 				case NotifyType.Collision:
-					ConflictResolver conflictResolver = new ConflictResolver();
-					conflictResolver.StartPosition = FormStartPosition.CenterScreen;
-					conflictResolver.iFolder = ifolderFromNotify;
-					conflictResolver.iFolderWebService = ifWebService;
-					conflictResolver.LoadPath = Application.StartupPath;
-					conflictResolver.CreateControl();
-					ShellNotifyIcon.SetForegroundWindow(conflictResolver.Handle);
-					conflictResolver.Show();
+                    if ( !GlobalProperties.AdvancedConflictResolver(ifWebService, ifolderFromNotify))
+                    {
+                        ConflictResolver conflictResolver = new ConflictResolver();
+                        conflictResolver.StartPosition = FormStartPosition.CenterScreen;
+                        conflictResolver.iFolder = ifolderFromNotify;
+                        conflictResolver.iFolderWebService = ifWebService;
+                        conflictResolver.LoadPath = Application.StartupPath;
+                        conflictResolver.CreateControl();
+                        ShellNotifyIcon.SetForegroundWindow(conflictResolver.Handle);
+                        conflictResolver.Show();
+                    }
 					break;
 				case NotifyType.NewMember:
 					iFolderAdvanced ifolderAdvanced = new iFolderAdvanced();
