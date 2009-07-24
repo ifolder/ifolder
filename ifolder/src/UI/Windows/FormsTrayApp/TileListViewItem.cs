@@ -241,11 +241,11 @@ namespace Novell.FormsTrayApp
 			if ( !selected )
 			{
 				descriptionBrush = new SolidBrush( inactiveTextColor );
+            }
                 toolTip.Hide(this);
 				Invalidate();
-			}
-
-			// TODO: Change the icon.
+			
+            // TODO: Change the icon.
 		}
 
 		private void TileListViewItem_MouseHover(object sender, System.EventArgs e)
