@@ -4268,6 +4268,8 @@ namespace Novell.iFolder
 		private void RemoveSelectedFolderHandler()
 		{
 			iFolderHolder holder = iFolderIconView.SelectedFolder;
+			DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+			if(domain == null) return;
 			if (holder != null)
 			{
 				iFolderMsgDialog dialog = new iFolderMsgDialog(
@@ -4280,13 +4282,13 @@ namespace Novell.iFolder
 
 				CheckButton deleteFromServerCB;
 
-				DomainInformation domain =
-					domainController.GetDomain(holder.iFolder.DomainID);
-				if (domain == null || domain.MemberUserID == holder.iFolder.OwnerID)
+				if (domain.MemberUserID == holder.iFolder.OwnerID)
 					deleteFromServerCB = new CheckButton(Util.GS("_Delete this iFolder from the server"));
 				else
 					deleteFromServerCB = new CheckButton(Util.GS("_Remove my membership from this iFolder"));
 				
+				deleteFromServerCB.Sensitive = domain.Authenticated;	
+
 				dialog.ExtraWidget = deleteFromServerCB;
 
 				int rc = dialog.Run();
