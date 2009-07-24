@@ -4914,6 +4914,18 @@ namespace Novell.iFolder
                                                 UpdateRowInListView(args.ID);
 					break;
 				}
+				case Simias.Client.Event.Action.DisabledSync:
+				{
+					
+					iFolderHolder holder = null;
+                   			holder = iFolderIconView.SelectedFolder;
+					if(holder != null && holder.iFolder != null)
+					{
+						holder.State = iFolderState.Normal;
+					        holder.iFolder.State = "WaitSync"; 
+					}
+					break;
+				}
 			}
 
 			// If the properties dialog is open, update it so it shows the
