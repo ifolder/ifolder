@@ -2579,9 +2579,13 @@ namespace Novell.FormsTrayApp
 				bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
 
 				RevertiFolder revertiFolder = new RevertiFolder();
+                
 				if( !IsMaster )
 					revertiFolder.removeFromServer.Text = TrayApp.Properties.Resources.AlsoRemoveMembership;
-				if ( revertiFolder.ShowDialog() == DialogResult.Yes )
+
+                revertiFolder.removeFromServer.Enabled =  simiasWebService.GetDomainInformation(ifolder.DomainID).Authenticated;
+				
+                if ( revertiFolder.ShowDialog() == DialogResult.Yes )
 				{
 					//ensure UI is re-painted before Revert is done
 					Invalidate();
@@ -2605,7 +2609,6 @@ namespace Novell.FormsTrayApp
 								string defaultiFolderID = this.simiasWebService.GetDefaultiFolder( newiFolder.DomainID );
 								if( defaultiFolderID == newiFolder.ID)
 								{
-									//MessageBox.Show("Setting default iFolder ID to null");
 									this.simiasWebService.DefaultAccount( newiFolder.DomainID, null );
 								}
 								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
@@ -2635,7 +2638,12 @@ namespace Novell.FormsTrayApp
 			catch (Exception ex)
 			{		
 				Cursor.Current = Cursors.Default;
-				Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(TrayApp.Properties.Resources.iFolderRevertError, TrayApp.Properties.Resources.revertErrorTitle, ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+				Novell.iFolderCom.MyMessageBox mmb = 
+                    new MyMessageBox(TrayApp.Properties.Resources.iFolderRevertError, 
+                        TrayApp.Properties.Resources.revertErrorTitle, 
+                        ex.Message, 
+                        MyMessageBoxButtons.OK, 
+                        MyMessageBoxIcon.Error);
 				mmb.ShowDialog();
 				mmb.Dispose();
 			}
