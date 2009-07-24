@@ -1216,11 +1216,10 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
-				if (syncEventArgs.SizeRemaining == syncEventArgs.SizeToSync)
-				{
-					progressBar1.Visible = syncEventArgs.SizeToSync > 0;
+				    progressBar1.Visible = syncEventArgs.SizeToSync > 0;
 					progressBar1.Value = 0;
 					progressBar1.Maximum = 200;
+                    progressBar1.Value = syncEventArgs.SizeToSync > 0 ? (int)(((syncEventArgs.SizeToSync - syncEventArgs.SizeRemaining) * 200) / syncEventArgs.SizeToSync) : progressBar1.Maximum;
 
 					if (startSync || (objectsToSync <= 0))
 					{
@@ -1299,12 +1298,6 @@ namespace Novell.FormsTrayApp
 							statusBar1.Text = string.Format(TrayApp.Properties.Resources.deleteUnknown, syncEventArgs.Name);
 							break;
 					}
-				}
-				else
-				{
-					statusBar1.Text = syncEventArgs.Name;
-					progressBar1.Value = syncEventArgs.SizeToSync > 0 ? (int)(((syncEventArgs.SizeToSync - syncEventArgs.SizeRemaining) * 200) / syncEventArgs.SizeToSync) : progressBar1.Maximum;
-				}
 			}
 			catch {}
 		}
