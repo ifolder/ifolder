@@ -575,7 +575,7 @@ namespace Novell.iFolder
  
 
                         // Row 2
-                        Label l2 = new Label(Util.GS("To recover a lost passphrase, you need the private key file (private key of the certificate) and the password to it or the decrypted key file from the administrator."));
+                        Label l2 = new Label(Util.GS("To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."));
                         table.Attach(l2,0,1, 1,2,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l2.LineWrap = true;
@@ -583,7 +583,7 @@ namespace Novell.iFolder
 
 
                         // Row 5
-                        Label l5 = new Label(Util.GS("If you don't have these parameters, you can use this wizard to export the encrypted key file, which you can mail to your administrator who will decrypt and send it back to you. You can then use this decrypted key file to reset your passphrase."));
+                        Label l5 = new Label(Util.GS("If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."));
 
                         table.Attach(l5, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -662,7 +662,7 @@ namespace Novell.iFolder
 
 			//Choice 3:have none
 
-			haveNone = new RadioButton(haveBoth,Util.GS("_I have no secret or data file."));
+			haveNone = new RadioButton(haveBoth,Util.GS("_I have no secret or data file"));
 			table.Attach(haveNone,0,1,3,4,AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 			haveNone.Sensitive = true;
 

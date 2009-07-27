@@ -249,7 +249,7 @@ namespace Novell.iFolder
 
 
 
-				Label nameLabel = new Label(Util.GS("User Name:"));
+				Label nameLabel = new Label(Util.GS("User Name")+":");
 				nameLabel.Xalign = 1;
 				loginTable.Attach(nameLabel, 0,1,1,2,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);

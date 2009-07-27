@@ -492,7 +492,7 @@ namespace Novell.iFolder
 			ServerNameVerifyLabel.Xalign = 0.0F;
 
 			// Row 3
-			l = new Label(Util.GS("User name")+":");
+			l = new Label(Util.GS("User name:"));
 			table.Attach(l, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -502,7 +502,7 @@ namespace Novell.iFolder
 			UserNameVerifyLabel.Xalign = 0.0F;
 			
 			// Row 4
-			l = new Label(Util.GS("Remember password on this computer") + ":");
+			l = new Label(Util.GS("Remember password:"));
 			table.Attach(l, 1,2, 3,4,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
