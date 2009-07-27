@@ -91,11 +91,12 @@ namespace Novell.iFolder.Utility
             KeyRecovery prg = new KeyRecovery(args);
             prg.OTP.OnOptionEntered = new Option.OptionEnteredHandler(prg.OnOTP);
             prg.ParseArguments();
-            certname = Path.GetFullPath(prg.keyPath.Value);
             pass = prg.pvkPass.Value;
             X509Certificate2 xcert;
-            try
-            {
+           try{
+                
+               certname = Path.GetFullPath(prg.keyPath.Value);
+                      
                 if (pass.Length > 0)
                     xcert = new X509Certificate2(certname, pass);
                 else
@@ -137,9 +138,10 @@ namespace Novell.iFolder.Utility
             catch (Exception exp)
             {
                 if(pass == null)
-                    Console.WriteLine("Private Key Password Null Exception ");
+                    Console.WriteLine("Private Key Password cannot be null. Try again. ");
                 else
-                    Console.WriteLine("Exception {0}", exp.Message);
+                    Console.WriteLine("Error while processing certificate. Try again");
+                    Console.WriteLine(exp.Message);
             }
         }
 
@@ -321,7 +323,8 @@ namespace Novell.iFolder.Utility
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception while processing" + e.Message + e.StackTrace);
+                Console.WriteLine("Error while processing input key file. Try again");
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -340,9 +343,10 @@ namespace Novell.iFolder.Utility
                 Console.WriteLine("encrypted mess {0}", Convert.ToBase64String(rsadec.Decrypt(rsaenc.Encrypt(Convert.FromBase64String(mess), false), false)));
 #endif
             }
-            catch (CryptographicException cExp)
+            catch (Exception cExp)
             {
-                Console.WriteLine("Crpto Error {0}", cExp.Message);
+                Console.WriteLine("Error while decoding message. Try again");
+                Console.WriteLine(cExp.Message);
             }
             return mess;
         }
@@ -367,9 +371,10 @@ namespace Novell.iFolder.Utility
                 byte[] output = Transform(mess, tdesp.CreateEncryptor(input, IV));
                 retStr = Convert.ToBase64String(output);
             }
-            catch (CryptographicException cryExp)
+            catch (Exception e)
             {
-                Console.WriteLine("Crpto Error {0}", cryExp.Message);
+                Console.WriteLine("Error while decoding message. Try again");
+                Console.WriteLine(e.Message);
             }
             return retStr;
         }
@@ -408,7 +413,9 @@ namespace Novell.iFolder.Utility
             }
             catch (Exception exp)
             {
-                Console.WriteLine("Exception {0}", exp.Message);
+                Console.WriteLine("Error while hashing passphrase. Try again"); 
+                Console.WriteLine(exp.Message);
+
             }
 
             return NewPassphrase;
