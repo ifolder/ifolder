@@ -1058,7 +1058,7 @@ namespace Novell.iFolder
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Name:   {0}"),lable); 
+			lable = string.Format(Util.GS("Name: {0}"),lable); 
 		    labelName = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
 		   	iFolderInfo.PackStart(labelName, false, false, 0);
@@ -1711,16 +1711,16 @@ namespace Novell.iFolder
 
 			if(holder != null && labelFolderToSync != null)	
 			{
-	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), holder.ObjectsToSync);
-	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),syncIntervalInMin);
-	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"),holder.iFolder.LastSyncTime);
+	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize: {0}"), holder.ObjectsToSync);
+	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"),syncIntervalInMin);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"),holder.iFolder.LastSyncTime);
 			//	TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
-	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
+	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
 
 
 				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
 			     UriBuilder serverUri = new UriBuilder(domain.HostUrl);	
-	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"),serverUri.Host);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Server: {0}"),serverUri.Host);
 			
 				string iftype = null;	
 				if( (null == holder.iFolder.encryptionAlgorithm) || ("" == holder.iFolder.encryptionAlgorithm) )
@@ -1731,7 +1731,7 @@ namespace Novell.iFolder
 				{
 			    	iftype = string.Format(Util.GS("Encrypted")); 
 				}
-			    	labeliFolderType.Text= string.Format(Util.GS("iFolder Type:    {0}"), iftype); 
+			    	labeliFolderType.Text= string.Format(Util.GS("iFolder Type: {0}"), iftype); 
 
            		if(holder.iFolder.IsSubscription) 
 				{
@@ -1764,9 +1764,9 @@ namespace Novell.iFolder
 			{
 			    ifolderName = ifolderName.Substring(0,displayableName) + "..."  ;	
 			}
-	     		labelName.Text = string.Format(Util.GS("Name:     {0}"), ifolderName);
-	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),holder.iFolder.Owner);
-	     		labelAccess.Text = string.Format(Util.GS("Access:   {0}"),holder.iFolder.CurrentUserRights);
+	     		labelName.Text = string.Format(Util.GS("Name: {0}"), ifolderName);
+	     		labelOwner.Text = string.Format(Util.GS("Owner: {0}"),holder.iFolder.Owner);
+	     		labelAccess.Text = string.Format(Util.GS("Access: {0}"),holder.iFolder.CurrentUserRights);
 
            		if(holder.iFolder.IsSubscription) 
 			{
@@ -1786,15 +1786,15 @@ namespace Novell.iFolder
 		{	
 		        string label = Util.GS("N/A");	
 
-	     		labelName.Text = string.Format(Util.GS("Name:     {0}"),label);
-	     		labelOwner.Text = string.Format(Util.GS("Owner:    {0}"),label);
-	     		labelAccess.Text = string.Format(Util.GS("Access:    {0}"),label);
+	     		labelName.Text = string.Format(Util.GS("Name: {0}"),label);
+	     		labelOwner.Text = string.Format(Util.GS("Owner: {0}"),label);
+	     		labelAccess.Text = string.Format(Util.GS("Access: {0}"),label);
 
-	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize:    {0}"), label);
-	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time:    {0}"), label);
-	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size:    {0}"), label);
-	     		labeliFolderServer.Text = string.Format(Util.GS("Server:    {0}"), label);
-			   	labeliFolderType.Text= string.Format(Util.GS("iFolder Type:    {0}"), label);
+	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize: {0}"), label);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"), label);
+	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), label);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Server: {0}"), label);
+			   	labeliFolderType.Text= string.Format(Util.GS("iFolder Type: {0}"), label);
 
 		}
 
