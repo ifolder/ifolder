@@ -267,7 +267,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 					
 						//Row 1
-						  Label l1 = new Label(Util.GS("Select the account for which the passphrase must be reset."));
+						  Label l1 = new Label(Util.GS("Select the account for which the passphrase must to be reset."));
                         table.Attach(l1, 0,1, 0,1,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l1.LineWrap = true;

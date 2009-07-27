@@ -3917,3 +3917,13 @@ msgid ""
 "Save as..."
 msgstr""
 "Save as..."
+
+msgid ""
+"Passphrase Recovery Wizard"
+msgstr""
+"Passphrase Recovery Wizard"
+
+msgid ""
+"_iFolder Account"
+msgstr""
+"_iFolder Account"
