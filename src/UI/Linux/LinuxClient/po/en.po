@@ -3902,3 +3902,8 @@ msgid ""
 "Hide ifolder _main window at startup"
 msgstr ""
 "Hide ifolder _main window at startup"
+
+msgid ""
+"_Location:"
+msgstr ""
+"_Location:"
