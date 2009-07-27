@@ -339,6 +339,7 @@
 		prefs-general32.png
 		prefs-notification32.png
 		prefs-sync32.png
+		remove_share_48.png
 		save32.png
 		serverifolder.ico
 		serverifolder24.png
