@@ -319,8 +319,6 @@ namespace Novell.iFolder
                 {
                     this.Title = Util.GS("Passphrase Recovery Wizard");
 			DomainSelectionUpdateSensitivity();
-                 //   KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
-			DomainSelectionUpdateSensitivity();
                 }
 
 
@@ -452,6 +450,7 @@ namespace Novell.iFolder
 	
 		bool result = false;
 		Status status = null;
+		 DomainController domainController = DomainController.GetDomainController();
 
                        if(this.newPassphrase.Text != this.confirmPassphrase.Text)
                       {
@@ -470,18 +469,23 @@ namespace Novell.iFolder
                 if (status.statusCode == StatusCodes.Success)
 
 		{
-		//	Console.WriteLine("Inside login");
-                    status = this.simws.LoginToRemoteDomain(domainInfo.ID, this.password.Text);
+			status = this.simws.LoginToRemoteDomain(domainInfo.ID, this.password.Text);
 			if(status.statusCode != StatusCodes.Success)
 			{
                                iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), Util.GS(""));
-                                  dialog.Run();
-                                  dialog.Hide();
-                                  dialog.Destroy();
-                                  dialog = null;
-		         	return false;
+				 int rc = dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+				dialog = null;
+	
+			 domainController.LogoutDomain(domainInfo.ID);		
+			if ((ResponseType)rc == ResponseType.Ok)
+                                {
+                                	CloseDialog();
+					ShowNextWizard();
+                                }
 
-			//	Console.WriteLine("Inside not success");
+			       	 return false;
 
 			}
 		result = true;
@@ -494,6 +498,7 @@ namespace Novell.iFolder
                                   dialog.Hide();
                                   dialog.Destroy();
                                   dialog = null;
+				 domainController.LogoutDomain(domainInfo.ID);
 				  return false;
 		}
 		if(result)
