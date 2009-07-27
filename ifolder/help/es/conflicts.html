@@ -1,157 +1,171 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="es" lang="es">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="es" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Resolving File Conflicts</title>
+<title>Resolución de conflictos con los archivos</title>
 <script type="text/javascript">
-  var prev_link = "sync.html";
-  var next_link = "movelocation.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "conflicts";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="conflicts">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Resolving File Conflicts</h1>
+<div class='nav' id='topnav'>
+  <a href="sync.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="movelocation.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
 
-<p class="para">Conflicts can occur between file versions saved at the same time on different computers, or when a filename differs by case only. When conflicts occur, the file is stored in the conflict area and the file is flagged with a status of <span class="guimenu">Name Conflict</span>. The iFolder Error icon <img src="images/ifolder-error_16.png" alt="iFolder Application Icon " class="inline" /> is displayed on the iFolder. If the <span class="guimenu">Notify of conflicts</span> option is enabled in your iFolder Preferences, an alert is also sent to the notification area. You can control the pop-up behavior of notifications by setting your preference in the <span class="menuchoice"><span class="guimenu">iFolder Preferences</span> > <span class="guimenu">General</span></span> tab.
+
+<div class="sect1" id="conflicts">
+
+<h1 class="title"> Resolución de conflictos con los archivos</h1>
+
+<p class="para">Es posible que se produzcan conflictos entre las versiones de archivos guardados simultáneamente en diferentes equipos, o cuando el nombre de archivo sólo difiere en el uso de mayúsculas o minúsculas. Cuando se produce algún conflicto, el archivo se almacena en el área de conflictos y se le asigna el estado de <span class="guimenu">Conflicto de nombres</span>. En tal caso, aparecerá el icono de error de iFolder <img src="images/ifolder-error_16.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> en la carpeta iFolder en cuestión. Si la opción <span class="guimenu">Notificación de conflictos</span> está habilitada en las Preferencias de iFolder, también se enviará un mensaje de alerta al área de notificaciones. Puede controlar el comportamiento de los mensajes emergentes de notificación; para ello, configure sus preferencias en la pestaña <span class="menuchoice"><span class="guimenu">General &gt; </span> > <span class="guimenu">Preferencias de iFolder</span></span>.
   </p>
-<p class="para">To resolve file conflicts, see the following:</p>
+<p class="para">Para resolver conflictos de archivos, consulte las secciones siguientes:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="conflicts.html#b4tc704">Resolving File Version Conflicts</a>
+            <a href="conflicts.html#b4tc704">Resolución de conflictos de versiones de archivos</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="conflicts.html#b4tc7jb">Resolving Filename Conflicts</a>
+            <a href="conflicts.html#b4tc7jb">Resolución de conflictos de nombres de archivos</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="b4tc704">
+<div class="sect2" id="b4tc704">
 
-<h2 class="title"> Resolving File Version Conflicts</h2>
+<h2 class="title"> Resolución de conflictos de versiones de archivos</h2>
 
-<p class="para">To resolve file version conflicts, you must select the correct version in the Conflict Resolution dialog box..</p>
+<p class="para">Para resolver conflictos de versiones de archivos, debe seleccionar la versión correcta en el recuadro de diálogo Resolución del conflicto.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvin9nq">
-<p class="para">In the notification area, right-click the <span class="guimenu">iFolder Services</span> icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">iFolders</span> to open the iFolder browser.
+<p class="para">En el área de notificaciones, haga clic con el botón derecho en el icono <span class="guimenu">Servicios de iFolder </span><img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Carpetas iFolder</span> para abrir el navegador de iFolder.
      </p></li>
 <li class="step" id="bvinc1r">
-<p class="para">Select the iFolder in conflict <img src="images/ifolder-error_16.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">Resolve</span> to open the <span class="guimenu">Resolve Conflicts</span> dialog box.
+<p class="para">Seleccione la carpeta iFolder en conflicto <img src="images/ifolder-error_16.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Resolver</span> para abrir el recuadro de diálogo <span class="guimenu">Resolver conflictos</span>.
      </p>
-<div class="informalfigure">
-                  <img src="images/if3_conflicts_a.png" alt="" />
-                </div>
-
-<p class="para">You can view two versions of the same file:</p>
+<p class="para">Puede ver dos versiones del mismo archivo:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bctt7of">
-                  <p class="title"><em class="title">Local Version:</em>
-                  File saved on your local machine.</p>
+                  <p class="title"><em class="title">Versión local:</em>
+                  Archivo almacenado en su equipo local.</p>
                 </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bctt844">
-                  <p class="title"><em class="title">Server Version:</em>
-                  File saved on the server.</p>
+                  <p class="title"><em class="title">Versión del servidor:</em>
+                  Archivo almacenado en el servidor.</p>
                 </div>
 </li></ul></div>
 
-<p class="para">You can view the details about the file on your local machine and the file on the server to determine which version of the file you want to keep.</p></li>
+<p class="para">Consulte la información del archivo del equipo local y la del archivo del servidor para determinar cuál es la versión del archivo que desea conservar.</p></li>
 <li class="step" id="bx1anvu">
-<p class="para">Click <span class="guimenu">Open</span> for each file to view the files.</p></li>
+<p class="para">Haga clic en <span class="guimenu">Abrir</span> para poder ver cada uno de los archivos.</p></li>
 <li class="step" id="b47rm2p">
-<p class="para">Select any of the following options for <span class="guimenu">Save to iFolder</span> based on your preference.</p>
+<p class="para">Seleccione cualquiera de las opciones siguientes en <span class="guimenu">Guardar en la carpeta iFolder</span> según sus preferencias.</p>
 <div class="formalpara" id="bc5i2bq">
-              <p class="title"><em class="title">Local Version:</em>
-              Select this option if you want to save the local version to the iFolder.</p>
+              <p class="title"><em class="title">Versión local: </em>
+              Seleccione esta opción si desea guardar la versión local en la carpeta iFolder.</p>
             </div>
 
 <div class="formalpara" id="bc5i3am">
-              <p class="title"><em class="title">Server Version:</em>
-              Select this option if you want to save the server version to the iFolder.</p>
+              <p class="title"><em class="title">Versión del servidor: </em>
+              Seleccione esta opción si desea guardar la versión del servidor en la carpeta iFolder.</p>
             </div>
 </li>
 <li class="step" id="bc5i4cu">
-<p class="para">Select <span class="guimenu">Enable</span> to enable the <span class="guimenu">Save to Conflict Bin</span> option. When you enable this option, the file in conflict is automatically selected to be saved in the Conflict bin. Your selection decides which version to be saved in the Conflict bin locally for later use.</p></li>
+<p class="para">Seleccione <span class="guimenu">Habilitar</span> para habilitar la opción <span class="guimenu">Guardar en la bandeja de conflictos</span>. Cuando se habilita esta opción, el archivo en conflicto se selecciona de forma automática y se guarda en la bandeja de conflictos. La opción seleccionada deteminará la versión que se guardará localmente en la bandeja de conflictos para utilizarla más adelante.</p></li>
 <li class="step" id="bvincoe">
-<p class="para">When you are done resolving the conflict, click <span class="guimenu">Save</span>.</p></li></ol>
+<p class="para">Cuando haya resuelto el conflicto, haga clic en <span class="guimenu">Guardar</span>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b4tc7jb">
+<div class="sect2" id="b4tc7jb">
 
-<h2 class="title"> Resolving Filename Conflicts</h2>
+<h2 class="title"> Resolución de conflictos de nombres de archivos</h2>
 
-<p class="para">Filename conflicts occur when the names of the local file version and the server file version differ by case. The content might differ, or it might be the same. These type of conflicts can be resolved by renaming the files, but be careful about where you rename the file. </p>
+<p class="para">Los conflictos de nombre de archivo se producen cuando los nombres de la versión del archivo local y la versión del archivo del servidor varían en las mayúsculas y minúsculas. El contenido puede variar o puede ser el mismo. Para resolver este tipo de conflictos pueden renombrarse los archivos, pero es necesario tener precaución acerca de la ubicación en la que se lleva a cabo dicha acción. </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the content is the same, you can rename one of the files by using the <span class="guimenu">Resolve Conflicts</span> dialog box.</p></li>
+<p class="listitem">Si el contenido es el mismo, puede renombrarse uno de los archivos en el recuadro de diálogo <span class="guimenu">Resolver conflictos</span>.</p></li>
 <li class="listitem">
-<p class="listitem">If the content is different, make sure to make a copy of the local file and give it a different name, then return to the Resolve Conflicts dialog box and save the server version of the file. This allows both versions of the file to exist in the iFolder with different filenames. If you rename a file version within the Resolve Conflicts dialog box, that version of the file overwrites the other, and the content of the other file is destroyed. </p></li></ul></div>
+<p class="listitem">Si el contenido es diferente, asegúrese de realizar una copia del archivo local, cámbiele el nombre y, a continuación, vuelva al recuadro de diálogo Resolve Conflicts (Resolución de conflictos) y guarde la versión del archivo del servidor. De este modo, permitirá que ambas versiones del archivo existan en la carpeta iFolder con distintos nombres de archivo. Si renombra una versión de archivo en el recuadro de diálogo Resolver conflictos, dicha versión sobrescribirá la otra y el contenido del otro archivo se destruirá. </p></li></ul></div>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bx1b07o">
-<p class="para">In the notification area, right-click the iFolder Services icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">iFolders</span> to open the iFolder browser.
+<p class="para">En el área de notificaciones, haga clic con el botón derecho en el icono Servicios de iFolder <img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Carpetas iFolder</span> para abrir el navegador de iFolder.
      </p></li>
 <li class="step" id="bx1b07p">
-<p class="para">Select the file in conflict <img src="images/ifolder-error_16.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">Resolve</span> to open the Resolve Conflicts dialog box.
+<p class="para">Seleccione el archivo que presenta el conflicto <img src="images/ifolder-error_16.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Resolver</span> para abrir el recuadro de diálogo Resolver Conflictos.
      </p></li>
 <li class="step" id="bx1atam">
-<p class="para">Confirm that it is a file name conflict, and determine whether the content is the same or different.</p></li>
+<p class="para">Confirme que se trata de un conflicto de nombre de archivo y determine si el contenido es el mismo o si varía.</p></li>
 <li class="step" id="bx1au4u">
-<p class="para">Do one of the following:</p>
+<p class="para">Realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the content is the same, rename one of the files, click <span class="guimenu">Save This Version</span>, then click <span class="guimenu">OK</span> to close the Resolve Conflicts dialog box. You are done.</p></li>
+<p class="listitem">Si el contenido es el mismo, renombre uno de los archivos, haga clic en <span class="guimenu">Guardar esta versión</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span> para cerrar el recuadro de diálogo Resolver conflictos. El proceso ha finalizado.</p></li>
 <li class="listitem">
-<p class="listitem">If the content is different, continue with <a href="conflicts.html#bx1au97">Step 5</a>.</p></li></ul></div>
+<p class="listitem">Si el contenido varía, continúe en el <a href="conflicts.html#bx1au97">Paso 5</a>.</p></li></ul></div>
 </li>
 <li class="step" id="bx1au97">
-<p class="para">Close the Resolve Conflicts dialog box.</p></li>
+<p class="para">Cierre el recuadro de diálogo Resolve Conflicts (Resolución de conflictos).</p></li>
 <li class="step" id="bx1b3p9">
-<p class="para">Open a file manager and navigate to the local copy of the file in conflict.</p></li>
+<p class="para">Abra un administrador de archivos y desplácese hasta la copia local del archivo en conflicto.</p></li>
 <li class="step" id="bx1b3xf">
-<p class="para">Copy the file and save it with a unique name in the iFolder. </p>
-<p class="para">iFolder synchronizes the file as a new file to the server and member computers.</p></li>
+<p class="para">Copie el archivo y guárdelo con un nombre exclusivo en la carpeta iFolder. </p>
+<p class="para">iFolder sincroniza el archivo como un archivo nuevo en el servidor y en los equipos miembro.</p></li>
 <li class="step" id="bx1b3k7">
-<p class="para">Return to the <span class="guimenu">Resolve Conflicts</span> dialog box, select the server version of the file, click <span class="guimenu">Save this Version</span>, then click <span class="guimenu">OK</span>.</p>
-<p class="para">The server version of the file downloads to your local machine and overwrites the local copy of the file by that name.</p></li></ol>
+<p class="para">Vuelva al recuadro de diálogo <span class="guimenu">Resolver conflictos</span>, seleccione la versión del servidor del archivo, haga clic en <span class="guimenu">Guardar esta versión</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p>
+<p class="para">La versión del archivo del servidor se descargará en el equipo local y sobrescribirá la copia local del archivo con ese nombre.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="sync.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="movelocation.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
 </body>
 </html>

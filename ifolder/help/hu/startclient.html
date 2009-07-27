@@ -1,50 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="hu" lang="hu">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="hu" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Starting the iFolder Client</title>
+<title>Az iFolder ügyfél elindítása</title>
 <script type="text/javascript">
-  var prev_link = "accountsprefs.html";
-  var next_link = "accounts.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "startclient";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="startclient">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Starting the iFolder Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
 
-<p class="para">When iFolder is running, the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon" class="inline" /> icon appears in the notification area of the taskbar. iFolder is integrated in the desktop environment. The iFolder emblem (a green “i”) <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> appears on iFolders when they are viewed in a file manager, on the desktop, or in the iFolder browser. The encrypted iFolder is indicated by the <img src="images/ifolder_encrypted_fold.png" alt="iFolder Icon " class="inline" /> emblem (locked folder).
+
+<div class="sect1" id="startclient">
+
+<h1 class="title"> Az iFolder ügyfél elindítása</h1>
+
+<p class="para">Amikor fut az iFolder szolgáltatás, az asztal értesítési területén egy <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" />ikon látható. Az iFolder beépül az asztali munkakörnyezetbe. Az iFolder mappákon az iFolder embléma (zöld „i” betű) <img src="images/ifolder32.png" alt="iFolder ikon " title="iFolder ikon " class="inline" /> jelenik meg a fájlkezelőkben, az asztalon, illetve az iFolder-böngészőben való megjelenítéskor. A titkosított iFolder mappát az <img src="images/ifolder_encrypted_fold.png" alt="iFolder ikon " title="iFolder ikon " class="inline" /> embléma (zárolt mappa) jelzi.
   </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>The notification area of the taskbar must be enabled in order for the <span class="guimenu">iFolder Services</span> icon to be displayed when iFolder is running. </p></div>
+<p class="para"><em class="title">FONTOS:</em>A tálca értesítési területének engedélyezve kell lennie ahhoz, hogy megjelenhessen az <span class="guimenu">iFolder szolgáltatás</span> ikon, amikor fut az iFolder szolgáltatás. </p></div>
 
-<p class="para">You can work locally with files in your local iFolders at any time. Whenever the iFolder client is running, it logs the changes you make to local iFolder data as you work. If you make changes to local iFolder data when iFolder is not running, iFolder identifies and logs the differences the next time you start iFolder.</p>
-<p class="para">When iFolder is not running, iFolders appear in the file manager or on the desktop. You can access files in your local copy of an iFolder, but you cannot manage iFolders. In addition, you must log in to an account to create an iFolder or synchronize its files.</p>
+<p class="para">A helyi iFolder mappákban található fájlokkal bármikor lehet helyben dolgozni. Amikor fut az iFolder ügyfél, naplózza a helyi iFolder adatokon munka közben végzett változtatásokat. Ha úgy végez változtatást a helyi iFolder-adatokon, hogy közben nem fut az iFolder, a következő indításkor az iFolder azonosítja és naplózza a különbségeket.</p>
+<p class="para">Amikor nem fut az iFolder szolgáltatás, az iFolder mappák a fájlkezelőben vagy az asztalon jeleníthetők meg. Az iFolder mappa hely példányában hozzáférhet a fájlokhoz, de nem tudja kezelni az iFolder mappákat. Ezen kívül az iFolder mappák létrehozásához vagy a fájlok szinkronizálásához be kell jelentkeznie egy fiókba.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>During account creation, user login happens through SSL. When you are prompted to accept the server certificate, you must validate the certificate and accept it for a successful connection.</p></div>
+<p class="para"><em class="title">MEGJEGYZÉS:</em>A fiók létrehozása során a felhasználó bejelentkezése SSL használatával történik. Amikor a rendszer kéri a kiszolgáló tanúsítványának elfogadását, érvényesítenie kell a tanúsítványt, és el kell fogadnia ahhoz, hogy sikeresen létrejöhessen a csatlakozás.</p></div>
 
-<p class="para">For information about stopping the iFolder client, see <a href="stopclient.html">Exiting the iFolder Client</a>.</p>
-<div class="sect2"  id="b4064a7">
+<p class="para">Az iFolder ügyfél leállításával kapcsolatos tudnivalók: <a href="stopclient.html">Kilépés az iFolder ügyfélből</a></p>
+<div class="sect2" id="b4064a7">
 
 <h2 class="title"> Linux</h2>
 
@@ -52,57 +65,53 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b40miua">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#b40miua">Az iFolder automatikus elindítása bejelentkezéskor</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb73z">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb73z">Az iFolder manuális elindítása</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b40miua">
+<div class="sect3" id="b40miua">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Az iFolder automatikus elindítása bejelentkezéskor</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to the desktop, do one of the following:</p>
+<p class="para">Ha azt szeretné, hogy az asztalra való bejelentkezéskor automatikusan elinduljon az iFolder, tegye a következők egyikét:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, click <span class="guimenu">More Applications</span>, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Add to Startup Programs</span> from the menu.</p>
-<div class="informalfigure">
-                    <img src="images/if_apbrmenu_a.png" alt="iFolder 3 Application Browser Menu" />
-                  </div>
-</li>
+<p class="listitem">Nyissa meg az alkalmazásmenüt, kattintson a <span class="guimenu">More Applications</span> (További alkalmazások) parancsra, keresse meg az <span class="guimenu">iFolder 3</span> parancsikont, és kattintson rá a jobb gombbal, majd válassza a menüből az <span class="guimenu">Add to Startup Programs</span> (Hozzáadás az Automatikus indítás programjaihoz) parancsot.</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li>
+<p class="listitem">A kijelentkezéskor hagyja futni az iFolder programot, majd mentse a munkamenet beállításait. Válassza ezt a munkamenetet, amikor bejelentkezik az asztalra.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal window, log in as the <span class="systemitem">root</span> user, then run <span class="filename">/opt/gnome/bin/gnome-session-properties</span> to add iFolder as a program to start when you log in to your computer.</p></li></ul></div>
+<p class="listitem">Nyisson meg egy terminálablakot, jelentkezzen be <span class="systemitem">root</span> felhasználóként, majd az <span class="filename">/opt/gnome/bin/gnome-session-properties</span> futtatásával adja hozzá az iFolder programot a számítógépre történő bejelentkezéskor elindítandó programokhoz.</p></li></ul></div>
 
-<p class="para">To disable iFolder from starting automatically on login, do one of the following:</p>
+<p class="para">Ha szeretné letiltani az iFolder automatikus elindulását bejelentkezéskor, tegye a következők egyikét:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Remove from Startup Programs</span>.</p></li>
+<p class="listitem">Nyissa meg az alkalmazásmenüt, keresse meg az <span class="guimenu">iFolder 3</span> parancsikont, és kattintson rá a jobb gombbal, majd válassza a menüből a <span class="guimenu">Remove from Startup Programs</span> (Eltávolítás az Automatikus indítás programjai közül) parancsot.</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is not running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li></ul></div>
+<p class="listitem">A kijelentkezéskor ne hagyja futni az iFolder programot, majd mentse a munkamenet beállításait. Válassza ezt a munkamenetet, amikor bejelentkezik az asztalra.</p></li></ul></div>
 
 </div>
 
-<div class="sect3"  id="b4tb73z">
+<div class="sect3" id="b4tb73z">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Az iFolder manuális elindítása</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Log in to your computer with the local Linux user identity you want to use when you create iFolders.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Linux-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
 <li class="step" id="bw18fdr">
-<p class="para">Use one of the following methods to start iFolder:</p>
+<p class="para">Indítsa el az iFolder programot a következő módszerek valamelyikével:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In the taskbar, open the applications menu, click <span class="guimenu">More Applications</span>, locate <span class="guimenu">iFolder 3</span> by searching or scrolling through the available options, right-click iFolder 3, then select <span class="guimenu">Start iFolder 3</span>.</p></li>
+<p class="listitem">Nyissa meg a tálcáról az alkalmazásmenüt, kattintson a <span class="guimenu">More Applications</span> (További alkalmazások) elemre, az elérhető elemek között kereséssel vagy tallózással keresse meg az <span class="guimenu">iFolder 3</span> parancsikont, kattintson rá a jobb gombbal, és válassza a <span class="guimenu">Start iFolder3</span> (Az iFolder 3 indítása) parancsot.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, then enter</p><pre class="screen">
+<p class="listitem">Nyisson meg egy terminálablakot, majd írja be a következőt:</p><pre class="screen">
 /usr/bin/ifolder
 </pre></li></ul></div>
 </li></ol>
@@ -112,7 +121,7 @@
 
 </div>
 
-<div class="sect2"  id="b406cyo">
+<div class="sect2" id="b406cyo">
 
 <h2 class="title"> Windows</h2>
 
@@ -120,117 +129,117 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb7g5">Starting iFolder Automatically on Logon</a>
+              <a href="startclient.html#b4tb7g5">Az iFolder automatikus elindítása bejelentkezéskor</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb879">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb879">Az iFolder manuális elindítása</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b4tb7g5">
+<div class="sect3" id="b4tb7g5">
 
-<h3 class="title"> Starting iFolder Automatically on Logon</h3>
+<h3 class="title"> Az iFolder automatikus elindítása bejelentkezéskor</h3>
 
-<p class="para">To start iFolder automatically when you log in to the desktop:</p>
+<p class="para">Ha azt szeretné, hogy az asztalra való bejelentkezéskor automatikusan elinduljon az iFolder:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41mcvg">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
+<p class="para">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja " title="iFolder alkalmazás ikonja " class="inline" /> ikonra, majd válassza a helyi menü <span class="guimenu">Beállítások</span> parancsát. Ennek hatására megnyílik az iFolder beállítások párbeszédpanel <span class="guimenu">Általános</span> lapja.
       </p></li>
 <li class="step" id="b41mcvh">
-<p class="para">Select <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Jelölje be az <span class="guimenu">iFolder elindítása az asztalra való bejelentkezéskor</span> beállítást, majd kattintson az <span class="guimenu">Alkalmaz</span> gombra.</p></li>
 <li class="step" id="b41mcvi">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Az iFolder beállítások párbeszédpanel bezárásához kattintson az <span class="guimenu">OK</span> gombra.</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically when you log on to the desktop:</p>
+<p class="para">Ha azt szeretné, hogy az asztalra való bejelentkezéskor ne induljon el automatikusan az iFolder:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41m94h">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.</p></li>
+<p class="para">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> ikonra, majd válassza a helyi menü <span class="guimenu">Beállítások</span> parancsát. Ennek hatására megnyílik az iFolder beállítások párbeszédpanel <span class="guimenu">Általános</span> lapja.</p></li>
 <li class="step" id="b41m9ty">
-<p class="para">Deselect <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Törölje be az <span class="guimenu">iFolder elindítása az asztalra való bejelentkezéskor</span> jelölőnégyzetből a jelet, majd kattintson az <span class="guimenu">Alkalmaz</span> gombra.</p></li>
 <li class="step" id="b41mac7">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Az iFolder beállítások párbeszédpanel bezárásához kattintson az <span class="guimenu">OK</span> gombra.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="b4tb879">
+<div class="sect3" id="b4tb879">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Az iFolder manuális elindítása</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Log in to the computer with the local Windows user identity you want to use when you create iFolders.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Windows-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
 <li class="step" id="bw08fxx">
-<p class="para">If iFolder does not start automatically on successful logon, start iFolder by clicking <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programs</span> > <span class="guimenu">iFolder 3</span></span>, then select the <span class="guimenu">iFolder 3 Client</span> application. </p></li></ol>
+<p class="para">Ha a sikeres bejelentkezést követően nem indul el automatikusan az iFolder, indítsa el úgy, hogy a <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programok</span> > <span class="guimenu">iFolder 3</span></span> csoportban az <span class="guimenu">iFolder 3 ügyfél</span> alkalmazásra kattint. </p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<div class="sect2"  id="b406d69">
+<div class="sect2" id="b406d69">
 
-<h2 class="title"> Macintosh</h2>
+<h2 class="title"> Macintosh operációs rendszerekhez</h2>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcpho1i">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#bcpho1i">Az iFolder automatikus elindítása bejelentkezéskor</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcphogg">Starting iFolder Manually</a>
+              <a href="startclient.html#bcphogg">Az iFolder manuális elindítása</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bcpho1i">
+<div class="sect3" id="bcpho1i">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Az iFolder automatikus elindítása bejelentkezéskor</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to your Macintosh computer, add iFolder to the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Ha azt szeretné, hogy az iFolder automatikusan elinduljon a Macintosh számítógépre történő bejelentkezés alkalmával, adja hozzá az iFolder programot az <span class="guimenu">indítási elemekhez</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
-<p class="para">Start iFolder.</p></li>
+<p class="para">Indítsa el az iFolder programot.</p></li>
 <li class="step" id="bcphuse">
-<p class="para">From the dock, right-click the iFolder icon and select the option <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, press the Ctrl key, click the iFolder icon, then select <span class="guimenu">Open at Login</span>.</p></li></ol>
+<p class="para">A dokkból kattintson a jobb gombbal az iFolder ikonra, és jelölje be a <span class="guimenu">Megnyitás bejelentkezéskor</span> lehetőséget.</p>
+<p class="para">vagy</p>
+<p class="para">A dokkból a Ctrl billentyű lenyomva tartása mellett kattintson az iFolder ikonra, és válassza a <span class="guimenu">Megnyitás bejelentkezéskor</span> lehetőséget.</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically, remove iFolder from the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Ha nem szeretné, hogy az iFolder automatikusan elinduljon, távolítsa el az iFolder elemet az <span class="guimenu">indítási elemek</span> közül.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcpi1cj">
-<p class="para">From the dock, right-click the iFolder icon, and deselect <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, right-click or Ctrl-click the iFolder icon, then deselect <span class="guimenu">Open at Login.</span></p></li></ol>
+<p class="para">A dokkból kattintson a jobb gombbal az iFolder ikonra, és törölje a <span class="guimenu">Megnyitás bejelentkezéskor</span> beállítás jelölését.</p>
+<p class="para">vagy</p>
+<p class="para">A dokkból a Ctrl billentyű lenyomva tartása mellett kattintson az iFolder ikonra, és törölje a <span class="guimenu">Megnyitás bejelentkezéskor</span> beállítás jelölését.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bcphogg">
+<div class="sect3" id="bcphogg">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Az iFolder manuális elindítása</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Log in to your computer with the local Macintosh user identity you want to use when you create iFolders.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Macintosh-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
 <li class="step" id="bw08fy2">
-<p class="para">Use one of the following methods to start iFolder: </p>
+<p class="para">Indítsa el az iFolder programot a következő módszerek valamelyikével: </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open <span class="guimenu">the Applications</span> directory on <span class="systemitem">Macintosh HD</span>, select <span class="guimenu">Applications</span>, then double-click <span class="guimenu"> iFolder 3</span>.</p></li>
+<p class="listitem">Nyissa meg az <span class="guimenu">Alkalmazások</span> könyvtárat a <span class="systemitem">Macintosh HD</span> területen, válassza az <span class="guimenu">Alkalmazások</span> elemet, és kattintson duplán az <span class="guimenu">iFolder 3</span> elemre.</p></li>
 <li class="listitem">
-<p class="listitem">Type <span class="command">iFolder</span> in the spotlight (Apple button + Spacebar or click the magnifying glass icon on top right) then click the <span class="guimenu">iFolder 3</span> under Applications.</p></li>
+<p class="listitem">Írja be az <span class="command">iFolder</span> szöveget a kijelölésbe (Apple gomb + szóköz, vagy kattintson jobboldalt felül a nagyítóra), és kattintson az Alkalmazások alatt az <span class="guimenu">iFolder 3</span> elemre.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, log in as the root user, then enter </p><pre class="screen">
+<p class="listitem">Nyisson terminálablakot, jelentkezzen be gyökér szintű felhasználóként, és írja be a következőt: </p><pre class="screen">
 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3
 </pre></li></ul></div>
 </li></ol>
@@ -242,8 +251,13 @@
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
 </body>
 </html>

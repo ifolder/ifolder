@@ -1,181 +1,185 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="hu" lang="hu">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="hu" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Configuring an iFolder Account</title>
+<title>iFolder-fiók konfigurálása</title>
 <script type="text/javascript">
-  var prev_link = "startclient.html";
-  var next_link = "login.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "accounts";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="accounts">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Configuring an iFolder Account</h1>
+<div class='nav' id='topnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
 
-<p class="para">Use the iFolder Account Assistant to add and configure a new account. You must configure at least one iFolder account before you can create iFolders or share iFolders on your system. You can create only one account for any given iFolder host service, but you can have multiple accounts. You can log in separately to each account and be logged in concurrently to multiple accounts.</p>
-<p class="para">Multiple users with different local login identities can have iFolders on the same computer. iFolder prompts the active user to set up an account on the first time the iFolder client runs under that local user identity.</p>
+
+<div class="sect1" id="accounts">
+
+<h1 class="title"> iFolder-fiók konfigurálása</h1>
+
+<p class="para">Új fiókot az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> használatával lehet hozzáadni és konfigurálni. Mielőtt iFolder mappákat hozhatna létre, illetve megoszthatná a rendszeren tárolt iFolder mappákat, legalább egy iFolder-fiókot létre kell hoznia. Az iFolder-kiszolgálóhoz egyszerre csak egy fiókkal csatlakozhat. Ha több iFolder-kiszolgálóhoz kíván csatlakozni, konfiguráljon több fiókot. Külön-külön bejelentkezhet az egyes fiókokba, de egyszerre több fiókba is be lehet jelentkezve.</p>
+<p class="para">A több bejelentkezési identitással rendelkező felhasználók ugyanazon a számítógépen több iFolder-fiókkal is rendelkezhetnek. Amikor első alkalommal indítja el az iFolder szolgáltatást az aktuális bejelentkezési identitással, az iFolder kéri egy iFolder-fiók beállítását.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>iFolder 3.7 introduces a new feature, auto-account creation, which helps the iFolder administrator to create and configure an account for you. If your iFolder administrator has enabled auto-account creation, you don’t need to configure an account for yourself. When you start an iFolder for the first time, you are prompted to enter your password. Enter your password and complete configuring the account.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Az iFolder 3.7 verzióban új funkció jelent meg, a fiókok automatikus létrehozása, amely megkönnyíti az iFolder rendszergazdának, hogy az Ön számára fiókot hozzon létre, illetve konfiguráljon. Ha az iFolder rendszergazdája engedélyezte a fiókok automatikus létrehozását, nem szükséges saját magának fiókot konfigurálnia. Amikor első alkalommal indítja el az iFolder ügyfelet, a rendszer jelszó megadását kéri. Adja meg a jelszavát, és fejezze be a fiók konfigurálását.</p></div>
 
-<p class="para">To configure a new account:</p>
+<p class="para">Új fiók konfigurálása:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bviaku6">
-<p class="para">Access the <span class="guimenu">iFolder Account Assistant</span>, using one of the following methods:</p>
+<p class="para">Az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> a következő módokon érhető el:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">The first time you start iFolder under your current local login identity, iFolder prompts you to set up an iFolder account. Click <span class="guimenu">Forward</span> to go directly to the <span class="guimenu">iFolder Account Assistant</span>.</p></li>
+<p class="listitem">Amikor első alkalommal indítja el az iFolder szolgáltatást az aktuális bejelentkezési identitással, az iFolder kéri egy iFolder-fiók beállítását. Kattintson a <span class="guimenu">Tovább</span> gombra az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> közvetlen megnyitásához.</p></li>
 <li class="listitem">
-<p class="listitem">Right-click the iFolder Services <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, select <span class="guimenu">Accounts </span>to open the iFolder Preferences dialog box to the <span class="guimenu">Accounts</span> tab, then click <span class="guimenu">Add</span> to open the <span class="guimenu">iFolder Account Assistant</span>.
+<p class="listitem">Kattintson jobb gombbal az iFolder szolgáltatások <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">Fiókok</span> parancsát. Ennek hatására megnyílik az iFolder beállítások párbeszédpanel <span class="guimenu">Fiókok</span> lapja. Az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> megnyitásához kattintson a <span class="guimenu">Hozzáadás</span> gombra.
       </p></li></ul></div>
 </li>
 <li class="step" id="bviamdh">
-<p class="para">Follow the on-screen instructions to specify the following values:</p>
+<p class="para">A következő értékek megadásához kövesse a képernyőn megjelenő útmutatást:</p>
 <div class="informaltable">
 <table class="topbot-lines">
                 
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvibwik"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Paraméter</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Leírás</p></th>
 </tr>
               
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwil"></a>
-<p class="para">Server Address</p></td>
+<p class="para">Kiszolgálócím</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The DNS name or IP address of the iFolder enterprise server where you have an account. Get this information from your iFolder administrator.</p>
-<p class="para">For example: <span class="literal">svr21.example.com</span> or <span class="literal">192.168.1.1</span></p>
-                        <img src="images/if3_server_address.png" alt="" />
-                      
-<p class="para">The server name is always displayed along with it’s IP address in the iFolder user interface. For example: iFolder - 192.162.1.1</p>
+<p class="para">Annak az iFolder vállalati kiszolgálónak a DNS-neve vagy IP-címe, amelyen Önnek fiókja van. Ezeket az információkat az iFolder rendszergazdájától kaphatja meg.</p>
+<p class="para">Például: <span class="literal">kiszolg21.pelda.com</span> vagy <span class="literal">192.168.1.1</span></p>
+<p class="para">Az iFolder felhasználói felületén a kiszolgáló neve mindig az IP-címmel együtt jelenik meg. Például: iFolder - 192.168.1.1</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You cannot use an iFolder 3.7 client to connect to an iFolder 3.2 server.</p></div>
+<p class="para"><em class="title">FONTOS:</em>iFolder 3.7 verziójú ügyfélprogram nem használható iFolder 3.2 verziójú kiszolgálóhoz való csatlakozásra.</p></div>
 </td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwiq"></a>
-<p class="para">Make this my default server</p></td>
+<p class="para">Legyen ez az alapértelmezett kiszolgálóm</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">When you have multiple servers, select <span class="guimenu">Make this my default server </span>to make this server the one selected by default in the drop-down list of servers when you create and upload iFolders.</p></td>
+<p class="para">Ha több kiszolgáló is csatlakozik a fiókjához, jelölje be a <span class="guimenu">Legyen ez az alapértelmezett kiszolgálóm</span> jelölőnégyzetet, így beállíthatja alapértelmezettként a kiszolgálók legördülő listáján kijelölt kiszolgálót arra az esetre, ha létrehoz vagy feltölt egy iFolder mappát.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwim"></a>
-<p class="para">User Name</p></td>
+<p class="para">Felhasználónév</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Specify your user identity for this account. Your iFolder administrator decides whether the format you should use is your network user ID (LDAP common name) or your e-mail address.</p>
-<p class="para">For example, if your name is John Smith with a user ID of jsmith and an e-mail address of john.smith@example.com<span class="literal"></span>, your administrator configures a setting for the server that determines which of the two formats to accept in the <span class="guimenu">Username</span> field for authentication purposes.</p>
-                        <img src="images/if3_identity.png" alt="" />
-                      </td>
+<p class="para">Adja meg a fiók felhasználóazonosítóját.  Az iFolder rendszergazdája dönti el, hogy itt a hálózati felhasználóazonosítót (az LDAP közös nevet) vagy az e-mail címet kell-e megadni.</p>
+<p class="para">Tegyük fel, hogy Ön Kovács János, a felhasználóazonosítója kovacsj, e-mail címe kovacs.janos@pelda.com<span class="literal"></span>. A rendszergazda megad egy beállítást a kiszolgálón, és ez határozza meg, hogy az melyik formátumot fogadja el hitelesítés céljából a <span class="guimenu">Felhasználónév</span> mezőben.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwin"></a>
-<p class="para">Password</p></td>
+<p class="para">Jelszó</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Specify the password for your username. </p>
-<p class="para">Authentication happens through Secure channel (SSL). You are prompted to validate and accept the server certificate.</p></td>
+<p class="para">Adja meg a felhasználónévhez tartozó jelszót. </p>
+<p class="para">A hitelesítés biztonságos csatornán (SSL protokollon) keresztül történik. A rendszer kéri a kiszolgálói tanúsítvány érvényesítését és elfogadását.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwio"></a>
-<p class="para">Remember My Password<span class="guimenu"></span></p></td>
+<p class="para">Jelszó mentése<span class="guimenu"></span></p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select <span class="guimenu">Remember My Password</span> to log in automatically to this iFolder account whenever you log in to your computer. </p>
-<p class="para">If your network password changes, automatic authentication fails gracefully the next time iFolder attempts to log in to the iFolder account. iFolder prompts you to log in with your new password and allows you to specify and save the new password.</p></td>
+<p class="para">Akkor jelölje be <span class="guimenu">A jelszó megjegyzése ezen a számítógépen</span> jelölőnégyzetet, ha azt szeretné, hogy mindig automatikusan jelentkezzen be ebbe az iFolder-fiókba, amikor a számítógépre bejelentkezik. </p>
+<p class="para">Amikor a hálózati jelszó módosulása után az iFolder a következő alkalommal próbál meg bejelentkezni az iFolder-fiókba, nem jár sikerrel az automatikus hitelesítés. Az iFolder felszólítja Önt az új jelszóval való bejelentkezésre, és lehetőséget nyújt az új jelszó megadására és mentésére.</p></td>
 </tr></table>
 </div>
 </li>
-<li class="step" id="b8yvcnt">
-<p class="para">Enter your secret passphrase in the <span class="guimenu">Passphrase</span> field and re-enter it for verification.</p>
-<p class="para">If your admin has set your encryption policy to <span class="emphasis">on</span>, iFolder prompts you to enter your passphrase and select the passphrase Recovery agent. For more information on passphrase management see <a href="managingpassphrse.html">Managing Passphrase for Encrypted iFolders</a></p>
-<div class="informalfigure">
-                <img src="images/if3_passphrase.png" alt="" />
-              </div>
-
-<p class="para">Select <span class="guimenu">Remember Passphrase</span> to automatically access the encrypted iFolder data during the current session. If you choose this option, iFolder can remember your passphrase. The next time you begin the login process, this passphrase exchange is done automatically; no dialog box appears.</p></li>
-<li class="step" id="bctnqjl">
-<p class="para">Select the desired Recovery agent from the list and click <span class="guimenu">OK</span>.</p></li>
-<li class="step" id="bvib17w">
-<p class="para">Verify that the information you have entered is correct, return to previous pages to make corrections if necessary, then click <span class="guimenu">Connect</span> to validate the settings by logging in to the iFolder server.</p></li>
+<li class="step" id="bk93jdq">
+<p class="para">Ellenőrizze a bevitt adatokat. Ha módosítani kívánja őket, kattintson a <span class="guimenu">Vissza</span> gombra, így visszatérhet az előző lapra. A folytatáshoz és a kiszolgálóval való kapcsolat ellenőrzéséhez kattintson a <span class="guimenu">Kapcsolódás</span> elemre.</p></li>
 <li class="step" id="b2m63qj">
-<p class="para">If you are prompted to <span class="guimenu">Accept the certificate of this server</span>, click <span class="guimenu">Details</span> to review the certificate information, then click <span class="guimenu">OK</span> to accept it. </p>
-<p class="para">If you do not accept the certificate, you cannot connect to the server.</p>
-<p class="para">On successful connection, you are asked to create a Default iFolder, if you do not have one currently.</p></li>
-<li class="step" id="bbba119">
-<p class="para">Specify the location where you want to create the default iFolder. </p>
-<p class="para">By default, the default iFolder is stored at <span class="filename">&lt;users home directory&gt;/ifolder/server_name/user_name</span>. You are allowed to change this location.</p></li>
-<li class="step" id="bctnqjm">
-<p class="para">Select the type of the Default iFolder that you want to create. If you choose <span class="guimenu">Encrypted</span>, it prompts you to give the passphrase. For more information, see <a href="accounts.html#b8yvcnt">Step 3</a>.</p>
-<div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share only the regular iFolders. Encrypted iFolders cannot be shared.</p></div>
-
-<p class="para">If your iFolder administrator has not enabled encryption for your current account, you can create only regular iFolders, and the <span class="guimenu">Regular</span> option is selected by default. In this case, both of the options for <span class="guimenu">Security</span> are disabled.</p></li>
-<li class="step" id="bft4h62">
-<p class="para">Select <span class="guimenu">SecureSync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
-<p class="para">After a folder is made a default iFolder, you can change the type only by deleting it from the server. If you remove the default iFolder on the server, the next time you configure the account from any thick client, iFolder prompts you to create a default iFolder again. </p></li>
-<li class="step" id="bctnqjn">
-<p class="para">If you have already set up a default iFolder, it asks you to download it to your local machine.</p>
-<p class="para">Download the default iFolder and click <span class="guimenu">Next</span> to go to complete account configuration.</p>
-<div class="informalfigure">
-                <img src="images/if3_defaultifolder_dwnld_a.png" alt="" />
-              </div>
+<p class="para">Ha a program az <span class="guimenu">Elfogadja a kiszolgáló tanúsítványát?</span> kérdést teszi fel, kattintson a <span class="guimenu">Részletek</span> gombra a tanúsítványadatok áttekintéséhez, majd az elfogadáshoz kattintson az <span class="guimenu">OK</span> gombra. </p>
+<div class="note">
+<p class="para"><em class="title">MEGJEGYZÉS:</em>A fiók létrehozása során a bejelentkezés SSL használatával történik. Amikor a rendszer kéri a kiszolgáló tanúsítványának elfogadását, érvényesítenie kell a tanúsítványt, és el kell fogadnia ahhoz, hogy sikeresen létrejöhessen a csatlakozás.</p></div>
 </li>
+<li class="step" id="b8yvcnt">
+<p class="para">Ha a rendszergazda engedélyezte a titkosítási házirendet<span class="emphasis"></span>, az iFolder a hozzáférési kód megadását kéri. </p>
+<p class="para">Írja be a hozzáférési kódot a <span class="guimenu">Hozzáférési kód</span> mezőbe.</p>
+<p class="para">Írja be ismét a hozzáférési kódot a <span class="guimenu">Hozzáférési kód ismételt beírása</span> mezőbe.</p>
+<p class="para">Jelölje be a <span class="guimenu">Hozzáférési kód megjegyzése</span> jelölőnégyzetet a titkosított iFolder-adatok munkamenet közbeni automatikus eléréséhez. Ha megadja ezt a beállítást, az iFolder megjegyzi a hozzáférési kódot a következő bejelentkezéshez. A hozzáférési kód átvitele automatikus.</p></li>
+<li class="step" id="bkcapke">
+<p class="para">Válassza ki a megfelelő helyreállítási ügynököt a legördülő listából, és kattintson az <span class="guimenu">OK</span> gombra.</p></li>
+<li class="step" id="bbba119">
+<p class="para">Adja meg a helyet, ahol az alapértelmezett iFolder mappát létre kívánja hozni. </p>
+<p class="para">Az alapértelmezett iFolder mappa helye alapértelmezés szerint a <span class="filename">&lt;felhasználó kezdőkönyvtára&gt;/ifolder/kiszolgáló_neve/felhasználónév</span>. </p></li>
+<li class="step" id="bctnqjm">
+<p class="para">Válassza ki, hogy milyen típusú alapértelmezett iFolder mappát kíván létrehozni. Ha a <span class="guimenu">Titkosítás</span> lehetőséget választja, a program kéri a hozzáférési kódot. </p>
+<div class="important">
+<p class="para"><em class="title">FONTOS:</em>Csak normál iFolder mappákat lehet megosztani. Titkosított iFolder mappákat nem lehet megosztani.</p></div>
+
+<p class="para">Ha az iFolder rendszergazdája nem engedélyezte a titkosítást az Ön aktuális fiókja számára, Ön csak normál iFolder mappákat tud létrehozni. Ha a titkosítás engedélyezve van, alapértelmezés szerint a <span class="guimenu">Normál</span> beállítás van megadva. </p></li>
+<li class="step" id="bft4h62">
+<p class="para">A létrehozandó iFolder mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
+<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
+<p class="para">Ha eltávolítja az alapértelmezett iFolder mappát a kiszolgálóról, amikor legközelebb a fiók konfigurálását végzi egy nem vékony ügyfélről, az iFolder kéri az alapértelmezett iFolder mappa létrehozását. </p>
+<p class="para">Ha a helyi számítógépről távolítja el az alapértelmezett iFolder mappát, a fiók következő konfigurálásakor az iFolder az alapértelmezett iFolder mappa letöltését kéri.</p></li>
+<li class="step" id="bctnqjn">
+<p class="para">Ha már beállított egy alapértelmezett iFolder mappát, letöltheti a helyi számítógépre.</p>
+<p class="para">Töltse le az alapértelmezett iFolder mappát, és a folytatáshoz kattintson a <span class="guimenu">Tovább</span> gombra.</p></li>
+<li class="step" id="bk84xbh">
+<p class="para">Ha a rendszeren már létezik az alapértelmezett iFolder mappával azonos nevű mappa, összefésülheti a két mappát, vagy letöltheti az alapértelmezett iFolder mappát egy másik helyre.</p>
+<p class="para">A két mappa összefésüléséhez kattintson az <span class="guimenu">OK</span> gombra. A <span class="guimenu">Mégse</span> gombra kattintva letöltheti az alapértelmezett iFolder mappát egy másik helyre.</p></li>
 <li class="step" id="b407oqi">
-<p class="para">On successful connection, click <span class="guimenu">Finish</span> to close the iFolder Account Assistant.</p>
-<p class="para">iFolder synchronizes the user list for the specified account and identifies iFolders that are available for download. This initial download can take a few seconds to a few minutes, depending on the size of the user list for the account. </p></li>
+<p class="para">Az iFolder fiók-létrehozási varázsló bezárásához kattintson a <span class="guimenu">Befejezés</span> gombra.</p>
+<p class="para">Az iFolder szolgáltatás szinkronizálja a megadott fiók felhasználólistáját, és azonosítja a letöltésre rendelkezésre álló iFolder mappákat. Ez a kezdeti letöltés a fiókhoz tartozó felhasználólista hosszától függően eltarthat néhány másodperctől kezdve akár több percig is. </p></li>
 <li class="step" id="b2m64i3">
-<p class="para">Verify that the account you set up appears in the list of accounts.</p>
+<p class="para">Ellenőrizze, hogy a beállított fiók megjelenik-e a fiókok listájában.</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b41ned9">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Preferences</span> from the menu to open the <span class="guimenu">iFolder Preferences</span> dialog box to the <span class="guimenu">Accounts</span> tab. 
+<p class="para">Kattintson jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">Beállítások</span> parancsát. Ennek hatására megnyílik az <span class="guimenu">iFolder beállítások</span> párbeszédpanel <span class="guimenu">Fiókok</span> lapja. 
       </p>
-<p class="para">When you are connected to the iFolder server, the <span class="guimenu">Online</span> check box is selected.</p>
-<div class="informalfigure">
-                    <img src="images/if_prefaccts_a.png" alt="Accounts Tab of the iFolder Preferences Dialog Box" />
-                  </div>
-</li>
+<p class="para">Amikor kapcsolódik az iFolder kiszolgálóhoz, az <span class="guimenu">Online</span> jelölőnégyzet be van jelölve.</p></li>
 <li class="step" id="bvib1d8">
-<p class="para">Close the iFolder Preferences dialog box.</p></li></ol>
+<p class="para">Zárja be az iFolder beállítások párbeszédpanelt.</p></li></ol>
 </div>
 </li>
 <li class="step" id="bvwsa5n">
-<p class="para">Set up iFolders for the account using either of these methods:</p>
+<p class="para">Adja meg a fiók iFolder mappáinak beállításait a következő módszerek valamelyikével:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Right-click the <span class="guimenu">iFolder Services</span> icon in the notification area, then select <span class="guimenu">iFolders</span> to open the iFolder browser. Continue with <a href="createifolder.html">Creating and Uploading an iFolder</a>.</p>
-<div class="informalfigure">
-                    <img src="images/if_menu_a.png" alt="iFolder Client Menu" />
-                  </div>
-</li>
+<p class="listitem">Kattintson jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">iFolder mappák</span> parancsát. Ennek hatására megnyílik az iFolder tallózó. Folytassa a következővel: <a href="createifolder.html">iFolder mappa létrehozása és feltöltése</a>.</p></li>
 <li class="listitem">
-<p class="listitem">If iFolders for this account are available for download from the server, they are listed on the iFolder window under iFolders on &lt;<span class="replaceable">iFolder_server_name</span>&gt;. The download icon <img src="images/if3_download.png" alt="iFolder Client Menu" class="inline" /> indicates that the iFolder is available for download. Continue with <a href="setupifolder.html">Downloading an Available iFolder</a>.
+<p class="listitem">Ha ehhez a fiókhoz tartozó iFolder mappák rendelkezésre állnak letöltésre a kiszolgálóról, azok felsorolása az iFolder mappák a következőn: &lt;<span class="replaceable">iFolder kiszolgáló neve</span> &gt; területen található. A letöltési ikon <img src="images/if3_download.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> jelzi, hogy az iFolder mappa elérhető letöltésre. Folytassa a következővel: <a href="setupifolder.html">Elérhető iFolder mappa letöltése</a>.
       </p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
 </body>
 </html>

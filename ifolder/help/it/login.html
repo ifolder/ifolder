@@ -1,94 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="it" lang="it">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="it" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Logging In to an iFolder Account</title>
+<title>Login a un conto iFolder</title>
 <script type="text/javascript">
-  var prev_link = "accounts.html";
-  var next_link = "accountdetails.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "login";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="login">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Sommario' title='Sommario' />Sommario</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Logging In to an iFolder Account</h1>
+<div class='nav' id='topnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
 
-<p class="para">You can work locally with files in the iFolder directories at any time. You must be logged in to an iFolder account to synchronize the user list, synchronize iFolder data, upload new iFolders, download shared iFolders, share iFolders, and manage iFolders. You can log in separately and be logged in concurrently to multiple accounts. </p>
-<p class="para">Use one of the following login methods for each account:</p>
+
+<div class="sect1" id="login">
+
+<h1 class="title"> Login a un conto iFolder</h1>
+
+<p class="para">È possibile utilizzare i file memorizzati nelle directory iFolder locali in qualunque momento. È necessario avere eseguito il login a un conto iFolder per potere sincronizzare l'elenco utenti e i dati iFolder, caricare nuove cartelle iFolder, scaricare le cartelle iFolder condivise, condividere le cartelle iFolder e gestirle. È possibile eseguire il login separatamente ed essere collegati simultaneamente a più conti. </p>
+<p class="para">Per ogni conto, eseguire una delle operazioni seguenti:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="b40gpos">
-            <p class="title"><em class="title">Log In Automatically:</em>
-            Enable <span class="guimenu">Remember My Password</span> for your iFolder account if you want to log in automatically whenever the iFolder client starts. You can enable <span class="guimenu">Remember My Password</span> when you configure the account or by modifying the account settings later.</p>
+            <p class="title"><em class="title">Esecuzione automatica del login:</em>
+            abilitare <span class="guimenu">Memorizza password</span> per il conto iFolder se si desidera eseguire automaticamente il login ad ogni avvio del client iFolder. È possibile abilitare <span class="guimenu">Memorizza la password in questo computer</span> quando si configura il conto o modificando le relative impostazioni in un secondo momento.</p>
           </div>
 
-<p class="listitem">Whenever your password changes, automatic authentication fails gracefully the next time you attempts to log in to the iFolder account. iFolder prompts you to log in, then you can enter the new password. Enable <span class="guimenu">Remember My Password</span> again if desired.</p></li>
+<p class="listitem">Ogni volta che viene modificata la password, l'autenticazione automatica non viene eseguita correttamente al successivo tentativo di eseguire il login al conto iFolder. Se iFolder richiede di eseguire il login, è possibile immettere la nuova password e selezionare di nuovo la casella di controllo <span class="guimenu">Memorizza password</span>, se lo si desidera.</p></li>
 <li class="listitem">
 <div class="formalpara" id="b40gq44">
-            <p class="title"><em class="title">Log In As Needed:</em>
-            Disable <span class="guimenu">Remember My Password</span> if you want to log in to an iFolder account only as needed.</p>
+            <p class="title"><em class="title">Login in base alle necessità:</em>
+            Deselezionare la casella di controllo <span class="guimenu">Memorizza password</span> se si desidera eseguire il login a un conto iFolder solo in base alle necessità.</p>
           </div>
 </li></ul></div>
 
-<p class="para">To enable or disable <span class="guimenu">Remember My Password</span> for an existing iFolder account:</p>
+<p class="para">Per abilitare o disabilitare la funzione <span class="guimenu">Memorizza password</span> per un conto iFolder esistente:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwrn0v">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span> to open the iFolder Preferences dialog box to the <span class="guimenu">Accounts</span> tab.
+<p class="para">Fare clic con il pulsante destro del mouse sull'icona <span class="guimenu">Servizi iFolder</span> <img src="images/ifolder22.png" alt="Icona dell'applicazione iFolder" title="Icona dell'applicazione iFolder" class="inline" /> nell'area di notifica e scegliere <span class="guimenu">Conti</span> per aprire la scheda <span class="guimenu">Conti</span> della finestra di dialogo Preferenze di iFolder.
     </p></li>
 <li class="step" id="bvwrn0w">
-<p class="para">Select the iFolder account, then click <span class="guimenu">Properties</span> to view its setting in the <span class="guimenu">Properties </span>dialog box.</p></li>
+<p class="para">Selezionare il conto iFolder, quindi fare clic su <span class="guimenu">Proprietà</span> per visualizzarne le impostazioni nella finestra di dialogo <span class="guimenu">Proprietà</span>.</p></li>
 <li class="step" id="bvwrhna">
-<p class="para">Click the<span class="guimenu"> Identity </span>tab.</p></li>
+<p class="para">Fare clic sulla scheda <span class="guimenu">Identità</span>.</p></li>
 <li class="step" id="bvwrhn9">
-<p class="para">Select (enable) or deselect (disable) <span class="guimenu">Remember My Password</span>.</p></li>
+<p class="para">Selezionare (abilitare) o deselezionare (disabilitare) <span class="guimenu">Memorizza password</span>.</p></li>
+<li class="step" id="bkfamxm">
+<p class="para">Fornire la password nel campo <span class="guimenu">Password</span>.</p></li>
 <li class="step" id="b41npf3">
-<p class="para">Click <span class="guimenu">OK</span> for successful completion.</p></li>
+<p class="para">Fare clic su <span class="guimenu">Chiudi</span> per completare le operazioni.</p></li>
 <li class="step" id="b41nqa7">
-<p class="para">Click <span class="guimenu">OK</span> in the <span class="guimenu">iFolder Properties </span>dialog box to save your changes and log in to the server.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">Chiudi</span> nella finestra di dialogo <span class="guimenu">Proprietà iFolder</span> per salvare le modifiche ed eseguire il login al server.</p></li></ol>
 </div>
 
-<p class="para">To log in to an iFolder account:</p>
+<p class="para">Per eseguire il login a un conto iFolder:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwntnx">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span>.
+<p class="para">Fare clic con il pulsante destro del mouse sull'icona <span class="guimenu">Servizi iFolder</span> <img src="images/ifolder22.png" alt="Icona dell'applicazione iFolder" title="Icona dell'applicazione iFolder" class="inline" /> nell'area di notifica e scegliere <span class="guimenu">Conti</span>.
     </p></li>
 <li class="step" id="bvwnufo">
-<p class="para">Select the iFolder account, then select the <span class="guimenu">Online</span> check box next to it.</p></li>
+<p class="para">Selezionare il conto iFolder, quindi selezionare la casella di controllo <span class="guimenu">In linea</span> accanto al conto.</p></li>
 <li class="step" id="bvwnv0e">
-<p class="para">If prompted for a password, specify the password, then click <span class="guimenu">Connect</span>.</p>
-<p class="para">If <span class="guimenu">Remember My Password</span> is enabled for the account, you are not prompted to enter a password unless your password has expired. </p>
-<p class="para">If login fails, an error message reports the cause, such as password failure. </p></li>
+<p class="para">Se viene chiesto di immettere una password, specificarla e fare clic su <span class="guimenu">Connetti</span>.</p>
+<p class="para">Se l'opzione <span class="guimenu">Memorizza password</span> è abilitata per il conto, non viene richiesto di immettere una password a meno che questa non sia scaduta. </p>
+<p class="para">In caso contrario, viene visualizzato un messaggio di errore che ne indica la causa, ad esempio un errore nella password. </p></li>
 <li class="step" id="bvws3f9">
-<p class="para">On successful connection, close the <span class="guimenu">iFolder Preferences</span> dialog box.</p></li></ol>
+<p class="para">Dopo avere eseguito la connessione, chiudere la finestra di dialogo <span class="guimenu">Preferenze di iFolder</span>.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Per ulteriori informazioni, vedere <a href="legal.html">Note legali</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
+
 </body>
 </html>

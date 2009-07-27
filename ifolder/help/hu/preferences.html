@@ -1,133 +1,156 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="hu" lang="hu">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="hu" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Configuring iFolder Preferences for the Client</title>
+<title>Az ügyfél iFolder-beállításainak megadása</title>
 <script type="text/javascript">
-  var prev_link = "accountdetails.html";
-  var next_link = "firewall.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "preferences";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="preferences">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Configuring iFolder Preferences for the Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+
+<div class="sect1" id="preferences">
+
+<h1 class="title"> Az ügyfél iFolder-beállításainak megadása</h1>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvibeb7">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
-    </p>
-<div class="informalfigure">
-                <img src="images/if_preferences_a.png" alt="General Tab of the iFolder Preferences Dialog Box" />
-              </div>
-</li>
+<p class="para">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">Beállítások</span> parancsát. Ennek hatására megnyílik az iFolder beállítások párbeszédpanel <span class="guimenu">Általános</span> lapja.
+    </p></li>
 <li class="step" id="bvibeba">
-<p class="para">Specify your preferences for the following:</p>
+<p class="para">Adja meg a beállításokat a következőkhöz.</p>
 <div class="informaltable">
 <table class="topbot-lines">
                 
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="btvqywm"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Paraméter</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Leírás</p></th>
 </tr>
               
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvr5uc"></a>
-<p class="para">Start iFolder When Logging In to the Desktop (Available only in Windows Client)</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
+<p class="para">iFolder elindítása az asztalra való bejelentkezéskor (ez a beállítás csak a Windows-alapú ügyfélben használható)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to launch iFolder whenever you log in with the local username where you set up the iFolder account. For those accounts where you have enabled <span class="guimenu">Remember My Password</span>, synchronization occurs in the background at the specified synchronization interval.</p>
-<p class="para">Deselect this option to start iFolder manually.</p></td>
+<p class="para">Akkor jelölje be ezt a jelölőnégyzetet, ha azt szeretné, hogy mindig elinduljon az iFolder, amikor Ön azzal a helyi felhasználónévvel jelentkezik be, amellyel létrehozta az iFolder-fiókot. Azoknak a fiókoknak az esetében, amelyeknél engedélyezve van a Jelszó mentése beállítás, a megadott szinkronizálási időközönként a háttérben megtörténik a szinkronizálás.</p>
+<p class="para">Ha kézzel szeretné elindítani az iFolder programot, törölje a jelet ebből a jelölőnégyzetből.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
-<p class="para">Show Confirmation Dialog When Creating iFolders</p></td>
+<p class="para">Megerősítő üzenet megjelenítése az iFolder mappa sikeres létrehozásakor</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to receive a confirmation message each time you create an iFolder, in addition to the normal visual cues such as the iFolder appearing in the list of iFolders.</p>
-<p class="para">Deselect this option to stop receiving the confirmation message.</p></td>
+<p class="para">Akkor jelölje be ezt a jelölőnégyzetet, ha az iFolder mappák létrehozásakor megerősítő üzenetet szeretne kapni a vizuális jelzéseken túlmenően (például azon kívül, hogy az iFolder megjelenik az iFolder mappák listájában).</p>
+<p class="para">Ha nem szeretne ilyen megerősítő üzenetet kapni, törölje a jelet ebből a jelölőnégyzetből.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">Notify of Shared iFolders</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<p class="para">Az iFolder főablak elrejtése indításkor </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever you receive a new invitation to share an iFolder. </p>
-<p class="para">To view a list of iFolders that are available to download on your current computer, select <span class="guimenu">Show Available iFolders</span> in the iFolder browser whenever iFolder is running.</p></td>
+<p class="para">Ha törli a jelet ebből a jelölőnégyzetből, a rendszer indításakor megjelenik az iFolder ablaka.</p>
+<p class="para">Ha a jelölőnégyzet be van jelölve, indításkor az iFolder ablaka rejtve marad.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
-<p class="para">Hide iFolder Tray Icon</p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<p class="para">Szinkronizálási naplók megjelenítése </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to hide the iFolder tray icon in the notification area.</p>
-<p class="para">Deselect this option to display the iFolder tray icon when iFolder is running.</p></td>
+<p class="para">Ha a jelölőnégyzet be van jelölve, indításkor megjelennek a szinkronizálási naplók.</p>
+<p class="para">Ha törli a jelet a jelölőnégyzetből, indításkor a szinkronizálási naplók rejtve maradnak.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
+<p class="para">Házirendmegsértésre vonatkozó értesítések megjelenítése </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ha bejelöli ezt a jelölőnégyzetet, az értesítési területen minden házirendmegsértéskor felbukkan egy üzenet. </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
+<p class="para">Értesítés az iFolder mappák megosztásakor </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ha bejelöli ezt a jelölőnégyzetet, az értesítési területen minden alkalommal felbukkan egy üzenet, amikor új meghívás érkezik egy iFolder közös használatára.  </p>
+<p class="para">Ha szeretné megtekinteni az aktuális számítógépre letölthető iFolder mappák listáját, válassza az iFolder böngészőjében az <span class="guimenu">Elérhető iFolder mappák megjelenítése</span> funkciót, miközben fut az iFolder.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">Notify of Conflicts</p></td>
+<p class="para">Értesítés az ütközésekről</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a conflict occurs when synchronizing files. </p>
-<p class="para">Deselect this option to disable the pop-up messages for synchronization conflicts.</p>
-<p class="para">Whenever conflicts occur, the<span class="guimenu"> iFolder Error </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> icon is displayed on the iFolder when iFolder is running.
+<p class="para">Ha bejelöli ezt a jelölőnégyzetet, az értesítési területen minden alkalommal felbukkan egy üzenet, amikor ütközés történik a fájlok szinkronizálásakor. </p>
+<p class="para">Ha le szeretné tiltani a szinkronizálási ütközésekre figyelmeztető üzenetet, törölje a jelet ebből a jelölőnégyzetből.</p>
+<p class="para">Ha ütközés van, és fut az iFolder, megjelenik az <span class="guimenu">iFolder Hiba </span><img src="images/ifolder-error_16.png" alt="" class="inline" /> ikonja.
          </p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">Notify When a User Joins</p></td>
+<p class="para">Értesítés, ha egy felhasználó belép az iFolder-tartományba</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a user accepts an invitation to share an iFolder. Acceptance is keyed to when the user actually sets up the iFolder on his or her own computer. </p>
-<p class="para">Deselect this option to disable the pop-up messages for user share confirmation.</p>
-<p class="para">You can view a complete list of iFolder users whenever iFolder is running by selecting the iFolder, then clicking <span class="guimenu">Share with</span> to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></td>
+<p class="para">Ha bejelöli ezt a jelölőnégyzetet, az értesítési területen minden alkalommal felbukkan egy üzenet, amikor egy felhasználó elfogadja a meghívást egy iFolder közös használatára.  </p>
+<p class="para">A felbukkanó üzenetek letiltásához törölje a jelet ebből a jelölőnégyzetből.</p>
+<p class="para">Amikor az iFolder fut, meg tudja tekinteni az iFolder-felhasználók teljes listáját, ha kijelöli az iFolder mappát, majd a <span class="guimenu">Megosztás</span> elemre kattintva megnyitja az iFolder tulajdonságai párbeszédpanel <span class="guimenu">Megosztás</span> lapját.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
-<p class="para">Synchronization</p></td>
+<p class="para">Szinkronizálás</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
-                      <p class="title"><em class="title">Automatically Synchronize iFolders:</em>
-                      Select this check box to enable synchronization for all iFolders on this computer under your current local login or logon identity. Deselect the check box to disable synchronization.</p>
+                      <p class="title"><em class="title">iFolder mappák automatikus szinkronizálása:</em>
+                       A jelölőnégyzet bejelölésével engedélyezi ezen a számítógépen az összes iFolder mappa szinkronizálását az aktuális bejelentkezési azonosítóval. A szinkronizálás letiltásához törölje a jelet a jelölőnégyzetből.</p>
                     </div>
 
 <div class="formalpara" id="byktwky">
-                      <p class="title"><em class="title">Synchronize iFolders Every:</em>
-                      Specify the minimum interval to use for synchronizing iFolders on this computer under your current local login or logon identity. Specify the value and units. The default is 5 minutes if this option is enabled. The minimum interval can be lowered to 5 seconds.</p>
+                      <p class="title"><em class="title">iFolder mappák szinkronizálási gyakorisága:</em>
+                       Adja meg azt a minimális időközt, amilyen gyakorisággal szinkronizálni kell az ezen a számítógépen található iFolder mappákat a jelenlegi bejelentkezési azonosítóval.  Adja meg az értéket és a mértékegységet. A beállítás engedélyezése esetén az alapértelmezett érték 5 perc. A minimális időköz 5 másodperc lehet.</p>
                     </div>
 
-<p class="para">If you use the iFolder client with Novell iFolder 3.7, the effective minimum synchronization interval is always the largest value of the following settings:</p>
+<p class="para">Ha az iFolder ügyfelet a Novell iFolder 3.7 verziójával használja, az érvényes szinkronizálási időköz mindig az alábbi három érték legnagyobbika:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">The system policy default of zero (<span class="literal">0</span>), unless there is a user policy set. If a user policy is set, the user policy overrides the system policy, whether the user policy is larger or smaller in value.</p></li>
+<p class="listitem">A rendszer házirend (alapértelmezett értéke nulla (<span class="literal">0</span>), kivéve ha be van állítva felhasználói házirend. Ha meg van adva felhasználói házirend, a felhasználói házirend felülbírálja a rendszerházirendet, attól függetlenül, hogy a felhasználói házirend kisebb vagy nagyobb értéknek felel-e meg.</p></li>
 <li class="listitem">
-<p class="listitem">The local machine policy, or the setting on the client machine synchronizing with the server.</p></li>
+<p class="listitem">A helyi számítógép házirendje vagy a kiszolgálóval szinkronizálódó ügyfélgép házirendje.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder (collection) policy.</p></li></ul></div>
+<p class="listitem">Az iFolder- (gyűjtemény-) házirend.</p></li></ul></div>
 </td>
 </tr></table>
 </div>
 </li>
-<li class="step" id="bvibebi">
-<p class="para">When you are done, click <span class="guimenu">Apply</span> to apply your changes.</p></li>
 <li class="step" id="bvibebj">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolder Preferences dialog box.</p></li></ol>
+<p class="para">Zárja be az iFolder beállítások párbeszédpanelt a <span class="guimenu">Bezárás</span> gombra kattintva.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
 </body>
 </html>

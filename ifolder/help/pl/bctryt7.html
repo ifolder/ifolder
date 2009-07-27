@@ -1,93 +1,111 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pl" lang="pl">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Upgrading iFolder 3.x Clients</title>
+<title>Uaktualnienie klienta programu iFolder 3.x klienci</title>
 <script type="text/javascript">
-  var prev_link = "migration.html";
-  var next_link = "bctrxs4.html";
-  var parentfile = "../coexistmig.html";
-  var parenttoc = "../toc_coexistmig.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bctryt7">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Upgrading iFolder 3.<span class="replaceable">x</span> Clients</h1>
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
 
-<p class="para">This section discusses the following:</p>
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> Uaktualnienie klienta programu iFolder 3.<span class="replaceable">x</span> klienci</h1>
+
+<p class="para">Ta sekcja zawiera omówienie następujących zagadnień:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Automatyczne uaktualnienie do programu iFolder 3.7</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">Ręczne uaktualnienie do programu iFolder 3.7</a>
           </p></li></ul></div>
 
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Before upgrading your 3.4.1 client, you must back up your local Simias store. If you don’t do the backup, you lose all configuration information from the computer because it deletes the Simias store when the upgrade fails.</p></div>
+<p class="para"><em class="title">WAŻNE:</em>Przed uaktualnieniem klienta w wersji 3.4.1 należy utworzyć kopię zapasową lokalnego magazynu Simias. W przypadku nieutworzenia kopii zapasowej może nastąpić utrata wszystkich informacji konfiguracyjnych w komputerze, ponieważ w przypadku niepowodzenia uaktualnienia magazyn Simias jest usuwany.</p></div>
 
-<div class="sect2"  id="bctryt8">
+<div class="sect2" id="bctryt8">
 
-<h2 class="title"> Automatically Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Automatyczne uaktualnienie do programu iFolder 3.7</h2>
 
-<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you can not connect to the iFolder 3.7 domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
+<p class="para">Automatyczne uaktualnienie jest możliwe tylko wtedy, gdy użytkownik ma dostęp do katalogu głównego, ponieważ proces musi zainstalować pakiety RPM. Podczas uaktualnienia pojawi się żądanie podania hasła superużytkownika. Jeśli użytkownik nie ma praw dostępu do katalogu głównego, pakiet nie zostanie zainstalowany automatycznie. Jednak pakiety klienta są pobierane do folderu tymczasowego. Klient Linux jest pobierany do folderu <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Umożliwia to późniejsze uaktualnienie, ponieważ folder zawiera dwa skrypty instalacyjne, które można uruchomić ręcznie Do czasu uaktualnienia klienta nie można łączyć się z domeną iFolder 3.7 za pomocą programu iFolder 3.<span class="replaceable">x</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
-<p class="para">From an iFolder 3.<span class="replaceable">x</span> client earlier than iFolder 3.7, try to connect to the iFolder server. You are prompted about whether you want to upgrade.</p></li>
+<p class="para">Za pomocą klienta programu iFolder 3.<span class="replaceable">x</span> starszego niż iFolder 3.7 spróbuj połączyć się z serwerem programu iFolder. Zostanie wyświetlony monit z pytaniem, czy program ma zostać uaktualniony.</p></li>
 <li class="step" id="bctryta">
-<p class="para">Click <span class="guimenu">Yes</span> to automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
+<p class="para">Kliknij przycisk <span class="guimenu">Tak</span>, aby automatycznie uaktualnić klienta programu iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
-<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
+<p class="para">W przypadku programu iFolder 3.4.1 kliknięcie przycisku <span class="guimenu">Nie</span> i próba połączenia się za pomocą klienta programu iFolder 3.4.1 z serwerem iFolder 3.7 spowoduje wyświetlenie komunikatu o błędzie. Kliknij przycisk <span class="guimenu">OK</span>, aby zamknąć okno komunikatu.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>An iFolder 3.<span class="replaceable">x</span> client (other than iFolder 3.4.1 clients) connects to iFolder 3.7 server even if you choose not to upgrade. Although the 3.<span class="replaceable">x</span> client stays connected to the 3.7 server, you cannot perform any of the iFolder operations with this client. When you attempt to convert an existing folder to an iFolder, the server does not consider those changes, and displays an error message that the server is unavailable. The only operation that you can perform is that download the new RPMs from the server to install iFolder 3.7.</p></div>
+<p class="para"><em class="title">UWAGA:</em>Klient programu iFolder 3.<span class="replaceable">x</span> (inny niż klienci iFolder 3.4.1) łączy się z serwerem iFolder 3.7, nawet jeśli nie wybrano uaktualnienia. Pomimo tego że klient 3.<span class="replaceable">x</span> jest połączony z serwerem iFolder 3.7, za jego pomocą nie można wykonać żadnych operacji programu iFolder. Jeśli istniejący folder zostanie przekształcony w iFolder, serwer nie uwzględni tej zmiany i wyświetli komunikat o błędzie informujący, że serwer jest niedostępny. Jedyną operacją, którą można wykonać, jest pobranie z serwera nowych pakietów RPM w celu zainstalowania programu iFolder 3.7.</p></div>
 
 </div>
 
-<div class="sect2"  id="bbjs0lm">
+<div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Manually Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Ręczne uaktualnienie do programu iFolder 3.7</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjefu4">
-<p class="para">Open a terminal. At the command prompt, run <span class="command">install-ifolder.sh</span>.</p></li>
+<p class="para">Otwórz terminal. Z poziomu wiersza poleceń uruchom program <span class="command">install-ifolder.sh</span>.</p></li>
 <li class="step" id="bbjeh6h">
-<p class="para">Enter the root password when it is requested.</p>
-<p class="para">This closes the iFolder client if it is already running, then it updates the XSP Web server and iFolder client along with the Nautilus-ifolder3 plug-in.</p></li>
+<p class="para">Podaj hasło superużytkownika.</p>
+<p class="para">Spowoduje to zamknięcie uruchomionego klienta programu iFolder, a następnie uaktualnienie serwera sieci Web XSP oraz klienta programu iFolder wraz z dodatkiem typu plug-in Nautilus-ifolder3. </p></li>
 <li class="step" id="bbjehh4">
-<p class="para">Start iFolder from the <span class="guimenu">Application</span> menu.</p></li></ol>
+<p class="para">Uruchom klienta programu iFolder z menu <span class="guimenu">Aplikacja</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Aby uzyskać więcej informacji, patrz sekcja <a href="legal.html">Informacje prawne</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
 </body>
 </html>

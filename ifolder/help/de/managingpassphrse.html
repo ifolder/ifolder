@@ -1,133 +1,337 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="de" lang="de">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="de" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:34" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Managing Passphrase for Encrypted iFolders</title>
+<title>Verwalten von Passwortsätzen für verschlüsselte iFolder-Ordner</title>
 <script type="text/javascript">
-  var prev_link = "propifolders.html";
-  var next_link = "ifquota.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "managingpassphrse";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="managingpassphrse">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Managing Passphrase for Encrypted iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
 
-<p class="para">Novell iFolder provides user-friendly interface to encrypt your iFolders to ensure data security at the server side. </p>
-<p class="para">After you successfully log in to the iFolder, an optional iFolder passphrase dialog box opens where you can enter your encryption passphrase if encryption is enabled by the Admin. iFolder uses the passphrase to generate a unique encryption key for encrypting and decrypting your iFolder. If you don’t provide a passphrase, the passphrase dialog box appears automatically while processing the encrypted iFolders. If you cannot recall your passphrase, the recovery agent you selected during login, helps you recover your encryption key. For more information, see <a href="accounts.html#b8yvcnt">Step 3</a></p>
-<p class="para">Encryption occurs before the files leave your workstation to travel securely across an Internet connection to be uploaded to, and stored on, the iFolder server. The iFolder data remain encrypted on the iFolder Server and travel securely on the channel to and from the server. The iFolder client decrypts the downloaded files as they arrive on your local workstation. </p>
-<div class="sect2"  id="recoveringpassphrse">
 
-<h2 class="title"> Recovering an Encrypted iFolder </h2>
+<div class="sect1" id="managingpassphrse">
 
-<p class="para">Each iFolder has a unique data encryption key which is auto-generated during iFolder creation. You use your passphrase to create the key that encrypts the unique data encryption key. If you forget the secret passphrase, you cannot access either the iFolder data or the encrypted key used for recovering it unless your passphrase is saved locally (enabling <span class="guimenu">Remember passphrase</span>). To avoid this problem, you must export the keys using the Export encrypted Keys menu item and send it manually to the recovery agent using e-mail address given in the dialog box. The recovery agent retrieves the keys and sends back to you (through e-mail or any other communication channel). You can import the keys and use them to reset the passphrase.</p>
+<h1 class="title"> Verwalten von Passwortsätzen für verschlüsselte iFolder-Ordner</h1>
+
+<p class="para">Ein verschlüsselter iFolder-Ordner verfügt über einen eindeutigen Datenverschlüsselungsschlüssel, der beim Erstellen des iFolder-Ordners automatisch generiert wird. Der Schlüssel wird mithilfe eines vom Benutzer angegebenen Passwortsatzes verschlüsselt, Sie können jedoch auch den öffentlichen Schlüssel des Wiederherstellungsagenten verwenden. </p>
+<p class="para">Der Wiederherstellungsagent wird während des Vorgangs zur Erstellung des iFolder-Kontos ausgewählt, falls der iFolder-Administrator die Verschlüsselungsrichtlinie auf dem Server aktiviert hat.</p>
+<p class="para">Falls der iFolder-Administrator die Verschlüsselung aktiviert hat, wird beim Erstellen eines iFolder-Ordners ein Dialogfeld angezeigt, in dem Sie Ihren Passwortsatz eingeben können. iFolder verwendet den Passwortsatz zum Generieren eines eindeutigen Verschlüsselungsschlüssels, der zum Verschlüsseln oder Entschlüsseln der iFolder-Daten auf dem iFolder-Server verwendet werden kann. Wenn Sie den Passwortsatz vergessen, können Sie nicht mehr auf die iFolder-Daten zugreifen. In diesem Fall müssen Sie den Passwortsatz zurücksetzen, um Zugriff auf die iFolder-Daten zu erhalten.</p>
+<div class="sect2" id="bknig1s">
+
+<h2 class="title"> Wiederherstellen eines verschlüsselten iFolder-Ordners</h2>
+
+<p class="para">Verwenden Sie den Assistenten zum Wiederherstellen des Passwortsatzes, um den Passwortsatz zurückzusetzen und einen verschlüsselten iFolder-Ordner wiederherzustellen. Führen Sie zum Starten des Assistenten zur Wiederherstellung des Passwortsatzes die folgenden Schritte aus:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknk4gv">
+<p class="para">Klicken Sie im iFolder-Browser auf <span class="guimenu">Sicherheit &gt; Passwortsatz vergessen</span>, um den Assistenten zu starten.</p></li>
+<li class="step" id="bknk53e">
+<p class="para">Wählen Sie in der Liste <span class="guimenu">iFolder-Konto</span> die Domäne aus, für die der Passwortsatz zurückgesetzt werden muss, und klicken Sie auf <span class="guimenu">Weiter</span>.</p>
+<p class="para">Wenn während des Vorgangs zur Erstellung des iFolder-Kontos die Option "Server-Standardeinstellung" als Wiederherstellungsagent ausgewählt war, wird die Seite "Neuen Passwortsatz festlegen" angezeigt. Informationen zum Zurücksetzen des neuen Passwortsatzes finden Sie unter <a href="managingpassphrse.html#bknigkn">Zurücksetzen des Passwortsatzes, wenn der Wiederherstellungsagent "Server-Standardeinstellung" lautet</a>.</p>
+<p class="para">Wenn Sie einen anderen Wiederherstellungsagenten als "Server-Standardeinstellung" ausgewählt haben, müssen Sie den Passwortsatz mithilfe von <a href="managingpassphrse.html#bknigq8">Zurücksetzen des Passwortsatzes, wenn der Wiederherstellungsagent nicht "Server-Standardeinstellung" lautet</a> zurücksetzen.</p></li></ol>
+</div>
+
+<div class="sect3" id="bknigkn">
+
+<h3 class="title"> Zurücksetzen des Passwortsatzes, wenn der Wiederherstellungsagent "Server-Standardeinstellung" lautet</h3>
+
+<p class="para">Gehen Sie folgendermaßen vor, um den neuen Passwortsatz festzulegen:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknkrbv">
+<p class="para">Geben Sie auf der Seite "Neuen Passwortsatz festlegen" den neuen Passwortsatz im Feld <span class="guimenu">Neuer Passwortsatz</span> an.</p></li>
+<li class="step" id="bknkt5g">
+<p class="para">Geben Sie den neuen Passwortsatz im Feld <span class="guimenu">Passwortsatz bestätigen</span> erneut ein und klicken Sie auf <span class="guimenu">Weiter</span>.</p></li>
+<li class="step" id="bknkxtk">
+<p class="para">Geben Sie den Benutzernamen und das Passwort im Feld <span class="guimenu">Benutzername</span> bzw. <span class="guimenu">Passwort</span> ein und klicken Sie anschließend auf <span class="guimenu">Weiter</span>.</p></li>
+<li class="step" id="bknl4px">
+<p class="para">Klicken Sie nach dem erfolgreichen Zurücksetzen des Passwortsatzes auf <span class="guimenu">Fertig stellen</span>, um den Assistenten zu schließen.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect3" id="bknigq8">
+
+<h3 class="title"> Zurücksetzen des Passwortsatzes, wenn der Wiederherstellungsagent nicht "Server-Standardeinstellung" lautet</h3>
+
+<p class="para">Gehen Sie zum Zurücksetzen des Passwortsatzes folgendermaßen vor, wenn der ausgewählte Wiederherstellungsagent nicht "Server-Standardeinstellung"<span class="guimenu"></span> lautet:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknihtk">
+<p class="para">Auf der Begrüßungsseite des Assistenten werden die Informationen angezeigt, die zum Zurücksetzen des Passwortsatzes erforderlich sind. Klicken Sie auf <span class="guimenu">Weiter</span>, um die Seite "Mechanismus zur Wiederherstellung des Passwortsatzes" anzuzeigen.</p></li>
+<li class="step" id="bknihtm">
+<p class="para">Der Assistent bietet drei Möglichkeiten, wie Sie Ihren Passwortsatz zurücksetzen können:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bknijt2">
+                    <p class="title"><em class="title">Verwenden der geheimen Datei und des dazugehörigen Passworts:</em>
+                    Die geheime Datei und das dazugehörige Passwort werden verwendet, um den Passwortsatz zurückzusetzen. Wenn Sie die geheime Datei und das dazugehörige Passwort aufbewahrt haben, können Sie den Assistenten verwenden, um den Standort der geheimen Datei und das dazugehörige Passwort anzugeben. Informationen zum Zurücksetzen des Passwortsatzes mithilfe der geheimen Datei finden Sie unter <a href="managingpassphrse.html#bknilk4">Verwenden der geheimen Datei zum Zurücksetzen des Passwortsatzes</a>.</p>
+                  </div>
+
 <div class="note">
-<p class="para"><em class="title">NOTE:</em> The Recovery agent is generally an entity independent of entities owning the iFolder server's infrastructure, or, independent of the IT department if deployed in a corporate environment. </p></div>
+<p class="para"><em class="title">HINWEIS:</em>Sie erhalten die geheime Datei und das dazugehörige Passwort vom iFolder-Administrator. </p></div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bknijt3">
+                    <p class="title"><em class="title">Verwenden der neuen Datendatei:</em>
+                    Die neue Datendatei kann auch verwendet werden, um den Passwortsatz zurückzusetzen. Sie erhalten die neue Datendatei vom Administrator, nachdem Sie einen Export der alten Datendatei durchgeführt haben. Informationen zum Zurücksetzen des Passwortsatzes mithilfe der neuen Datendatei finden Sie unter <a href="managingpassphrse.html#bknim3f">Verwenden der neuen Datendatei zum Zurücksetzen des Passwortsatzes</a>. </p>
+                  </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bkninnm">
+                    <p class="title"><em class="title">Exportieren der alten Datendatei:</em>
+                    Wenn Sie nicht über die geheime Datei oder die neue Datendatei verfügen, können Sie den Assistenten verwenden, um die alte Datendatei zu exportieren. Anschließend senden Sie die Datei per Email an den Administrator. Wenn der Administrator die neue Datendatei zurückgeschickt hat, können Sie den Assistenten verwenden, um Ihren Passwortsatz zurückzusetzen. Informationen zum Exportieren der alten Datendatei finden Sie unter <a href="managingpassphrse.html#bknim8d">Verwenden einer exportierten Datei zum Zurücksetzen des Passwortsatzes</a>.</p>
+                  </div>
+</li></ul></div>
+</li></ol>
+</div>
 
-<p class="para">To export your data encryption key,</p>
+<p class="para">In der folgenden Tabelle sind die zu treffenden Entscheidungen zusammengefasst.</p>
+<div class="table" id="bknihtq">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bknihtr"></a>
+<p class="para">Einstellungen</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Beschreibung</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihts"></a>
+<p class="para">Liste der iFolder-Konten</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Zeigt die Liste der konfigurierten iFolder-Konten an. Standardmäßig wird das erste angemeldete Konto ausgewählt.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtt"></a>
+<p class="para">Standort der geheimen Datei</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Bezeichnet den Standort der Datei mit dem privaten Schlüssel des Zertifikats, die Sie vom iFolder-Administrator erhalten.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtu"></a>
+<p class="para">Passwort für die geheime Datei</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Stellt das Passwort für die Datei mit dem geheimen Schlüssel dar.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtv"></a>
+<p class="para">Einmalpasswort</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Stellt das Passwort dar, das vom Administrator zur Verschlüsselung der neuen Datendatei verwendet wird.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtw"></a>
+<p class="para">Standort der neuen Datendatei</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Bezeichnet den Standort der entschlüsselten Schlüsseldatei. Die neue Datendatei erhalten Sie vom iFolder-Administrator, nachdem Sie die alte Datendatei exportiert haben.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtx"></a>
+<p class="para">Standort zum Speichern der alten Datendatei</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Bezeichnet den Standort zum Speichern der exportierten Schlüsseldatei. Nach dem Exportieren der alten Datendatei können Sie die Datei per Email an Ihren Administrator senden. Der Administrator sendet Ihnen anschließend die neue Datendatei.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihty"></a>
+<p class="para">Neuer Passwortsatz</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Stellt den neuen Passwortsatz dar, den Sie eingeben, um den eindeutigen Datenverschlüsselungsschlüssel zu verschlüsseln, der bei der Erstellung des iFolder-Ordners generiert wurde. </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtz"></a>
+<p class="para">Passwortsatz bestätigen</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Stellt den neuen Passwortsatz dar, der erneut eingegeben werden muss.</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect3" id="bknilk4">
+
+<h3 class="title"> Verwenden der geheimen Datei zum Zurücksetzen des Passwortsatzes</h3>
+
+<p class="para">Führen Sie die folgenden Schritte aus, um den Passwortsatz mithilfe der geheimen Datei zurückzusetzen:</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">Wählen Sie die Option <span class="guimenu">Ich habe die geheime Datei und das dazugehörige Passwort</span> aus.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Füllen Sie die folgenden Felder aus:</p>
+<div class="formalpara" id="bknm2yo">
+                <p class="title"><em class="title">Standort der geheimen Datei:</em>
+                Geben Sie den Standort der geheimen Datei an oder klicken Sie auf die Schaltfläche <span class="guimenu">Durchsuchen</span>, um die geheime Datei zu suchen und auszuwählen.</p>
+              </div>
+
+<div class="formalpara" id="bknm4il">
+                <p class="title"><em class="title">Passwort für die geheime Datei:</em>
+                Geben Sie das Passwort für die geheime Datei an.</p>
+              </div>
+
+<div class="formalpara" id="bknm4im">
+                <p class="title"><em class="title">Neuer Passwortsatz:</em>
+                Geben Sie den neuen Passwortsatz an. </p>
+              </div>
+
+<div class="formalpara" id="bknm4in">
+                <p class="title"><em class="title">Passwortsatz bestätigen</em>
+                Geben Sie den neuen Passwortsatz erneut ein.</p>
+              </div>
+</li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Weiter</span>, um den Passwortsatz zurückzusetzen.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Fertig stellen</span>, um den Assistenten zu schließen.</p></li>
+          </ol></div>
+
+<div class="note">
+<p class="para"><em class="title">HINWEIS:</em>Sie erhalten die geheime Datei und das dazugehörige Passwort vom iFolder-Administrator. </p></div>
+
+</div>
+
+<div class="sect3" id="bknim3f">
+
+<h3 class="title"> Verwenden der neuen Datendatei zum Zurücksetzen des Passwortsatzes</h3>
+
+<p class="para">Führen Sie die folgenden Schritte aus, um den Passwortsatz mithilfe der neuen Datendatei zurückzusetzen:</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">Wählen Sie die Option <span class="guimenu">Der Administrator sendet mir die neue Datendatei</span> aus und klicken Sie anschließend auf <span class="guimenu">Weiter</span>.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Geben Sie im Feld <span class="guimenu">Standort der neuen Datendatei</span> den Standort der neuen Datendatei an oder klicken Sie auf die Schaltfläche <span class="guimenu">Durchsuchen </span>, um die neue Datendatei zu suchen und auszuwählen.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Wenn die neue Datendatei, die Sie vom Administrator erhalten, verschlüsselt ist, aktivieren Sie das Kontrollkästchen für <span class="guimenu">Ist die oben genannte Datei verschlüsselt?</span>. Wenn Sie dieses Kontrollkästchen aktivieren, wird das Feld <span class="guimenu">Einmalpasswort</span> aktiviert. </p></li>
+            
+<li class="listitem">
+<p class="listitem">Geben Sie im Feld <span class="guimenu">Einmalpasswort</span> das Passwort an, das vom Administrator zur Verschlüsselung der neuen Datendatei verwendet wurde.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Geben Sie im Feld <span class="guimenu">Neuer Passwortsatz</span> den neuen Passwortsatz an.</p></li>
+            
+<li class="listitem">
+<p class="listitem"> Geben Sie im Feld <span class="guimenu">Passwortsatz bestätigen</span> den neuen Passwortsatz erneut an.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Weiter</span>, um den Passwortsatz zurückzusetzen.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Fertig stellen</span>, um den Assistenten zu schließen.</p></li>
+          </ol></div>
+
+</div>
+
+<div class="sect3" id="bknim8d">
+
+<h3 class="title"> Verwenden einer exportierten Datei zum Zurücksetzen des Passwortsatzes</h3>
+
+<p class="para">So setzen Sie den Passwortsatz zurück, wenn Sie weder über die geheime Datei noch über die neue Datendatei verfügen:</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">Wählen Sie die Option <span class="guimenu">Ich habe keine geheime Datei oder Datendatei</span> und klicken Sie anschließend auf <span class="guimenu">Weiter</span>.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Geben Sie im Feld <span class="guimenu">Standort zum Speichern der alten Datendatei</span> den Standort an, an dem die alte Datendatei gespeichert werden muss, oder klicken Sie auf die Schaltfläche <span class="guimenu">Durchsuchen</span>, um den Standort zum Speichern der alten Datendatei anzugeben. </p></li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Weiter</span>, um die alte Datendatei abzurufen. Der Standort der alten Datendatei und die Email-Adresse des iFolder-Administrators werden angezeigt. Sie können diese Informationen zum Abrufen der neuen Datendatei verwenden.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Klicken Sie auf <span class="guimenu">Fertig stellen</span>, um den Assistenten zu schließen.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Senden Sie die alte Datendatei per Email an Ihren iFolder-Administrator mit der Bitte, Ihnen die neue Datendatei zurückzusenden.</p></li>
+            
+<li class="listitem">
+<p class="listitem">Nachdem Sie die neue Datendatei erhalten haben, finden Sie die Informationen zum Zurücksetzen Ihres Passwortsatzes unter <a href="managingpassphrse.html#bknim3f">Verwenden der neuen Datendatei zum Zurücksetzen des Passwortsatzes</a>. </p></li>
+          </ol></div>
+
+</div>
+
+</div>
+
+<div class="sect2" id="bkmh0g8">
+
+<h2 class="title"> Ändern des Passwortsatzes</h2>
+
+<p class="para">Aus Sicherheitsgründen müssen Sie den Passwortsatz regelmäßig ändern. Sie können den Passwortsatz mithilfe des Einmalpassworts zurücksetzen, das Sie vom Wiederherstellungsagenten erhalten haben.</p>
 <div class="procedure">
 <ol class="steps">
-<li class="step" id="b91cqi2">
-<p class="para">Select <span class="guimenu">Security &gt; Key Recovery &gt; Export Encrypted Keys</span></p>
-<div class="informalfigure">
-                  <img src="images/if3_export_encrypt_keys.png" alt="" />
-                </div>
-</li>
-<li class="step" id="b91cs8u">
-<p class="para">Select the iFolder account from the drop down list.</p></li>
-<li class="step" id="b91csad">
-<p class="para">Specify the location on your local machine where you want to store your exported file that contains the encrypted keys.</p></li>
-<li class="step" id="bewrvw3">
-<p class="para">Select the Recovery Agent you have selected during the login</p></li>
-<li class="step" id="bewrw6p">
-<p class="para">Specify the e-mail ID of the recovery agent you have selected.</p></li>
-<li class="step" id="b91csy8">
-<p class="para">Click <span class="guimenu">OK</span></p></li></ol>
-</div>
-
-<p class="para">To import your recovered data encryption key, </p>
-<div class="procedure">
-<ol class="steps">
-<li class="step" id="b93ch7q">
-<p class="para">Select <span class="guimenu">Security&gt; Key Recovery &gt; Import Decryted Keys</span></p>
-<div class="informalfigure">
-                  <img src="images/if3_import_decyptd_key.png" alt="" />
-                </div>
-</li>
-<li class="step" id="b93cnjb">
-<p class="para">Specify the location of the imported file that contains the decrypted keys.</p></li>
-<li class="step" id="b93cnlj">
-<p class="para">Specify the <span class="guimenu">One Time Passphrase</span> provided by the Recovery agent to decrypt and rarefy the key.(optional)</p>
-<p class="para">The Recovery agent can choose to encrypt the recovered decrypted keys using the one time passphrase. The one time passphrase and key file need to be send through different communication channels (for security reason). If the Recover agent choose not to re-encrypt, then the imported file contains decrypted keys. </p></li>
-<li class="step" id="b93coe4">
-<p class="para">Specify the <span class="guimenu">New Passphrase</span> to re-encrypt the data encryption key.</p></li>
-<li class="step" id="b93conm">
-<p class="para">In the <span class="guimenu">Re-type Passphrase</span> field, re-type the passphrase to verify and then, click <span class="guimenu">OK</span></p></li></ol>
-</div>
-
-</div>
-
-<div class="sect2"  id="reset_passphrase">
-
-<h2 class="title"> Resetting the Passphrase</h2>
-
-<p class="para">For security reasons, you should reset the passphrase after you import the keys. You do this by using the one-time passphrase sent by your Recover agent.</p>
-<div class="procedure">
-<ol class="steps">
-<li class="step" id="beq0soc">
-<p class="para">Select <span class="guimenu">Security &gt; Reset Passphrase</span>.</p></li>
-<li class="step" id="beq0tkt">
-<p class="para">In the Reset Passphrase window, select the iFolder account you want to reset the passphrase for and specify the following details:</p>
-<div class="formalpara" id="beq168j">
-              <p class="title"><em class="title">Enter Passphrase:</em>
-              Enter the one-time passphrase.</p>
+<li class="step" id="bkmh1hl">
+<p class="para">Wählen Sie im iFolder-Browser <span class="guimenu">Sicherheit &gt; Passwortsatz ändern</span> aus.</p></li>
+<li class="step" id="bkmh1of">
+<p class="para">Wählen Sie im Fenster <span class="guimenu">Passwortsatz ändern</span> das iFolder-Konto aus, für das Sie den Passwortsatz zurücksetzen möchten, und geben Sie folgende Details an:</p>
+<div class="formalpara" id="bkmh1ww">
+              <p class="title"><em class="title">Passwortsatz eingeben:</em>
+              Geben Sie Ihren aktuellen Passwortsatz an.</p>
             </div>
 
-<div class="formalpara" id="beq16hq">
-              <p class="title"><em class="title">Enter New Passphrase:</em>
-              Enter the new passphrase you want to set for the current iFolder account.</p>
+<div class="formalpara" id="bkmh318">
+              <p class="title"><em class="title">Neuen Passwortsatz eingeben:</em>
+              Geben Sie den neuen Passwortsatz an, den Sie für das aktuelle iFolder-Konto festlegen möchten.</p>
             </div>
 
-<div class="formalpara" id="beq16mx">
-              <p class="title"><em class="title">Retype Passphrase:</em>
-              Enter the new passphrase again for confirmation.</p>
+<div class="formalpara" id="bkmh319">
+              <p class="title"><em class="title">Passwortsatz erneut eingeben:</em>
+              Geben Sie den neuen Passwortsatz zur Bestätigung erneut an.</p>
             </div>
 
-<div class="formalpara" id="beq16y3">
-              <p class="title"><em class="title">Recovery Agent:</em>
-              Select the Recovery agent you have set for the current iFolder account.</p>
+<div class="formalpara" id="bkmh31a">
+              <p class="title"><em class="title">Wiederherstellungsagent:</em>
+              Wählen Sie den Wiederherstellungsagenten aus, den Sie für das aktuelle iFolder-Konto festgelegt haben.</p>
             </div>
 </li>
-<li class="step" id="beq2nh2">
-<p class="para">Click <span class="guimenu">Reset</span>.</p></li></ol>
+<li class="step" id="bkmh2t3">
+<p class="para">Klicken Sie auf <span class="guimenu">Zurücksetzen</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
 </body>
 </html>

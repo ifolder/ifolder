@@ -1,50 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-tw" lang="zh-tw">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Starting the iFolder Client</title>
+<title>啟動 iFolder 用戶端</title>
 <script type="text/javascript">
-  var prev_link = "accountsprefs.html";
-  var next_link = "accounts.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "startclient";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="startclient">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Starting the iFolder Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
 
-<p class="para">When iFolder is running, the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon" class="inline" /> icon appears in the notification area of the taskbar. iFolder is integrated in the desktop environment. The iFolder emblem (a green “i”) <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> appears on iFolders when they are viewed in a file manager, on the desktop, or in the iFolder browser. The encrypted iFolder is indicated by the <img src="images/ifolder_encrypted_fold.png" alt="iFolder Icon " class="inline" /> emblem (locked folder).
+
+<div class="sect1" id="startclient">
+
+<h1 class="title"> 啟動 iFolder 用戶端</h1>
+
+<p class="para">當 iFolder 執行時，工作列的通知區域會顯示<span class="guimenu">「iFolder 服務」</span><img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />圖示。iFolder 會在桌面環境中整合。在檔案管理員中、桌面上或 iFolder 瀏覽器中檢視 iFolder 時，該 iFolder 上會出現 iFolder 徽章 (綠色的 “i”)<img src="images/ifolder32.png" alt="iFolder 圖示" title="iFolder 圖示" class="inline" />。加密的 iFolder 由 <img src="images/ifolder_encrypted_fold.png" alt="iFolder 圖示" title="iFolder 圖示" class="inline" /> 徽章 (鎖定的資料夾) 指示。
   </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>The notification area of the taskbar must be enabled in order for the <span class="guimenu">iFolder Services</span> icon to be displayed when iFolder is running. </p></div>
+<p class="para"><em class="title">重要：</em>您必須開啟工作列的通知區域，iFolder 執行時才能顯示<span class="guimenu">「iFolder 服務」</span>圖示。 </p></div>
 
-<p class="para">You can work locally with files in your local iFolders at any time. Whenever the iFolder client is running, it logs the changes you make to local iFolder data as you work. If you make changes to local iFolder data when iFolder is not running, iFolder identifies and logs the differences the next time you start iFolder.</p>
-<p class="para">When iFolder is not running, iFolders appear in the file manager or on the desktop. You can access files in your local copy of an iFolder, but you cannot manage iFolders. In addition, you must log in to an account to create an iFolder or synchronize its files.</p>
+<p class="para">您隨時可以從本地使用本地 iFolder 中的檔案。當 iFolder 用戶端正在執行時，它會在您工作時記錄您對本地 iFolder 資料所做的變更。如果您在 iFolder 執行時變更本地 iFolder 資料，iFolder 會識別且在下次您啟動 iFolder 時記錄其差異。</p>
+<p class="para">當 iFolder 沒有執行時，iFolder 會出現在檔案管理員中或桌面上。您可以存取 iFolder 本地副本中的檔案，但是無法管理 iFolder。此外，您必須登入帳戶，才能建立 iFolder 或同步化其檔案。</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>During account creation, user login happens through SSL. When you are prompted to accept the server certificate, you must validate the certificate and accept it for a successful connection.</p></div>
+<p class="para"><em class="title">附註：</em>建立帳戶期間，使用者登入會透過 SSL 進行。系統提示您接受伺服器證書時，您必須驗證並接受該證書，才能成功連接。</p></div>
 
-<p class="para">For information about stopping the iFolder client, see <a href="stopclient.html">Exiting the iFolder Client</a>.</p>
-<div class="sect2"  id="b4064a7">
+<p class="para">如需有關停止 iFolder 用戶端的詳細資訊，請參閱 <a href="stopclient.html">離開 iFolder 用戶端</a>。</p>
+<div class="sect2" id="b4064a7">
 
 <h2 class="title"> Linux</h2>
 
@@ -52,57 +65,53 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b40miua">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#b40miua">登入時自動啟動 iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb73z">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb73z">手動啟動 iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b40miua">
+<div class="sect3" id="b40miua">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> 登入時自動啟動 iFolder</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to the desktop, do one of the following:</p>
+<p class="para">若要啟用登入桌面時自動啟動 iFolder，請執行以下動作之一：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, click <span class="guimenu">More Applications</span>, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Add to Startup Programs</span> from the menu.</p>
-<div class="informalfigure">
-                    <img src="images/if_apbrmenu_a.png" alt="iFolder 3 Application Browser Menu" />
-                  </div>
-</li>
+<p class="listitem">開啟應用程式功能表，按一下<span class="guimenu">「更多應用程式」</span>，找出並以滑鼠右鍵按一下<span class="guimenu">「iFolder 3」</span>，然後從功能表選取<span class="guimenu">「新增至啟動程式」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li>
+<p class="listitem">確定您登出時 iFolder 正在執行，然後儲存工作階段設定。登入桌面時，請選取此工作階段選項。</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal window, log in as the <span class="systemitem">root</span> user, then run <span class="filename">/opt/gnome/bin/gnome-session-properties</span> to add iFolder as a program to start when you log in to your computer.</p></li></ul></div>
+<p class="listitem">開啟終端機視窗，以<span class="systemitem">根部</span>使用者身份登入，然後執行 <span class="filename">/opt/gnome/bin/gnome-session-properties</span> 以新增 iFolder 為您登入電腦時要啟動的程式。</p></li></ul></div>
 
-<p class="para">To disable iFolder from starting automatically on login, do one of the following:</p>
+<p class="para">若要停用登入時自動啟動 iFolder，請執行以下動作之一：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Remove from Startup Programs</span>.</p></li>
+<p class="listitem">開啟應用程式功能表，找出並以滑鼠右鍵按一下 <span class="guimenu">iFolder 3</span>，然後選取<span class="guimenu">「從啟動程式中移除」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is not running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li></ul></div>
+<p class="listitem">確定您登出時 iFolder 沒有在執行，然後儲存工作階段設定。登入桌面時，請選取此工作階段選項。</p></li></ul></div>
 
 </div>
 
-<div class="sect3"  id="b4tb73z">
+<div class="sect3" id="b4tb73z">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> 手動啟動 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Log in to your computer with the local Linux user identity you want to use when you create iFolders.</p></li>
+<p class="para">使用您建立 iFolder 時要所使用的本地 Linux 使用者識別登入您的電腦。</p></li>
 <li class="step" id="bw18fdr">
-<p class="para">Use one of the following methods to start iFolder:</p>
+<p class="para">請使用下列方法之一來啟動 iFolder：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In the taskbar, open the applications menu, click <span class="guimenu">More Applications</span>, locate <span class="guimenu">iFolder 3</span> by searching or scrolling through the available options, right-click iFolder 3, then select <span class="guimenu">Start iFolder 3</span>.</p></li>
+<p class="listitem">在工作列中，開啟應用程式功能表，按一下<span class="guimenu">「更多應用程式」</span>，在可用的選項中搜尋或捲動以找出 <span class="guimenu">iFolder 3</span>，以滑鼠右鍵按一下 iFolder 3，然後選取<span class="guimenu">「啟動 iFolder 3」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, then enter</p><pre class="screen">
+<p class="listitem">開啟終端機外圍程序，然後輸入</p><pre class="screen">
 /usr/bin/ifolder
 </pre></li></ul></div>
 </li></ol>
@@ -112,7 +121,7 @@
 
 </div>
 
-<div class="sect2"  id="b406cyo">
+<div class="sect2" id="b406cyo">
 
 <h2 class="title"> Windows</h2>
 
@@ -120,117 +129,117 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb7g5">Starting iFolder Automatically on Logon</a>
+              <a href="startclient.html#b4tb7g5">登入時自動啟動 iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb879">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb879">手動啟動 iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b4tb7g5">
+<div class="sect3" id="b4tb7g5">
 
-<h3 class="title"> Starting iFolder Automatically on Logon</h3>
+<h3 class="title"> 登入時自動啟動 iFolder</h3>
 
-<p class="para">To start iFolder automatically when you log in to the desktop:</p>
+<p class="para">當您登入桌上型電腦時，若要自動啟動 iFolder：</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41mcvg">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
+<p class="para">以滑鼠右鍵按一下通知區域中的<span class="guimenu">「iFolder 服務」</span><img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />圖示，然後選取<span class="guimenu">「優先設定」</span>開啟「iFolder 優先設定」對話方塊至<span class="guimenu">「一般」</span>索引標籤。
       </p></li>
 <li class="step" id="b41mcvh">
-<p class="para">Select <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">選取<span class="guimenu">「登入桌面時啟動 iFolder」</span>，然後按一下<span class="guimenu">「套用」</span>。</p></li>
 <li class="step" id="b41mcvi">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">按一下<span class="guimenu">「確定」</span>關閉「iFolder 優先設定」對話方塊。</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically when you log on to the desktop:</p>
+<p class="para">若要停用登入桌面時自動啟動 iFolder：</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41m94h">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.</p></li>
+<p class="para">以滑鼠右鍵按一下<span class="guimenu">「iFolder 服務」</span>圖示，然後選取<span class="guimenu">「優先設定」</span>開啟「iFolder 優先設定」對話方塊至<span class="guimenu">「一般」</span>索引標籤。</p></li>
 <li class="step" id="b41m9ty">
-<p class="para">Deselect <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">取消選取<span class="guimenu">「登入桌面時啟動 iFolder」</span>，然後按一下<span class="guimenu">「套用」</span>。</p></li>
 <li class="step" id="b41mac7">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">按一下<span class="guimenu">「確定」</span>關閉「iFolder 優先設定」對話方塊。</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="b4tb879">
+<div class="sect3" id="b4tb879">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> 手動啟動 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Log in to the computer with the local Windows user identity you want to use when you create iFolders.</p></li>
+<p class="para">使用建立 iFolder 時想使用的本地 Windows 使用者身份登入電腦。</p></li>
 <li class="step" id="bw08fxx">
-<p class="para">If iFolder does not start automatically on successful logon, start iFolder by clicking <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programs</span> > <span class="guimenu">iFolder 3</span></span>, then select the <span class="guimenu">iFolder 3 Client</span> application. </p></li></ol>
+<p class="para">如果 iFolder 在成功登入時沒有自動啟動，請按一下<span class="menuchoice"><span class="guimenu">「啟動</span> > <span class="guimenu">程式」</span> > <span class="guimenu">「iFolder 3」</span></span>，然後選取<span class="guimenu">「iFolder 3 用戶端」</span>應用程式將它啟動。 </p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<div class="sect2"  id="b406d69">
+<div class="sect2" id="b406d69">
 
-<h2 class="title"> Macintosh</h2>
+<h2 class="title"> 跨平台用戶端</h2>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcpho1i">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#bcpho1i">登入時自動啟動 iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcphogg">Starting iFolder Manually</a>
+              <a href="startclient.html#bcphogg">手動啟動 iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bcpho1i">
+<div class="sect3" id="bcpho1i">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> 登入時自動啟動 iFolder</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to your Macintosh computer, add iFolder to the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">若要在登入 Macintosh 電腦時自動開啟 iFolder，則將 iFolder 加入<span class="guimenu">「啟動項目」</span>中。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
-<p class="para">Start iFolder.</p></li>
+<p class="para">啟動 iFolder。</p></li>
 <li class="step" id="bcphuse">
-<p class="para">From the dock, right-click the iFolder icon and select the option <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, press the Ctrl key, click the iFolder icon, then select <span class="guimenu">Open at Login</span>.</p></li></ol>
+<p class="para">從固定點，以滑鼠右鍵按一下 iFolder 圖示，並選取<span class="guimenu">「登入時開啟」</span>選項。</p>
+<p class="para">或</p>
+<p class="para">從固定點，按住 CTRL 鍵，按一下 iFolder 圖示，然後選取<span class="guimenu">「登入時開啟」</span>選項。</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically, remove iFolder from the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">若要關閉自動啟動 iFolder，則從<span class="guimenu">「啟動項目」</span>移除 iFolder。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcpi1cj">
-<p class="para">From the dock, right-click the iFolder icon, and deselect <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, right-click or Ctrl-click the iFolder icon, then deselect <span class="guimenu">Open at Login.</span></p></li></ol>
+<p class="para">從固定點，以滑鼠右鍵按一下 iFolder 圖示，並取消選取<span class="guimenu">「登入時開啟」</span>選項。</p>
+<p class="para">或</p>
+<p class="para">從固定點，以滑鼠右鍵按一下 iFolder 圖示，或按住 CTRL 鍵再按一下 iFolder 圖示，然後取消選取<span class="guimenu">「登入時開啟」選項。</span></p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bcphogg">
+<div class="sect3" id="bcphogg">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> 手動啟動 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Log in to your computer with the local Macintosh user identity you want to use when you create iFolders.</p></li>
+<p class="para">以建立 iFolder 時想使用的本地 Macintosh 使用者身份登入電腦。</p></li>
 <li class="step" id="bw08fy2">
-<p class="para">Use one of the following methods to start iFolder: </p>
+<p class="para">請使用下列方法之一來啟動 iFolder： </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open <span class="guimenu">the Applications</span> directory on <span class="systemitem">Macintosh HD</span>, select <span class="guimenu">Applications</span>, then double-click <span class="guimenu"> iFolder 3</span>.</p></li>
+<p class="listitem">開啟 <span class="guimenu">Applications</span> 目錄，(此目錄位於 <span class="systemitem">Macintosh HD</span>)，選取 <span class="guimenu">Applications</span>，然後按兩下<span class="guimenu">「iFolder 3」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">Type <span class="command">iFolder</span> in the spotlight (Apple button + Spacebar or click the magnifying glass icon on top right) then click the <span class="guimenu">iFolder 3</span> under Applications.</p></li>
+<p class="listitem">在高亮顯示處 (Apple 按鈕 + 空白鍵，或按一下右上方的放大鏡) 輸入 <span class="command">iFolder</span>，然後按一下 Applications 下的 <span class="guimenu">「iFolder 3」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, log in as the root user, then enter </p><pre class="screen">
+<p class="listitem">開啟終端機外圍程序，以 root 使用者身份登入，然後輸入 </p><pre class="screen">
 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3
 </pre></li></ul></div>
 </li></ol>
@@ -242,8 +251,13 @@
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
 </body>
 </html>

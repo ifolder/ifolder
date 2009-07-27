@@ -1,145 +1,155 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ru" lang="ru">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migrating from iFolder 2.x to iFolder 3.7</title>
+<title>Миграция с iFolder 2.x на iFolder 3.7</title>
 <script type="text/javascript">
-  var prev_link = "coexistmig.html";
-  var next_link = "bctryt7.html";
-  var parentfile = "../coexistmig.html";
-  var parenttoc = "../toc_coexistmig.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "migration";
+  var parentId = "coexistmig";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="migration">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Migrating from iFolder 2.<span class="replaceable">x</span> to iFolder 3.7</h1>
+<div class='nav' id='topnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
 
-<p class="para">This section discusses the following:</p>
+
+<div class="sect1" id="migration">
+
+<h1 class="title"> Миграция с iFolder 2.<span class="replaceable">x</span> на iFolder 3.7</h1>
+
+<p class="para">Темы раздела:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6kho">Understanding the Migration Process</a>
+            <a href="migration.html#bax6kho">Общие сведения о процессе миграции</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6esx">Migration Procedure</a>
+            <a href="migration.html#bax6esx">Процедура миграции</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bax6kho">
+<div class="sect2" id="bax6kho">
 
-<h2 class="title"> Understanding the Migration Process</h2>
+<h2 class="title"> Общие сведения о процессе миграции</h2>
 
-<p class="para">Novell iFolder provides a simple migration from iFolder 2.<span class="replaceable">x</span> to the iFolder client for Novell iFolder 3.7. The Migration Assistant provided in the iFolder client helps you migrate the existing iFolder 2.<span class="replaceable">x</span> data quickly and easily.</p>
-<p class="para">During the startup, the Migration Assistant detects the 2.<span class="replaceable">x</span> installation and prompts you to migrate your data. During the data migration, it prompts you again to convert the existing folders or to make a copy of the 2.<span class="replaceable">x</span> iFolder. For more information on this, refer <a href="migration.html#b8anh5z">Step 6</a>.</p>
-<p class="para">iFolder prompts you about the resynchronization of the files to 3.7 server, and asks whether you need to retain the 2.<span class="replaceable">x</span> client until the 3.7 completes synchronization. During this process, only the data get migrated, hence, the user has to set the preference in the new client. </p>
+<p class="para">Приложение Novell iFolder предоставляет возможность простой и быстрой миграции данных iFolder 2.<span class="replaceable">x</span> на ПО клиента iFolder для Novell iFolder 3.7. С помощью мастера миграции, доступного в приложении клиента iFolder , можно быстро выполнить миграцию существующих данных iFolder 2.<span class="replaceable">x</span>.</p>
+<p class="para">При запуске мастер миграции обнаруживает установку версии 2.<span class="replaceable">x</span> и выводит запрос на миграцию данных. Во время миграции появляется запрос на преобразование существующих папок или на сохранение копий папок приложения iFolder 2.<span class="replaceable">x</span>. Для получения дополнительной информации об этом см. <a href="migration.html#b8anh5z">Шаг 6</a>.</p>
+<p class="para">Приложение iFolder выводит запрос на синхронизацию файлов с сервером 3.7, а также спрашивает о необходимости сохранения клиента 2.<span class="replaceable">x</span> до завершения синхронизации на сервере 3.7. Во время этого процесса выполняется только миграция данных, поэтому пользователь должен выполнить настройку нового клиента. </p>
 </div>
 
-<div class="sect2"  id="bax6esx">
+<div class="sect2" id="bax6esx">
 
-<h2 class="title"> Migration Procedure</h2>
+<h2 class="title"> Процедура миграции</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Install the iFolder client for iFolder 3.7, then configure your account for the iFolder 3.7 enterprise server.</p>
-<p class="para">For information on installing the client and setting up the account, see <a href="accountsprefs.html">Managing iFolder Accounts and Preferences</a>.</p></li>
+<p class="para">Установите клиент iFolder для iFolder 3.7, затем настройте учетную запись для сервера iFolder 3.7 Enterprise Server.</p>
+<p class="para">Для получения информации об установке клиента и настройке учетной записи см. раздел <a href="accountsprefs.html">Управление учетными записями и настройками iFolder</a>.</p></li>
 <li class="step" id="b88immw">
-<p class="para">In the iFolder browser, create one or more iFolders on your local computer.</p>
-<p class="para">You can use any valid name for an iFolder. Do not create an iFolder in the same directory path as your current iFolder 2.<span class="replaceable">x</span> directory. For information, see <a href="createifolder.html">Creating and Uploading an iFolder</a>.</p></li>
+<p class="para">В навигаторе iFolder создайте одну или несколько папок iFolder на локальном компьютере.</p>
+<p class="para">Для папки iFolder можно использовать любое допустимое имя. Не создавайте папку iFolder в папке iFolder 2.<span class="replaceable">x</span>. См. дополнительные сведения: <a href="createifolder.html">Создание и отправка папки iFolder</a>.</p></li>
 <li class="step" id="bb0b2z9">
-<p class="para">The iFolder displays a message about the existence of previous version data, and a request for a migration. </p>
-<p class="para">Click <span class="guimenu">OK</span> to open a list of available 2.<span class="replaceable">x</span> iFolders.</p></li>
+<p class="para">В приложении iFolder отобразится сообщение о существовании предыдущей версии данных и запрос на миграцию. </p>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы открыть список доступных папок iFolder 2.<span class="replaceable">x</span>.</p></li>
 <li class="step" id="b8annny">
-<p class="para">Select the 2.<span class="replaceable">x</span> iFolders you want to migrate.</p>
-<p class="para">Click <span class="guimenu">Migrate</span> to appear the Migration Assistant.</p>
+<p class="para">Выберите папки iFolder 2.<span class="replaceable">x</span>, которые необходимо мигрировать.</p>
+<p class="para">Щелкните <span class="guimenu">Миграция</span> для запуска помощника по миграции.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also reach the Migration Assistant by <span class="guimenu">iFolder &gt; Migration &gt; Migrate from iFolder 2.x</span>.</p></div>
+<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Помощника по миграции можно также запустить, выбрав <span class="guimenu">iFolder &gt; Миграция &gt; Миграция с версии iFolder 2.x</span>.</p></div>
 
-<p class="para">Migration Assistant takes you through the Migration process to complete your data migration.</p></li>
+<p class="para">Помощник по миграции помогает последовательно осуществить процесс миграции для полного переноса данных.</p></li>
 <li class="step" id="b8andsn">
-<p class="para"> Click<span class="guimenu"> Forward </span>to display the Migration options.</p></li>
+<p class="para"> Щелкните <span class="guimenu">Далее</span> для отображения параметров миграции.</p></li>
 <li class="step" id="b8anh5z">
-<p class="para">Select one of the following:</p>
-<div class="informalfigure">
-                  <img src="images/a_mig_asst1.png" alt="" />
-                </div>
-
+<p class="para">Выберите одно из следующих действий:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migrate the iFolder and disconnect it from 2.x domain</span>:</em>
-              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> domain after migrating it to 3.7.</p>
+              <p class="title"><em class="title"><span class="guimenu">Выполнить миграцию папки iFolder и отключить ее от домена 2.x</span>:</em>
+               выберите этот параметр для отключения существующей папки от домена iFolder 2.<span class="replaceable">x</span> после перехода на версию 3.7.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
-                <span class="guimenu">Create a copy of the iFolder and migrate:</span>
+                <span class="guimenu">Создать копию папки iFolder и мигрировать:</span>
               </em>
-              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to the iFolder 3.7. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> domain even after you migrate the files to the iFolder 3.7.</p>
+               выберите этот параметр для создания копии файлов iFolder 2.<span class="replaceable">x</span> и их преобразования в файлы iFolder 3.7. При этом файлы из домена ifolder 2.<span class="replaceable">x</span> не удаляются даже после миграции файлов в iFolder 3.7.</p>
             </div>
 
-<p class="para">If you select this option, you can also select<span class="guimenu"> Copy the parent folder</span> if you want to copy not only the contents of the 2.<span class="replaceable">x</span> folder, but the parent folder as well. If you leave this option deselected, only the contents of the selected folder will be migrated to 3.7. </p>
-<p class="para">Click <span class="guimenu">Browse</span> to find the location to save the migrated folder.</p>
-<p class="para">For example, <span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> is a 2.<span class="replaceable">x</span> iFolder and <span class="filename">dir1</span> and <span class="filename">dir2</span> are the directories under <span class="filename">ifolder2dir</span>. When you select the option <span class="guimenu">Copy the parent directory</span>, it create the <span class="filename">ifolder2dir </span>in the new location and the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are copied to it. If the option remains deselected, only the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are moved to the specified location.</p></li>
+<p class="para">При выборе этого параметра необходимо также выбрать функцию <span class="guimenu">Копировать родительскую папку</span>, если необходимо скопировать не только содержимое папки 2.<span class="replaceable">x</span>, но и родительскую папку. Если этот параметр не выбран, в 3.7 будет перенесено только содержимое выбранной папки. </p>
+<p class="para">Щелкните <span class="guimenu">Просмотр</span>, чтобы определить местоположение для хранения мигрированной папки.</p>
+<p class="para">Например каталог <span class="filename">c:/Documents and Settings/&lt;имя_пользователя&gt;/ifolder2dir</span> является папкой iFolder 2.<span class="replaceable">x</span>, а <span class="filename">dir1</span> и <span class="filename">dir2</span> - каталоги в папке <span class="filename">ifolder2dir</span>. При выборе параметра <span class="guimenu">Копировать родительскую папку</span> в новом местоположении создается каталог <span class="filename">ifolder2dir </span> и каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span> копируются в него. Если этот параметр не выбран, в указанное местоположение перемещаются только каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span>.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Click <span class="guimenu">Forward</span> to select the domain and Security options as follows:</p>
+<p class="para">Щелкните <span class="guimenu">Далее</span>, чтобы выбрать домен и параметры защиты, как указано ниже:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Select the domain from the drop-down list.</p>
-<div class="informalfigure">
-                      <img src="images/if3_mig_asst2.png" alt="" />
-                    </div>
-</li>
+<p class="para">Выберите домен в раскрывающемся списке.</p></li>
 <li class="step" id="b8ao481">
-<p class="para">Select the desired security option:</p>
+<p class="para">Выберите необходимые параметры защиты:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Encrypted</span> to encrypt the selected iFolder.</p>
-<p class="listitem">If you did not set your passphrase during login, iFolder prompts you to enter the passphrase. You can skip this option and set the passphrase later.</p>
-<p class="listitem">If you are not currently connected to the iFolder domain, it prompts you to connect to the domain.</p></li>
+<p class="listitem">Выберите <span class="guimenu">Шифрование</span> для шифрования выбранной папки iFolder.</p>
+<p class="listitem">Если контрольная фраза не была указана при регистрации, iFolder выдаст запрос на ввод контрольной фразы. Можно пропустить это действие и настроить контрольную фразу позднее.</p>
+<p class="listitem">Если соединение с доменом iFolder еще не установлено, появится запрос на подключения к домену.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder 3.7 domain.</p>
-<p class="listitem">You can migrate an encrypted 2.<span class="guimenu">x</span> iFolder to shared folder. When you attempt to migrate an encrypted 2.<span class="replaceable">x</span> iFolder to a shared folder, it prompts you to verify the action.</p>
-<p class="listitem">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ul></div>
+<p class="listitem">Выберите <span class="guimenu">Совместное использование</span> для совместного использования с другими членами папки iFolder в домене iFolder 3.7.</p>
+<p class="listitem">Можно выполнить миграцию зашифрованной папки iFolder 2.<span class="guimenu">x</span> в совместно используемую папку. При попытке выполнить миграцию зашифрованной папки iFolder 2.<span class="replaceable">x</span> в совместно используемую папку появляется запрос на подтверждение выполнения действия.</p>
+<p class="listitem">Для подтверждения действия щелкните <span class="guimenu">ОК</span>.</p></li></ul></div>
 </li></ol>
 </div>
 </li>
 <li class="step" id="b8ao7ou">
-<p class="para">Click <span class="guimenu">Forward</span> to migrate the selected iFolder.</p></li>
+<p class="para">Щелкните <span class="guimenu">Далее</span> для миграции выбранной папки iFolder.</p></li>
 <li class="step" id="b8ao9s7">
-<p class="para">Verify that the information you have entered is correct, if necessary, click <span class="guimenu">Back </span>to return to previous pages to make corrections. </p>
-<p class="para">If the given information is correct, click <span class="guimenu">Migrate </span>to begin migration.</p>
-<p class="para">Click <span class="guimenu">Back</span> to go back and make any necessary changes.</p></li>
+<p class="para">Проверьте правильность указанной информации, при необходимости щелкните <span class="guimenu">Назад </span>, чтобы вернуться на предыдущую страницу и внести изменения. </p>
+<p class="para">Если информация указана правильно, щелкните <span class="guimenu">Миграция </span>, чтобы начать миграцию.</p>
+<p class="para">Щелкните <span class="guimenu">Назад</span> для возврата и внесения необходимых изменений.</p></li>
 <li class="step" id="bb51sen">
-<p class="para">Click <span class="guimenu">Finish</span> to complete the migration.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">Готово</span>, чтобы выполнить миграцию.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
 </body>
 </html>

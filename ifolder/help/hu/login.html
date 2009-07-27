@@ -1,94 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="hu" lang="hu">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="hu" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Logging In to an iFolder Account</title>
+<title>Bejelentkezés egy iFolder-fiókba</title>
 <script type="text/javascript">
-  var prev_link = "accounts.html";
-  var next_link = "accountdetails.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "login";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="login">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Logging In to an iFolder Account</h1>
+<div class='nav' id='topnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
 
-<p class="para">You can work locally with files in the iFolder directories at any time. You must be logged in to an iFolder account to synchronize the user list, synchronize iFolder data, upload new iFolders, download shared iFolders, share iFolders, and manage iFolders. You can log in separately and be logged in concurrently to multiple accounts. </p>
-<p class="para">Use one of the following login methods for each account:</p>
+
+<div class="sect1" id="login">
+
+<h1 class="title"> Bejelentkezés egy iFolder-fiókba</h1>
+
+<p class="para">Az iFolder könyvtárakban található fájlokkal bármikor lehet helyben dolgozni. A felhasználólista szinkronizálásához, az iFolder-adatok szinkronizálásához, az új iFolder mappák feltöltéséhez, a megosztott iFolder mappák letöltéséhez, az iFolder mappák megosztásához és kezeléséhez be kell jelentkeznie egy iFolder-fiókba. Külön-külön bejelentkezhet az egyes fiókokba, de egyszerre több fiókba is be lehet jelentkezve. </p>
+<p class="para">Jelentkezzen be minden kívánt fiókba a következő módszerek valamelyikével:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="b40gpos">
-            <p class="title"><em class="title">Log In Automatically:</em>
-            Enable <span class="guimenu">Remember My Password</span> for your iFolder account if you want to log in automatically whenever the iFolder client starts. You can enable <span class="guimenu">Remember My Password</span> when you configure the account or by modifying the account settings later.</p>
+            <p class="title"><em class="title">Automatikus bejelentkezés:</em>
+            Engedélyezze a <span class="guimenu">Jelszó mentése</span> beállítást az iFolder-fiókhoz, ha az iFolder ügyfél indításakor mindig automatikusan szeretne bejelentkezni. A <span class="guimenu">Jelszó megjegyzése ezen a számítógépen</span> beállítást engedélyezheti a fiók konfigurálásakor vagy a fiókbeállítások későbbi módosítása során.</p>
           </div>
 
-<p class="listitem">Whenever your password changes, automatic authentication fails gracefully the next time you attempts to log in to the iFolder account. iFolder prompts you to log in, then you can enter the new password. Enable <span class="guimenu">Remember My Password</span> again if desired.</p></li>
+<p class="listitem">Amikor a jelszó módosulása után a következő alkalommal próbál meg bejelentkezni az iFolder-fiókba, nem jár sikerrel az automatikus hitelesítés.  Amikor az iFolder azt kéri, hogy jelentkezzen be, írja be az új jeslzót, és szükség esetén jelölje be ismét a <span class="guimenu">Jelszó mentése</span> jelölőnégyzetet. </p></li>
 <li class="listitem">
 <div class="formalpara" id="b40gq44">
-            <p class="title"><em class="title">Log In As Needed:</em>
-            Disable <span class="guimenu">Remember My Password</span> if you want to log in to an iFolder account only as needed.</p>
+            <p class="title"><em class="title">Szükség szerinti bejelentkezés:</em>
+            Törölje a jelet a <span class="guimenu">Jelszó mentése</span> jelölőnégyzetből, ha az iFolder-fiókba csak akkor kíván bejelentkezni, ha szükséges.</p>
           </div>
 </li></ul></div>
 
-<p class="para">To enable or disable <span class="guimenu">Remember My Password</span> for an existing iFolder account:</p>
+<p class="para">A <span class="guimenu">Jelszó mentése</span> beállítás engedélyezése és letiltása egy már létező iFolder-fiók esetében:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwrn0v">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span> to open the iFolder Preferences dialog box to the <span class="guimenu">Accounts</span> tab.
+<p class="para">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">Fiókok</span> parancsát. Ennek hatására megnyílik az iFolder beállítások párbeszédpanel <span class="guimenu">Fiókok</span> lapja.
     </p></li>
 <li class="step" id="bvwrn0w">
-<p class="para">Select the iFolder account, then click <span class="guimenu">Properties</span> to view its setting in the <span class="guimenu">Properties </span>dialog box.</p></li>
+<p class="para">Válassza ki az iFolder-fiókot, és kattintson a <span class="guimenu">Tulajdonságok</span> gombra a beállítások megtekintéséhez a <span class="guimenu">Tulajdonságok</span>párbeszédpanelen.</p></li>
 <li class="step" id="bvwrhna">
-<p class="para">Click the<span class="guimenu"> Identity </span>tab.</p></li>
+<p class="para">Kattintson az <span class="guimenu">Identitás</span> fülre.</p></li>
 <li class="step" id="bvwrhn9">
-<p class="para">Select (enable) or deselect (disable) <span class="guimenu">Remember My Password</span>.</p></li>
+<p class="para">Jelölje be a <span class="guimenu">Jelszó mentése</span> jelölőnégyzetet, vagy törölje belőle a jelet, ezzel engedélyezi, illetve letiltja a szolgáltatást.</p></li>
+<li class="step" id="bkfamxm">
+<p class="para">Írja be a jelszót a <span class="guimenu">Jelszó</span> mezőbe. </p></li>
 <li class="step" id="b41npf3">
-<p class="para">Click <span class="guimenu">OK</span> for successful completion.</p></li>
+<p class="para">A sikeres befejezéshez kattintson a <span class="guimenu">Bezárás</span> gombra.</p></li>
 <li class="step" id="b41nqa7">
-<p class="para">Click <span class="guimenu">OK</span> in the <span class="guimenu">iFolder Properties </span>dialog box to save your changes and log in to the server.</p></li></ol>
+<p class="para">Kattintson a <span class="guimenu">Bezárás</span> gombra az <span class="guimenu">iFolder tulajdonságai</span>párbeszédpanelen a változtatások mentéséhez és a kiszolgálóra való bejelentkezéshez.</p></li></ol>
 </div>
 
-<p class="para">To log in to an iFolder account:</p>
+<p class="para">Bejelentkezés egy iFolder-fiókba:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwntnx">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span>.
+<p class="para">Kattintson jobb gombbal az értesítési területen látható <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonra, majd válassza a helyi menü <span class="guimenu">Fiókok</span> parancsát.
     </p></li>
 <li class="step" id="bvwnufo">
-<p class="para">Select the iFolder account, then select the <span class="guimenu">Online</span> check box next to it.</p></li>
+<p class="para">Keresse meg az iFolder-fiókot, majd jelölje be mellette az <span class="guimenu">Online</span> jelölőnégyzetet.</p></li>
 <li class="step" id="bvwnv0e">
-<p class="para">If prompted for a password, specify the password, then click <span class="guimenu">Connect</span>.</p>
-<p class="para">If <span class="guimenu">Remember My Password</span> is enabled for the account, you are not prompted to enter a password unless your password has expired. </p>
-<p class="para">If login fails, an error message reports the cause, such as password failure. </p></li>
+<p class="para">Ha a program jelszót kér, adja meg a jelszót, és kattintson a <span class="guimenu">Kapcsolódás</span> gombra.</p>
+<p class="para">Ha a fiókhoz engedélyezve van a <span class="guimenu">Jelszó mentése</span> funkció, a rendszer nem kéri a jelszó megadását, csak akkor, ha a jelszó érvényessége lejárt. </p>
+<p class="para">Ha sikertelen a bejelentkezés, egy hibaüzenet közli ennek okát, például azt, hogy nem felelt meg a jelszó. </p></li>
 <li class="step" id="bvws3f9">
-<p class="para">On successful connection, close the <span class="guimenu">iFolder Preferences</span> dialog box.</p></li></ol>
+<p class="para">A sikeres kapcsolódás után zárja be az <span class="guimenu">iFolder beállítások</span> párbeszédpanelt.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
 </body>
 </html>

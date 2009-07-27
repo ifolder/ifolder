@@ -1,50 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ru" lang="ru">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Starting the iFolder Client</title>
+<title>Запуск клиента iFolder</title>
 <script type="text/javascript">
-  var prev_link = "accountsprefs.html";
-  var next_link = "accounts.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "startclient";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="startclient">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Starting the iFolder Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
 
-<p class="para">When iFolder is running, the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon" class="inline" /> icon appears in the notification area of the taskbar. iFolder is integrated in the desktop environment. The iFolder emblem (a green “i”) <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> appears on iFolders when they are viewed in a file manager, on the desktop, or in the iFolder browser. The encrypted iFolder is indicated by the <img src="images/ifolder_encrypted_fold.png" alt="iFolder Icon " class="inline" /> emblem (locked folder).
+
+<div class="sect1" id="startclient">
+
+<h1 class="title"> Запуск клиента iFolder</h1>
+
+<p class="para">Если приложение iFolder запущено, значок <span class="guimenu">Сервисы iFolder</span> <img src="images/ifolder22.png" alt="Значок приложения iFolder" title="Значок приложения iFolder" class="inline" /> отображается в области оповещений на панели задач. Приложение iFolder интегрировано в вычислительную среду рабочей станции. Эмблема iFolder (зеленая буква "i") <img src="images/ifolder32.png" alt="Значок iFolder" title="Значок iFolder" class="inline" /> отображается на папках iFolder во время их просмотра в менеджере файлов на рабочей станции или в средстве просмотра iFolder. Зашифрованная папка iFolder обозначается эмблемой <img src="images/ifolder_encrypted_fold.png" alt="Значок iFolder" title="Значок iFolder" class="inline" /> (заблокированная папка).
   </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>The notification area of the taskbar must be enabled in order for the <span class="guimenu">iFolder Services</span> icon to be displayed when iFolder is running. </p></div>
+<p class="para"><em class="title">ВАЖНО.</em>Необходимо включить область оповещений на панели задач, чтобы при запуске приложения iFolder на ней отображался значок <span class="guimenu">Сервисы iFolder</span>. </p></div>
 
-<p class="para">You can work locally with files in your local iFolders at any time. Whenever the iFolder client is running, it logs the changes you make to local iFolder data as you work. If you make changes to local iFolder data when iFolder is not running, iFolder identifies and logs the differences the next time you start iFolder.</p>
-<p class="para">When iFolder is not running, iFolders appear in the file manager or on the desktop. You can access files in your local copy of an iFolder, but you cannot manage iFolders. In addition, you must log in to an account to create an iFolder or synchronize its files.</p>
+<p class="para">Работать локально с фалами в локальных папках iFolder можно в любое время. Если клиент iFolder запущен, во время работы с папками все изменения локальной папки данных iFolder протоколируются. Если локальные данные папки iFolder изменяются, когда приложение iFolder не запущено, при последующем запуске приложение iFolder определяет и протоколирует все изменения.</p>
+<p class="para">Если приложение iFolder не запущено, папки iFolder отображаются в менеджере файлов или на рабочей станции. Можно получить доступ к файлам в локальной копии папки iFolder, но управлять папками iFolder нельзя. Кроме того, необходимо зарегистрироваться с помощью учетной записи, чтобы иметь возможность создавать папку iFolder или синхронизировать ее файлы.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>During account creation, user login happens through SSL. When you are prompted to accept the server certificate, you must validate the certificate and accept it for a successful connection.</p></div>
+<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Во время создания учетной записи вход пользователя в систему выполняется по протоколу SSL. При получении запроса о том, чтобы принять сертификат сервера, для успешного соединения необходимо проверить сертификат и принять его.</p></div>
 
-<p class="para">For information about stopping the iFolder client, see <a href="stopclient.html">Exiting the iFolder Client</a>.</p>
-<div class="sect2"  id="b4064a7">
+<p class="para">Дополнительную информацию об остановке клиента iFolder см. в разделе <a href="stopclient.html">Завершение работы с клиентом iFolder</a>.</p>
+<div class="sect2" id="b4064a7">
 
 <h2 class="title"> Linux</h2>
 
@@ -52,57 +65,53 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b40miua">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#b40miua">Автоматический запуск iFolder при регистрации</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb73z">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb73z">Запуск iFolder вручную</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b40miua">
+<div class="sect3" id="b40miua">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Автоматический запуск iFolder при регистрации</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to the desktop, do one of the following:</p>
+<p class="para">Чтобы настроить автоматический запуск iFolder при регистрации в компьютере, выполните одно из следующих действий:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, click <span class="guimenu">More Applications</span>, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Add to Startup Programs</span> from the menu.</p>
-<div class="informalfigure">
-                    <img src="images/if_apbrmenu_a.png" alt="iFolder 3 Application Browser Menu" />
-                  </div>
-</li>
+<p class="listitem">Откройте меню приложений, щелкните <span class="guimenu">More Applications</span> (Приложения), найдите и щелкните правой кнопкой <span class="guimenu">iFolder 3</span>, затем в меню выберите <span class="guimenu">Add to Startup Programs</span> (Добавить в запуск программ).</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li>
+<p class="listitem">При разрегистрации убедитесь, что приложение iFolder запущено, затем сохраните настройки сеанса. При регистрации в компьютере выберите этот сеанс.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal window, log in as the <span class="systemitem">root</span> user, then run <span class="filename">/opt/gnome/bin/gnome-session-properties</span> to add iFolder as a program to start when you log in to your computer.</p></li></ul></div>
+<p class="listitem">Откройте окно терминала, зарегистрируйтесь в качестве пользователя <span class="systemitem">root</span>, затем введите команду <span class="filename">/opt/gnome/bin/gnome-session-properties</span>, чтобы добавить iFolder в качестве программы, которая будет загружаться при регистрации в компьютере.</p></li></ul></div>
 
-<p class="para">To disable iFolder from starting automatically on login, do one of the following:</p>
+<p class="para">Чтобы отключить автоматический запуск iFolder при регистрации, выполните одно из следующих действий:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Remove from Startup Programs</span>.</p></li>
+<p class="listitem">Откройте меню приложений, найдите и щелкните правой кнопкой <span class="guimenu">iFolder 3</span>, затем выберите <span class="guimenu">Remove from Startup Programs</span> (Удалить из запуска программ).</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is not running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li></ul></div>
+<p class="listitem">При разрегистрации убедитесь, что приложение iFolder не запущено, затем сохраните настройки сеанса. При регистрации в компьютере столе выберите этот сеанс.</p></li></ul></div>
 
 </div>
 
-<div class="sect3"  id="b4tb73z">
+<div class="sect3" id="b4tb73z">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Запуск iFolder вручную</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Log in to your computer with the local Linux user identity you want to use when you create iFolders.</p></li>
+<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Linux, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw18fdr">
-<p class="para">Use one of the following methods to start iFolder:</p>
+<p class="para">Для запуска iFolder используйте один из следующих способов:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In the taskbar, open the applications menu, click <span class="guimenu">More Applications</span>, locate <span class="guimenu">iFolder 3</span> by searching or scrolling through the available options, right-click iFolder 3, then select <span class="guimenu">Start iFolder 3</span>.</p></li>
+<p class="listitem">На панели задач откройте меню приложений, щелкните <span class="guimenu">More Applications</span> (Приложения), среди доступных элементов найдите или перейдите к <span class="guimenu">iFolder 3</span>, щелкните правой кнопкой "iFolder 3", затем выберите <span class="guimenu">Start iFolder 3</span> (Запуск iFolder 3).</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, then enter</p><pre class="screen">
+<p class="listitem">Откройте оболочку терминала и введите</p><pre class="screen">
 /usr/bin/ifolder
 </pre></li></ul></div>
 </li></ol>
@@ -112,7 +121,7 @@
 
 </div>
 
-<div class="sect2"  id="b406cyo">
+<div class="sect2" id="b406cyo">
 
 <h2 class="title"> Windows</h2>
 
@@ -120,59 +129,59 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb7g5">Starting iFolder Automatically on Logon</a>
+              <a href="startclient.html#b4tb7g5">Автоматический запуск iFolder при входе</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb879">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb879">Запуск iFolder вручную</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b4tb7g5">
+<div class="sect3" id="b4tb7g5">
 
-<h3 class="title"> Starting iFolder Automatically on Logon</h3>
+<h3 class="title"> Автоматический запуск iFolder при входе</h3>
 
-<p class="para">To start iFolder automatically when you log in to the desktop:</p>
+<p class="para">Порядок настройки автоматического запуска iFolder при регистрации на рабой станции:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41mcvg">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
+<p class="para">Щелкните правой кнопкой значок <span class="guimenu">Сервисы iFolder</span> <img src="images/ifolder22.png" alt="Значок приложения iFolder " title="Значок приложения iFolder " class="inline" />, затем выберите <span class="guimenu">Настройки</span>, чтобы открыть диалоговое окно "Настройки iFolder" на вкладке <span class="guimenu">Общие</span>.
       </p></li>
 <li class="step" id="b41mcvh">
-<p class="para">Select <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Выберите <span class="guimenu">Запуск iFolder при регистрации в рабочей станции </span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
 <li class="step" id="b41mcvi">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы закрыть диалоговое окно "Настройки iFolder".</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically when you log on to the desktop:</p>
+<p class="para">Порядок отключения автоматического запуска iFolder при регистрации в рабочей станции:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41m94h">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.</p></li>
+<p class="para">Щелкните правой кнопкой значок <span class="guimenu">Сервисы iFolder</span>, затем выберите <span class="guimenu">Настройки</span>, чтобы открыть диалоговое окно "Настройки iFolder" на вкладке <span class="guimenu">Общие</span>.</p></li>
 <li class="step" id="b41m9ty">
-<p class="para">Deselect <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Отмените выбор параметра <span class="guimenu">Запуск iFolder при регистрации в рабочей станции</span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
 <li class="step" id="b41mac7">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы закрыть диалоговое окно "Настройки iFolder".</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="b4tb879">
+<div class="sect3" id="b4tb879">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Запуск iFolder вручную</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Log in to the computer with the local Windows user identity you want to use when you create iFolders.</p></li>
+<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Windows, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw08fxx">
-<p class="para">If iFolder does not start automatically on successful logon, start iFolder by clicking <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programs</span> > <span class="guimenu">iFolder 3</span></span>, then select the <span class="guimenu">iFolder 3 Client</span> application. </p></li></ol>
+<p class="para">Если после успешной входа в систему приложение iFolder не было запущено автоматически, запустите iFolder, щелкнув <span class="menuchoice"><span class="guimenu">Пуск</span> > <span class="guimenu">Программы &gt;</span> > <span class="guimenu">iFolder 3</span></span>, затем выберите приложение <span class="guimenu">iFolder 3 Client</span> (Клиент iFolder 3). </p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<div class="sect2"  id="b406d69">
+<div class="sect2" id="b406d69">
 
 <h2 class="title"> Macintosh</h2>
 
@@ -180,57 +189,57 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcpho1i">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#bcpho1i">Автоматический запуск iFolder при регистрации</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcphogg">Starting iFolder Manually</a>
+              <a href="startclient.html#bcphogg">Запуск iFolder вручную</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bcpho1i">
+<div class="sect3" id="bcpho1i">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Автоматический запуск iFolder при регистрации</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to your Macintosh computer, add iFolder to the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Для разрешения автоматического запуска клиента iFolder при регистрации в компьютере Macintosh добавьте iFolder в <span class="guimenu">Startup Items</span> (Автозагрузка).</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
-<p class="para">Start iFolder.</p></li>
+<p class="para">Запустите iFolder.</p></li>
 <li class="step" id="bcphuse">
-<p class="para">From the dock, right-click the iFolder icon and select the option <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, press the Ctrl key, click the iFolder icon, then select <span class="guimenu">Open at Login</span>.</p></li></ol>
+<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder и выберите параметр <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p>
+<p class="para">или</p>
+<p class="para">На панели быстрого запуска приложений нажмите клавишу Ctrl, щелкните значок iFolder, затем выберите <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically, remove iFolder from the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Чтобы отменить автоматический запуск приложения iFolder, удалите iFolder из списка <span class="guimenu">Startup Items</span> (Автозагрузка).</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcpi1cj">
-<p class="para">From the dock, right-click the iFolder icon, and deselect <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, right-click or Ctrl-click the iFolder icon, then deselect <span class="guimenu">Open at Login.</span></p></li></ol>
+<p class="para">В прикреплении щелкните правой кнопкой значок iFolder и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p>
+<p class="para">или</p>
+<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder или нажмите клавишу Ctrl и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bcphogg">
+<div class="sect3" id="bcphogg">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Запуск iFolder вручную</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Log in to your computer with the local Macintosh user identity you want to use when you create iFolders.</p></li>
+<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Macintosh, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw08fy2">
-<p class="para">Use one of the following methods to start iFolder: </p>
+<p class="para">Для запуска iFolder используйте один из следующих способов: </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open <span class="guimenu">the Applications</span> directory on <span class="systemitem">Macintosh HD</span>, select <span class="guimenu">Applications</span>, then double-click <span class="guimenu"> iFolder 3</span>.</p></li>
+<p class="listitem">Откройте каталог <span class="guimenu">Applications</span> (Приложения) на <span class="systemitem">Macintosh HD</span>, выберите <span class="guimenu">Applications</span> (Приложения), затем дважды щелкните приложение <span class="guimenu">iFolder 3</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Type <span class="command">iFolder</span> in the spotlight (Apple button + Spacebar or click the magnifying glass icon on top right) then click the <span class="guimenu">iFolder 3</span> under Applications.</p></li>
+<p class="listitem">Введите <span class="command">iFolder</span> в выделенном поле (кнопка Apple + пробел, либо щелкните значок лупы в верхнем правом углу), затем щелкните <span class="guimenu">iFolder 3</span> в списке приложений.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, log in as the root user, then enter </p><pre class="screen">
+<p class="listitem">Откройте терминальную оболочку, зарегистрируйтесь в качестве пользователя root, затем введите </p><pre class="screen">
 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3
 </pre></li></ul></div>
 </li></ol>
@@ -242,8 +251,13 @@
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
 </body>
 </html>

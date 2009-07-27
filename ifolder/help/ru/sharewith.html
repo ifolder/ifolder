@@ -1,360 +1,370 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ru" lang="ru">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Sharing an iFolder</title>
+<title>Совместное использование папки iFolder</title>
 <script type="text/javascript">
-  var prev_link = "createifolder.html";
-  var next_link = "viewhide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="sharewith">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Sharing an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
 
-<p class="para">You can share an iFolder with multiple users. This section discusses the following tasks:</p>
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> Совместное использование папки iFolder</h1>
+
+<p class="para">Папка iFolder может совместно использоваться несколькими пользователями. В данной разделе рассматриваются следующие задачи:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bv2hnvt">Understanding User Access Rights</a>
+            <a href="sharewith.html#bv2hnvt">Общие сведения о правах доступа пользователя</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b41tbcf">Accessing the Sharing Tab</a>
+            <a href="sharewith.html#b41tbcf">Доступ к вкладке "Совместное использование"</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwm0">Adding a User to an iFolder</a>
+            <a href="sharewith.html#bq6lwm0">Добавление пользователя iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwma">Modifying User Access Rights</a>
+            <a href="sharewith.html#bq6lwma">Изменение прав доступа пользователей</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwmr">Removing a User from an iFolder</a>
+            <a href="sharewith.html#bq6lwmr">Удаление пользователей iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b47q8t9">Transferring Ownership to an iFolder User</a>
+            <a href="sharewith.html#b47q8t9">Передача владения пользователю папки iFolder</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bv2hnvt">
+<div class="sect2" id="bv2hnvt">
 
-<h2 class="title"> Understanding User Access Rights</h2>
+<h2 class="title"> Общие сведения о правах доступа пользователя</h2>
 
-<p class="para">The following table describes the capabilities associated with each level of access for users or LDAPGroup. </p>
+<p class="para">В следующей таблице описаны возможности, связанные с каждым уровнем доступа пользователей или группы LDAPGroup. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>All the members of an LDAPGroup inherit the access rights set for that LDAPGroup.</p></div>
+<p class="para"><em class="title">ВАЖНО.</em>Все члены группы LDAPGroup наследуют права доступа, установленные для данной группы LDAPGroup.</p></div>
 
 <div class="table" id="b4031ex">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
-<p class="para">Capability</p></th>
+<p class="para">Функция</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Owner</p></th>
+<p class="para">Владелец</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Full Control</p></th>
+<p class="para">Член с полным контролем</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read/Write</p></th>
+<p class="para">Член с правом на чтение/запись</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read Only</p></th>
+<p class="para">Член с правом только на чтение</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
-<p class="para">With an enterprise server, the space consumed by the iFolder on the server is charged against the user’s quota</p></td>
+<p class="para">В случае сервера, пространство iFolder на сервере используется с учетом квоты пользователя</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
-<p class="para">Transfer ownership to another member whose state is iFolder User </p></td>
+<p class="para">Передача владения другому члену с состоянием "Пользователь iFolder" </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
-<p class="para">Set a quota for the iFolder</p></td>
+<p class="para">Установление квоты для папки iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
-<p class="para">Make the iFolder available to other users (sharing)</p></td>
+<p class="para">Установление доступности папки iFolder для других пользователей (совместное использование)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
-<p class="para">Make the iFolder unavailable to other users (stop sharing)</p></td>
+<p class="para">Отмена доступности папки iFolder для других пользователей (прекращение совместного использования)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">Да, кроме владельца</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
-<p class="para">Assign iFolder access rights for other users</p></td>
+<p class="para">Назначение прав доступа других пользователей к папке iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">Да, кроме владельца</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
-<p class="para">Read directories and files in the iFolder </p></td>
+<p class="para">Чтение каталогов и файлов папки iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
-<p class="para">Add, modify, or delete directories and files in the iFolder</p></td>
+<p class="para">Добавление, изменение или удаление каталогов и файлов папки iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
-<p class="para">Rename directories and files in an iFolder</p></td>
+<p class="para">Переименование каталогов и файлов папки iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
-<p class="para">Rename the iFolder</p></td>
+<p class="para">Переименование папки iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
-<p class="para">Set up an iFolder on multiple computers</p></td>
+<p class="para">Настройка iFolder на нескольких компьютерах</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
-<p class="para">Revert an iFolder (do not participate on a local computer)</p></td>
+<p class="para">Преобразование папки iFolder (отмена участия на локальном компьютере)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
-<p class="para">Delete an available iFolder to decline participating</p></td>
+<p class="para">Удаление доступной папки iFolder для отказа в участии</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
-<p class="para">Delete the iFolder and delete the iFolder and its files from the server (make it a normal folder again and no longer share it with others)</p></td>
+<p class="para">Удаление папки iFolder, а также удаление папки iFolder и ее файлов с сервера (преобразование ее в стандартную папку и прекращение ее совместного использования с другими пользователями)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Да</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">Нет</p></td>
 </tr></table>
 </div>
 
 </div>
 
-<div class="sect2"  id="b41tbcf">
+<div class="sect2" id="b41tbcf">
 
-<h2 class="title"> Accessing the Sharing Tab</h2>
+<h2 class="title"> Доступ к вкладке "Совместное использование"</h2>
 
-<p class="para">You can manage membership for the iFolder from the <span class="guimenu">Sharing</span> tab in the iFolder Properties dialog box.</p>
+<p class="para">На вкладке <span class="guimenu">Совместное использование</span> в диалоговом окне "Свойства iFolder" можно управлять членством в папке iFolder.</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share iFolders only if the iFolder administrator has enabled the sharing policy for your account.</p></div>
+<p class="para"><em class="title">ВАЖНО.</em>Совместное использование папок iFolder возможно только в том случае, если администратор iFolder включил политику совместного использования для Вашей учетной записи.</p></div>
 
 <ol class="steps">
 <li class="step" id="b41tmw1">
-<p class="para">If iFolder is not running, start iFolder.</p></li>
+<p class="para">Если приложение iFolder не запущено, запустите iFolder.</p></li>
 <li class="step" id="b41tmw2">
-<p class="para">Do one of the following to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p>
-<div class="informalfigure">
-                  <img src="images/if3_sharing_a.png" alt="" />
-                </div>
-
+<p class="para">Выполните одно из указанных ниже действий, чтобы открыть диалоговое окно "Свойства iFolder" на вкладке <span class="guimenu">Совместное использование</span>.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In a file manager, right-click the iFolder you want to share, then select <span class="guimenu">Share with</span>.</p></li>
+<p class="listitem">В менеджере файлов щелкните правой кнопкой папку iFolder, которая необходима для совместного использования, затем выберите <span class="guimenu">Совместное использование</span>.</p></li>
 <li class="listitem">
-<p class="listitem">In the iFolder browser, select the iFolder, then select <span class="guimenu">Share with</span>.</p></li></ul></div>
+<p class="listitem">В навигаторе iFolder выберите папку iFolder, затем выберите <span class="guimenu">Совместное использование</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwm0">
+<div class="sect2" id="bq6lwm0">
 
-<h2 class="title"> Adding a User to an iFolder</h2>
+<h2 class="title"> Добавление пользователя iFolder</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41tjp8">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, click <span class="guimenu">Add</span> to open the Select User dialog box.</p></li>
+<p class="para">На вкладке <span class="guimenu">Совместное использование</span> щелкните <span class="guimenu">Добавить</span>, чтобы открыть диалоговое окно выбора пользователя.</p></li>
 <li class="step" id="bv2hqlb">
-<p class="para">From the list of users, select one or more users or LDAPGroups by adding them to the <span class="guimenu">Selected Users</span> list, then click <span class="guimenu">OK</span>.</p>
-<p class="para">It can take several seconds for the users to synchronize up to the server. Soon after the sync, a notification appears at the bottom right of the page.</p></li>
+<p class="para">Из списка пользователей выберите одного или нескольких пользователей или группы LDAPGroups, добавляя их в список <span class="guimenu">Добавляемые пользователи</span>, и щелкните <span class="guimenu">ОК</span>.</p>
+<p class="para">Для синхронизации пользователей на сервере потребуется несколько секунд. После синхронизации в нижнем правом углу страницы отображается оповещение.</p></li>
 <li class="step" id="bv2hqlc">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to assign the same access right. </p></li>
+<p class="para">На вкладке <span class="guimenu">Совместное использование</span> выберите одного или нескольких пользователей, которым необходимо назначить одинаковое право доступа. </p></li>
 <li class="step" id="b41tpyv">
-<p class="para">Click <span class="guimenu">Access</span>, select the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> access right, then click <span class="guimenu">OK</span>.</p></li>
+<p class="para">Щелкните <span class="guimenu">Права</span>, выберите право доступа (<span class="guimenu">Полный контроль</span>, <span class="guimenu">Чтение/запись</span> или <span class="guimenu">Только чтение</span>) и нажмите <span class="guimenu">ОК</span>.</p></li>
 <li class="step" id="bx3vxly">
-<p class="para">Repeat the previous steps until you have invited all the desired users or LDAPGroups to share the iFolder and have set their access rights.</p></li>
+<p class="para">Повторяйте предыдущие действия, пока все нужные пользователи или группы LDAPGroup не будут приглашены для совместного использования папки iFolder и не будут назначены их права доступа.</p></li>
 <li class="step" id="bv2hqld">
-<p class="para">Click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">Закрыть</span>, чтобы вернуться в окно свойств iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwma">
+<div class="sect2" id="bq6lwma">
 
-<h2 class="title"> Modifying User Access Rights</h2>
+<h2 class="title"> Изменение прав доступа пользователей</h2>
 
-<p class="para">As the working relationships and status of members of an iFolder change, you might need to change a user’s access right for the iFolder. For example, you might want to give a trusted user the Full Control right for the iFolder.</p>
+<p class="para">Поскольку рабочие взаимосвязи и состояния членов iFolder меняются, может потребоваться изменение права доступа пользователя к папке iFolder. Например Вы можете захотеть дать право полного контроля в папке iFolder пользователю, которому Вы доверяете.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hncw">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to have the same access right.</p></li>
+<p class="para">На вкладке <span class="guimenu">Совместное использование</span> выберите одного или нескольких пользователей, которым необходимо назначить одинаковое право доступа.</p></li>
 <li class="step" id="bv2hoj5">
-<p class="para">Select <span class="guimenu">Access</span>, then specify the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> right.</p>
-<div class="informalfigure">
-                  <img src="images/if3_ifcr_share-accessro_a.png" alt="" />
-                </div>
-
-<p class="para">When you first invite a user or LDAPGroup to participate, the <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box. If you intend to make the new user the owner, you must wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then you can transfer ownership. When you transfer the ownership to an LDAPGroup, all the members of that LDAPGroup get the ownership rights.</p></li>
+<p class="para">Щелкните <span class="guimenu">Права</span> и выберите право доступа (<span class="guimenu">Полный контроль</span>, <span class="guimenu">Чтение/запись</span> или <span class="guimenu">Только чтение</span>).</p>
+<p class="para">Если пользователь или группа LDAPGroup приглашается к участию впервые, параметр <span class="guimenu">Назначить пользователя владельцем папки iFolder</span> в диалоговом окне "Доступ" отключен (отмечен серым). Если необходимо назначить нового пользователя владельцем, нужно подождать, пока состояние пользователя <span class="guimenu">Приглашенный пользователь</span> изменится на <span class="guimenu">Пользователь iFolder</span>, после чего можно передать владение. При передаче владения группе LDAPGroup все члены данной группы LDAPGroup получают права владения.</p></li>
 <li class="step" id="bv2hpae">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, затем щелкните <span class="guimenu">OK</span>, чтобы закрыть окно "Свойства iFolder".</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwmr">
+<div class="sect2" id="bq6lwmr">
 
-<h2 class="title"> Removing a User from an iFolder</h2>
+<h2 class="title"> Удаление пользователей iFolder</h2>
 
-<p class="para">To unshare an iFolder, you must remove a user or an LDAPGroup as a member of an iFolder. The iFolder on the user’s or LDAPGroup member’s workstation becomes a normal folder. A copy of the data remains on the former member’s workstation, but the files are no longer synchronized with the shared iFolder.</p>
+<p class="para">Для отмены совместного использования папки iFolder необходимо удалить пользователя или группу LDAPGroup как члена папки iFolder. Папка iFolder на рабочей станции пользователя или члена группы LDAPGroup преобразуется в стандартную папку. На рабочей станции бывшего участника остается копия данных, однако файлы больше не синхронизируются с совместно используемой папкой iFolder.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hug0">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users from the list.</p></li>
+<p class="para">На вкладке <span class="guimenu">Совместное использование</span> выберите в списке одного или нескольких пользователей.</p></li>
 <li class="step" id="bv2hug1">
-<p class="para">Click <span class="guimenu">Remove</span>, click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">Удалить</span>, а затем — <span class="guimenu">Да</span>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b47q8t9">
+<div class="sect2" id="b47q8t9">
 
-<h2 class="title"> Transferring Ownership to an iFolder User </h2>
+<h2 class="title"> Передача владения пользователю папки iFolder </h2>
 
-<p class="para">The owner of an iFolder can transfer ownership of the iFolder to another individual member or LDAPGroup whose state is iFolder User. After the transfer, the original owner becomes a member with the Read/Write right, and the space consumed by the iFolder is charged against the new owner. When an LDAPGroup becomes the owner of an iFolder, all the members of the group get the ownership rights.</p>
+<p class="para">Владелец папки iFolder может передать права владения папкой iFolder другому отдельному члену или группе LDAPGroup с состоянием "Пользователь iFolder". После передачи прав первоначальный пользователь становится членом с правами "Чтение/Запись", а пространство, выделенное для папки iFolder, будет использоваться в соответствии с новым владельцем. Когда группа LDAPGroup становится владельцем папки iFolder, все члены группы получают права владения.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b47q70j">
-<p class="para">In a file manager or the iFolder browser, right-click the iFolder you want to transfer, then select <span class="guimenu">Share With</span> to open the iFolder’s Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></li>
+<p class="para">В менеджере файлов или в навигаторе iFolder щелкните правой кнопкой мыши папку iFolder, которую необходимо передать, а затем выберите пункт <span class="guimenu">Совместное использование</span>, чтобы открыть диалоговое окно свойств папки iFolder на вкладке <span class="guimenu">Совместное использование</span>.</p></li>
 <li class="step" id="b47q8tb">
-<p class="para">From the list of users, select the iFolder User who is to be the new owner, then click <span class="guimenu">Access</span>.</p></li>
+<p class="para">Из списка пользователей выберите пользователя iFolder, которого хотите назначить новым владельцем, и щелкните <span class="guimenu">Права</span>.</p></li>
 <li class="step" id="b47q70k">
-<p class="para">Select <span class="guimenu">Make this user the owner of this iFolder</span>.</p>
-<p class="para">The <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box if the user’s state is <span class="guimenu">Invited User</span>. In this case, exit the dialog box, wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then repeat the preceding steps to transfer ownership.</p></li>
+<p class="para">Выберите <span class="guimenu">Назначить пользователя владельцем папки iFolder</span>.</p>
+<p class="para">Параметр <span class="guimenu">Назначить пользователя владельцем папки iFolder</span> в диалоговом окне "Доступ" отключен (серый), если пользователь находится в состоянии <span class="guimenu">Приглашенный пользователь</span>. В этом случае закройте диалоговое окно, подождите, пока состояние пользователя <span class="guimenu">Приглашенный пользователь</span> изменится на <span class="guimenu">Пользователь iFolder</span>, затем повторите предыдущие действия по передаче владения.</p></li>
 <li class="step" id="b47qbju">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, затем щелкните <span class="guimenu">OK</span>, чтобы закрыть окно "Свойства iFolder".</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
 </body>
 </html>

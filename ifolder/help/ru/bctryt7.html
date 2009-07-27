@@ -1,93 +1,111 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ru" lang="ru">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Upgrading iFolder 3.x Clients</title>
+<title>Обновление клиента iFolder 3.x</title>
 <script type="text/javascript">
-  var prev_link = "migration.html";
-  var next_link = "bctrxs4.html";
-  var parentfile = "../coexistmig.html";
-  var parenttoc = "../toc_coexistmig.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bctryt7">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Upgrading iFolder 3.<span class="replaceable">x</span> Clients</h1>
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
 
-<p class="para">This section discusses the following:</p>
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> Обновление клиента iFolder 3.<span class="replaceable">x</span></h1>
+
+<p class="para">Темы раздела:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Автоматическое обновление на версию iFolder 3.7</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">Обновление на версию iFolder 3.7 вручную</a>
           </p></li></ul></div>
 
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Before upgrading your 3.4.1 client, you must back up your local Simias store. If you don’t do the backup, you lose all configuration information from the computer because it deletes the Simias store when the upgrade fails.</p></div>
+<p class="para"><em class="title">ВАЖНО.</em>Перед обновлением клиента 3.4.1 необходимо создать резервную копию локального хранилища Simias. Если резервное копирование не выполнено, вся конфигурационная информация компьютера будте утрачена, так как при сбое обновления харнилище Simias удаляется.</p></div>
 
-<div class="sect2"  id="bctryt8">
+<div class="sect2" id="bctryt8">
 
-<h2 class="title"> Automatically Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Автоматическое обновление на версию iFolder 3.7</h2>
 
-<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you can not connect to the iFolder 3.7 domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
+<p class="para">Автоматическое обновление возможно только при наличии прав доступа "root", так как для обновления необходимо выполнить установку пакетов RPM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет удален, Вы не можете установить соединение с доменом iFolder 3.7 с использованием клиента iFolder 3.<span class="replaceable">x</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
-<p class="para">From an iFolder 3.<span class="replaceable">x</span> client earlier than iFolder 3.7, try to connect to the iFolder server. You are prompted about whether you want to upgrade.</p></li>
+<p class="para">С помощью клиента iFolder 3.<span class="replaceable">x</span> более ранней версии, чем iFolder 3.7, попытайтесь установить соединение с сервером iFolder. Отображается запрос на выполнение обновления.</p></li>
 <li class="step" id="bctryta">
-<p class="para">Click <span class="guimenu">Yes</span> to automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
+<p class="para">Щелкните <span class="guimenu">Да</span> для автоматического обновления клиента iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
-<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
+<p class="para">При использовании iFolder 3.4.1 выбор варианта <span class="guimenu">Нет</span> и попытка подключения клиента iFolder 3.4.1 к серверу iFolder 3.7 приводит к отображению сообщения об ошибке. Щелкните <span class="guimenu">ОК</span>, чтобы закрыть сообщение.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>An iFolder 3.<span class="replaceable">x</span> client (other than iFolder 3.4.1 clients) connects to iFolder 3.7 server even if you choose not to upgrade. Although the 3.<span class="replaceable">x</span> client stays connected to the 3.7 server, you cannot perform any of the iFolder operations with this client. When you attempt to convert an existing folder to an iFolder, the server does not consider those changes, and displays an error message that the server is unavailable. The only operation that you can perform is that download the new RPMs from the server to install iFolder 3.7.</p></div>
+<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Клиент iFolder 3.<span class="replaceable">x</span> (версии, отличной от iFolder 3.4.1) устанавливает соединение с сервером iFolder 3.7 даже в том случае, если выбран отказ от обновления. Хотя соединение клиента 3.<span class="replaceable">x</span> с сервером 3.7 установлено, выполнение каких-либо операций iFolder с помощью этого клиента невозможно. При попытке преобразования существующей папки в папку iFolder сервер не учитывает эти изменения и отображается сообщение об ошибке с информацией о том, что сервер недоступен. Единственной операцией, которую может выполнить пользователь, является загрузка пакетов RPM с сервера для установки iFolder 3.7.</p></div>
 
 </div>
 
-<div class="sect2"  id="bbjs0lm">
+<div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Manually Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Обновление на версию iFolder 3.7 вручную</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjefu4">
-<p class="para">Open a terminal. At the command prompt, run <span class="command">install-ifolder.sh</span>.</p></li>
+<p class="para">Откройте терминал. В командной строке введите <span class="command">install-ifolder.sh</span>.</p></li>
 <li class="step" id="bbjeh6h">
-<p class="para">Enter the root password when it is requested.</p>
-<p class="para">This closes the iFolder client if it is already running, then it updates the XSP Web server and iFolder client along with the Nautilus-ifolder3 plug-in.</p></li>
+<p class="para">Введите пароль "root" при появлении запроса.</p>
+<p class="para">Если клиент iFolder уже запущен, выполнение этой операции приводит к его закрытию, затем выполняется обновление веб-сервера XSP и клиента iFolder, а также подключаемого модуля Nautilus-ifolder3.</p></li>
 <li class="step" id="bbjehh4">
-<p class="para">Start iFolder from the <span class="guimenu">Application</span> menu.</p></li></ol>
+<p class="para">Запустите iFolder из меню <span class="guimenu">Приложение</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
 </body>
 </html>

@@ -1,67 +1,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ja" lang="ja">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for File Types and Sizes to Not Synchronize</title>
+<title>同期を行わないファイルのタイプとサイズに関するガイドライン</title>
 <script type="text/javascript">
-  var prev_link = "locguide.html";
-  var next_link = "nameconv.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "typeguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="typeguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目次' title='目次' />目次</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for File Types and Sizes to Not Synchronize</h1>
-
-<p class="para">When the iFolder client is used, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, LDAPGroup or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</p>
-<p class="para">Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as <span class="filename">.mp3</span> files. </p>
-<div class="sect2"  id="bctogsl">
-
-<h2 class="title"> Operating System Files</h2>
-
-<p class="para">You should not convert system directories to iFolders. Most system files change infrequently and it is better to keep an image file of your basic system and key software than to attempt to synchronize those files to the server.</p>
+<div class='nav' id='topnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 
-<div class="sect2"  id="bctogyn">
 
-<h2 class="title"> Hidden Files</h2>
+<div class="sect1" id="typeguide">
 
-<p class="para">If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </p>
-<p class="para">For example, iFolder automatically excludes two hidden file manager files called <span class="filename">thumbs.db</span> and <span class="filename">.DS_Store</span>.</p>
+<h1 class="title"> 同期を行わないファイルのタイプとサイズに関するガイドライン</h1>
+
+<p class="para">iFolderクライアントがNovell iFolderで使用される場合、iFolder管理者は、ファイルタイプおよび最大ファイルサイズに関する制限を、システム、ユーザ、LDAPGroupまたはiFolderレベルで指定する可能性があります。 その場合、お使いのアカウントも、所有するiFolder内でデータが使用できる容量に制限を受ける可能性があります。 他のiFolderに参加する場合、そのサーバで使用した容量は、そのiFolderの所有者にとって負担になります。</p>
+<p class="para">オペレーティングシステムファイル、ファイルマネージャによって作成された隠しファイル、またはリンクファイルの集合として実装されたデータベースなど、一部のファイルは同期に適していません。 業務で使用される重要なファイルタイプのみを含め、<span class="filename">.mp3</span>ファイルのように業務にはあまり関係のないファイルは除外するようにします。 </p>
+<div class="sect2" id="bctogsl">
+
+<h2 class="title"> オペレーティングシステムファイル</h2>
+
+<p class="para">システムディレクトリをiFolderに変換しないでください。 多くのシステムファイルは頻繁に変更されることはありません。基本システムと主要ソフトウェアのイメージファイルは、サーバのファイルと同期させずに維持する方がよいでしょう。</p>
 </div>
 
-<div class="sect2"  id="bctoh6r">
+<div class="sect2" id="bctogyn">
 
-<h2 class="title"> Database Files</h2>
+<h2 class="title"> 隠しファイル</h2>
 
-<p class="para">iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
-<p class="para">Do not try to synchronize your GroupWise® data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
+<p class="para">ファイルシステムが隠しファイルを使用して表示の初期設定を追跡している場合、管理者は、それらのファイルタイプがお使いのシステムで同期されないように制限する可能性があります。 通常、隠しファイルは、それが作成された特定のコンピュータのみに関連付けられ、ファイルやディレクトリがアクセスされるたびに変更されます。 これらのファイルを維持する必要はありません。これらのファイルを同期すると、繰り返しファイルの競合エラーになります。 </p>
+<p class="para">たとえば、iFolderは、<span class="filename">thumbs.db</span>および<span class="filename">.DS_Store</span>と呼ばれる2つの隠しファイルマネージャファイルを自動的に除外します。</p>
+</div>
+
+<div class="sect2" id="bctoh6r">
+
+<h2 class="title"> データベースファイル</h2>
+
+<p class="para">iFolderは、個別のファイルまたは個別のファイルで変更された部分を同期します。ファイルをセットで同期することはありません。 リンクファイルの集合として実装されたデータベースがある場合、それをiFolder内で同期しないでください。</p>
+<p class="para">GroupWiseアーカイブ、キャッシュ、またはリモートディレクトリをiFolder内に作成することで、GroupWise®データを同期しないでください。 データを同期すると、GroupWiseデータファイルを何度か同期した後に、そのファイルは破損します。 GroupWiseでは、アーカイブ中にファイルセットとして維持されるファイルが必要です。</p>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 詳細については、「 <a href="legal.html">保証と著作権</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
+</div>
+
 </body>
 </html>

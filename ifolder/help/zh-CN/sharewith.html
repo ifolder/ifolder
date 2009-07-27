@@ -1,360 +1,370 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-cn" lang="zh-cn">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Sharing an iFolder</title>
+<title>共享 iFolder</title>
 <script type="text/javascript">
-  var prev_link = "createifolder.html";
-  var next_link = "viewhide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="sharewith">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Sharing an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
 
-<p class="para">You can share an iFolder with multiple users. This section discusses the following tasks:</p>
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> 共享 iFolder</h1>
+
+<p class="para">可以与多个用户共享 iFolder。本节讨论以下任务：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bv2hnvt">Understanding User Access Rights</a>
+            <a href="sharewith.html#bv2hnvt">了解用户访问权限</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b41tbcf">Accessing the Sharing Tab</a>
+            <a href="sharewith.html#b41tbcf">访问“共享”选项卡</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwm0">Adding a User to an iFolder</a>
+            <a href="sharewith.html#bq6lwm0">将用户添加到 iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwma">Modifying User Access Rights</a>
+            <a href="sharewith.html#bq6lwma">修改用户访问权限</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwmr">Removing a User from an iFolder</a>
+            <a href="sharewith.html#bq6lwmr">从 iFolder 中去除用户</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b47q8t9">Transferring Ownership to an iFolder User</a>
+            <a href="sharewith.html#b47q8t9">将所有权转让给 iFolder 用户</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bv2hnvt">
+<div class="sect2" id="bv2hnvt">
 
-<h2 class="title"> Understanding User Access Rights</h2>
+<h2 class="title"> 了解用户访问权限</h2>
 
-<p class="para">The following table describes the capabilities associated with each level of access for users or LDAPGroup. </p>
+<p class="para">下表说明了与用户或 LDAP 组的每个访问级别相关联的功能。 </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>All the members of an LDAPGroup inherit the access rights set for that LDAPGroup.</p></div>
+<p class="para"><em class="title">重要说明：</em>LDAP 组的所有成员都将继承该 LDAP 组的访问权限集。</p></div>
 
 <div class="table" id="b4031ex">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
-<p class="para">Capability</p></th>
+<p class="para">功能</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Owner</p></th>
+<p class="para">拥有者</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Full Control</p></th>
+<p class="para">具有“完全控制”权限的成员</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read/Write</p></th>
+<p class="para">具有“读/写”权限的成员</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read Only</p></th>
+<p class="para">具有“只读”权限的成员</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
-<p class="para">With an enterprise server, the space consumed by the iFolder on the server is charged against the user’s quota</p></td>
+<p class="para">使用 Enterprise Server 时，服务器上的 iFolder 所占用的空间耗用用户的定额</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
-<p class="para">Transfer ownership to another member whose state is iFolder User </p></td>
+<p class="para">将所有权转让给另一位状态为 iFolder 用户的成员 </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
-<p class="para">Set a quota for the iFolder</p></td>
+<p class="para">设置 iFolder 的定额</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
-<p class="para">Make the iFolder available to other users (sharing)</p></td>
+<p class="para">使 iFolder 可供其他用户使用（共享）</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
-<p class="para">Make the iFolder unavailable to other users (stop sharing)</p></td>
+<p class="para">使 iFolder 不可供其他用户使用（停止共享）</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">是，拥有者除外</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
-<p class="para">Assign iFolder access rights for other users</p></td>
+<p class="para">为其他用户指派 iFolder 访问权限</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">是，拥有者除外</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
-<p class="para">Read directories and files in the iFolder </p></td>
+<p class="para">读取 iFolder 中的目录和文件 </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
-<p class="para">Add, modify, or delete directories and files in the iFolder</p></td>
+<p class="para">添加、修改或删除 iFolder 中的目录和文件</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">无</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
-<p class="para">Rename directories and files in an iFolder</p></td>
+<p class="para">重命名 iFolder 中的目录和文件</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">无</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
-<p class="para">Rename the iFolder</p></td>
+<p class="para">重命名 iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
-<p class="para">Set up an iFolder on multiple computers</p></td>
+<p class="para">在多台计算机上设置 iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
-<p class="para">Revert an iFolder (do not participate on a local computer)</p></td>
+<p class="para">恢复 iFolder（不要在本地计算机上加入）</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
-<p class="para">Delete an available iFolder to decline participating</p></td>
+<p class="para">删除可用的 iFolder 以谢绝加入</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">是</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
-<p class="para">Delete the iFolder and delete the iFolder and its files from the server (make it a normal folder again and no longer share it with others)</p></td>
+<p class="para">删除 iFolder 并将 iFolder 及其文件从服务器上删除（使其再次成为常规文件夹并且不再与他人共享它）</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">有</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No</p></td>
+<p class="para">否</p></td>
 </tr></table>
 </div>
 
 </div>
 
-<div class="sect2"  id="b41tbcf">
+<div class="sect2" id="b41tbcf">
 
-<h2 class="title"> Accessing the Sharing Tab</h2>
+<h2 class="title"> 访问“共享”选项卡</h2>
 
-<p class="para">You can manage membership for the iFolder from the <span class="guimenu">Sharing</span> tab in the iFolder Properties dialog box.</p>
+<p class="para">您可以通过“iFolder 属性”对话框中的<span class="guimenu">“共享”</span>选项卡管理 iFolder 的成员资格。</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share iFolders only if the iFolder administrator has enabled the sharing policy for your account.</p></div>
+<p class="para"><em class="title">重要说明：</em>仅当 iFolder 管理员已为您的帐户启用共享策略后，您才能共享 iFolder。</p></div>
 
 <ol class="steps">
 <li class="step" id="b41tmw1">
-<p class="para">If iFolder is not running, start iFolder.</p></li>
+<p class="para">如果 iFolder 没有运行，请启动 iFolder。</p></li>
 <li class="step" id="b41tmw2">
-<p class="para">Do one of the following to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p>
-<div class="informalfigure">
-                  <img src="images/if3_sharing_a.png" alt="" />
-                </div>
-
+<p class="para">进行下面的操作之一以打开“iFolder 属性”对话框，显示<span class="guimenu">“共享”</span>选项卡。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In a file manager, right-click the iFolder you want to share, then select <span class="guimenu">Share with</span>.</p></li>
+<p class="listitem">在文件管理器中，右击要共享的 iFolder，然后选择<span class="guimenu">“共享对象”</span>。</p></li>
 <li class="listitem">
-<p class="listitem">In the iFolder browser, select the iFolder, then select <span class="guimenu">Share with</span>.</p></li></ul></div>
+<p class="listitem">在 iFolder 浏览器中，选择 iFolder，然后选择<span class="guimenu">“共享对象”</span>。</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwm0">
+<div class="sect2" id="bq6lwm0">
 
-<h2 class="title"> Adding a User to an iFolder</h2>
+<h2 class="title"> 将用户添加到 iFolder</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41tjp8">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, click <span class="guimenu">Add</span> to open the Select User dialog box.</p></li>
+<p class="para">在<span class="guimenu">“共享”</span>选项卡上，单击<span class="guimenu">“添加”</span>以打开“选择用户”对话框。</p></li>
 <li class="step" id="bv2hqlb">
-<p class="para">From the list of users, select one or more users or LDAPGroups by adding them to the <span class="guimenu">Selected Users</span> list, then click <span class="guimenu">OK</span>.</p>
-<p class="para">It can take several seconds for the users to synchronize up to the server. Soon after the sync, a notification appears at the bottom right of the page.</p></li>
+<p class="para">从用户列表中，通过将一个或多个用户或 LDAP 组添加到<span class="guimenu">“要添加的用户”</span>列表来选择一个或多个用户或 LDAP 组，然后单击<span class="guimenu">“确定”</span>。</p>
+<p class="para">用户可能需要花费几秒钟来同步到服务器。同步后不久，页的右底部将出现一个通知。</p></li>
 <li class="step" id="bv2hqlc">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to assign the same access right. </p></li>
+<p class="para">在<span class="guimenu">“共享”</span>选项卡上，选择一个或多个要指派相同访问权限的用户。 </p></li>
 <li class="step" id="b41tpyv">
-<p class="para">Click <span class="guimenu">Access</span>, select the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> access right, then click <span class="guimenu">OK</span>.</p></li>
+<p class="para">单击<span class="guimenu">“权限”</span>，选择<span class="guimenu">“完全控制”</span>、<span class="guimenu">“读/写”</span>或<span class="guimenu">“只读”</span>访问权限，然后单击<span class="guimenu">“确定”</span>。</p></li>
 <li class="step" id="bx3vxly">
-<p class="para">Repeat the previous steps until you have invited all the desired users or LDAPGroups to share the iFolder and have set their access rights.</p></li>
+<p class="para">重复前面的步骤，直到已邀请所有需要的用户或 LDAP 组共享 iFolder 并为其设置了访问权限。</p></li>
 <li class="step" id="bv2hqld">
-<p class="para">Click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">单击<span class="guimenu">“关闭”</span>来关闭“iFolder 属性”窗口。</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwma">
+<div class="sect2" id="bq6lwma">
 
-<h2 class="title"> Modifying User Access Rights</h2>
+<h2 class="title"> 修改用户访问权限</h2>
 
-<p class="para">As the working relationships and status of members of an iFolder change, you might need to change a user’s access right for the iFolder. For example, you might want to give a trusted user the Full Control right for the iFolder.</p>
+<p class="para">由于 iFolder 成员的工作关系和状态会发生改变，因此您可能需要更改某个用户对 iFolder 的访问权限。例如，您可能希望授予某个可信用户对 iFolder 的“完全控制”权限。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hncw">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to have the same access right.</p></li>
+<p class="para">在<span class="guimenu">“共享”</span>选项卡上，选择一个或多个您希望他们拥有相同访问权限的用户。</p></li>
 <li class="step" id="bv2hoj5">
-<p class="para">Select <span class="guimenu">Access</span>, then specify the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> right.</p>
-<div class="informalfigure">
-                  <img src="images/if3_ifcr_share-accessro_a.png" alt="" />
-                </div>
-
-<p class="para">When you first invite a user or LDAPGroup to participate, the <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box. If you intend to make the new user the owner, you must wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then you can transfer ownership. When you transfer the ownership to an LDAPGroup, all the members of that LDAPGroup get the ownership rights.</p></li>
+<p class="para">选择<span class="guimenu">“权限”</span>，然后指定<span class="guimenu">“完全控制”</span>、<span class="guimenu">“读/写”</span>或<span class="guimenu">“只读”</span>权限。</p>
+<p class="para">首次邀请一个用户或 LDAP 组参与时，“访问权限”对话框中的<span class="guimenu">“将此用户作为 iFolder 的拥有者”</span>选项是禁用的（灰显）。如果您要将新用户设置为拥有者，则必须等到该用户的状态从<span class="guimenu">“已邀请用户”</span>变为<span class="guimenu">“iFolder 用户”</span>，然后才能转让所有权。将所有权转让给 LDAP 组时，该组的所有成员都将获得该所有权。</p></li>
 <li class="step" id="bv2hpae">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">单击<span class="guimenu">“确定”</span>，然后单击<span class="guimenu">“确定”</span>关闭“iFolder 属性”窗口。</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwmr">
+<div class="sect2" id="bq6lwmr">
 
-<h2 class="title"> Removing a User from an iFolder</h2>
+<h2 class="title"> 从 iFolder 中去除用户</h2>
 
-<p class="para">To unshare an iFolder, you must remove a user or an LDAPGroup as a member of an iFolder. The iFolder on the user’s or LDAPGroup member’s workstation becomes a normal folder. A copy of the data remains on the former member’s workstation, but the files are no longer synchronized with the shared iFolder.</p>
+<p class="para">要取消共享一个 iFolder，必须去除用户或 LDAP 组的 iFolder 成员资格。用户或 LDAP 组成员的工作站上的 iFolder 将变为常规文件夹。数据的一份拷贝保留在前成员的工作站上，但文件不再与共享的 iFolder 同步。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hug0">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users from the list.</p></li>
+<p class="para">在<span class="guimenu">“共享”</span>选项卡上，从列表中选择一个或多个用户。</p></li>
 <li class="step" id="bv2hug1">
-<p class="para">Click <span class="guimenu">Remove</span>, click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">单击<span class="guimenu">“去除”</span>，然后单击<span class="guimenu">“是”</span>。</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b47q8t9">
+<div class="sect2" id="b47q8t9">
 
-<h2 class="title"> Transferring Ownership to an iFolder User </h2>
+<h2 class="title"> 将所有权转让给 iFolder 用户 </h2>
 
-<p class="para">The owner of an iFolder can transfer ownership of the iFolder to another individual member or LDAPGroup whose state is iFolder User. After the transfer, the original owner becomes a member with the Read/Write right, and the space consumed by the iFolder is charged against the new owner. When an LDAPGroup becomes the owner of an iFolder, all the members of the group get the ownership rights.</p>
+<p class="para">一个 iFolder 的拥有者可以将该 iFolder 的所有权转让给状态为“iFolder 用户”的其他单个用户或 LDAP 组。转让所有权后，原拥有者将变为具有读/写权限的成员，新拥有者将对该 iFolder 占用的空间付费。当一个 LDAP 组是 iFolder 的拥有者时，该组的所有成员都将获得拥有权。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b47q70j">
-<p class="para">In a file manager or the iFolder browser, right-click the iFolder you want to transfer, then select <span class="guimenu">Share With</span> to open the iFolder’s Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></li>
+<p class="para">在文件管理器或 iFolder 浏览器中，右击要转让的 iFolder，然后选择<span class="guimenu">“共享对象”</span>打开此 iFolder 的“属性”对话框，显示<span class="guimenu">“共享”</span>选项卡。</p></li>
 <li class="step" id="b47q8tb">
-<p class="para">From the list of users, select the iFolder User who is to be the new owner, then click <span class="guimenu">Access</span>.</p></li>
+<p class="para">从用户列表中，选择将成为新的拥有者的 iFolder 用户，然后单击<span class="guimenu">“权限”</span>。</p></li>
 <li class="step" id="b47q70k">
-<p class="para">Select <span class="guimenu">Make this user the owner of this iFolder</span>.</p>
-<p class="para">The <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box if the user’s state is <span class="guimenu">Invited User</span>. In this case, exit the dialog box, wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then repeat the preceding steps to transfer ownership.</p></li>
+<p class="para">选择<span class="guimenu">“将此用户作为 iFolder 的拥有者”</span>。</p>
+<p class="para">如果用户的状态为<span class="guimenu">“已邀请用户”</span>，则“访问”对话框中的<span class="guimenu">“将此用户作为 iFolder 的拥有者”</span>选项被禁用（灰显）。在此情况下，请退出对话框，等到用户的状态从<span class="guimenu">“已邀请的用户”</span>变为 <span class="guimenu">“iFolder 用户”</span>后，再重复上述步骤转让所有权。</p></li>
 <li class="step" id="b47qbju">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">单击<span class="guimenu">“确定”</span>，然后单击<span class="guimenu">“确定”</span>关闭“iFolder 属性”窗口。</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
 </body>
 </html>

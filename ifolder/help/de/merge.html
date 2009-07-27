@@ -1,127 +1,145 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="de" lang="de">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="de" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:34" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Merging iFolders</title>
+<title>iFolder-Ordner zusammenführen</title>
 <script type="text/javascript">
-  var prev_link = "viewhide.html";
-  var next_link = "setupifolder.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="merge">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Merging iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
 
-<p class="para">Merge helps you consolidate the iFolder data and minimize the data transfer between iFolder server and client. You can merge the content in an iFolder on the server with the content on an existing local machine folder content.</p>
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> iFolder-Ordner zusammenführen</h1>
+
+<p class="para">Mithilfe der Zusammenführung können Sie Daten in iFolder-Ordnern konsolidieren und den Datentransfer zwischen dem iFolder-Server und dem Client minimieren. Sie können den Inhalt in einem iFolder-Ordner auf dem Server mit dem Inhalt des Ordners auf einem lokalen Computer zusammenführen.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>
+            <a href="merge.html#bcq0ign">Zusammenführen eines iFolder-Ordners mit einem Ordner</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0kks">Moving Existing iFolders to Different Locations</a>
+            <a href="merge.html#bcq0kks">Verschieben von vorhandenen iFolder-Ordnern an einen anderen Speicherplatz</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0l8i">Merging a Migrated 2.x iFolder to iFolder 3.7</a>
+            <a href="merge.html#bcq0l8i">Zusammenführen eines migrierten iFolder 2.x-Ordners mit einem iFolder 3.7-Ordner</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bcq0ign">
+<div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-to-Folder Merge</h2>
+<h2 class="title"> Zusammenführen eines iFolder-Ordners mit einem Ordner</h2>
 
-<p class="para">You can merge an iFolder and a normal folder with the same name. For example, you can merge the content of an iFolder named <span class="filename">corporate</span> with that of a normal folder named <span class="filename">corporate</span>. </p>
-<p class="para">Assume that the <span class="filename">corporate</span> iFolder has three sub folders: <span class="filename">hr</span>, <span class="filename">finance</span> and <span class="filename">marketing</span>. You want to download the content of <span class="filename">corporate</span> iFolder to the folder named <span class="filename">corporate,</span> which contains only the <span class="filename">hr</span> and <span class="filename">finance</span> folders. In this case, you don’t need to download all the three folders to <span class="filename">the corporate</span> folder and increase the transer rate. Instead, you can merge the <span class="filename">corporate</span> iFolder to <span class="filename">the corporate</span> folder so that the <span class="guimenu">Merge to folder</span> feature intelligently avoids downloading the sub folders <span class="filename">hr</span> and <span class="filename">finance</span>, and downloads only <span class="filename">marketing</span> sub folder. If the data in the <span class="filename">corporate</span> iFolder and <span class="filename">corporate</span> folder is different, a version conflict is displayed. You can resolve the conflicts manually. Similarly, if filename conflict is displayed, you can resolve it manually.</p>
-<p class="para">To merge an iFolder on the server to an existing local machine folder content:</p>
+<p class="para">Sie können einen iFolder-Ordner mit einem normalen Ordner zusammenführen, der den gleichen Namen besitzt. Beispielsweise können Sie den Inhalt eines iFolder-Ordners mit dem Namen <span class="filename">Firma</span> mit dem eines normalen Ordners mit dem Namen <span class="filename">Firma</span> zusammenführen. </p>
+<p class="para">Angenommen, der iFolder-Ordner <span class="filename">Firma</span> besitzt drei Unterordner: <span class="filename">Personal</span>, <span class="filename">Finanzen</span> und <span class="filename">Marketing</span>. Sie möchten nun den Inhalt des iFolder-Ordners<span class="filename">Firma</span> zu dem Ordner mit dem Namen <span class="filename">Firma</span> herunterladen, der nur die Unterordner <span class="filename">Personal</span> und <span class="filename">Finanzen</span> enthält. In diesem Fall brauchen Sie nicht alle drei Ordner in den Ordner <span class="filename">Firma</span> herunterzuladen, wodurch die Übertragungsgeschwindigkeit viel höher ist. Stattdessen können Sie den iFolder-Ordner <span class="filename">Firma</span> mit dem Ordner <span class="filename">Firma</span> zusammenführen, sodass die Funktion <span class="guimenu">Mit Ordner zusammenführen</span> auf intelligente Weise die Unterordner <span class="filename">Personal</span> und <span class="filename">Finanzen</span> nicht herunterlädt, sondern nur den Unterordner <span class="filename">Marketing</span>. Wenn sich der Inhalt des iFolder-Ordners <span class="filename">Firma</span> von demjenigen des Ordners <span class="filename">Firma</span> unterscheidet, wird ein Versionskonflikt angezeigt. Sie können diesen Konflikt manuell auflösen. Auch eventuelle Dateinamenkonflikte können manuell aufgelöst werden.</p>
+<p class="para">So führen Sie einen iFolder-Ordner auf dem Server mit dem vorhandenen Inhalt in einem Ordner auf dem lokalen Computer zusammen:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr3w0i">
-<p class="para">In the iFolder browser, right-click the desired iFolder from the list of iFolders on the selected server, then select <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">Klicken Sie im iFolder-Browser mit der rechten Maustaste auf den gewünschten iFolder in der Liste der iFolder-Ordner auf dem ausgewählten Server und wählen Sie <span class="guimenu">In Ordner zusammenführen</span> aus.</p></li>
 <li class="step" id="bcr4m9d">
-<p class="para">Browse and select the folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Suchen Sie nach dem Ordner, wählen Sie ihn aus und klicken Sie auf <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
-<p class="para">Now, the contents of these two folders are compared and the files that are not present in the folder is downloaded from the iFolder. The files that are not present in the iFolder, but available in the folder are uploaded.</p>
+<p class="para">Die Inhalte dieser beiden Ordner werden jetzt miteinander verglichen und die in dem Ordner nicht vorhandenen Dateien werden von dem iFolder-Ordner heruntergeladen. Die Dateien, die im iFolder-Ordner nicht vorhanden sind, jedoch in dem Ordner, werden hochgeladen.</p>
 </div>
 
-<div class="sect2"  id="bcq0kks">
+<div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Moving Existing iFolders to Different Locations</h2>
+<h2 class="title"> Verschieben von vorhandenen iFolder-Ordnern an einen anderen Speicherplatz</h2>
 
-<p class="para">To move an existing iFolder named <span class="filename">corporate</span> to a different location on the client machine: </p>
+<p class="para">So verschieben Sie einen vorhandenen iFolder-Ordner mit dem Namen <span class="filename">Firma</span> zu einem anderen Speicherort auf dem Clientcomputer: </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr4vli">
-<p class="para">Convert the <span class="filename">corporate</span> iFolder into a normal folder.</p>
+<p class="para">Konvertieren Sie den iFolder-Ordner <span class="filename">Firma</span> in einen normalen Ordner.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not delete the iFolder on the server.</p></div>
+<p class="para"><em class="title">WICHTIG:</em>Sie dürfen den iFolder-Ordner auf dem Server nicht löschen.</p></div>
 
-<p class="para">For more information, see <a href="reverting.html">Reverting an iFolder to a Normal Folder</a>.</p></li>
+<p class="para">Weitere Informationen finden Sie unter <a href="reverting.html">Zurücksetzen von iFolder-Ordnern auf normale Ordner</a>.</p></li>
 <li class="step" id="bcr4vww">
-<p class="para">Move the <span class="filename">corporate</span> folder to a different location. </p>
+<p class="para">Verschieben Sie den Ordner <span class="filename">Firma</span> zu einem anderen Speicherplatz. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not change the folder name while it is being moved.</p></div>
+<p class="para"><em class="title">WICHTIG:</em>Sie dürfen den Ordnernamen während des Verschiebens nicht ändern.</p></div>
 </li>
 <li class="step" id="bcr4w5o">
-<p class="para">In the iFolder browser window, select the <span class="filename">corporate</span> iFolder on the server, then click <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">Wählen Sie im Fenster des iFolder-Browsers den iFolder-Ordner <span class="filename">Firma</span> auf dem Server aus und klicken Sie auf <span class="guimenu">In Ordner zusammenführen</span>.</p></li>
 <li class="step" id="bcr4y94">
-<p class="para">Select the <span class="filename">corporate</span> folder on the local machine, then click <span class="guimenu">OK</span> to merge the content.</p>
+<p class="para">Wählen Sie den Ordner <span class="filename">Firma</span> auf dem lokalen Computer aus und klicken Sie auf <span class="guimenu">OK</span>, um die Inhalte zusammenzuführen.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>If you use <span class="guimenu">Sychronize Now</span> (instead of <span class="guimenu">Merge to folder</span>), as described in <a href="movelocation.html">Moving an iFolder</a>, it checks for all the data in the iFolder on the server, and synchronizes all the data.Thus it increases data transfering time. In other hand, <span class="guimenu">Merge to folder </span>minimize the data transfer as it only merges the contents of the iFolder and the normal folder.</p></div>
+<p class="para"><em class="title">HINWEIS:</em>Wenn Sie die Option <span class="guimenu">Jetzt synchronisieren</span> wie in <span class="guimenu"> beschrieben verwenden (anstelle von </span>In Ordner zusammenführen<a href="movelocation.html">Verschieben von iFolder-Ordnern</a>), werden alle Daten im iFolder-Ordner auf dem Server überprüft und alle Daten werden synchronisiert, wodurch sich die Übertragungszeit verlängert. Demgegenüber reduziert <span class="guimenu">In Ordner zusammenführen</span> den Datentransfer, da lediglich die Inhalte des iFolder-Ordners mit denen des normalen Ordners zusammengeführt werden.</p></div>
 
-<p class="para">For more information on merging, see <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>.</p></li></ol>
+<p class="para">Weitere Informationen zum Zusammenführen finden Sie unter <a href="merge.html#bcq0ign">Zusammenführen eines iFolder-Ordners mit einem Ordner</a>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bcq0l8i">
+<div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Merging a Migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7</h2>
+<h2 class="title"> Zusammenführen eines migrierten iFolder 2.<span class="replaceable">x</span>-Ordners mit einem iFolder 3.7-Ordner</h2>
 
-<p class="para">You can merge a migrated 2.x iFolder and iFolder 3.7 iFolder. For more information on migration, see <a href="coexistmig.html">Novell iFolder Migration And Upgrade</a>. </p>
-<p class="para">After migration, the 2.<span class="replaceable">x</span> iFolders are moved to the iFolder 3.7 server. You can choose to download the migrated iFolders on the 3.7 server to the client machine. However, those iFolders might already exist on the client machine. If this is the case, use the merge functionality to avoid unnecessary data transfer from server to the client. </p>
-<p class="para">To merge a migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7,</p>
+<p class="para">Sie können einen migrierten iFolder 2.x-Ordner mit einem iFolder 3.7-Ordner zusammenführen. Weitere Informationen zur Migration finden Sie unter <a href="coexistmig.html">Novell iFolder-Migration und -Upgrade</a>. </p>
+<p class="para">Nach der Migration werden die iFolder 2.<span class="replaceable">x</span>-Ordner auf den iFolder 3.7-Server verschoben. Sie können die migrierten iFolder-Ordner auf dem iFolder 3.7-Server auf den Clientcomputer herunterladen. Diese iFolder-Ordner sind jedoch möglicherweise auf dem Clientcomputer bereits vorhanden. Verwenden Sie in diesem Fall die Funktion zum Zusammenführen, um unnötigen Datentransfer vom Server zum Client zu vermeiden. </p>
+<p class="para">So führen Sie einen migrierten iFolder 2.<span class="replaceable">x</span>-Ordner mit einem iFolder 3.7-Ordner zusammen:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr6eex">
-<p class="para">Migrate the 2.<span class="replaceable">x</span> iFolders to the iFolder 3.7 domain.</p></li>
+<p class="para">Migrieren Sie die iFolder 2.<span class="replaceable">x</span>-Ordner zu der iFolder 3.7-Domäne.</p></li>
 <li class="step" id="bcr6f1n">
-<p class="para">Convert the 2.<span class="replaceable">x</span> iFolders on the local machine to normal folders.</p></li>
+<p class="para">Konvertieren Sie die iFolder 2.<span class="replaceable">x</span>-Ordner auf dem lokalen Computer in normale Ordner.</p></li>
 <li class="step" id="bcr6f5l">
-<p class="para">Select the server copy of each iFolder and click <span class="replaceable">Merge to folder</span>.</p></li>
+<p class="para">Wählen Sie die Serverkopien aller iFolder-Ordner aus und klicken Sie auf <span class="replaceable">In Ordner zusammenführen</span>.</p></li>
 <li class="step" id="bcr6is8">
-<p class="para">To merge the content, select the normal folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Um die Inhalte zusammenzuführen, wählen Sie den normalen Ordner aus und klicken Sie auf <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
 </body>
 </html>

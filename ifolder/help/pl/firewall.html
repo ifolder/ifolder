@@ -1,101 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pl" lang="pl">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Configuring Local Firewall Settings for iFolder Traffic</title>
+<title>Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</title>
 <script type="text/javascript">
-  var prev_link = "preferences.html";
-  var next_link = "virusscan.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "firewall";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="firewall">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Configuring Local Firewall Settings for iFolder Traffic</h1>
+<div class='nav' id='topnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
 
-<p class="para">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono® XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP in your environment.</p>
-<p class="para">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP ports for traffic. However, if you block the traffic between the client and Mono XSP, the client has no way to communicate with the server. You cannot log in to your iFolder account and synchronize iFolder data.</p>
-<p class="para">Initially, the iFolder configuration does not specify a particular port to use for client-to-Mono XSP communications. When iFolder first runs, it opens an available local port to listen for requests from Mono XSP and to send data to the server via Mono XSP. It writes the port number to a configuration file and uses this port thereafter unless the port is not available whenever iFolder starts. If the port is in use by another application, iFolder selects a different available port, reconfigures the port in the configuration file, and uses the new port thereafter. For example, if iFolder is down and another application takes the port, iFolder must select and configure a different port to use when you restart iFolder.</p>
+
+<div class="sect1" id="firewall">
+
+<h1 class="title"> Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</h1>
+
+<p class="para">Jeśli użytkownik korzysta z zapory lokalnej, musi skonfigurować zaporę tak, aby pozwolić programowi iFolderowi na wybór lokalnego portu dynamicznego lub skonfigurować lokalny port statyczny dla klienta programu iFolder w taki sposób, aby mógł komunikować się lokalnie (na tym samym komputerze) z serwerem Mono® XSP Server. Program iFolder korzysta z usług webserwisu Mono XSP do komunikacji poprzez protokół HTTP z firmowymi serwerami Novell iFolder, na których użytkownik ma konta iFolder. Administrator programu iFolder konfiguruje usługi iFolder określające, czy w środowisku użytkownika do komunikacji wykorzystywany jest protokół HTTP.</p>
+<p class="para">Zapora nie blokuje ruchu między serwerem Mono XSP i serwerem firmowym Novell iFolder, ponieważ serwer Mono XSP wykorzystuje do komunikacji standardowe porty. Jeśli jednak ruch między klientem i serwerem Mono XSP zostanie zablokowany, klient nie będzie mógł komunikować się z serwerem. Nie można zalogować się do konta programu iFolder i zsynchronizować danych z iFolderu.</p>
+<p class="para">Początkowo konfiguracja programu iFolder nie podaje określonego portu służącego do komunikacji z klienta z serwerem Mono XSP. Podczas pierwszego uruchomienia program iFolder otwiera dostępny port lokalny do nasłuchiwania żądań z serwera Mono XSP i wysyłania danych do serwera przez serwer Mono XSP. Numer portu jest zapisywany w pliku konfiguracyjnym i później wykorzystywany, chyba że nie będzie dostępny podczas uruchamiania programu iFolder. Jeżeli port jest wykorzystywany przez inną aplikację, program iFolder wybierze inny dostępny port, zmieni port w pliku konfiguracyjnym i będzie korzystać z tego portu. Jeśli na przykład program iFolder jest wyłączony i inna aplikacja przejmuje port, program iFolder musi przy ponownym uruchomieniu wybrać i skonfigurować do wykorzystywania inny port.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">Using a Local Dynamic Port</a>
+            <a href="firewall.html#bctnqjo">Korzystanie z lokalnego portu dynamicznego</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">Using a Local Static Port</a>
+            <a href="firewall.html#bctnqjp">Korzystanie z lokalnego portu statycznego</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bctnqjo">
+<div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Using a Local Dynamic Port</h2>
+<h2 class="title"> Korzystanie z lokalnego portu dynamicznego</h2>
 
-<p class="para">If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Select <span class="guimenu">Allow</span> to permit the iFolder traffic for this session. If you allow the traffic permanently, your firewall should not remind you again, and you can avoid receiving the pop-up alerts whenever iFolder starts.</p>
-<p class="para">If you block the iFolder-to-Mono XSP traffic, your firewall prevents you from connecting with the iFolder server and you cannot synchronize your files. iFolder does not detect that traffic is blocked by the firewall; it reports only that it cannot connect to your account on the iFolder server.</p>
+<p class="para">Jeśli na komputerze wykorzystywana jest lokalna zapora, powinna ona wykrywać lokalny ruch między programem iFolder i serwerem Mono XSP za każdym razem, gdy program iFolder łączy się z serwerem w celu zsynchronizowania listy użytkowników i danych programu iFolder. Zaznacz opcję <span class="guimenu">Zezwalaj</span>, aby umożliwić komunikację z programem iFolder dla tej sesji. Jeśli zgoda na komunikację zostanie wydana na stałe, zapora nie powinna ponownie przypominać o tym, dzięki czemu można będzie uniknąć wyskakujących alertów przy każdym uruchomieniu programu iFolder.</p>
+<p class="para">Jeśli komunikacja między programem iFolder i serwerem Mono XSP zostanie zablokowana, zapora uniemożliwi połączenie się z serwerem iFolder i nie będzie można zsynchronizować plików użytkownika. Program iFolder nie wykryje zablokowania komunikacji przez zaporę; zgłosi jedynie niemożność połączenia do konta użytkownika na serwerze iFolder.</p>
 </div>
 
-<div class="sect2"  id="bctnqjp">
+<div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Using a Local Static Port</h2>
+<h2 class="title"> Korzystanie z lokalnego portu statycznego</h2>
 
-<p class="para">You can optionally add the Web Service Port Range parameter in the Service Manager section of the <span class="filename">Simias.config</span> file to allow Mono XSP Server to use a static port or a range of ports for this local traffic. This port or range of ports can then be opened in the firewall to allow communications for Mono XSP. </p>
-<p class="para">You can find <span class="filename">Simias.config</span> in the following locations:</p>
+<p class="para">Opcjonalnie można dodać parametr Web Service Port Range w sekcji Service Manager pliku <span class="filename">Simias.config</span>, aby zezwolić na wykorzystanie przez serwer Mono XSP statycznego portu lub zakresu portów dla tego ruchu lokalnego. Ten port lub zakres portów może być następnie otwierany w zaporze, aby umożliwić komunikację z serwerem Mono XSP. </p>
+<p class="para">Plik <span class="filename">Simias.config</span> można znaleźć w następujących lokalizacjach:</p>
 <div class="informaltable">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
-<p class="para">Operating System</p></th>
+<p class="para">System operacyjny</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Location of the Simias.config File</p></th>
+<p class="para">Lokalizacja pliku Simias.config</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
-                    <span class="filename">/home/<span class="replaceable">username</span>/.local/share/simias/Simias.config</span>
+                    <span class="filename">/home/<span class="replaceable">nazwa_użytkownika</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
-                    <span class="filename">C:\Documents and Settings\<span class="replaceable">username</span>\Local Settings\Application Data\simias\Simias.config</span>
+                    <span class="filename">C:\Documents and Settings\<span class="replaceable">nazwa_użytkownika</span>\Local Settings\Application Data\simias\Simias.config</span>
                   </p></td>
 </tr></table>
 </div>
 
-<p class="para">To configure your system to use a specific port or range of ports:</p>
+<p class="para">Aby skonfigurować system do wykorzystywania określonego portu lub zakresu portów:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw4v93e">
-<p class="para">Configure your firewall to allow traffic for the port or range of ports you want to use for iFolder traffic.</p>
-<p class="para">See your firewall’s documentation for information on how to open a port in the firewall.</p></li>
+<p class="para">Skonfiguruj zaporę tak, aby zezwalała na ruch dla portu lub zakresu portów, który ma być wykorzystywany przez program iFolder.</p>
+<p class="para">Informacje dotyczące otwierania portów w zaporze można znaleźć w dokumentacji zapory.</p></li>
 <li class="step" id="bw4v6ou">
-<p class="para">Stop the iFolder client by right-clicking the iFolder icon, then selecting <span class="guimenu">Exit</span>.</p></li>
+<p class="para">Zatrzymaj klienta programu iFolder, klikając prawym przyciskiem myszy ikonę iFolderu, a następnie wybierając opcję <span class="guimenu">Zakończ</span>.</p></li>
 <li class="step" id="bw4v6r7">
-<p class="para">Modify the <span class="filename">Simias.config</span> file by adding the Web Service Port Range parameter to the <span class="guimenu">Service Manager</span> section.</p><pre class="screen">
+<p class="para">Zmodyfikuj plik <span class="filename">Simias.config</span>, dodając parametr Web Service Port Range w sekcji <span class="guimenu">Service Manager</span>.</p><pre class="screen">
 &lt;configuration&gt;
 </pre><pre class="screen">
   &lt;section name="ServiceManager"&gt;
@@ -109,31 +122,36 @@
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="bctnuhr">
-<p class="para">Replace <span class="replaceable">monoxsp_port</span> with a port number or range of port numbers:</p>
+<p class="para">Parametr <span class="replaceable">monoxsp_port</span> należy zastąpić numerem portu lub zakresem numerów portów:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Specify a value of a single four-digit port number (such as 1234) to use a single static port. For example:</p><pre class="screen">
+<p class="listitem">Aby używać pojedynczego portu statycznego, należy podać wartość, będącą czterocyfrowym numerem portu (taką jak 1234). Na przykład:</p><pre class="screen">
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234</span>" /&gt;
 </pre></li>
 <li class="listitem">
-<p class="listitem">Specify a range of ports (such as “1234-1236”) to use any available port in the specified range of ports. For example:</p><pre class="screen">
+<p class="listitem">Aby używać dowolnego dostępnego portu z podanego zakresu, należy podać zakres portów (taki jak "1234-1236"). Na przykład:</p><pre class="screen">
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234-1236</span>" /&gt;
 </pre></li></ul></div>
 </li></ol>
 </div>
 </li>
 <li class="step" id="bw4vbz4">
-<p class="para">Start the iFolder client.</p>
-<p class="para">For more information, see <a href="startclient.html">Starting the iFolder Client</a>.</p></li></ol>
+<p class="para">Uruchom klienta programu iFolder.</p>
+<p class="para">Więcej informacji można znaleźć w dokumencie <a href="startclient.html">Uruchamianie klienta programu iFolder</a>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Aby uzyskać więcej informacji, patrz sekcja <a href="legal.html">Informacje prawne</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
 </body>
 </html>

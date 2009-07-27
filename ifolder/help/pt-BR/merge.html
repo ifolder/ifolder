@@ -1,127 +1,145 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pt-br" lang="pt-br">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pt-br" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Merging iFolders</title>
+<title>Fundindo pastas do iFolder</title>
 <script type="text/javascript">
-  var prev_link = "viewhide.html";
-  var next_link = "setupifolder.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="merge">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Índice' title='Índice' />Índice</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Merging iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
 
-<p class="para">Merge helps you consolidate the iFolder data and minimize the data transfer between iFolder server and client. You can merge the content in an iFolder on the server with the content on an existing local machine folder content.</p>
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> Fundindo pastas do iFolder</h1>
+
+<p class="para">A ação de fundir ajuda você a consolidar os dados das pastas do iFolder e minimizar a transferência de dados entre o cliente e o servidor iFolder. Você pode fundir o conteúdo em uma pasta do iFolder no servidor com o conteúdo em um conteúdo da pasta existente na máquina local.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>
+            <a href="merge.html#bcq0ign">Fundição de uma pasta do iFolder com outra pasta</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0kks">Moving Existing iFolders to Different Locations</a>
+            <a href="merge.html#bcq0kks">Movendo pastas do iFolder existentes para localizações diferentes</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0l8i">Merging a Migrated 2.x iFolder to iFolder 3.7</a>
+            <a href="merge.html#bcq0l8i">Fundindo um iFolder 2.x migrado para o iFolder 3.7</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bcq0ign">
+<div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-to-Folder Merge</h2>
+<h2 class="title"> Fundição de uma pasta do iFolder com outra pasta</h2>
 
-<p class="para">You can merge an iFolder and a normal folder with the same name. For example, you can merge the content of an iFolder named <span class="filename">corporate</span> with that of a normal folder named <span class="filename">corporate</span>. </p>
-<p class="para">Assume that the <span class="filename">corporate</span> iFolder has three sub folders: <span class="filename">hr</span>, <span class="filename">finance</span> and <span class="filename">marketing</span>. You want to download the content of <span class="filename">corporate</span> iFolder to the folder named <span class="filename">corporate,</span> which contains only the <span class="filename">hr</span> and <span class="filename">finance</span> folders. In this case, you don’t need to download all the three folders to <span class="filename">the corporate</span> folder and increase the transer rate. Instead, you can merge the <span class="filename">corporate</span> iFolder to <span class="filename">the corporate</span> folder so that the <span class="guimenu">Merge to folder</span> feature intelligently avoids downloading the sub folders <span class="filename">hr</span> and <span class="filename">finance</span>, and downloads only <span class="filename">marketing</span> sub folder. If the data in the <span class="filename">corporate</span> iFolder and <span class="filename">corporate</span> folder is different, a version conflict is displayed. You can resolve the conflicts manually. Similarly, if filename conflict is displayed, you can resolve it manually.</p>
-<p class="para">To merge an iFolder on the server to an existing local machine folder content:</p>
+<p class="para">Você pode fundir uma pasta do iFolder e uma pasta normal com o mesmo nome. Por exemplo, você pode fundir o conteúdo de uma pasta do iFolder chamada <span class="filename">corporativa</span> com o de uma pasta normal chamada <span class="filename">corporativa</span>. </p>
+<p class="para">Considere que o iFolder <span class="filename">corporativo</span> possui três subpastas: <span class="filename">rh</span>, <span class="filename">finanças</span> e <span class="filename">marketing</span>.  Você deseja fazer download do conteúdo da pasta <span class="filename">corporativa</span> do iFolder para a pasta chamada <span class="filename">corporativa</span>, que contém apenas as pastas <span class="filename">rh</span> e <span class="filename">finanças</span>. Nesse caso, não é necessário fazer o download das três pastas para <span class="filename">a pasta corporativa</span> e aumentar a taxa de transferência.  Em vez disso, você pode fundir a pasta <span class="filename">corporativa</span> do iFolder com a pasta <span class="filename">corporativa</span>, de forma que o recurso <span class="guimenu">Fundir com a pasta</span> evite de maneira inteligente o download das subpastas <span class="filename">rh</span> e <span class="filename">finanças</span> e faça o download somente da subpasta <span class="filename">marketing</span>. Se os dados na pasta <span class="filename">corporativa</span> do iFolder e na pasta <span class="filename">corporativa</span> forem diferentes, será exibido um conflito de versão. Esses conflitos podem ser resolvidos manualmente. Da mesma forma, se houver um conflito com nome de arquivo, você poderá resolvê-lo manualmente.</p>
+<p class="para">Para fundir uma pasta do iFolder no servidor com o conteúdo da pasta existente na máquina local:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr3w0i">
-<p class="para">In the iFolder browser, right-click the desired iFolder from the list of iFolders on the selected server, then select <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">No browser do iFolder, clique o botão direito do mouse na pasta desejada da lista de pastas do iFolder no servidor selecionado e marque <span class="guimenu">Fundir com a pasta</span>.</p></li>
 <li class="step" id="bcr4m9d">
-<p class="para">Browse and select the folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Procure e selecione a pasta e clique em <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
-<p class="para">Now, the contents of these two folders are compared and the files that are not present in the folder is downloaded from the iFolder. The files that are not present in the iFolder, but available in the folder are uploaded.</p>
+<p class="para">Agora, o conteúdo dessas duas pastas são comparados e os arquivos que não estão na pasta são descarregados da pasta do iFolder. Os arquivos que não estão presentes na pasta do iFolder, mas estão disponíveis na pasta são carregados. </p>
 </div>
 
-<div class="sect2"  id="bcq0kks">
+<div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Moving Existing iFolders to Different Locations</h2>
+<h2 class="title"> Movendo pastas do iFolder existentes para localizações diferentes</h2>
 
-<p class="para">To move an existing iFolder named <span class="filename">corporate</span> to a different location on the client machine: </p>
+<p class="para">Para mover uma pasta existente do iFolder chamada <span class="filename">corporativa</span> para uma localização diferente na máquina do cliente: </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr4vli">
-<p class="para">Convert the <span class="filename">corporate</span> iFolder into a normal folder.</p>
+<p class="para">Converta a pasta <span class="filename">corporativa</span> do iFolder em uma pasta normal.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not delete the iFolder on the server.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Não é possível apagar o iFolder no servidor.</p></div>
 
-<p class="para">For more information, see <a href="reverting.html">Reverting an iFolder to a Normal Folder</a>.</p></li>
+<p class="para">Para obter mais informações, consulte a <a href="reverting.html">Revertendo um iFolder para uma pasta normal</a>.</p></li>
 <li class="step" id="bcr4vww">
-<p class="para">Move the <span class="filename">corporate</span> folder to a different location. </p>
+<p class="para">Mova a pasta <span class="filename">corporativa</span> para uma localização diferente. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not change the folder name while it is being moved.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Não é possível mudar o nome da pasta enquanto ela está sendo movida.</p></div>
 </li>
 <li class="step" id="bcr4w5o">
-<p class="para">In the iFolder browser window, select the <span class="filename">corporate</span> iFolder on the server, then click <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">Na janela do browser do iFolder, selecione a pasta <span class="filename">corporativa</span> do iFolder no servidor e clique em <span class="guimenu">Fundir com a pasta</span>.</p></li>
 <li class="step" id="bcr4y94">
-<p class="para">Select the <span class="filename">corporate</span> folder on the local machine, then click <span class="guimenu">OK</span> to merge the content.</p>
+<p class="para">Selecione a pasta <span class="filename">corporativa</span> na máquina local e clique em <span class="guimenu">OK</span> para fundir o conteúdo.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>If you use <span class="guimenu">Sychronize Now</span> (instead of <span class="guimenu">Merge to folder</span>), as described in <a href="movelocation.html">Moving an iFolder</a>, it checks for all the data in the iFolder on the server, and synchronizes all the data.Thus it increases data transfering time. In other hand, <span class="guimenu">Merge to folder </span>minimize the data transfer as it only merges the contents of the iFolder and the normal folder.</p></div>
+<p class="para"><em class="title">NOTA:</em>Se você usar <span class="guimenu">Sincronizar Agora</span> (em vez de <span class="guimenu">Fundir com a pasta</span>), como descrito em <a href="movelocation.html">Movendo uma pasta iFolder</a>, todos os dados no iFolder do servidor serão verificados e sincronizados. Portanto, isso aumenta o tempo de transferência de dados. Por outro lado, <span class="guimenu">Fundir com a pasta</span> minimiza a transferência de dados já que esse recurso funde apenas o conteúdo da pasta do iFolder e da pasta normal.</p></div>
 
-<p class="para">For more information on merging, see <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>.</p></li></ol>
+<p class="para">Para obter mais informações sobre fusão, consulte a <a href="merge.html#bcq0ign">Fundição de uma pasta do iFolder com outra pasta</a>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bcq0l8i">
+<div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Merging a Migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7</h2>
+<h2 class="title"> Fundindo um iFolder 2.<span class="replaceable"></span>x migrado para o iFolder 3.7</h2>
 
-<p class="para">You can merge a migrated 2.x iFolder and iFolder 3.7 iFolder. For more information on migration, see <a href="coexistmig.html">Novell iFolder Migration And Upgrade</a>. </p>
-<p class="para">After migration, the 2.<span class="replaceable">x</span> iFolders are moved to the iFolder 3.7 server. You can choose to download the migrated iFolders on the 3.7 server to the client machine. However, those iFolders might already exist on the client machine. If this is the case, use the merge functionality to avoid unnecessary data transfer from server to the client. </p>
-<p class="para">To merge a migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7,</p>
+<p class="para">Você pode fundir um iFolder 2.X migrado e um iFolder 3.7. Para obter mais informações sobre a migração, consulte o <a href="coexistmig.html">Migração e upgrade do Novell iFolder</a>. </p>
+<p class="para">Após a migração, as pastas do iFolder 2.<span class="replaceable">X</span> são movidas para o servidor do iFolder 3.7. Você pode optar por fazer download das pastas do iFolder migradas no servidor 3.7 para a máquina do cliente. Porém, essas pastas já podem existir na máquina do cliente. Se esse for o caso, use o recurso de fundição para evitar transferências de dados desnecessárias do servidor para o cliente. </p>
+<p class="para">Para fundir um iFolder 2. <span class="replaceable">X</span> migrado com o iFolder 3.7,</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr6eex">
-<p class="para">Migrate the 2.<span class="replaceable">x</span> iFolders to the iFolder 3.7 domain.</p></li>
+<p class="para">Migre as pastas do iFolder 2. <span class="replaceable">X</span> para o domínio do iFolder 3.7.</p></li>
 <li class="step" id="bcr6f1n">
-<p class="para">Convert the 2.<span class="replaceable">x</span> iFolders on the local machine to normal folders.</p></li>
+<p class="para">Converta as pastas do iFolder 2.<span class="replaceable">X</span> na máquina local em pastas normais. </p></li>
 <li class="step" id="bcr6f5l">
-<p class="para">Select the server copy of each iFolder and click <span class="replaceable">Merge to folder</span>.</p></li>
+<p class="para">Selecione a cópia do servidor de cada pasta do iFolder e clique em <span class="replaceable">Fundir com a pasta</span>.</p></li>
 <li class="step" id="bcr6is8">
-<p class="para">To merge the content, select the normal folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Para fundir o conteúdo, selecione a pasta normal e clique em <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Para obter mais informações, consulte <a href="legal.html">Informações legais</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
+
 </body>
 </html>

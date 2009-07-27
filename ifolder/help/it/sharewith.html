@@ -1,93 +1,106 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="it" lang="it">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="it" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Sharing an iFolder</title>
+<title>Condivisione di una cartella iFolder</title>
 <script type="text/javascript">
-  var prev_link = "createifolder.html";
-  var next_link = "viewhide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="sharewith">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Sommario' title='Sommario' />Sommario</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Sharing an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
 
-<p class="para">You can share an iFolder with multiple users. This section discusses the following tasks:</p>
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> Condivisione di una cartella iFolder</h1>
+
+<p class="para">È possibile condividere una cartella iFolder con più utenti. In questa sezione vengono descritti i task seguenti:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bv2hnvt">Understanding User Access Rights</a>
+            <a href="sharewith.html#bv2hnvt">Informazioni sui diritti di accesso utente</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b41tbcf">Accessing the Sharing Tab</a>
+            <a href="sharewith.html#b41tbcf">Accesso alla scheda Condivisione</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwm0">Adding a User to an iFolder</a>
+            <a href="sharewith.html#bq6lwm0">Aggiunta di un utente a una cartella iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwma">Modifying User Access Rights</a>
+            <a href="sharewith.html#bq6lwma">Modifica dei diritti di accesso utente</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#bq6lwmr">Removing a User from an iFolder</a>
+            <a href="sharewith.html#bq6lwmr">Rimozione di un utente da una cartella iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sharewith.html#b47q8t9">Transferring Ownership to an iFolder User</a>
+            <a href="sharewith.html#b47q8t9">Trasferimento della proprietà di una cartella iFolder a un altro utente</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bv2hnvt">
+<div class="sect2" id="bv2hnvt">
 
-<h2 class="title"> Understanding User Access Rights</h2>
+<h2 class="title"> Informazioni sui diritti di accesso utente</h2>
 
-<p class="para">The following table describes the capabilities associated with each level of access for users or LDAPGroup. </p>
+<p class="para">Nella tabella seguente vengono descritte le funzionalità associate a ogni livello di accesso degli utenti o dei gruppi LDAP. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>All the members of an LDAPGroup inherit the access rights set for that LDAPGroup.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>I membri di un gruppo LDAP ereditano i diritti di accesso impostati per il gruppo.</p></div>
 
 <div class="table" id="b4031ex">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
-<p class="para">Capability</p></th>
+<p class="para">Funzionalità</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Owner</p></th>
+<p class="para">Proprietario</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Full Control</p></th>
+<p class="para">Membro con controllo completo</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read/Write</p></th>
+<p class="para">Membro con accesso in lettura/scrittura</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member with Read Only</p></th>
+<p class="para">Membro con accesso in sola lettura</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
-<p class="para">With an enterprise server, the space consumed by the iFolder on the server is charged against the user’s quota</p></td>
+<p class="para">In un server aziendale, lo spazio utilizzato dalla cartella iFolder viene sottratto alla quota utente</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
@@ -96,9 +109,9 @@
 <p class="para">No</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
-<p class="para">Transfer ownership to another member whose state is iFolder User </p></td>
+<p class="para">Trasferimento della proprietà della cartella iFolder a un altro membro il cui stato è Utente iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
@@ -107,7 +120,7 @@
 <p class="para">No</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
-<p class="para">Set a quota for the iFolder</p></td>
+<p class="para">Impostazione di una quota per la cartella iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
@@ -118,73 +131,73 @@
 <p class="para">No</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
-<p class="para">Make the iFolder available to other users (sharing)</p></td>
+<p class="para">Impostazione della condivisione della cartella iFolder con altri utenti</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
-<p class="para">Make the iFolder unavailable to other users (stop sharing)</p></td>
+<p class="para">Interruzione della condivisione della cartella iFolder con altri utenti</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">Sì, tranne che per il proprietario</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
-<p class="para">Assign iFolder access rights for other users</p></td>
+<p class="para">Assegnazione di diritti di accesso alle cartelle iFolder a altri utenti</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes, except the owner</p></td>
+<p class="para">Sì, tranne che per il proprietario</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
-<p class="para">Read directories and files in the iFolder </p></td>
+<p class="para">Lettura di file e directory nella cartella iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
-<p class="para">Add, modify, or delete directories and files in the iFolder</p></td>
+<p class="para">Aggiunta, modifica o cancellazione di file e directory nella cartella iFolder.</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
-<p class="para">Rename directories and files in an iFolder</p></td>
+<p class="para">Ridenominazione di file e directory in una cartella iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
-<p class="para">Rename the iFolder</p></td>
+<p class="para">Ridenominazione della cartella iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
@@ -195,42 +208,42 @@
 <p class="para">No</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
-<p class="para">Set up an iFolder on multiple computers</p></td>
+<p class="para">Configurazione di una cartella iFolder su più computer</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
-<p class="para">Revert an iFolder (do not participate on a local computer)</p></td>
+<p class="para">Annullamento di una cartella iFolder (interruzione della partecipazione sul computer locale)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
-<p class="para">Delete an available iFolder to decline participating</p></td>
+<p class="para">Cancellazione di una cartella iFolder disponibile per rifiutare la partecipazione</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
-<p class="para">Delete the iFolder and delete the iFolder and its files from the server (make it a normal folder again and no longer share it with others)</p></td>
+<p class="para">Cancellazione della cartella iFolder e dei relativi file in locale e nel server (annullamento della conversione in cartella iFolder e interruzione della condivisione)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Yes</p></td>
+<p class="para">Sì</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">No</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
@@ -242,119 +255,116 @@
 
 </div>
 
-<div class="sect2"  id="b41tbcf">
+<div class="sect2" id="b41tbcf">
 
-<h2 class="title"> Accessing the Sharing Tab</h2>
+<h2 class="title"> Accesso alla scheda Condivisione</h2>
 
-<p class="para">You can manage membership for the iFolder from the <span class="guimenu">Sharing</span> tab in the iFolder Properties dialog box.</p>
+<p class="para">È possibile gestire l'appartenenza a una cartella iFolder dalla scheda <span class="guimenu">Condivisione</span> della finestra di dialogo Proprietà iFolder.</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share iFolders only if the iFolder administrator has enabled the sharing policy for your account.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>È possibile condividere le cartelle iFolder solo se l'amministratore ha abilitato le apposite norme per il conto dell'utente.</p></div>
 
 <ol class="steps">
 <li class="step" id="b41tmw1">
-<p class="para">If iFolder is not running, start iFolder.</p></li>
+<p class="para">Se iFolder non è in esecuzione, avviarlo.</p></li>
 <li class="step" id="b41tmw2">
-<p class="para">Do one of the following to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p>
-<div class="informalfigure">
-                  <img src="images/if3_sharing_a.png" alt="" />
-                </div>
-
+<p class="para">Per aprire la scheda <span class="guimenu">Condivisione</span> della finestra di dialogo Proprietà iFolder, effettuare una delle operazioni seguenti:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In a file manager, right-click the iFolder you want to share, then select <span class="guimenu">Share with</span>.</p></li>
+<p class="listitem">In un manager di file, fare clic con il pulsante destro del mouse sulla cartella iFolder che si desidera condividere e scegliere <span class="guimenu">Condividi con</span>.</p></li>
 <li class="listitem">
-<p class="listitem">In the iFolder browser, select the iFolder, then select <span class="guimenu">Share with</span>.</p></li></ul></div>
+<p class="listitem">Nel browser delle cartelle iFolder, selezionare la cartella e quindi <span class="guimenu">Condividi con</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwm0">
+<div class="sect2" id="bq6lwm0">
 
-<h2 class="title"> Adding a User to an iFolder</h2>
+<h2 class="title"> Aggiunta di un utente a una cartella iFolder</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41tjp8">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, click <span class="guimenu">Add</span> to open the Select User dialog box.</p></li>
+<p class="para">Nella scheda <span class="guimenu">Condivisione</span>, fare clic su <span class="guimenu">Aggiungi</span> per aprire la finestra di dialogo Selezione utenti.</p></li>
 <li class="step" id="bv2hqlb">
-<p class="para">From the list of users, select one or more users or LDAPGroups by adding them to the <span class="guimenu">Selected Users</span> list, then click <span class="guimenu">OK</span>.</p>
-<p class="para">It can take several seconds for the users to synchronize up to the server. Soon after the sync, a notification appears at the bottom right of the page.</p></li>
+<p class="para">Dall'elenco di utenti, selezionare uno o più utenti o gruppi LDAP aggiungendoli all'elenco <span class="guimenu">Utenti da aggiungere</span>, quindi fare clic su <span class="guimenu">OK</span>.</p>
+<p class="para">La sincronizzazione degli utenti nel server può richiedere diversi secondi. Al termine della sincronizzazione, viene visualizzata una notifica nella parte inferiore destra della pagina.</p></li>
 <li class="step" id="bv2hqlc">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to assign the same access right. </p></li>
+<p class="para">Nella scheda <span class="guimenu">Condivisione</span>, selezionare uno o più utenti a cui si desidera assegnare gli stessi diritti di accesso. </p></li>
 <li class="step" id="b41tpyv">
-<p class="para">Click <span class="guimenu">Access</span>, select the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> access right, then click <span class="guimenu">OK</span>.</p></li>
+<p class="para">Fare clic su <span class="guimenu">Diritti</span>, selezionare il diritto di accesso <span class="guimenu">Controllo completo</span>, <span class="guimenu">Lettura/scrittura</span> o <span class="guimenu">Sola lettura</span>, quindi fare clic su <span class="guimenu">OK</span>.</p></li>
 <li class="step" id="bx3vxly">
-<p class="para">Repeat the previous steps until you have invited all the desired users or LDAPGroups to share the iFolder and have set their access rights.</p></li>
+<p class="para">Ripetere i passaggi precedenti per invitare tutti gli utenti o i gruppi LDAP desiderati a condividere la cartella iFolder e impostare i relativi diritti di accesso.</p></li>
 <li class="step" id="bv2hqld">
-<p class="para">Click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">Chiudi</span> per chiudere la finestra Proprietà di iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwma">
+<div class="sect2" id="bq6lwma">
 
-<h2 class="title"> Modifying User Access Rights</h2>
+<h2 class="title"> Modifica dei diritti di accesso utente</h2>
 
-<p class="para">As the working relationships and status of members of an iFolder change, you might need to change a user’s access right for the iFolder. For example, you might want to give a trusted user the Full Control right for the iFolder.</p>
+<p class="para">Dal momento che i rapporti lavorativi e lo stato dei membri di una cartella iFolder cambiano nel tempo, potrebbe essere necessario modificare i diritti di accesso di un utente relativamente a una cartella iFolder. Si potrebbe decidere ad esempio di concedere il diritto Controllo completo a un utente di fiducia.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hncw">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users who you want to have the same access right.</p></li>
+<p class="para">Nella scheda <span class="guimenu">Condivisione</span>, selezionare uno o più utenti che si desidera possano disporre degli stessi diritti di accesso.</p></li>
 <li class="step" id="bv2hoj5">
-<p class="para">Select <span class="guimenu">Access</span>, then specify the <span class="guimenu">Full Control</span>, <span class="guimenu">Read/Write</span>, or <span class="guimenu">Read Only</span> right.</p>
-<div class="informalfigure">
-                  <img src="images/if3_ifcr_share-accessro_a.png" alt="" />
-                </div>
-
-<p class="para">When you first invite a user or LDAPGroup to participate, the <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box. If you intend to make the new user the owner, you must wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then you can transfer ownership. When you transfer the ownership to an LDAPGroup, all the members of that LDAPGroup get the ownership rights.</p></li>
+<p class="para">Selezionare <span class="guimenu">Diritti</span>, quindi specificare il diritto <span class="guimenu">Controllo completo</span>, <span class="guimenu">Lettura/scrittura</span> o <span class="guimenu">Sola lettura</span>.</p>
+<p class="para">Quando si invita un utente o un gruppo LDAP a partecipare la prima volta, l'opzione <span class="guimenu">Assegna a questo utente la proprietà della cartella iFolder</span> è disabilitata e visualizzata in grigio nella finestra di dialogo Accesso. Se si desidera che il nuovo utente sia il proprietario della cartella, attendere il cambiamento dello stato dell'utente da <span class="guimenu">Utente invitato</span> a <span class="guimenu">Utente iFolder</span>, quindi trasferire la proprietà. Quando si trasferisce la proprietà a un gruppo LDAP, tutti i membri del gruppo ottengono diritti di proprietà.</p></li>
 <li class="step" id="bv2hpae">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">OK</span> e ancora su <span class="guimenu">OK</span> per chiudere la finestra Proprietà iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bq6lwmr">
+<div class="sect2" id="bq6lwmr">
 
-<h2 class="title"> Removing a User from an iFolder</h2>
+<h2 class="title"> Rimozione di un utente da una cartella iFolder</h2>
 
-<p class="para">To unshare an iFolder, you must remove a user or an LDAPGroup as a member of an iFolder. The iFolder on the user’s or LDAPGroup member’s workstation becomes a normal folder. A copy of the data remains on the former member’s workstation, but the files are no longer synchronized with the shared iFolder.</p>
+<p class="para">Per annullare la condivisione di una cartella iFolder, è necessario revocare a un utente o a un gruppo LDAP lo stato di membro della cartella.  La cartella iFolder nelle workstation dell'utente o dei membri del gruppo LDAP viene convertita in cartella normale. in cui verrà conservata una copia dei dati. I file tuttavia non verranno più sincronizzati con la cartella iFolder condivisa.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hug0">
-<p class="para">On the <span class="guimenu">Sharing</span> tab, select one or more users from the list.</p></li>
+<p class="para">Nella scheda <span class="guimenu">Condivisione</span>, selezionare uno o più utenti dall'elenco.</p></li>
 <li class="step" id="bv2hug1">
-<p class="para">Click <span class="guimenu">Remove</span>, click <span class="guimenu">Apply</span>, then click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">Rimuovi</span>, quindi fare clic su <span class="guimenu">Sì</span>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b47q8t9">
+<div class="sect2" id="b47q8t9">
 
-<h2 class="title"> Transferring Ownership to an iFolder User </h2>
+<h2 class="title"> Trasferimento della proprietà di una cartella iFolder a un altro utente </h2>
 
-<p class="para">The owner of an iFolder can transfer ownership of the iFolder to another individual member or LDAPGroup whose state is iFolder User. After the transfer, the original owner becomes a member with the Read/Write right, and the space consumed by the iFolder is charged against the new owner. When an LDAPGroup becomes the owner of an iFolder, all the members of the group get the ownership rights.</p>
+<p class="para">Il proprietario di una cartella iFolder può trasferire la proprietà della cartella a un altro membro singolo o gruppo LDAP il cui stato sia Utente iFolder. Dopo il trasferimento, il proprietario originale diventa un membro con i diritti Lettura/scrittura e lo spazio utilizzato dalla cartella iFolder viene dedotto dalla quota assegnata al nuovo proprietario. Quando un gruppo LDAP diventa proprietario di una cartella iFolder, tutti i membri del gruppo ottengono diritti di proprietà.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b47q70j">
-<p class="para">In a file manager or the iFolder browser, right-click the iFolder you want to transfer, then select <span class="guimenu">Share With</span> to open the iFolder’s Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></li>
+<p class="para">In un manager di file o nel browser delle cartelle iFolder, fare clic con il pulsante destro del mouse sulla cartella iFolder a cui si desidera assegnare un nuovo proprietario e selezionare <span class="guimenu">Condividi con</span> per aprire la scheda <span class="guimenu">Condivisione</span> della finestra di dialogo Proprietà iFolder.</p></li>
 <li class="step" id="b47q8tb">
-<p class="para">From the list of users, select the iFolder User who is to be the new owner, then click <span class="guimenu">Access</span>.</p></li>
+<p class="para">Dall'elenco di utenti, selezionare l'utente iFolder che deve essere il nuovo proprietario, quindi fare clic su <span class="guimenu">Diritti</span>.</p></li>
 <li class="step" id="b47q70k">
-<p class="para">Select <span class="guimenu">Make this user the owner of this iFolder</span>.</p>
-<p class="para">The <span class="guimenu">Make this user the owner of the iFolder </span>option is disabled (dimmed) in the Access dialog box if the user’s state is <span class="guimenu">Invited User</span>. In this case, exit the dialog box, wait until the user’s state changes from <span class="guimenu">Invited User</span> to <span class="guimenu">iFolder User</span>, then repeat the preceding steps to transfer ownership.</p></li>
+<p class="para">Selezionare <span class="guimenu">Assegna a questo utente la proprietà della cartella iFolder</span>.</p>
+<p class="para">Se lo stato dell'utente è <span class="guimenu">Utente invitato</span>, l'opzione <span class="guimenu">Assegna a questo utente la proprietà della cartella iFolder</span> è disabilitata e visualizzata in grigio. In tale caso, chiudere la finestra di dialogo, attendere il cambiamento dello stato dell'utente da <span class="guimenu">Utente invitato</span> a <span class="guimenu">Utente iFolder</span> e ripetere i passaggi precedenti per trasferire la proprietà della cartella.</p></li>
 <li class="step" id="b47qbju">
-<p class="para">Click <span class="guimenu">OK</span>, then click <span class="guimenu">OK</span> to close the iFolder Properties window.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">OK</span> e ancora su <span class="guimenu">OK</span> per chiudere la finestra Proprietà iFolder.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Per ulteriori informazioni, vedere <a href="legal.html">Note legali</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
+
 </body>
 </html>

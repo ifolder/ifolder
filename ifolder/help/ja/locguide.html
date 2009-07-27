@@ -1,98 +1,116 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ja" lang="ja">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for the Location and Use of iFolders</title>
+<title>iFolderの場所と利用法のガイドライン</title>
 <script type="text/javascript">
-  var prev_link = "myifolders.html";
-  var next_link = "typeguide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="locguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目次' title='目次' />目次</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for the Location and Use of iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
+</div>
 
-<p class="para">Generally, you can put iFolders anywhere on your local hard drive when you create an iFolder or set up an iFolder that is shared with you. However, there are some practical and specific limitations. Consider the following guidelines for placing and using iFolders on your computer:</p>
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> iFolderの場所と利用法のガイドライン</h1>
+
+<p class="para">一般に、iFolderは、iFolderを作成するか、共有するiFolderを設定したときに、ローカルハードドライブの任意の場所に配置できます。 ただし、実際にはいくつかの制約があります。 コンピュータ上にiFolderを配置して使用する際には、次のガイドラインを考慮してください。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">An iFolder’s name must be a unique folder name in the directory where you put the iFolder.</p></li>
+<p class="listitem">iFolderの名前は、iFolderを配置するディレクトリ内で一意である必要があります。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder’s name cannot contain the following invalid characters:</p><pre class="screen">
+<p class="listitem">iFolderの名前に次の無効な文字を含めることはできません。</p><pre class="screen">
 \/:*?"&lt;&gt;|;
 </pre>
-<p class="listitem">For other naming conventions, see <a href="nameconv.html">Naming Conventions for an iFolder and Its Folders and Files</a>.</p></li>
+<p class="listitem">その他の命名規則については、「<a href="nameconv.html">iFolderとそのフォルダおよびファイルの命名規則</a>」を参照してください。</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder must reside on a local hard drive; the location cannot be on a network drive or non-physical drive.</p></li>
+<p class="listitem">iFolderは、ローカルハードドライブに存在する必要があります。ネットワークドライブまたは非物理ドライブには配置できません。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot exist at the root of the hard drive. </p></li>
+<p class="listitem">iFolderは、ハードドライブのルートには配置できません。 </p></li>
 <li class="listitem">
-<p class="listitem">An iFolder can be created only from a folder where you have the file system access rights to read and write files. When you set up a shared iFolder on a computer, you must have file system access rights to the folder where you are placing the iFolder.</p></li>
+<p class="listitem">iFolderは、ファイルの読み込みと書き込みを行うファイルシステムアクセス権があるフォルダからのみ作成できます。 コンピュータに共有iFolderを設定する場合、iFolderを配置するフォルダに対するファイルシステムアクセス権が必要です。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in an applications folder such as the Program Files folder.</p></li>
+<p class="listitem">iFolderは、Program Filesフォルダのようなアプリケーションフォルダを含んだり、そこに配置したりすることはできません。</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder cannot contain or reside in the iFolder metadata folder. The default location of the metadata folder is as follows:</p>
+<p class="listitem">iFolderは、メタデータフォルダを含んだり、そこに配置したりすることはできません。 メタデータフォルダのデフォルトの場所は次のとおりです。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bx09dxu">
                 <p class="title"><em class="title">Linux:</em>
-                In your home folder in the <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span> subdirectory</p>
+                <span class="filename">&lt;ホームディレクトリ&gt;\.local\share</span>\<span class="filename">simias</span>サブディレクトリのホームフォルダ内</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bx09ffv">
                 <p class="title"><em class="title">Windows:</em>
-                In the <span class="filename">C:\Documents and Settings\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span> directory</p>
+                <span class="filename">C:\Documents and Settings\<span class="replaceable"></span>&lt;Windowsログオンユーザ名&gt;\Local Settings\Application Data\simias</span>ディレクトリ内</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bcto9jx">
                 <p class="title"><em class="title">Macintosh:</em>
-                In the <span class="filename">$HOME/.local/share/simias</span></p>
+                <span class="filename">$HOME/.local/share/simias</span>内</p>
               </div>
 </li></ul></div>
 </li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in other iFolders, including your Novell iFolder 2.<span class="replaceable">x</span> iFolder.</p>
-<p class="listitem">iFolder does not support network folders as iFolders. For example, iFolders cannot be the users’ network-based /home directories that are mapped to the users’ workstations. iFolder also does not support WebDAV access for users from their desktop to their iFolder collection on the iFolder server’s user-data volume.</p></li>
+<p class="listitem">iFolderは、お使いのNovell iFolder  2.<span class="replaceable">x</span>などの他のiFolderを含めたり、そこに配置したりすることはできません。</p>
+<p class="listitem">iFolderでは、iFolderをネットワークフォルダとして使用することはできません。たとえば、iFolderを、ネットワークベースの/homeディレクトリとしてユーザのワークステーションにマップすることはできません。iFolderは、デスクトップからiFolderサーバのユーザデータボリュームにあるiFolderコレクションへのWebDAVによるアクセスもサポートしていません。</p></li>
 <li class="listitem">
-<p class="listitem">Although you can log in to more than one iFolder account at a time, an iFolder can be associated with only one iFolder account. You cannot synchronize one iFolder against multiple accounts. When you create an iFolder, the iFolder can be shared only with other users and LDAPGroups that are provisioned in the same iFolder server or domain.</p></li>
+<p class="listitem">一度に複数のiFolderアカウントでログインできますが、1つのiFolderには1つのiFolderアカウントしか関連付けることができません。複数のアカウントで1つのiFolderを同期させることはできません。iFolderを作成すると、そのiFolderは同じiFolderサーバ/ドメイン内でプロビジョニングされている他のユーザおよびLDAPGroupとのみ共有できます。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder is available to all the members of an LDAPGroup when it is shared with that LDAPGroup.</p></li>
+<p class="listitem">iFolderがLDAPGroupと共有されている場合、そのLDAPGroupに属しているすべてのメンバーがiFolderを使用できます。</p></li>
 <li class="listitem">
-<p class="listitem">When multiple users share a computer, the local copies of your iFolders are private to your storage space on the disk if the file system supports privacy features, and if you configure your system to use them.</p>
-<p class="listitem">On Windows, NTFS includes built-in security features such as file and folder permissions and the Encrypting File System (EFS), which is the technology used to store encrypted files on NTFS volumes. These security features are not supported on FAT32 file systems. Make sure the local login identities for users (other than the Administrator identity, of course) do not have the Administrator rights or equivalent. The Administrator user has access to all files and directories on the computer. For shared computers where privacy and security are essential for each user, the users can encrypt their local copy of iFolder data with EFS or a third-party file system encryption.</p>
-<p class="listitem">Linux and Macintosh file systems are designed for multi-user environments. File permissions allow you to control access for the user, groups, and others. A user’s personal files are typically set with full permissions for the user and no access for the groups and others settings. </p>
-<p class="listitem">If you store iFolders locally on a FAT32 volume on Linux, it requires special handling because FAT32 file systems are not POSIX* compliant. For information, see <a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a>.</p></li>
+<p class="listitem">複数のユーザが1台のコンピュータを使用する際に、ファイルシステムがプライバシー機能をサポートしており、これを使用するようにシステムを設定してある場合、iFolderのローカルコピーはディスク上の自分専用のストレージ領域に維持されます。</p>
+<p class="listitem">Windowsの場合、NTFSにファイルやフォルダのアクセス権や、NTFSボリューム上でファイルを暗号化して保存する技術であるEncrypting File System (EFS)などのセキュリティ機能が組み込まれています。このようなセキュリティ機能はFAT32ファイルシステムではサポートされません。管理者のIDを除き、ユーザのローカルログインIDに、管理者権限や同等の権限を付与しないようにしてください。管理者ユーザには、コンピュータ上のすべてのファイルやディレクトリへのアクセス権があります。共有のコンピュータで、ユーザごとにプライバシーとセキュリティを維持する必要がある場合は、iFolderのローカルコピーをEFSまたはサードパーティのファイルシステム暗号化機能を使用して暗号化します。</p>
+<p class="listitem">LinuxおよびMacintoshのファイルシステムは、複数のユーザ環境を考慮して設計されています。ファイルのアクセス権により、ユーザ、グループおよびその他のアクセスを制御できます。ユーザの個人的なファイルには、通常はそのユーザに対してのみ、すべてのアクセス権が設定され、他のグループやその他には設定されません。 </p>
+<p class="listitem">iFolderをLinux上のFAT32ボリュームにローカル保存する場合、FAT32ファイルシステムはPOSIX*との互換性がないため、特別な対処が必要です。詳細については、<a href="createifolder.html#fat32mtpt">FAT32マウントポイント(Linux)上にiFolderを作成する</a>を参照してください。</p></li>
 <li class="listitem">
-<p class="listitem">If users of the same computer share iFolders, multiple copies of the iFolder can exist on the device, with a copy for each user who downloads it from the server. Different local login identities cannot share a single location for the shared iFolders.</p></li></ul></div>
+<p class="listitem">同じコンピュータのユーザがiFolderを共有する場合、デバイス上に複数のiFolderのコピーを保存できます。その場合、各ユーザがサーバからダウンロードしたコピーが維持されます。別のローカルログインIDを使用して、共有iFolderを1つの場所で共有することはできません。</p></li></ul></div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 詳細については、「 <a href="legal.html">保証と著作権</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
+</div>
+
 </body>
 </html>

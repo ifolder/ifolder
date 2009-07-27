@@ -1,56 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="es" lang="es">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="es" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Creating and Uploading an iFolder</title>
+<title>Creación y carga de una carpeta iFolder</title>
 <script type="text/javascript">
-  var prev_link = "ificons.html";
-  var next_link = "sharewith.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "createifolder";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="createifolder">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Creating and Uploading an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="bkjj1f9.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="sharewith.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
 
-<p class="para">You can create an iFolder by converting an existing folder that satisfies the following guidelines: </p>
+
+<div class="sect1" id="createifolder">
+
+<h1 class="title"> Creación y carga de una carpeta iFolder</h1>
+
+<p class="para">Es posible crear una carpeta iFolder mediante la conversión de una carpeta existente que cumpla con las directrices siguientes: </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="locguide.html">Guidelines for the Location and Use of iFolders</a>
+            <a href="locguide.html">Directrices para la ubicación y utilización de carpetas iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="nameconv.html">Naming Conventions for an iFolder and Its Folders and Files</a>
+            <a href="nameconv.html">Convenciones de denominación de una carpeta iFolder y de las carpetas y archivos que contiene</a>
           </p></li></ul></div>
 
-<p class="para">If the folder does not exist, you can browse to a location and create the new folder as part of the process. </p>
+<p class="para">Si la carpeta no existe, puede examinar una ubicación y crear la carpeta nueva como parte del proceso. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share only the regular iFolders. Encrypted iFolders cannot be shared.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Únicamente es posible compartir las carpetas iFolder normales. No es posible compartir las carpetas iFolder cifradas</p></div>
 
-<p class="para">Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
-<p class="para">When you exceeds the limit for number of iFolders an individual user can create, iFolder displays an error message. For example, if your administrator has set the policy for <span class="guimenu">Number of iFolder per user</span> to 10 and you attempt to create the eleventh iFolder, iFolder 3.7 notifies you about the policy violation.</p>
+<p class="para">En la carpeta iFolder, es posible configurar cualquier estructura de subdirectorios que se adecue a los hábitos de trabajo personales o de la empresa. La estructura de subdirectorios es constante en todas las carpetas iFolder miembro. Cada estación de trabajo puede especificar un directorio padre diferente para la carpeta iFolder compartida.</p>
+<p class="para">Cuando se supera el número límite de carpetas iFolder que un usuario puede crear, iFolder muestra un mensaje de error. Por ejemplo, si el administrador ha establecido la directiva de <span class="guimenu">Número de carpetas iFolder por usuario</span> en diez e intenta crear la carpeta iFolder número once, iFolder 3.7 le notificará acerca de la infracción de la directiva.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -67,127 +80,123 @@
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a>
+            <a href="createifolder.html#fat32mtpt">Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bbrkjhr">
+<div class="sect2" id="bbrkjhr">
 
 <h2 class="title"> Linux</h2>
 
-<p class="para">You can create iFolders with a file manager or with the iFolder browser, which is available in the client application. Use the following methods to create an iFolder:</p>
+<p class="para">Para crear carpetas iFolder puede utilizar un gestor de archivos o bien el navegador de iFolder, disponible en la aplicación del cliente. Para crear una carpeta iFolder, utilice los métodos siguientes:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkq96">Creating iFolders in the iFolders Browser</a>
+              <a href="createifolder.html#bbrkq96">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkqnw">Creating iFolders in a File Manager</a>
+              <a href="createifolder.html#bbrkqnw">Creación de carpetas iFolder en un administrador de archivos</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bbrkq96">
+<div class="sect3" id="bbrkq96">
 
-<h3 class="title"> Creating iFolders in the iFolders Browser</h3>
+<h3 class="title"> Creación de carpetas iFolder en el navegador de carpetas iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2gxbu">
-<p class="para">In the notification area, use one of the following methods to open the iFolder browser:</p>
+<p class="para">En el área de notificaciones, utilice uno de los siguientes métodos para abrir el navegador de iFolder:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click the <span class="guimenu">iFolder Services</span> icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />.
+<p class="listitem">Haga clic en el icono <span class="guimenu">Servicios de iFolder</span> <img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" />.
         </p></li>
 <li class="listitem">
-<p class="listitem">Right-click the <span class="guimenu">iFolder Services</span> icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">iFolders</span>.
+<p class="listitem">Haga clic con el botón derecho en el icono <span class="guimenu">Servicios de iFolder</span><img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Carpetas iFolder</span>.
         </p></li></ul></div>
 </li>
 <li class="step" id="bv2gxbv">
-<p class="para">Click <span class="guimenu">Upload a folder</span>.</p>
-<div class="informalfigure">
-                    <img src="images/if3_shared_a.png" alt="" />
-                  </div>
-</li>
+<p class="para">Haga clic en <span class="guimenu">Crear carpeta iFolder</span>.</p></li>
 <li class="step" id="bv2gwvt">
-<p class="para">Under <span class="guimenu">More Options</span>, specify the <span class="guimenu">iFolder Account</span> you want to use for this iFolder.</p>
-<p class="para">If you have multiple iFolder accounts, the default account is listed first. Use the drop-down list to select a different account.</p></li>
+<p class="para">En <span class="guimenu">Más opciones</span>, especifique la <span class="guimenu">cuenta de iFolder</span> que desea utilizar para esta carpeta iFolder.</p>
+<p class="para">Si tiene varias cuentas de iFolder, la cuenta por defecto aparecerá en el primer lugar de la lista. Utilice la lista desplegable para seleccionar otra cuenta.</p></li>
 <li class="step" id="bv2guwr">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">En el navegador, vaya al directorio en el que desea crear una carpeta iFolder.</p></li>
 <li class="step" id="bv2gv55">
-<p class="para">Select the normal folder you want to make an iFolder, using one of these methods:</p>
+<p class="para">Seleccione la carpeta normal que desea convertir en una carpeta iFolder mediante uno de estos métodos:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the normal folder exists, select the folder, then click <span class="guimenu">Add</span>.</p></li>
+<p class="listitem">Si la carpeta normal ya existe, selecciónela y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li>
 <li class="listitem">
-<p class="listitem">If the normal folder does not exist, click <span class="guimenu">Create Folder</span> to create it, select the newly created folder, then click <span class="guimenu">Add</span>.</p></li></ul></div>
+<p class="listitem">Si la carpeta normal no existe, haga clic en <span class="guimenu">Crear carpeta</span> para crearla; seleccione la carpeta que acaba de crear y, a continuación, haga clic en <span class="guimenu">Añadir</span>.</p></li></ul></div>
 </li>
 <li class="step" id="b93crcv">
-<p class="para">Select the iFolder <span class="guimenu">Type</span> from the given options. You can decide whether you want to create an encrypted iFolder or a regular one.</p>
+<p class="para">Seleccione el <span class="guimenu">tipo</span> de carpeta iFolder entre las opciones proporcionadas. Puede decidir si desea crear una carpeta iFolder cifrada o normal.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder administrator has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Podrá crear carpetas iFolder cifradas sólo si el administrador de iFolder ha definido la directiva de cifrado como <span class="guimenu">Activa</span>. En caso contrario, sólo podrá crear carpetas iFolder normales. Esta opción está seleccionada por defecto. En este caso, las opciones de <span class="guimenu">Tipo</span> están inhabilitadas.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If you have not set the passphrase during the login session, and you select <span class="guimenu">Passphrase Encryption</span>, it prompts you to enter the passphrase. Specify the passphrase in the Passphrase dialog box.</p></li>
+<p class="listitem">Seleccione <span class="guimenu">Cifrado de la contraseña codificada</span> para habilitar el cifrado para la carpeta iFolder seleccionada.</p>
+<p class="listitem">Si no ha definido la contraseña codificada durante la sesión de entrada y selecciona <span class="guimenu">Cifrado de la contraseña codificada</span>, el sistema le solicitará que introduzca la contraseña codificada. Especifíquela en el recuadro de diálogo Contraseña codificada.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p>
-<p class="listitem">iFolder announces the availability of shared iFolders with a pop-up message in the notification area. Shared users can click the message to set up the iFolder at that time, or close the message and download the iFolder later.</p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">Normal</span> para habilitar el uso compartido para la carpeta iFolder seleccionada. </p>
+<p class="listitem">iFolder anuncia la disponibilidad de las carpetas iFolder compartidas mediante un mensaje emergente en el área de notificaciones. Los usuarios compartidos pueden hacer clic en el mensaje para configurar la carpeta iFolder en ese momento o bien pueden cerrarlo para descargar la carpeta iFolder más tarde.</p></li></ul></div>
 </li>
 <li class="step" id="bfkhncz">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
+<p class="para">Seleccione <span class="guimenu">SecureSync</span> para habilitar la sincronización segura de los archivos en la carpeta iFolder que está creando.</p>
+<p class="para">Es posible habilitar un canal seguro tanto para las carpetas iFolder normales como cifradas. Cuando esta opción se encuentra seleccionada, la carpeta iFolder permite utilizar un canal seguro para establecer una sincronización entre la carpeta iFolder del servidor y el equipo local.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also enable secure sync for a selected iFolder on your machine by using the right-click iFolder &gt; Properties option in the iFolder main window. For that, right-click the iFolder and select <span class="guimenu">Properties</span> and in the General tab, select the <span class="guimenu">Secure Sync</span> check box.</p></div>
+<p class="para"><em class="title">NOTA:</em>Es posible habilitar la sincronización segura para una carpeta iFolder seleccionada en su máquina haciendo clic en el botón derecho en la opción iFolder &gt; Propiedades en la ventana principal de iFolder. Para ello, haga clic con el botón derecho en iFolder y seleccione <span class="guimenu">Propiedades</span> en la pestaña General; a continuación, marque la casilla de verificación <span class="guimenu">Secure Sync</span>.</p></div>
 </li>
 <li class="step" id="bwb5ss4">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the <span class="guimenu">iFolders on This Computer</span> list.</p></li>
+<p class="para">Haga clic en <span class="guimenu">Aceptar</span>.</p>
+<p class="para">La carpeta iFolder aparecerá en la lista <span class="guimenu">Carpetas iFolder en este equipo</span>.</p></li>
 <li class="step" id="bwb5tng">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">Si aparece el mensaje <span class="guimenu">Carpeta iFolder creada</span>, realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">Haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do Not Show This Message Again</span> to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to <span class="guimenu">iFolder Preferences</span>, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">No mostrar este mensaje de nuevo</span> para inhabilitar futuras notificaciones y, a continuación, haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p>
+<p class="listitem">Si posteriormente decide que desea recibir mensajes de confirmación, vaya a <span class="guimenu">Preferencias de iFolder</span>, seleccione <span class="guimenu">Mostrar recuadro de diálogo de confirmación al crear carpetas de iFolder</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bbrkqnw">
+<div class="sect3" id="bbrkqnw">
 
-<h3 class="title"> Creating iFolders in a File Manager</h3>
+<h3 class="title"> Creación de carpetas iFolder en un administrador de archivos</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bq6lwlg">
-<p class="para">Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</p></li>
+<p class="para">Utilice el administrador de archivos para desplazarse a la carpeta que desea convertir en una carpeta iFolder y, a continuación, seleccione dicha carpeta.</p></li>
 <li class="step" id="bq6lwlh">
-<p class="para">Use one of the following methods:</p>
+<p class="para">Lleve a cabo uno de estos métodos:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Right-click the folder icon, then click <span class="guimenu">Convert to an iFolder.</span></p></li>
+<p class="listitem">Haga clic con el botón derecho en el icono de la carpeta y, a continuación, haga clic en <span class="guimenu">Convertir en una carpeta iFolder</span>.</p></li>
 <li class="listitem">
-<p class="listitem">On the toolbar, click <span class="menuchoice"><span class="guimenu">File</span> > <span class="guimenu">Convert to an iFolder</span></span>.</p></li></ul></div>
+<p class="listitem">En la barra de herramientas, haga clic en <span class="menuchoice"><span class="guimenu">Archivo</span> > <span class="guimenu">Convertir en una carpeta iFolder</span></span>.</p></li></ul></div>
 
-<p class="para">The folder icon <img src="images/folder_16.png" alt="Folder Icon" class="inline" /> changes to a folder with an overlay of the iFolder emblem <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> (green “i”).
+<p class="para">El icono de carpeta <img src="images/folder_16.png" alt="Icono de carpeta" title="Icono de carpeta" class="inline" /> se convertirá en una carpeta con una superposición de emblema de iFolder <img src="images/ifolder32.png" alt="Icono iFolder" title="Icono iFolder" class="inline" /> (la “i” verde).
       </p></li>
 <li class="step" id="bx19z0q">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">Si aparece el mensaje <span class="guimenu">Carpeta iFolder creada</span>, realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">Haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do not show this message again </span>to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to iFolder Preferences, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">No mostrar este mensaje de nuevo</span> para inhabilitar futuras notificaciones y, a continuación, haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p>
+<p class="listitem">Si posteriormente decide que desea recibir mensajes de confirmación, vaya a Preferencias de iFolder, seleccione <span class="guimenu">Mostrar recuadro de diálogo de confirmación al crear carpetas de iFolder</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
@@ -195,123 +204,123 @@
 
 </div>
 
-<div class="sect2"  id="bbrkjtk">
+<div class="sect2" id="bbrkjtk">
 
 <h2 class="title"> Windows</h2>
 
-<p class="para">You can create iFolders with a file manager or with the iFolder browser, which is available in the client application. Use the following methods to create an iFolder:</p>
+<p class="para">Para crear carpetas iFolder puede utilizar un gestor de archivos o bien el navegador de iFolder, disponible en la aplicación del cliente. Para crear una carpeta iFolder, utilice los métodos siguientes:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkmqg">Creating iFolders in the iFolders Browser</a>
+              <a href="createifolder.html#bbrkmqg">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkln6">Creating iFolders in a File Manager</a>
+              <a href="createifolder.html#bbrkln6">Creación de carpetas iFolder en un administrador de archivos</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bbrkmqg">
+<div class="sect3" id="bbrkmqg">
 
-<h3 class="title"> Creating iFolders in the iFolders Browser</h3>
+<h3 class="title"> Creación de carpetas iFolder en el navegador de carpetas iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbrkmv4">
-<p class="para">In the notification area, use one of the following methods to open the iFolder browser:</p>
+<p class="para">En el área de notificaciones, utilice uno de los siguientes métodos para abrir el navegador de iFolder:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon.
+<p class="listitem">Haga clic en el icono <span class="guimenu">Servicios de iFolder</span> <img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" />.
         </p></li>
 <li class="listitem">
-<p class="listitem">Right-click the <span class="guimenu">iFolder Services </span><img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then click <span class="guimenu">iFolders</span>.
+<p class="listitem">Haga clic con el botón derecho en el icono <span class="guimenu">Servicios de iFolder</span> <img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> y, a continuación, haga clic en <span class="guimenu">Carpetas iFolder</span>.
         </p></li></ul></div>
 </li>
 <li class="step" id="bbrkn5v">
-<p class="para">Click <span class="guimenu">Upload a folder</span>.</p></li>
+<p class="para">Haga clic en <span class="guimenu">Crear carpeta iFolder</span>.</p></li>
 <li class="step" id="bbrknbe">
-<p class="para">From the drop-down list, select the iFolder account you want to use for this iFolder.</p>
-<p class="para">If you have multiple iFolder accounts, the default account is listed first. You can use the drop-down list to select a different account.</p></li>
+<p class="para">En la lista desplegable, seleccione la cuenta de iFolder que desea utilizar para esta carpeta iFolder.</p>
+<p class="para">Si tiene varias cuentas de iFolder, la cuenta por defecto aparecerá en el primer lugar de la lista. Utilice la lista desplegable para seleccionar otra cuenta.</p></li>
 <li class="step" id="bbrknpo">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">En el navegador, vaya al directorio en el que desea crear una carpeta iFolder.</p></li>
 <li class="step" id="bbrknvw">
-<p class="para">Select the normal folder you want to make an iFolder, using one of these methods:</p>
+<p class="para">Seleccione la carpeta normal que desea convertir en una carpeta iFolder mediante uno de estos métodos:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the normal folder exists, select the folder, then click <span class="guimenu">OK</span>.</p></li>
+<p class="listitem">Si la carpeta normal ya existe, selecciónela y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li>
 <li class="listitem">
-<p class="listitem">If the normal folder does not exist, click <span class="guimenu">Make New Folder</span> to create it, and select the newly created folder.</p></li></ul></div>
+<p class="listitem">Si la carpeta normal no existe, haga clic en <span class="guimenu">Crear carpeta nueva</span> para crearla y seleccione la carpeta que acaba de crear.</p></li></ul></div>
 </li>
 <li class="step" id="bbrko5o">
-<p class="para">Select the iFolder type from one of the following from the given options:</p>
+<p class="para">Seleccione el tipo de carpeta iFolder entre las siguientes opciones proporcionadas:</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder Administrators has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Podrá crear carpetas iFolder cifradas sólo si el administrador de iFolder ha definido la directiva de cifrado como <span class="guimenu">Activo</span>. En caso contrario, sólo podrá crear carpetas iFolder normales. Esta opción está seleccionada por defecto. En este caso, las opciones de <span class="guimenu">Tipo</span> están inhabilitadas.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If your administrator has set your encryption policy to <span class="emphasis">On</span>, you are permitted to create encrypted or shared iFolders. </p>
-<p class="listitem">If you did not set the passphrase during the login session, and you select <span class="guimenu">Passphrase Encryption</span>, it prompts you to enter the passphrase.</p></li>
+<p class="listitem">Seleccione <span class="guimenu">Cifrado de la contraseña codificada</span> para habilitar el cifrado para la carpeta iFolder seleccionada.</p>
+<p class="listitem">Si el administrador ha establecido la directiva de cifrado en <span class="emphasis">Activo</span>, podrá crear carpetas iFolder cifradas o compartidas. </p>
+<p class="listitem">Si no ha definido la contraseña codificada durante la sesión de entrada y selecciona <span class="guimenu">Cifrado de la contraseña codificada</span>, el sistema le solicitará que introduzca la contraseña codificada. </p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p>
+<p class="listitem">Seleccione <span class="guimenu">Normal</span> para habilitar el uso compartido para la carpeta iFolder seleccionada. </p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>When you share your iFolder with other iFolder members, iFolder announces the availability of shared iFolders with a pop-up message in the notification area. Shared users can click the message to set up the iFolder at that time, or close the message to download the iFolder later.</p></div>
+<p class="para"><em class="title">NOTA:</em>Al compartir una carpeta iFolder con otros miembros de iFolder, la información sobre la disponibilidad de las carpetas iFolder compartidas se recibe mediante un mensaje emergente en el área de notificaciones. Los usuarios compartidos pueden hacer clic en el mensaje para configurar la carpeta iFolder en ese momento o bien pueden cerrarlo para descargar la carpeta iFolder más tarde.</p></div>
 </li></ul></div>
 </li>
 <li class="step" id="bfq5bu3">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
+<p class="para">Seleccione <span class="guimenu">SecureSync</span> para habilitar la sincronización segura de los archivos en la carpeta iFolder que está creando.</p>
+<p class="para">Es posible habilitar un canal seguro tanto para las carpetas iFolder normales como cifradas. Cuando esta opción se encuentra seleccionada, la carpeta iFolder permite utilizar un canal seguro para establecer una sincronización entre la carpeta iFolder del servidor y el equipo local.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also enable secure sync for a selected iFolder on your machine by using the right-click iFolder &gt; Properties option in the iFolder main window. For that, right-click the iFolder and select <span class="guimenu">Properties</span> and in the General tab, select the <span class="guimenu">Secure Sync</span> check box.</p></div>
+<p class="para"><em class="title">NOTA:</em>Es posible habilitar la sincronización segura para una carpeta iFolder seleccionada en su máquina haciendo clic en el botón derecho en la opción iFolder &gt; Propiedades en la ventana principal de iFolder. Para ello, haga clic con el botón derecho en iFolder y seleccione <span class="guimenu">Propiedades</span> en la pestaña General; a continuación, marque la casilla de verificación <span class="guimenu">Secure Sync</span>.</p></div>
 </li>
 <li class="step" id="bbrkofc">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the <span class="guimenu">iFolders on This Computer</span> list.</p></li>
+<p class="para">Haga clic en <span class="guimenu">Aceptar</span>.</p>
+<p class="para">La carpeta iFolder aparecerá en la lista <span class="guimenu">Carpetas iFolder en este equipo</span>.</p></li>
 <li class="step" id="bbrkoum">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">Si aparece el mensaje <span class="guimenu">Carpeta iFolder creada</span>, realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">Haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do not show this message again</span> to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to <span class="guimenu">iFolder Preferences</span>, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">No mostrar este mensaje de nuevo</span> para inhabilitar futuras notificaciones y, a continuación, haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p>
+<p class="listitem">Si posteriormente decide que desea recibir mensajes de confirmación, vaya a <span class="guimenu">Preferencias de iFolder</span>, seleccione <span class="guimenu">Mostrar recuadro de diálogo de confirmación al crear carpetas de iFolder</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bbrkln6">
+<div class="sect3" id="bbrkln6">
 
-<h3 class="title"> Creating iFolders in a File Manager</h3>
+<h3 class="title"> Creación de carpetas iFolder en un administrador de archivos</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbrklt7">
-<p class="para">Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</p></li>
+<p class="para">Utilice el administrador de archivos para desplazarse a la carpeta que desea convertir en una carpeta iFolder y, a continuación, seleccione dicha carpeta.</p></li>
 <li class="step" id="bbrklxp">
-<p class="para">Use one of the following methods:</p>
+<p class="para">Lleve a cabo uno de estos métodos:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Right-click the folder icon, then click <span class="guimenu">Convert to an iFolder.</span></p></li>
+<p class="listitem">Haga clic con el botón derecho en el icono de la carpeta y, a continuación, haga clic en <span class="guimenu">Convertir en una carpeta iFolder</span>.</p></li>
 <li class="listitem">
-<p class="listitem">On the toolbar, click <span class="menuchoice"><span class="guimenu">File</span> > <span class="guimenu">Convert to an iFolder</span></span>.</p></li></ul></div>
+<p class="listitem">En la barra de herramientas, haga clic en <span class="menuchoice"><span class="guimenu">Archivo</span> > <span class="guimenu">Convertir en una carpeta iFolder</span></span>.</p></li></ul></div>
 
-<p class="para">The folder icon <img src="images/if3_folder.png" alt="iFolder Icon " class="inline" /> changes to a folder with an overlay of the iFolder emblem (green “i”) .
+<p class="para">El icono de carpeta <img src="images/if3_folder.png" alt="Icono de carpeta" title="Icono de carpeta" class="inline" /> se convertirá en una carpeta con una superposición de emblema de iFolder (la “i” verde).
       </p></li>
 <li class="step" id="bbrkm5l">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">Si aparece el mensaje <span class="guimenu">Carpeta iFolder creada</span>, realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">Haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do Not Show This Message Again </span>to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to iFolder Preferences, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">No mostrar este mensaje de nuevo</span> para inhabilitar futuras notificaciones y, a continuación, haga clic en <span class="guimenu">Cerrar</span> para salir del mensaje.</p>
+<p class="listitem">Si posteriormente decide que desea recibir mensajes de confirmación, vaya a Preferencias de iFolder, seleccione <span class="guimenu">Mostrar recuadro de diálogo de confirmación al crear carpetas de iFolder</span> y, a continuación, haga clic en <span class="guimenu">Aceptar</span>.</p></li></ul></div>
 </li></ol>
 </div>
 
@@ -319,86 +328,86 @@
 
 </div>
 
-<div class="sect2"  id="bctq91g">
+<div class="sect2" id="bctq91g">
 
 <h2 class="title"> Macintosh</h2>
 
-<p class="para">You can create iFolders with the iFolder browser, which is available in the client application.</p>
+<p class="para"> Se pueden crear carpetas iFolder con el navegador de iFolder, disponible en la aplicación cliente.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bctqam6">
-<p class="para">Click the <span class="guimenu">iFolder Services</span> icon from the dock to open the iFolder browser.</p></li>
+<p class="para">Haga clic en el icono <span class="guimenu">Servicios de iFolder</span> del Dock (muelle) para abrir el navegador de iFolder.</p></li>
 <li class="step" id="bctqam7">
-<p class="para">Use one of the following methods to open the browser.</p>
+<p class="para">Utilice uno de los siguientes métodos para abrir el navegador.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">New</span> in the toolbar</p></li>
+<p class="listitem">Haga clic en <span class="guimenu">Nuevo</span> en la barra de herramientas</p></li>
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">File &gt; New</span> in the menu bar</p></li></ul></div>
+<p class="listitem">Haga clic en <span class="guimenu">Archivo &gt; Nuevo</span> en la barra de menús</p></li></ul></div>
 </li>
 <li class="step" id="bctqam9">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">En el navegador, vaya al directorio en el que desea crear una carpeta iFolder.</p></li>
 <li class="step" id="bctqama">
-<p class="para">Select the normal folder you want to make into an iFolder, then click <span class="guimenu">Open</span>.</p></li>
+<p class="para">Seleccione la carpeta normal que desea crear en una carpeta iFolder y, a continuación, seleccione <span class="guimenu">Abrir</span>.</p></li>
 <li class="step" id="bfq5e1a">
-<p class="para">Select the iFolder type from one of the following from the given options:</p>
+<p class="para">Seleccione el tipo de carpeta iFolder entre las siguientes opciones proporcionadas:</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder Administrators has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Podrá crear carpetas iFolder cifradas sólo si el administrador de iFolder ha definido la directiva de cifrado como <span class="guimenu">Activo</span>. En caso contrario, sólo podrá crear carpetas iFolder normales. Esta opción está seleccionada por defecto. En este caso, las opciones de <span class="guimenu">Tipo</span> están inhabilitadas.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If your administrator has set your encryption policy to <span class="emphasis">On</span>, you are permitted to create encrypted or shared iFolders. </p>
-<p class="listitem">If you did not set the passphrase during the login session, and you select <span class="guimenu">Passphrase</span>  > <span class="guimenu">Encryption</span>, it prompts you to enter the passphrase.</p></li>
+<p class="listitem">Seleccione <span class="guimenu">Cifrado de la contraseña codificada</span> para habilitar el cifrado para la carpeta iFolder seleccionada.</p>
+<p class="listitem">Si el administrador ha establecido la directiva de cifrado en <span class="emphasis">Activo</span>, podrá crear carpetas iFolder cifradas o compartidas. </p>
+<p class="listitem">Si no ha definido la contraseña codificada durante la sesión de entrada y selecciona <span class="guimenu">Cifrado de la</span>  > <span class="guimenu">contraseña codificada</span>, el sistema le solicitará que introduzca la contraseña codificada. </p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p></li></ul></div>
+<p class="listitem">Seleccione <span class="guimenu">Normal</span> para habilitar el uso compartido para la carpeta iFolder seleccionada. </p></li></ul></div>
 </li>
 <li class="step" id="bfq5e6z">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p></li>
+<p class="para">Seleccione <span class="guimenu">SecureSync</span> para habilitar la sincronización segura de los archivos en la carpeta iFolder que está creando.</p>
+<p class="para">Es posible habilitar un canal seguro tanto para las carpetas iFolder normales como cifradas. Cuando esta opción se encuentra seleccionada, la carpeta iFolder permite utilizar un canal seguro para establecer una sincronización entre la carpeta iFolder del servidor y el equipo local.</p></li>
 <li class="step" id="bctqamc">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the iFolder browser window.</p></li></ol>
+<p class="para">Haga clic en <span class="guimenu">Aceptar.</span></p>
+<p class="para">La carpeta iFolder aparecerá en la ventana del navegador de iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="fat32mtpt">
+<div class="sect2" id="fat32mtpt">
 
-<h2 class="title"> Creating iFolders on a FAT32 Mount Point (Linux)</h2>
+<h2 class="title"> Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</h2>
 
-<p class="para">On Linux, iFolder supports creating and using iFolders on a mount point for a FAT32 file system. Before you can create new iFolders or set up shared iFolders on a FAT32 volume on your Linux computer, the iFolder user must own the FAT32 mount point where you want to store the iFolders, and the <span class="filename">/etc/fstab</span> file must explicitly identify the iFolder user’s local user ID for the mount point. </p>
+<p class="para">En Linux, iFolder admite la creación y uso de carpetas iFolder en un punto de montaje de un sistema de archivos FAT32. Antes de crear nuevas carpetas iFolder o de configurar carpetas iFolder compartidas en un volumen FAT32 del equipo Linux, el usuario de la carpeta iFolder debe poseer el punto de montaje FAT32 donde desea almacenar las carpetas iFolder, y el archivo <span class="filename">/etc/fstab</span> debe identificar explícitamente el ID de usuario local del usuario de la carpeta iFolder para el punto de montaje. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>This is required because FAT32 does not support file permissions. Any other file system that does not support permissions has the same issue.</p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>Esto es necesario porque FAT32 no es compatible con permisos de archivos. Cualquier otro sistema de archivos no compatible con permisos tendrá el mismo problema.</p></div>
 
-<p class="para">For dual boot systems, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</p>
-<p class="para">Because the FAT32 file system does not support POSIX file system permissions, make sure the iFolder user is the local owner of the mount point. Modify the <span class="filename">/etc/fstab</span> file to set the user ID (UID) parameter of the user’s local login identity to the iFolder user who creates iFolders on that mount point.</p>
+<p class="para">En sistemas de arranque dual, es posible acceder a los datos de las carpetas iFolder del mismo modo que con las carpetas normales del sistema donde la carpeta no se ha configurado como una carpeta iFolder. Si configura la carpeta como una carpeta iFolder en ambas plataformas, el conjunto de datos se almacenará en dos carpetas iFolder diferentes en el servidor, que consume el doble de los recursos de disco del servidor que tiene asignados.</p>
+<p class="para">Debido a que el sistema de archivos FAT32 no es compatible con los permisos del sistema de archivos POSIX, asegúrese de que el usuario de iFolder es el propietario local del punto de montaje. Modifique el archivo <span class="filename">/etc/fstab</span> para establecer el parámetro de ID de usuario (UID) de la identidad de entrada local del usuario de iFolder que crea carpetas iFolder en dicho punto de montaje.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bwenpgg">
-<p class="para">Log in to your computer as the <span class="systemitem">root</span> user.</p></li>
+<p class="para">Entre al equipo como usuario <span class="systemitem">Root</span> (raíz).</p></li>
 <li class="step" id="bwen6om">
-<p class="para">Create the directory where you want to mount the FAT32 file system. At a command prompt, enter</p><pre class="screen">
+<p class="para">Cree el directorio donde desea montar el sistema de archivos FAT32. En un indicador de comandos, introduzca</p><pre class="screen">
 mkdir /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>
 </pre>
-<p class="para">Replace <span class="filename"><span class="replaceable">username</span></span> with the username of the user who plans to use the FAT32 drive for iFolders. Replace <span class="filename"><span class="replaceable">fsmount</span></span> with the directory name you want to use as the mount point. For example, if the username is <span class="filename"><span class="replaceable">jsmith</span></span> and the directory name is <span class="filename"><span class="replaceable">fat32mntpt</span></span> for a FAT32 drive or partition, enter</p><pre class="screen">
+<p class="para">Sustituya <span class="filename"><span class="replaceable">nombre_usuario</span></span> por el nombre del usuario que desea utilizar la unidad FAT32 para las carpetas iFolder. Sustituya <span class="filename"><span class="replaceable">fsmount</span></span> por el nombre del directorio que desea utilizar como punto de montaje. Por ejemplo, si el nombre de usuario de una unidad o partición FAT32 es <span class="filename"><span class="replaceable">jsmith</span></span> y el nombre del directorio es <span class="filename"><span class="replaceable">fat32mntpt</span></span>, introduzca</p><pre class="screen">
 mkdir /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemec8">
-<p class="para">Mount the FAT32 drive at the desired mount point. At a command prompt, enter</p><pre class="screen">
+<p class="para">Monte la unidad FAT32 en el punto de montaje deseado. En un indicador de comandos, introduzca</p><pre class="screen">
 mount -t vfat /dev/<span class="replaceable">hda1</span> /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount </span>
 </pre>
-<p class="para">Replace <span class="filename">/dev/<span class="replaceable">hda1</span></span> with the device or partition name of the non-Linux device. Replace <span class="filename"><span class="replaceable">username</span></span> with the username of the iFolder user. Replace <span class="filename"><span class="replaceable">fsmount</span></span> with the directory name you want to use as the mount point. </p>
-<p class="para">Continuing the example, where the FAT32 file system (<span class="literal">vfat</span>) is on the <span class="filename">hda4</span> device (<span class="filename"><span class="replaceable">/dev/hda4</span></span>), the username is <span class="filename"><span class="replaceable">jsmith</span></span>, and the mount point directory is <span class="filename">/home/<span class="replaceable">jsmith</span>/<span class="replaceable">fat32mntpt</span></span>, enter</p><pre class="screen">
+<p class="para">Sustituya <span class="filename">/dev/<span class="replaceable">hda1</span></span> por el nombre del dispositivo o partición de un dispositivo que no sea Linux. Sustituya <span class="filename"><span class="replaceable">nombre_usuario</span></span> por el nombre del usuario de la carpeta iFolder. Sustituya <span class="filename"><span class="replaceable">fsmount</span></span> por el nombre del directorio que desea utilizar como punto de montaje. </p>
+<p class="para">Para continuar con el ejemplo, si el sistema de archivos FAT32 (<span class="literal">vfat</span>) se encuentra en el dispositivo <span class="filename">hda4</span> (<span class="filename"><span class="replaceable">/dev/hda4</span></span>), el nombre de usuario es <span class="filename"><span class="replaceable">jsmith</span></span> y el directorio del punto de montaje es <span class="filename">/home/<span class="replaceable">jsmith</span>/<span class="replaceable">fat32mntpt</span></span>, introduzca</p><pre class="screen">
 mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemszm">
-<p class="para">Edit the <span class="filename">/etc/fstab</span> file by adding the <span class="literal">uid=username</span> parameter of the iFolder user on the line that defines the FAT32 mount point.</p><pre class="screen">
+<p class="para">Añada el parámetro <span class="literal">uid=nombre_usuario</span> del usuario de la carpeta iFolder en la línea que define el punto de montaje FAT32 para editar el archivo <span class="filename">/etc/fstab</span>.</p><pre class="screen">
 /dev/<span class="replaceable">hda1</span>  /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>  <span class="replaceable">vfat</span>  uid=<span class="replaceable">username</span>
 </pre>
-<p class="para">Continuing the example, modify <span class="filename">/etc/fstab</span> file by adding <span class="literal">uid=jsmith</span> to the mount point:</p><pre class="screen">
+<p class="para">Para continuar con el ejemplo, añada <span class="literal">uid=jsmith</span> al punto de montaje para modificar el archivo <span class="filename">/etc/fstab</span>:</p><pre class="screen">
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
@@ -407,8 +416,13 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="bkjj1f9.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="sharewith.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
 </body>
 </html>

@@ -1,133 +1,337 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-cn" lang="zh-cn">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Managing Passphrase for Encrypted iFolders</title>
+<title>管理加密 iFolder 的通行口令</title>
 <script type="text/javascript">
-  var prev_link = "propifolders.html";
-  var next_link = "ifquota.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "managingpassphrse";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="managingpassphrse">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Managing Passphrase for Encrypted iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
 
-<p class="para">Novell iFolder provides user-friendly interface to encrypt your iFolders to ensure data security at the server side. </p>
-<p class="para">After you successfully log in to the iFolder, an optional iFolder passphrase dialog box opens where you can enter your encryption passphrase if encryption is enabled by the Admin. iFolder uses the passphrase to generate a unique encryption key for encrypting and decrypting your iFolder. If you don’t provide a passphrase, the passphrase dialog box appears automatically while processing the encrypted iFolders. If you cannot recall your passphrase, the recovery agent you selected during login, helps you recover your encryption key. For more information, see <a href="accounts.html#b8yvcnt">Step 3</a></p>
-<p class="para">Encryption occurs before the files leave your workstation to travel securely across an Internet connection to be uploaded to, and stored on, the iFolder server. The iFolder data remain encrypted on the iFolder Server and travel securely on the channel to and from the server. The iFolder client decrypts the downloaded files as they arrive on your local workstation. </p>
-<div class="sect2"  id="recoveringpassphrse">
 
-<h2 class="title"> Recovering an Encrypted iFolder </h2>
+<div class="sect1" id="managingpassphrse">
 
-<p class="para">Each iFolder has a unique data encryption key which is auto-generated during iFolder creation. You use your passphrase to create the key that encrypts the unique data encryption key. If you forget the secret passphrase, you cannot access either the iFolder data or the encrypted key used for recovering it unless your passphrase is saved locally (enabling <span class="guimenu">Remember passphrase</span>). To avoid this problem, you must export the keys using the Export encrypted Keys menu item and send it manually to the recovery agent using e-mail address given in the dialog box. The recovery agent retrieves the keys and sends back to you (through e-mail or any other communication channel). You can import the keys and use them to reset the passphrase.</p>
+<h1 class="title"> 管理加密 iFolder 的通行口令</h1>
+
+<p class="para">加密的 iFolder 都具有唯一的在创建 iFolder 过程中自动生成的数据加密钥。密钥通过用户提供的通行口令进行加密，也可通过使用恢复代理的公共密钥进行加密。 </p>
+<p class="para">如果 iFolder 管理员在服务器上启用加密策略，则会在 iFolder 帐户创建过程中选择恢复代理。</p>
+<p class="para">如果 iFolder 管理员启用了加密，则在 iFolder 创建过程中会向您显示用于输入通行口令的对话框。iFolder 使用通行口令来生成唯一的加密钥，以加密或解密 iFolder 服务器上的 iFolder 数据。如果您忘记了通行口令，则无法访问 iFolder 数据。必须重设置通行口令才能获得访问 iFolder 数据的权限。</p>
+<div class="sect2" id="bknig1s">
+
+<h2 class="title"> 恢复加密的 iFolder</h2>
+
+<p class="para">使用“通行口令恢复向导”来重设置通行口令，或是恢复加密的 iFolder。按照下面给出的步骤来起动“通行口令恢复向导”：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknk4gv">
+<p class="para">在 iFolder 浏览器中单击<span class="guimenu">“安全”&gt;“忘记通行口令”</span>来起动向导。</p></li>
+<li class="step" id="bknk53e">
+<p class="para">在<span class="guimenu">“iFolder 帐户”</span>列表中选择要重设置通行口令的域，然后单击<span class="guimenu">“下一步”</span>。</p>
+<p class="para">在 iFolder 帐户的创建过程中，如果选中了“Server_Default”作为恢复代理，则会显示“设定新通行口令”页面。要重设置新通行口令，请参阅<a href="managingpassphrse.html#bknigkn">在恢复代理为 Server_Default 时重设置通行口令</a>。</p>
+<p class="para">另一方面，如果未选择“Server_Default”作为恢复代理，则必须使用<a href="managingpassphrse.html#bknigq8">在恢复代理不是 Server_Default 时重设置通行口令</a>来重设置通行口令。</p></li></ol>
+</div>
+
+<div class="sect3" id="bknigkn">
+
+<h3 class="title"> 在恢复代理为 Server_Default 时重设置通行口令</h3>
+
+<p class="para">要设置新的通行口令，请执行下面的步骤：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknkrbv">
+<p class="para">在“设置新通行口令”页面，在<span class="guimenu">“新通行口令”</span>字段指定新的通行口令。</p></li>
+<li class="step" id="bknkt5g">
+<p class="para">在<span class="guimenu">“确认通行口令”</span>字段重新输入新通行口令并单击<span class="guimenu">“下一步”</span>。</p></li>
+<li class="step" id="bknkxtk">
+<p class="para">在<span class="guimenu">“用户名”</span>和<span class="guimenu">“口令”</span>字段中指定用户名和口令，然后单击<span class="guimenu">“下一步”</span>。</p></li>
+<li class="step" id="bknl4px">
+<p class="para">成功重设置通行口令后，单击<span class="guimenu">“完成”</span>来关闭向导。</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect3" id="bknigq8">
+
+<h3 class="title"> 在恢复代理不是 Server_Default 时重设置通行口令</h3>
+
+<p class="para">要在选择的恢复代理不是“Server_Default<span class="guimenu"></span>”时重设置通行口令,请执行下面给出的步骤：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknihtk">
+<p class="para">向导欢迎页面会显示与重设置通行口令所需信息相关的信息。单击<span class="guimenu">“下一步”</span>显示“通行口令恢复机制”页面。</p></li>
+<li class="step" id="bknihtm">
+<p class="para">您可在向导中使用三种方法来重设置通行口令：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bknijt2">
+                    <p class="title"><em class="title">使用机密文件及其口令：</em>
+                    机密文件及其口令用于重设置通行口令。如果保留有机密文件及其口令，您就可以使用向导指定机密文件的位置并提供其口令。要使用机密文件重设置通行口令，请参阅<a href="managingpassphrse.html#bknilk4">使用机密文件重设置通行口令</a>。</p>
+                  </div>
+
 <div class="note">
-<p class="para"><em class="title">NOTE:</em> The Recovery agent is generally an entity independent of entities owning the iFolder server's infrastructure, or, independent of the IT department if deployed in a corporate environment. </p></div>
+<p class="para"><em class="title">注：</em>您可从 iFolder 管理员处获取机密文件及其口令。 </p></div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bknijt3">
+                    <p class="title"><em class="title">使用新数据文件：</em>
+                    您也可使用新数据文件来重设置通行口令。您可在执行旧数据文件的导出操作后，从管理员处获取新数据文件。要使用新数据文件重设置通行口令，请参阅<a href="managingpassphrse.html#bknim3f">使用新数据文件重设置通行口令</a>。 </p>
+                  </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bkninnm">
+                    <p class="title"><em class="title">导出旧数据文件：</em>
+                    如果您没有机密文件或新数据文件，则可以通过向导导出旧数据文件，然后将其通过电子邮件发送给管理员。管理员发回新数据文件后，即可使用向导来重设置通行口令。要导出旧数据文件，请参阅<a href="managingpassphrse.html#bknim8d">使用导出文件重设置通行口令</a>。</p>
+                  </div>
+</li></ul></div>
+</li></ol>
+</div>
 
-<p class="para">To export your data encryption key,</p>
+<p class="para">下表总结了您所做的决定。</p>
+<div class="table" id="bknihtq">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bknihtr"></a>
+<p class="para">设置</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">说明</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihts"></a>
+<p class="para">iFolder 帐户列表</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">显示已配置的 iFolder 帐户列表。默认情况下会选择第一个登录的帐户。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtt"></a>
+<p class="para">机密文件的位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">表示可从 iFolder 管理员处获取的证书的私用密钥文件位置。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtu"></a>
+<p class="para">机密文件口令</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表机密密钥文件的口令。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtv"></a>
+<p class="para">一次性口令</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表管理员用来加密新数据文件的口令。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtw"></a>
+<p class="para">新数据文件的位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">表示加密密钥文件的位置。执行旧数据文件导出操作后，可从 iFolder 管理员处获取新数据文件。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtx"></a>
+<p class="para">旧数据文件的保存位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">表示导出的密钥文件的保存位置。导出旧数据文件后，您可将其通过电子邮件发送给您的管理员。然后，管理员会发送给您新数据文件。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihty"></a>
+<p class="para">新通行口令</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表输入用于加密唯一数据加密钥的新通行口令，该数据加密钥在 iFolder 创建的过程中自动生成。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtz"></a>
+<p class="para">确认通行口令</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表您必须再次输入的新通行口令。</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect3" id="bknilk4">
+
+<h3 class="title"> 使用机密文件重设置通行口令</h3>
+
+<p class="para">要使用机密文件重设置通行口令，请执行下面的步骤：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">选择<span class="guimenu">“我有机密文件及其口令”</span>选项。</p></li>
+            
+<li class="listitem">
+<p class="listitem">填写以下字段：</p>
+<div class="formalpara" id="bknm2yo">
+                <p class="title"><em class="title">机密文件的位置：</em>
+                指定机密文件的位置，或单击<span class="guimenu">“浏览”</span>按钮来查找并选择机密文件。</p>
+              </div>
+
+<div class="formalpara" id="bknm4il">
+                <p class="title"><em class="title">机密文件口令：</em>
+                指定机密文件的口令。</p>
+              </div>
+
+<div class="formalpara" id="bknm4im">
+                <p class="title"><em class="title">新通行口令：</em>
+                指定新通行口令。</p>
+              </div>
+
+<div class="formalpara" id="bknm4in">
+                <p class="title"><em class="title">确认通行口令</em>
+                再次输入新通行口令。</p>
+              </div>
+</li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“下一步”</span>重设置通行口令。</p></li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“完成”</span>结束向导。</p></li>
+          </ol></div>
+
+<div class="note">
+<p class="para"><em class="title">注：</em>您可从 iFolder 管理员处获取机密文件及其口令。 </p></div>
+
+</div>
+
+<div class="sect3" id="bknim3f">
+
+<h3 class="title"> 使用新数据文件重设置通行口令</h3>
+
+<p class="para">要使用新数据文件重设置通行口令，请执行下面的步骤：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">选择<span class="guimenu">“我有管理员发送的新数据文件”</span>选项，然后单击<span class="guimenu">“下一步”</span>。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">“新数据文件位置”</span>字段内指定新数据文件的位置，或单击<span class="guimenu">“浏览”</span>按钮查找和选择新数据文件。</p></li>
+            
+<li class="listitem">
+<p class="listitem">如果从管理员处收到的新数据文件已加密，请选中<span class="guimenu">“上面的文件已加密？”</span>复选框。选中此复选框后，将启用<span class="guimenu">“一次性口令”</span>字段。 </p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">“一次性口令”</span>字段中，指定管理员用于加密新数据文件的口令。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">“新通行口令”</span>字段中指定新通行口令。</p></li>
+            
+<li class="listitem">
+<p class="listitem"> 在<span class="guimenu">“确认通行口令”</span>字段中再次输入新通行口令。</p></li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“下一步”</span>重设置通行口令。</p></li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“完成”</span>结束向导。</p></li>
+          </ol></div>
+
+</div>
+
+<div class="sect3" id="bknim8d">
+
+<h3 class="title"> 使用导出文件重设置通行口令</h3>
+
+<p class="para">要在无机密文件或新数据文件的情况下重设置通行口令：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">选择<span class="guimenu">“我没有机密文件或数据文件”</span>选项，然后单击<span class="guimenu">“下一步”</span>。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">“旧数据文件保存位置”</span>字段中指定旧数据文件必须保存的位置，或单击<span class="guimenu">“浏览”</span>按钮来指定旧数据文件的保存位置。 </p></li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“下一步”</span>来获取旧数据文件。将显示旧数据文件的位置，以及 iFolder 管理员的电子邮件地址。利用此信息来获取新数据文件。</p></li>
+            
+<li class="listitem">
+<p class="listitem">单击<span class="guimenu">“完成”</span>结束向导。</p></li>
+            
+<li class="listitem">
+<p class="listitem">将旧数据文件通过电子邮件发送给您的 iFolder 管理员，请求其返回新数据文件。</p></li>
+            
+<li class="listitem">
+<p class="listitem">接收到新数据文件后，参阅<a href="managingpassphrse.html#bknim3f">使用新数据文件重设置通行口令</a>来重设置通行口令。 </p></li>
+          </ol></div>
+
+</div>
+
+</div>
+
+<div class="sect2" id="bkmh0g8">
+
+<h2 class="title"> 更改通行口令</h2>
+
+<p class="para">出于安全原因，您必须定期更改通行口令。可以使用恢复代理发送的一次性通行口令来重设置通行口令。</p>
 <div class="procedure">
 <ol class="steps">
-<li class="step" id="b91cqi2">
-<p class="para">Select <span class="guimenu">Security &gt; Key Recovery &gt; Export Encrypted Keys</span></p>
-<div class="informalfigure">
-                  <img src="images/if3_export_encrypt_keys.png" alt="" />
-                </div>
-</li>
-<li class="step" id="b91cs8u">
-<p class="para">Select the iFolder account from the drop down list.</p></li>
-<li class="step" id="b91csad">
-<p class="para">Specify the location on your local machine where you want to store your exported file that contains the encrypted keys.</p></li>
-<li class="step" id="bewrvw3">
-<p class="para">Select the Recovery Agent you have selected during the login</p></li>
-<li class="step" id="bewrw6p">
-<p class="para">Specify the e-mail ID of the recovery agent you have selected.</p></li>
-<li class="step" id="b91csy8">
-<p class="para">Click <span class="guimenu">OK</span></p></li></ol>
-</div>
-
-<p class="para">To import your recovered data encryption key, </p>
-<div class="procedure">
-<ol class="steps">
-<li class="step" id="b93ch7q">
-<p class="para">Select <span class="guimenu">Security&gt; Key Recovery &gt; Import Decryted Keys</span></p>
-<div class="informalfigure">
-                  <img src="images/if3_import_decyptd_key.png" alt="" />
-                </div>
-</li>
-<li class="step" id="b93cnjb">
-<p class="para">Specify the location of the imported file that contains the decrypted keys.</p></li>
-<li class="step" id="b93cnlj">
-<p class="para">Specify the <span class="guimenu">One Time Passphrase</span> provided by the Recovery agent to decrypt and rarefy the key.(optional)</p>
-<p class="para">The Recovery agent can choose to encrypt the recovered decrypted keys using the one time passphrase. The one time passphrase and key file need to be send through different communication channels (for security reason). If the Recover agent choose not to re-encrypt, then the imported file contains decrypted keys. </p></li>
-<li class="step" id="b93coe4">
-<p class="para">Specify the <span class="guimenu">New Passphrase</span> to re-encrypt the data encryption key.</p></li>
-<li class="step" id="b93conm">
-<p class="para">In the <span class="guimenu">Re-type Passphrase</span> field, re-type the passphrase to verify and then, click <span class="guimenu">OK</span></p></li></ol>
-</div>
-
-</div>
-
-<div class="sect2"  id="reset_passphrase">
-
-<h2 class="title"> Resetting the Passphrase</h2>
-
-<p class="para">For security reasons, you should reset the passphrase after you import the keys. You do this by using the one-time passphrase sent by your Recover agent.</p>
-<div class="procedure">
-<ol class="steps">
-<li class="step" id="beq0soc">
-<p class="para">Select <span class="guimenu">Security &gt; Reset Passphrase</span>.</p></li>
-<li class="step" id="beq0tkt">
-<p class="para">In the Reset Passphrase window, select the iFolder account you want to reset the passphrase for and specify the following details:</p>
-<div class="formalpara" id="beq168j">
-              <p class="title"><em class="title">Enter Passphrase:</em>
-              Enter the one-time passphrase.</p>
+<li class="step" id="bkmh1hl">
+<p class="para">在 iFolder 浏览器中选择<span class="guimenu">“安全”&gt;“更改通行口令”</span>。</p></li>
+<li class="step" id="bkmh1of">
+<p class="para">在<span class="guimenu">“更改通行口令”</span>窗口中，选择要为其重设置通行口令的 iFolder 帐户，并指定以下细节：</p>
+<div class="formalpara" id="bkmh1ww">
+              <p class="title"><em class="title">输入通行口令：</em>
+              指定当前的通行口令。</p>
             </div>
 
-<div class="formalpara" id="beq16hq">
-              <p class="title"><em class="title">Enter New Passphrase:</em>
-              Enter the new passphrase you want to set for the current iFolder account.</p>
+<div class="formalpara" id="bkmh318">
+              <p class="title"><em class="title">输入新通行口令：</em>
+              指定要为当前 iFolder 帐户设置的新通行口令。</p>
             </div>
 
-<div class="formalpara" id="beq16mx">
-              <p class="title"><em class="title">Retype Passphrase:</em>
-              Enter the new passphrase again for confirmation.</p>
+<div class="formalpara" id="bkmh319">
+              <p class="title"><em class="title">重新键入通行口令：</em>
+              再次指定新通行口令以进行确认。</p>
             </div>
 
-<div class="formalpara" id="beq16y3">
-              <p class="title"><em class="title">Recovery Agent:</em>
-              Select the Recovery agent you have set for the current iFolder account.</p>
+<div class="formalpara" id="bkmh31a">
+              <p class="title"><em class="title">恢复代理：</em>
+              选择为当前 iFolder 帐户所设置的恢复代理。</p>
             </div>
 </li>
-<li class="step" id="beq2nh2">
-<p class="para">Click <span class="guimenu">Reset</span>.</p></li></ol>
+<li class="step" id="bkmh2t3">
+<p class="para">单击<span class="guimenu">“重设置”</span>。</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
 </body>
 </html>
