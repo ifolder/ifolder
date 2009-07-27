@@ -1375,6 +1375,10 @@ namespace Novell.iFolder
                             filePathValue = (string)info.GetValue( autoAccount, null );
                             iFolderWindow.log.Debug("File path value is {0}", filePathValue );
                             System.IO.FileInfo fileInfo = new System.IO.FileInfo(filePathValue);
+			    if( File.Exists(filePathValue+".backup"))
+			    {
+				File.Delete(filePathValue+".backup");
+			    }
                             fileInfo.MoveTo(filePathValue+".backup");
                         }
                     }
