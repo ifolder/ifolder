@@ -1,70 +1,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-tw" lang="zh-tw">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Removing Membership From a Shared iFolder</title>
+<title>從共用 iFolder 移除成員資格</title>
 <script type="text/javascript">
-  var prev_link = "reverting.html";
-  var next_link = "deleting.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bbb7rj2";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bbb7rj2">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Removing Membership From a Shared iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
 
-<p class="para">To remove membership from a downloaded shared iFolder:</p>
+
+<div class="sect1" id="bbb7rj2">
+
+<h1 class="title"> 從共用 iFolder 移除成員資格</h1>
+
+<p class="para">從下載的共用 iFolder 移除成員資格：</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Individual members of an LDAPGroup are not allowed to remove their membership from an iFolder if that iFolder is shared with that LDAPGroup. </p></div>
+<p class="para"><em class="title">重要：</em>如果與 LDAPGroup 共用 iFolder，則不允許 LDAPGroup 的個別成員從該 iFolder 移除他們的成員資格。 </p></div>
 
 <ol class="steps">
 <li class="step" id="bbb7rz6">
-<p class="para">In the file manager or the iFolder browser, locate the iFolder that you want to remove your membership from. </p></li>
+<p class="para">在檔案管理員或 iFolder 瀏覽器中，找到要從中移除成員資格的 iFolder。 </p></li>
 <li class="step" id="bbb7smi">
-<p class="para">Right-click the iFolder and select <span class="guimenu">Revert to a normal folder</span> to display the confirmation dialog box.</p></li>
+<p class="para">以滑鼠右鍵按一下 iFolder 然後選取<span class="guimenu">「回復為一般資料夾」</span>以顯示確認對話方塊。</p></li>
 <li class="step" id="bbb7sr7">
-<p class="para">In the confirmation dialog box, select <span class="guimenu">Also remove my membership from the iFolder</span>. </p></li>
+<p class="para">在確認對話方塊中，選取<span class="guimenu">「同時從 iFolder 移除我的成員資格」</span>。 </p></li>
 <li class="step" id="bbb7uad">
-<p class="para">Click <span class="guimenu">Yes</span> to confirm.</p>
-<p class="para">The local copy of the iFolder is a normal folder and is no longer synchronized with the server. </p></li></ol>
+<p class="para">按一下<span class="guimenu">「是」</span>以確定。</p>
+<p class="para">iFolder 的本地副本便成為一般資料夾，並不再與伺服器同步。 </p></li></ol>
 </div>
 
-<p class="para">To remove membership from a shared iFolder on the server:</p>
+<p class="para">從伺服器上的共用 iFolder 移除成員資格：</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbbbz9l">
-<p class="para">In the iFolder browser, locate the iFolder that you want to remove your membership from.</p></li>
+<p class="para">在 iFolder 瀏覽器中，找到要從中刪除成員資格的 iFolder。</p></li>
 <li class="step" id="bbb7vru">
-<p class="para">Right-click the iFolder and <span class="guimenu">Select Remove my membership</span>.</p></li>
+<p class="para">以滑鼠右鍵按一下 iFolder 然後<span class="guimenu">選取「移除我的成員資格」</span>。</p></li>
 <li class="step" id="bbb7vzm">
-<p class="para">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ol>
+<p class="para">按一下<span class="guimenu">「確定」</span>，確認您的動作。</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
 </body>
 </html>

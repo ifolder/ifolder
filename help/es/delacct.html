@@ -1,93 +1,106 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="es" lang="es">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="es" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Deleting an iFolder Account</title>
+<title>Supresión de una cuenta de iFolder</title>
 <script type="text/javascript">
-  var prev_link = "virusscan.html";
-  var next_link = "logout.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "delacct";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="delacct">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Deleting an iFolder Account</h1>
+<div class='nav' id='topnav'>
+  <a href="virusscan.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="logout.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
 
-<p class="para">You can specify whether to remove an account only from the current computer, or whether to also remove the iFolders you own from the server. </p>
-<p class="para">If you remove an iFolder account only from your computer:</p>
+
+<div class="sect1" id="delacct">
+
+<h1 class="title"> Supresión de una cuenta de iFolder</h1>
+
+<p class="para">Es posible especificar si se desea eliminar una cuenta sólo del equipo actual o bien eliminar también las carpetas iFolder que posee del servidor. </p>
+<p class="para">Si elimina una cuenta de iFolder sólo del equipo:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">The local iFolders for this account are reverted to normal folders. Use a file manager to locate and delete the local copy of the data if it is not needed.</p></li>
+<p class="listitem">Las carpetas iFolder locales de esta cuenta se revertirán a carpetas normales. Utilice un administrador de archivos para buscar y eliminar la copia local de los datos si no la necesita.</p></li>
 <li class="listitem">
-<p class="listitem">You can continue to access the iFolders from other computers with the iFolder client. </p></li>
+<p class="listitem">Podrá seguir accediendo a las carpetas iFolder desde otros equipos mediante el Cliente iFolder. </p></li>
 <li class="listitem">
-<p class="listitem">When the iFolder client is used with a Novell iFolder 3.7 enterprise server, you can also access files from anywhere with Novell iFolder 3.7 Web Access.</p></li></ul></div>
+<p class="listitem">Si el Cliente iFolder se utiliza con un servidor empresarial iFolder 3.7 de Novell, también podrá acceder a los archivos desde cualquier lugar con Web Access de iFolder 3.7 de Novell.</p></li></ul></div>
 
-<p class="para">If you remove your iFolder account from the server: </p>
+<p class="para">Si elimina la cuenta de iFolder del servidor: </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">All of the iFolders you own are unshared.</p></li>
+<p class="listitem">Todas las carpetas iFolder que posee dejarán de ser compartidas.</p></li>
 <li class="listitem">
-<p class="listitem">The local copies of iFolders on member computers are reverted to normal folders. Use a file manager to locate and delete the local copy of the data if it is not needed.</p></li>
+<p class="listitem">Las copias locales de carpetas iFolder de equipos miembro se revertirán a carpetas normales. Utilice un administrador de archivos para buscar y eliminar la copia local de los datos si no la necesita.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder and its contents are removed from the server.</p></li>
+<p class="listitem">La carpeta iFolder y su contenido se eliminarán del servidor.</p></li>
 <li class="listitem">
-<p class="listitem">You are removed as a member of iFolders that others shared with you.</p></li>
+<p class="listitem">Dejará de ser miembro de las carpetas iFolder que otros usuarios comparten con usted.</p></li>
 <li class="listitem">
-<p class="listitem">The account is removed from the local computer.</p></li></ul></div>
+<p class="listitem">La cuenta se eliminará del equipo local.</p></li></ul></div>
 
-<p class="para">If you decide to use this account again on this or another computer, you must set up the account and its iFolders just as you did when it was new.</p>
-<p class="para">To delete an iFolder account:</p>
+<p class="para">Si decide volver a utilizar esta cuenta en este o en otros equipos, deberá configurar la cuenta y las carpetas iFolder correspondientes del mismo modo que al crearla.</p>
+<p class="para">Para suprimir una cuenta de iFolder:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwspv2">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Account Settings</span> to open the iFolder Preferences dialog box to the <span class="guimenu">Accounts</span> tab.
+<p class="para">Haga clic con el botón derecho en el icono <span class="guimenu">Servicios de iFolder</span> <img src="images/ifolder22.png" alt="Icono de la aplicación iFolder " title="Icono de la aplicación iFolder " class="inline" /> en el área de notificaciones y, a continuación, seleccione <span class="guimenu">Configuración de la cuenta</span> para abrir la pestaña <span class="guimenu">Cuentas</span> del recuadro de diálogo Preferencias de iFolder.
     </p></li>
 <li class="step" id="bvwspv3">
-<p class="para">Select the iFolder account you want to delete, then click <span class="guimenu">Remove</span>.</p></li>
+<p class="para">Seleccione la cuenta de iFolder que desea suprimir y, a continuación, haga clic en <span class="guimenu">Eliminar</span>.</p></li>
 <li class="step" id="bvwspqf">
-<p class="para">A message prompts you to determine the extent of the remove action. </p>
-<p class="para">Do one of the following:</p>
+<p class="para">Aparecerá un mensaje que le solicitará que determine el alcance de la acción de eliminación. </p>
+<p class="para">Realice una de las siguientes acciones:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bvwsuhg">
-                <p class="title"><em class="title">Remove the iFolder Account from Only the Current Computer:</em>
-                Make sure that <span class="guimenu">Remove My iFolder and Files from the Server</span> is deselected, then click <span class="guimenu">Yes</span>.</p>
+                <p class="title"><em class="title">Eliminar la cuenta de iFolder sólo del equipo actual:</em>
+                 asegúrese de deseleccionar la opción <span class="guimenu">Eliminar mis carpetas iFolder y archivos del servidor</span> y, a continuación, haga clic en <span class="guimenu">Sí</span>.</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bvwsxkq">
-                <p class="title"><em class="title">Remove the iFolder Account and Your iFolders and Files from the Server:</em>
-                Select <span class="guimenu">Remove My iFolder and Files from the Server</span>, then click <span class="guimenu">Yes</span>.</p>
+                <p class="title"><em class="title">Eliminar la cuenta de iFolder, así como las carpetas iFolder y los archivos del servidor:</em>
+                 seleccione la opción <span class="guimenu">Eliminar mis carpetas iFolder y archivos del servidor</span> y, a continuación, haga clic en <span class="guimenu">Sí</span>.</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bvwsxkr">
-                <p class="title"><em class="title">Cancel the Delete:</em>
-                Click <span class="guimenu">No</span> to back out of the delete action. Your account and its iFolders remain untouched.</p>
+                <p class="title"><em class="title">Cancelar la supresión:</em>
+                 haga clic en <span class="guimenu">No</span> para salir de la acción de supresión. La cuenta y las carpetas iFolder correspondientes permanecerán intactas.</p>
               </div>
 </li></ul></div>
 </li></ol>
@@ -95,8 +108,13 @@
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="virusscan.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="logout.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
 </body>
 </html>

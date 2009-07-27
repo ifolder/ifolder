@@ -1,175 +1,193 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="ru" lang="ru">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Viewing and Configuring Properties of an iFolder</title>
+<title>Просмотр и конфигурирование свойств папки iFolder</title>
 <script type="text/javascript">
-  var prev_link = "setupifolder.html";
-  var next_link = "managingpassphrse.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "propifolders";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="propifolders">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Viewing and Configuring Properties of an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
 
-<p class="para">Use the iFolders Properties page to view and configure the following information about a selected iFolder.</p>
+
+<div class="sect1" id="propifolders">
+
+<h1 class="title"> Просмотр и конфигурирование свойств папки iFolder</h1>
+
+<p class="para">Используйте страницу "Свойства iFolder" для просмотра и конфигурирования приведенной ниже информации о выбранной папке iFolder.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="propifolders.html#b4tc8ue">Understanding iFolder Properties</a>
+            <a href="propifolders.html#b4tc8ue">Общие сведения о свойствах iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="propifolders.html#b4tc9mz">Accessing iFolder Properties from a File Manager</a>
+            <a href="propifolders.html#b4tc9mz">Доступ к свойствам iFolder из менеджера файлов</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="propifolders.html#b4tc9vn">Accessing iFolder Properties from the iFolder Browser</a>
+            <a href="propifolders.html#b4tc9vn">Доступ к свойствам iFolder из навигатора iFolder</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="b4tc8ue">
+<div class="sect2" id="b4tc8ue">
 
-<h2 class="title"> Understanding iFolder Properties</h2>
+<h2 class="title"> Общие сведения о свойствах iFolder</h2>
 
-<p class="para">The following parameters report the disk space used on the server:</p>
+<p class="para">Следующие параметры относятся к дисковому пространству, используемому на сервере:</p>
 <div class="table" id="b403606">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038dc"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Параметр</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Описание</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dd"></a>
 <p class="para">
-                    <span class="guimenu">Available</span>
+                    <span class="guimenu">Доступен</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The total amount of server disk space currently available for files or directories in the selected iFolder. The value is equal to the quota minus the used space.</p></td>
+<p class="para">Общий объем дискового пространства, доступного в данный момент на сервере для файлов или каталогов в выбранной папке iFolder. Это значение равно квоте за вычетом уже использованного пространства.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038de"></a>
 <p class="para">
-                    <span class="guimenu">Used</span>
+                    <span class="guimenu">Используется</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The total amount of server disk space currently consumed by all files and directories in the selected iFolder.</p></td>
+<p class="para">Общий объем дискового пространства, потребляемого в данный момент всеми файлами и каталогами выбранной папки iFolder.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038df"></a>
 <p class="para">
-                    <span class="guimenu">Quota</span>
+                    <span class="guimenu">Квота</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The value reports the total amount of server disk space allocated to the selected iFolder by the iFolder owner. If no quota is set, the value is empty or <span class="literal">N/A</span> (Not Applicable).</p></td>
+<p class="para">Это значение показывает общий объем дискового пространства, выделенный владельцем iFolder для выбранной папки iFolder. Если квота не установлена, значение является пустым или обозначается как <span class="literal">Н/Д</span>(Недоступно).</p></td>
 </tr></table>
 </div>
 
-<p class="para">The following parameters report the synchronization status for the local copy of the iFolder:</p>
+<p class="para">Следующие параметры определяют состояние синхронизации локальной копии папки iFolder:</p>
 <div class="table" id="b40374t">
 <table class="topbot-lines">
               
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038di"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Параметр</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Описание</p></th>
 </tr>
             
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dj"></a>
 <p class="para">
-                    <span class="guimenu">Last Successful Synchronization</span>
+                    <span class="guimenu">Последняя успешная синхронизация</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The completion time of the most recent successful synchronization of your local copy of the iFolder with the iFolder server.</p><pre class="screen">
+<p class="para">Время завершения последней успешной синхронизации локальной копии папки iFolder с сервером iFolder.</p><pre class="screen">
 mm/dd/yyyy hh:mm:ss
 </pre></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dk"></a>
 <p class="para">
-                    <span class="guimenu">Files/Folders to Synchronize</span>
+                    <span class="guimenu">Файлов/папок для синхронизации</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The total number of storage items (files and folders) in the iFolder that need to be synchronized.</p></td>
+<p class="para">Общее количество элементов хранения (файлов и папок) iFolder, которые необходимо синхронизировать.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dl"></a>
 <p class="para">
-                    <span class="guimenu">Automatically Synchronizes Every</span>
+                    <span class="guimenu">Автоматическая синхронизация через каждые</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">The synchronization interval for the iFolder. Specify the value in minutes, hours, or days. </p>
-<p class="para">When the iFolder client is used with a Novell iFolder 3.<span class="replaceable">6 </span>enterprise server, the interval cannot override the minimum interval specified by the iFolder administrator for the server or your account on the server, but it can override the client-wide synchronization interval.</p></td>
+<p class="para">Интервал синхронизации iFolder. Укажите значение в минутах, часах или днях. </p>
+<p class="para">Если клиент iFolder используется с сервером Novell iFolder 3.<span class="replaceable">6 </span>Enterprise Server, этот интервал не может переопределить минимальный интервал, указанный администратором iFolder для сервера или учетной записи на сервере, но он может переопределить интервал синхронизации на уровне клиента.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bjcscye"></a>
 <p class="para">
-                    <span class="guimenu">Secure Sync</span>
+                    <span class="guimenu">Защищенная синхронизация</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Enables secure synchronization of files in the iFolder you are creating. You can enable secure channel for both regular and encrypted iFolders. If this option is selected, iFolder enables you to use a secure channel to synchronize between iFolders on the server and on the local machine.</p></td>
+<p class="para">Включение безопасной синхронизации файлов в создаваемой папке iFolder. Можно включить использование защищенного канала и для зашифрованных, и для обычных папок iFolder. Если этот флажок установлен, система iFolder позволяет использовать для синхронизации папки iFolder между сервером и локальным компьютером защищенный канал.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dm"></a>
 <p class="para">
-                    <span class="guimenu">Synchronize Now</span>
+                    <span class="guimenu">Синхронизировать сейчас</span>
                   </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Click the button to initiate a synchronization on demand.</p></td>
+<p class="para">Щелкните кнопку для выполнения синхронизации вручную.</p></td>
 </tr></table>
 </div>
 
 </div>
 
-<div class="sect2"  id="b4tc9mz">
+<div class="sect2" id="b4tc9mz">
 
-<h2 class="title"> Accessing iFolder Properties from a File Manager</h2>
+<h2 class="title"> Доступ к свойствам iFolder из менеджера файлов</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2h29s">
-<p class="para">In the file manager, navigate to the iFolder, then select it.</p></li>
+<p class="para">В менеджере файлов перейдите к папке iFolder и выберите ее.</p></li>
 <li class="step" id="bv2h2hg">
-<p class="para">Right-click the iFolder, then click <span class="menuchoice"><span class="guimenu">iFolder</span> > <span class="guimenu">Properties</span></span>.</p></li></ol>
+<p class="para">Щелкните правой кнопкой iFolder, затем щелкните <span class="menuchoice"><span class="guimenu">iFolder</span> > <span class="guimenu">Свойства</span></span>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b4tc9vn">
+<div class="sect2" id="b4tc9vn">
 
-<h2 class="title"> Accessing iFolder Properties from the iFolder Browser</h2>
+<h2 class="title"> Доступ к свойствам iFolder из навигатора iFolder</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2h017">
-<p class="para">In the notification area, right-click the iFolder Services icon, then click <span class="guimenu">iFolders</span> to open the iFolder browser.</p></li>
+<p class="para">В области оповещений щелкните правой кнопкой значок сервисов iFolder, затем щелкните <span class="guimenu">Папки iFolder</span>, чтобы открыть навигатор iFolder.</p></li>
 <li class="step" id="bv2h0o4">
-<p class="para">In the list of iFolders, select the iFolder, then click <span class="guimenu">Properties</span>.</p></li></ol>
+<p class="para">В списке папок iFolder выберите папку iFolder и щелкните <span class="guimenu">Свойства</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
 </body>
 </html>

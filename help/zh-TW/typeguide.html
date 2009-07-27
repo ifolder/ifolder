@@ -1,67 +1,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-tw" lang="zh-tw">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for File Types and Sizes to Not Synchronize</title>
+<title>檔案類型和大小不同步的指示</title>
 <script type="text/javascript">
-  var prev_link = "locguide.html";
-  var next_link = "nameconv.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "typeguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="typeguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for File Types and Sizes to Not Synchronize</h1>
-
-<p class="para">When the iFolder client is used, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, LDAPGroup or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</p>
-<p class="para">Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as <span class="filename">.mp3</span> files. </p>
-<div class="sect2"  id="bctogsl">
-
-<h2 class="title"> Operating System Files</h2>
-
-<p class="para">You should not convert system directories to iFolders. Most system files change infrequently and it is better to keep an image file of your basic system and key software than to attempt to synchronize those files to the server.</p>
+<div class='nav' id='topnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
 
-<div class="sect2"  id="bctogyn">
 
-<h2 class="title"> Hidden Files</h2>
+<div class="sect1" id="typeguide">
 
-<p class="para">If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </p>
-<p class="para">For example, iFolder automatically excludes two hidden file manager files called <span class="filename">thumbs.db</span> and <span class="filename">.DS_Store</span>.</p>
+<h1 class="title"> 檔案類型和大小不同步的指示</h1>
+
+<p class="para">使用 iFolder 用戶端時，您的 iFolder 管理員可能會在系統、使用者、LDAPGroup 或 iFolder 層級，指定檔案類型限制以及檔案大小上限限制。您的帳戶也可能對於您自己在 iFolder 中資料可使用的空間容量受到限制。當您參與其他 iFolder 時，會針對 iFolder 的擁有者計算在伺服器上所佔用的空間大小。</p>
+<p class="para">有些檔案類型不適合同步化，例如作業系統檔案、檔案管理員建立的隱藏檔案，或作為連結檔案集合來執行的資料庫。您僅能針對您的企業包含重要檔案類型，或者排除可能與企業不相關的檔案，例如 <span class="filename">.mp3</span>。 </p>
+<div class="sect2" id="bctogsl">
+
+<h2 class="title"> 作業系統檔案</h2>
+
+<p class="para">您不應轉換系統目錄為 iFolder。大部分系統檔案不會經常變更，因此建議保留基本系統的影像檔和關鍵軟體，不要嘗試將這些檔案同步至伺服器。</p>
 </div>
 
-<div class="sect2"  id="bctoh6r">
+<div class="sect2" id="bctogyn">
 
-<h2 class="title"> Database Files</h2>
+<h2 class="title"> 隱藏檔案</h2>
 
-<p class="para">iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
-<p class="para">Do not try to synchronize your GroupWise® data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
+<p class="para">如果您的檔案系統使用隱藏檔案來追蹤顯示優先設定，您的管理員可能會限制這些檔案類型，將其排除在系統上同步化。通常，隱藏檔案僅與其建立時的所在特殊電腦相關，並且每當檔案或目錄被存取時就會變更。您不需要保留這些檔案，將它們同步會導致重複的檔案衝突錯誤。 </p>
+<p class="para">例如，iFolder 會自動排除兩種隱藏檔案管理員檔案，即 <span class="filename">thumbs.db</span> 和 <span class="filename">.DS_Store</span>。</p>
+</div>
+
+<div class="sect2" id="bctoh6r">
+
+<h2 class="title"> 資料庫檔案</h2>
+
+<p class="para">iFolder 會同步個別檔案或個別檔案變動的部分；它不會以檔案集來同步化檔案。如果您具有作為連結檔案集合執行的資料庫檔案，請不要嘗試在 iFolder 中將它們同步。</p>
+<p class="para">請不要嘗試透過製作 GroupWise 歸檔、快取記憶體或將遠端目錄加入 iFolder，來同步化您的 GroupWise® 資料。如果您這麼做，GroupWise 資料會在同步化檔案幾次之後毀損。GroupWise 需要將歸檔中的檔案作為檔案集合來維護。</p>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
 </body>
 </html>

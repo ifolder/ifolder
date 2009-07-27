@@ -1,61 +1,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pl" lang="pl">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Naming Conventions for an iFolder and Its Folders and Files</title>
+<title>Konwencje nazewnictwa dotyczące iFolderów oraz zawartych w nich folderów i plików</title>
 <script type="text/javascript">
-  var prev_link = "typeguide.html";
-  var next_link = "ificons.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "nameconv";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="nameconv">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Naming Conventions for an iFolder and Its Folders and Files</h1>
+<div class='nav' id='topnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
 
-<p class="para">The iFolder client imposes naming conventions that consider the collective restrictions of the Linux, and Windows file systems. An iFolder, folder, or file must have a valid name that complies with the naming conventions before it can be synchronized.</p>
-<p class="para">Use the following naming conventions for your iFolders and the folders and files in them:</p>
+
+<div class="sect1" id="nameconv">
+
+<h1 class="title"> Konwencje nazewnictwa dotyczące iFolderów oraz zawartych w nich folderów i plików</h1>
+
+<p class="para">Klient programu iFolder narzuca konwencje nazewnictwa uwzględniające łączne ograniczenia systemów plików Linux i Windows. iFolder, folder lub plik musi mieć prawidłową nazwę zgodną z konwencjami nazewnictwa, aby mógł być synchronizowany.</p>
+<p class="para">Dla iFolderów oraz folderów i plików w nich zawartych należy używać następujących konwencji nazewnictwa:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">iFolder supports the <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> character set with UTF-8 encoding. </p></li>
+<p class="listitem">iFolder obsługuje zestaw znaków <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> z kodowaniem UTF-8. </p></li>
 <li class="listitem">
-<p class="listitem">Do not use the following invalid characters in the names of iFolders or in the names of folders and files in them:</p><pre class="screen">
+<p class="listitem">W nazwach iFolderów oraz folderów i plików w nich zawartych nie należy używać następujących niewłaściwych znaków:</p><pre class="screen">
 \/:*?"&lt;&gt;|;
 </pre>
-<p class="listitem">iFolder creates a name conflict if you use the invalid characters in a file or folder name. The conflict must be resolved before the file or folder can be synchronized.</p></li>
+<p class="listitem">Program iFolder utworzy konflikt nazwy jeżeli w nazwie pliku lub folderu zostaną użyte niewłaściwie znaki. Konflikt musi być rozwiązany, aby plik lub folder mógł być synchronizowany.</p></li>
 <li class="listitem">
-<p class="listitem">The maximum name length for single path component depends upon the client file system. For filenames, the maximum length includes the dot (.) and file extension. </p>
-<p class="listitem">When you attempt to download or synchronize an iFolder whose name length exceeds the maximum limit supported by the file system, iFolder displays an error message.</p></li>
+<p class="listitem">Maksymalna długość nazwy dla komponentu pojedynczej ścieżki zależy od systemu plików klienta. Dla nazw plików maksymalna długość obejmuje kropkę (.) i rozszerzenie pliku. </p>
+<p class="listitem">Podczas próby pobrania lub zsynchronizowania iFolderu, którego długość nazwy przekracza limit maksymalny obsługiwany przez system plików, program iFolder wyświetli komunikat o błędzie.</p></li>
 <li class="listitem">
-<p class="listitem">Names of iFolders, folders, and files are case insensitive; however, case is preserved. If filenames differ only by case, iFolder creates a name conflict. The conflict must be resolved before the file or folder can be synchronized.</p></li>
+<p class="listitem">W nazwach iFolderów, folderów i plików nie są rozróżniane wielkie i małe litery, ale wielkość liter jest zachowywana. Jeżeli dwie nazwy różnią się wyłącznie wielkością liter, program iFolder utworzy konflikt nazwy. Konflikt musi być rozwiązany, aby plik lub folder mógł być synchronizowany.</p></li>
 <li class="listitem">
-<p class="listitem">If you create iFolders on a FAT32 file system on Linux, avoid naming files in all uppercase characters. The VFAT or FAT32 file handling on Linux automatically changes the filenames that are all uppercase characters and meet the MS-DOS 8.3 file format from all uppercase characters to all lowercase characters. This creates synchronization problems for those files if the iFolder is set with the Read Only access right.</p></li></ul></div>
+<p class="listitem">Jeżeli tworzone są iFoldery w systemie plików FAT32 w systemie Linux, należy unikać nazw plików zawierających wyłącznie wielkie litery. Funkcja obsługi pliku VFAT lub FAT32 w systemie Linux automatycznie zamienia nazwy plików zawierające wyłącznie wielkie litery, zgodne z formatem MS-DOS 8.3 na nazwy składające się wyłącznie z małych liter. Powoduje to problemy z synchronizacją tych plików, jeżeli iFolder ma ustawione prawa dostępu tylko do odczytu.</p></li></ul></div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Aby uzyskać więcej informacji, patrz sekcja <a href="legal.html">Informacje prawne</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
 </body>
 </html>

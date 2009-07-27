@@ -1,133 +1,156 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="cs" lang="cs">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:54" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Configuring iFolder Preferences for the Client</title>
+<title>Konfigurování předvoleb aplikace iFolder pro klienta</title>
 <script type="text/javascript">
-  var prev_link = "accountdetails.html";
-  var next_link = "firewall.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "preferences";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="preferences">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Configuring iFolder Preferences for the Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+
+<div class="sect1" id="preferences">
+
+<h1 class="title"> Konfigurování předvoleb aplikace iFolder pro klienta</h1>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvibeb7">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
-    </p>
-<div class="informalfigure">
-                <img src="images/if_preferences_a.png" alt="General Tab of the iFolder Preferences Dialog Box" />
-              </div>
-</li>
+<p class="para">Klepněte pravým tlačítkem na ikonu <span class="guimenu">Služby iFolder</span> <img src="images/ifolder22.png" alt="Ikona aplikace iFolder" title="Ikona aplikace iFolder" class="inline" /> v oznamovací oblasti a možností <span class="guimenu">Předvolby</span> otevřete dialogové okno Předvolby iFolder na kartě <span class="guimenu">Obecné</span>.
+    </p></li>
 <li class="step" id="bvibeba">
-<p class="para">Specify your preferences for the following:</p>
+<p class="para">Zadejte předvolby pro následující parametry:</p>
 <div class="informaltable">
 <table class="topbot-lines">
                 
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="btvqywm"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Parametr</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Popis</p></th>
 </tr>
               
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvr5uc"></a>
-<p class="para">Start iFolder When Logging In to the Desktop (Available only in Windows Client)</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
+<p class="para">Spustit aplikaci iFolder během přihlášení k ploše (k dispozici pouze pro klienta Windows)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to launch iFolder whenever you log in with the local username where you set up the iFolder account. For those accounts where you have enabled <span class="guimenu">Remember My Password</span>, synchronization occurs in the background at the specified synchronization interval.</p>
-<p class="para">Deselect this option to start iFolder manually.</p></td>
+<p class="para">Tuto možnost vyberte v případě, že chcete aplikaci iFolder spustit vždy, když se přihlásíte s místním uživatelským jménem tam, kde nastavujete účet iFolder. Pro ty účty, kde jste povolili možnost Zapamatovat heslo je synchronizace prováděna na pozadí ve specifikovaném intervalu synchronizace.</p>
+<p class="para">Zrušte výběr této možnosti a spusťte iFolder ručně.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
-<p class="para">Show Confirmation Dialog When Creating iFolders</p></td>
+<p class="para">Po úspěšném vytvoření složky iFolder zobrazit potvrzující dialog.</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to receive a confirmation message each time you create an iFolder, in addition to the normal visual cues such as the iFolder appearing in the list of iFolders.</p>
-<p class="para">Deselect this option to stop receiving the confirmation message.</p></td>
+<p class="para">Toto políčko zaškrtněte v případě, že chcete při každém vytvoření složky iFolder kromě normálních vizuálních potvrzení, jako je například zobrazení složky iFolder v seznamu složek iFolder, obdržet i zprávu s potvrzením.</p>
+<p class="para">Pokud nechcete zprávy s potvrzením zobrazovat, zrušte zaškrtnutí tohoto políčka.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">Notify of Shared iFolders</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<p class="para">Skrýt při spuštění hlavní okno aplikace iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever you receive a new invitation to share an iFolder. </p>
-<p class="para">To view a list of iFolders that are available to download on your current computer, select <span class="guimenu">Show Available iFolders</span> in the iFolder browser whenever iFolder is running.</p></td>
+<p class="para">Pokud chcete při spuštění zobrazovat okno aplikace iFolder, zrušte zaškrtnutí tohoto políčka.</p>
+<p class="para">Pokud chcete, aby okno aplikace iFolder zůstávalo při spuštění skryté, zaškrtněte toto políčko.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
-<p class="para">Hide iFolder Tray Icon</p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<p class="para">Zobrazit synchronizační protokoly </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to hide the iFolder tray icon in the notification area.</p>
-<p class="para">Deselect this option to display the iFolder tray icon when iFolder is running.</p></td>
+<p class="para">Pokud chcete při spuštění zobrazit synchronizační protokoly, zaškrtněte toto políčko.</p>
+<p class="para">Pokud chcete při spuštění synchronizační protokoly skrýt, zrušte zaškrtnutí tohoto políčka.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
+<p class="para">Zobrazit upozornění při porušení zásad </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Pokud chcete vždy při porušení zásad zobrazit v oznamovací oblasti kontextovou zprávu, zaškrtněte toto políčko. </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
+<p class="para">Upozornit na sdílení složek iFolder </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Pokud chcete vždy, když obdržíte nové pozvání ke sdílení složky iFolder, zobrazit v oznamovací oblasti kontextovou zprávu, zaškrtněte toto políčko. </p>
+<p class="para">Chcete-li zobrazit seznam složek iFolder, které jsou dostupné pro stažení do vašeho aktuálního počítače, vyberte možnost <span class="guimenu">Zobrazit dostupné složky iFolder</span> v prohlížeči iFolder, kdekoliv je aplikace iFolder spuštěna.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">Notify of Conflicts</p></td>
+<p class="para">Upozornit na vznik konfliktu</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a conflict occurs when synchronizing files. </p>
-<p class="para">Deselect this option to disable the pop-up messages for synchronization conflicts.</p>
-<p class="para">Whenever conflicts occur, the<span class="guimenu"> iFolder Error </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> icon is displayed on the iFolder when iFolder is running.
+<p class="para">Pokud chcete zobrazit kontextovou zprávu v oznamovací oblasti vždy, když při synchronizování souborů dojde ke konfliktu, zaškrtněte toto políčko. </p>
+<p class="para">Zrušte zaškrtnutí tohoto políčka, pokud chcete vypnout zobrazování kontextových zpráv pro konflikty synchronizace.</p>
+<p class="para">Vždy, když nastane konflikt, zobrazí se ikona <span class="guimenu">Chyba iFolder </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> ve složce iFolder, pokud je aplikace iFolder v chodu.
          </p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">Notify When a User Joins</p></td>
+<p class="para">Upozornit při připojení uživatele k doméně iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a user accepts an invitation to share an iFolder. Acceptance is keyed to when the user actually sets up the iFolder on his or her own computer. </p>
-<p class="para">Deselect this option to disable the pop-up messages for user share confirmation.</p>
-<p class="para">You can view a complete list of iFolder users whenever iFolder is running by selecting the iFolder, then clicking <span class="guimenu">Share with</span> to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></td>
+<p class="para">Pokud chcete zobrazit kontextovou zprávu v oznamovací oblasti vždy, když uživatel přijme pozvání ke sdílení složky iFolder, zaškrtněte toto políčko. </p>
+<p class="para">Zrušením zaškrtnutí políčka kontextové zprávy vypnete.</p>
+<p class="para">Úplný seznam uživatelů složky iFolder můžete zobrazit vždy, když je aplikace iFolder v chodu a to vybráním složky iFolder, pak klepnutím na položku <span class="guimenu">Sdílet s</span> a otevřením dialogového okna vlastnosti iFolder na kartě <span class="guimenu">Sdílení.</span></p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
-<p class="para">Synchronization</p></td>
+<p class="para">Synchronizace</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
-                      <p class="title"><em class="title">Automatically Synchronize iFolders:</em>
-                      Select this check box to enable synchronization for all iFolders on this computer under your current local login or logon identity. Deselect the check box to disable synchronization.</p>
+                      <p class="title"><em class="title">Automaticky synchronizovat složky iFolder:</em>
+                      Zaškrtnutím tohoto políčka povolíte synchronizaci pro všechny složky iFolder v tomto počítači pod stávajícím uživatelským jménem nebo přihlašovací identitou. Zrušte zaškrtnutí tohoto zaškrtávacího políčka a vypněte synchronizaci.</p>
                     </div>
 
 <div class="formalpara" id="byktwky">
-                      <p class="title"><em class="title">Synchronize iFolders Every:</em>
-                      Specify the minimum interval to use for synchronizing iFolders on this computer under your current local login or logon identity. Specify the value and units. The default is 5 minutes if this option is enabled. The minimum interval can be lowered to 5 seconds.</p>
+                      <p class="title"><em class="title">Synchronizovat složky iFolder každých:</em>
+                       Zadejte minimální interval pro synchronizování složek iFolder v tomto počítači pod stávajícím uživatelským jménem nebo přihlašovací identitou. Zadejte hodnotu a jednotky. Když je tato možnost zapnuta, je výchozí hodnota 5 minut. Minimální interval lze zkrátit až na 5 sekund.</p>
                     </div>
 
-<p class="para">If you use the iFolder client with Novell iFolder 3.7, the effective minimum synchronization interval is always the largest value of the following settings:</p>
+<p class="para">Pokud použijete klienta iFolder s aplikací Novell iFolder 3.7, platný minimální interval synchronizace je vždy největší hodnotou následujícího nastavení:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">The system policy default of zero (<span class="literal">0</span>), unless there is a user policy set. If a user policy is set, the user policy overrides the system policy, whether the user policy is larger or smaller in value.</p></li>
+<p class="listitem">Systémová zásada (výchozí nastavení je nula (<span class="literal">0</span>), pokud nejsou nastaveny uživatelské zásady. Pokud je nastavena uživatelská zásada, tato zásada potlačí systémovou zásadu, bez ohledu na to, zda má uživatelská zásada vyšší nebo nižší hodnotu.</p></li>
 <li class="listitem">
-<p class="listitem">The local machine policy, or the setting on the client machine synchronizing with the server.</p></li>
+<p class="listitem">Zásada místního počítače nebo nastavení na klientském počítači synchronizující jej se serverem.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder (collection) policy.</p></li></ul></div>
+<p class="listitem">Zásada iFolder (kolekce).</p></li></ul></div>
 </td>
 </tr></table>
 </div>
 </li>
-<li class="step" id="bvibebi">
-<p class="para">When you are done, click <span class="guimenu">Apply</span> to apply your changes.</p></li>
 <li class="step" id="bvibebj">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolder Preferences dialog box.</p></li></ol>
+<p class="para">Klepnutím na tlačítko <span class="guimenu">OK</span> zavřete dialogové okno Předvolby složek iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
 </body>
 </html>

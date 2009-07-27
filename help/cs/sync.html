@@ -1,93 +1,111 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="cs" lang="cs">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:54" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Synchronizing Files</title>
+<title>Synchronizace souborů</title>
 <script type="text/javascript">
-  var prev_link = "ifquota.html";
-  var next_link = "conflicts.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "sync";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="sync">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Synchronizing Files</h1>
+<div class='nav' id='topnav'>
+  <a href="ifquota.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="conflicts.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+
+<div class="sect1" id="sync">
+
+<h1 class="title"> Synchronizace souborů</h1>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="sync.html#b4tc5o1">Synchronizing Files on Demand</a>
+            <a href="sync.html#b4tc5o1">Synchronizace souborů na vyžádání</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="sync.html#b4tc5wr">Configuring the Synchronization Interval</a>
+            <a href="sync.html#b4tc5wr">Konfigurování intervalu synchronizace</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="b4tc5o1">
+<div class="sect2" id="b4tc5o1">
 
-<h2 class="title"> Synchronizing Files on Demand</h2>
+<h2 class="title"> Synchronizace souborů na vyžádání</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bviejgb">
-<p class="para">In the notification area, right-click the iFolder Services icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">iFolders</span> to open the iFolder browser.
+<p class="para">V oznamovací oblasti klepněte pravým tlačítkem na ikonu služby iFolder <img src="images/ifolder22.png" alt="Ikona aplikace iFolder" title="Ikona aplikace iFolder" class="inline" /> a klepnutím na možnost <span class="guimenu">Složky iFolder</span> otevřete prohlížeč iFolder.
      </p></li>
 <li class="step" id="bviejgc">
-<p class="para">In the list of iFolders, select the iFolder, then click <span class="guimenu">Synchronize Now</span>.</p></li></ol>
+<p class="para">V seznamu složek iFolder vyberte iFolder, pak klepněte na položku <span class="guimenu">Synchronizovat nyní</span>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="b4tc5wr">
+<div class="sect2" id="b4tc5wr">
 
-<h2 class="title"> Configuring the Synchronization Interval</h2>
+<h2 class="title"> Konfigurování intervalu synchronizace</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bviete3">
-<p class="para">In the notification area, right-click the iFolder Services icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
+<p class="para">V oznamovací oblasti klepněte pravým tlačítkem na ikonu Služby iFolder <img src="images/ifolder22.png" alt="Ikona aplikace iFolder " title="Ikona aplikace iFolder " class="inline" /> a možností <span class="guimenu">Předvolby</span> otevřete dialogové okno Předvolby aplikace iFolder na kartě <span class="guimenu">Obecné</span>.
      </p></li>
 <li class="step" id="bviesn8">
-<p class="para">Do one of the following:</p>
+<p class="para">Použijte jednu z následujících možností:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Synchronize</span> to enable background synchronization.</p></li>
+<p class="listitem">Vyberte <span class="guimenu">Synchronizovat</span> a povolte synchronizaci na pozadí.</p></li>
 <li class="listitem">
-<p class="listitem">Deselect <span class="guimenu">Synchronize</span> to disable synchronization.</p></li></ul></div>
+<p class="listitem">Zrušte výběr <span class="guimenu">Synchronizovat</span> a synchronizaci zakažte.</p></li></ul></div>
 </li>
 <li class="step" id="bviet4u">
-<p class="para">If you enable synchronization, specify the interval for synchronizing files, such as every 1 hour or every 2 days. </p>
-<p class="para">When the iFolder client is used with Novell iFolder, the minimum system Synchronization Interval, typically every 5 minutes, is configured by the iFolder administrator. You cannot override the system minimum. The absolute system minimum is 1 minute.</p></li></ol>
+<p class="para">Pokud synchronizaci povolíte, stanovte interval pro synchronizování souborů, například každou 1 hodinu nebo každé 2 dny. </p>
+<p class="para">Když používáte klienta iFolder s aplikací Novell iFolder, je správcem iFolder nakonfigurován minimální interval synchronizace systému, typicky každých 5 minut. Minimální systémovou hodnotu nemůžete změnit. Absolutní systémové minimum je 1 minuta.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="ifquota.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="conflicts.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
 </body>
 </html>

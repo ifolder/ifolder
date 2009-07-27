@@ -1,70 +1,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="sk" lang="sk">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Removing Membership From a Shared iFolder</title>
+<title>Odstránenie členstva zo zdieľaného priečinka iFolder</title>
 <script type="text/javascript">
-  var prev_link = "reverting.html";
-  var next_link = "deleting.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bbb7rj2";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bbb7rj2">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Removing Membership From a Shared iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
 
-<p class="para">To remove membership from a downloaded shared iFolder:</p>
+
+<div class="sect1" id="bbb7rj2">
+
+<h1 class="title"> Odstránenie členstva zo zdieľaného priečinka iFolder</h1>
+
+<p class="para">Členstvo z prevzatého zdieľaného priečinka iFolder odstránite nasledovne:</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Individual members of an LDAPGroup are not allowed to remove their membership from an iFolder if that iFolder is shared with that LDAPGroup. </p></div>
+<p class="para"><em class="title">DÔLEŽITÉ:</em>Jednotliví členovia skupiny LDAP nemôžu odstrániť svoje členstvo v priečinku iFolder, ak je tento priečinok zdieľaný s príslušnou skupinou LDAP. </p></div>
 
 <ol class="steps">
 <li class="step" id="bbb7rz6">
-<p class="para">In the file manager or the iFolder browser, locate the iFolder that you want to remove your membership from. </p></li>
+<p class="para">Pomocou správcu súborov alebo prehľadávača aplikácie iFolder vyhľadajte priečinok iFolder, z ktorého chcete odstrániť členstvo. </p></li>
 <li class="step" id="bbb7smi">
-<p class="para">Right-click the iFolder and select <span class="guimenu">Revert to a normal folder</span> to display the confirmation dialog box.</p></li>
+<p class="para">Pravým tlačidlom kliknite na priečinok iFolder a vyberte možnosť <span class="guimenu">Zmeniť na normálny priečinok</span>. Zobrazí sa dialógové okno potvrdenia.</p></li>
 <li class="step" id="bbb7sr7">
-<p class="para">In the confirmation dialog box, select <span class="guimenu">Also remove my membership from the iFolder</span>. </p></li>
+<p class="para">V dialógovom okno potvrdenia vyberte možnosť <span class="guimenu">Tiež odstrániť moje členstvo v priečinku iFolder</span>. </p></li>
 <li class="step" id="bbb7uad">
-<p class="para">Click <span class="guimenu">Yes</span> to confirm.</p>
-<p class="para">The local copy of the iFolder is a normal folder and is no longer synchronized with the server. </p></li></ol>
+<p class="para">Potvrďte kliknutím na tlačidlo <span class="guimenu">Áno</span>.</p>
+<p class="para">Miestna kópia priečinka iFolder bude odteraz obyčajným priečinkom a už sa nebude synchronizovať so serverom. </p></li></ol>
 </div>
 
-<p class="para">To remove membership from a shared iFolder on the server:</p>
+<p class="para">Členstvo zo zdieľaného priečinka iFolder na serveri odstránite nasledovne:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbbbz9l">
-<p class="para">In the iFolder browser, locate the iFolder that you want to remove your membership from.</p></li>
+<p class="para">Pomocou prehľadávača aplikácie iFolder nájdite priečinok iFolder, z ktorého chcete odstrániť členstvo.</p></li>
 <li class="step" id="bbb7vru">
-<p class="para">Right-click the iFolder and <span class="guimenu">Select Remove my membership</span>.</p></li>
+<p class="para">Pravým tlačidlom kliknite na priečinok iFolder a vyberte možnosť <span class="guimenu">Odstrániť členstvo</span>.</p></li>
 <li class="step" id="bbb7vzm">
-<p class="para">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ol>
+<p class="para">Potvrďte akciu kliknutím na tlačidlo <span class="guimenu">Áno</span>.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
 </body>
 </html>

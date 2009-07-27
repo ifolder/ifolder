@@ -1,127 +1,145 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pl" lang="pl">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Merging iFolders</title>
+<title>Scalanie iFolderów</title>
 <script type="text/javascript">
-  var prev_link = "viewhide.html";
-  var next_link = "setupifolder.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="merge">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Merging iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
 
-<p class="para">Merge helps you consolidate the iFolder data and minimize the data transfer between iFolder server and client. You can merge the content in an iFolder on the server with the content on an existing local machine folder content.</p>
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> Scalanie iFolderów</h1>
+
+<p class="para">Scalanie pomaga konsolidować dane iFolderu oraz minimalizować ilość przesyłanych danych między serwerem a klientem programu iFolder. Użytkownik może scalać zawartość znajdującą się w iFolderze na serwerze z zawartością znajdującą się w folderze istniejącym na komputerze lokalnym.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>
+            <a href="merge.html#bcq0ign">Scalanie iFolderu z folderem</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0kks">Moving Existing iFolders to Different Locations</a>
+            <a href="merge.html#bcq0kks">Przenoszenie istniejących iFolderów w inne miejsca</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0l8i">Merging a Migrated 2.x iFolder to iFolder 3.7</a>
+            <a href="merge.html#bcq0l8i">Scalanie iFolderu 2.x migrowanego do iFolderu 3.7</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bcq0ign">
+<div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-to-Folder Merge</h2>
+<h2 class="title"> Scalanie iFolderu z folderem</h2>
 
-<p class="para">You can merge an iFolder and a normal folder with the same name. For example, you can merge the content of an iFolder named <span class="filename">corporate</span> with that of a normal folder named <span class="filename">corporate</span>. </p>
-<p class="para">Assume that the <span class="filename">corporate</span> iFolder has three sub folders: <span class="filename">hr</span>, <span class="filename">finance</span> and <span class="filename">marketing</span>. You want to download the content of <span class="filename">corporate</span> iFolder to the folder named <span class="filename">corporate,</span> which contains only the <span class="filename">hr</span> and <span class="filename">finance</span> folders. In this case, you don’t need to download all the three folders to <span class="filename">the corporate</span> folder and increase the transer rate. Instead, you can merge the <span class="filename">corporate</span> iFolder to <span class="filename">the corporate</span> folder so that the <span class="guimenu">Merge to folder</span> feature intelligently avoids downloading the sub folders <span class="filename">hr</span> and <span class="filename">finance</span>, and downloads only <span class="filename">marketing</span> sub folder. If the data in the <span class="filename">corporate</span> iFolder and <span class="filename">corporate</span> folder is different, a version conflict is displayed. You can resolve the conflicts manually. Similarly, if filename conflict is displayed, you can resolve it manually.</p>
-<p class="para">To merge an iFolder on the server to an existing local machine folder content:</p>
+<p class="para">Użytkownik może scalać iFolder ze zwykłym folderem o tej samej nazwie. Na przykład zawartość iFolderu o nazwie <span class="filename">korporacja</span> można scalić ze zwykłym folderem o nazwie <span class="filename">korporacja</span>. </p>
+<p class="para">Załóżmy, że folder iFolder <span class="filename">korporacja</span> ma trzy podfoldery: <span class="filename">zasoby_ludzkie</span>, <span class="filename">finanse</span> i <span class="filename">marketing</span>. Użytkownik chce pobrać zawartość folderu iFolder <span class="filename">korporacja</span> do folderu o nazwie <span class="filename">korporacja</span>, który zawiera tylko foldery <span class="filename">zasoby_ludzkie</span> i <span class="filename">finanse</span>. W tym przypadku do folderu <span class="filename">korporacja</span> nie trzeba pobierać wszystkich trzech folderów i w ten sposób zwiększać transmisji. Zamiast tego iFolder <span class="filename">korporacja</span> można scalić z folderem <span class="filename">korporacja</span>, aby funkcja <span class="guimenu">Scalanie z folderem</span> mogła inteligentnie uniknąć pobierania podfolderów <span class="filename">zasoby_ludzkie</span> i <span class="filename">finanse</span>, pobierając jedynie podfolder <span class="filename">marketing</span>. Jeśli dane iFolderu <span class="filename">korporacja</span> i folderu <span class="filename">korporacja</span> są różne, zostanie wyświetlony konflikt wersji. Konflikty można rozwiązywać ręcznie. Podobnie ręcznie można rozwiązywać konflikty nazw plików.</p>
+<p class="para">Aby scalić iFolder znajdujący się na serwerze z istniejącą zawartością folderu na komputerze lokalnym:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr3w0i">
-<p class="para">In the iFolder browser, right-click the desired iFolder from the list of iFolders on the selected server, then select <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">W przeglądarce iFolderów, na liście iFolderów znajdujących się na wybranym serwerze, prawym przyciskiem myszy kliknij żądany iFolder, a następnie wybierz opcję <span class="guimenu">Scalanie z folderem</span>.</p></li>
 <li class="step" id="bcr4m9d">
-<p class="para">Browse and select the folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Przejdź do wybranego folderu i kliknij przycisk <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
-<p class="para">Now, the contents of these two folders are compared and the files that are not present in the folder is downloaded from the iFolder. The files that are not present in the iFolder, but available in the folder are uploaded.</p>
+<p class="para">W tym momencie porównywana jest zawartość tych dwóch folderów, a pliki, które nie znajdują się w folderze, są pobierane z iFolderu. Pliki, które nie są obecne w iFolderze, ale dostępne w zwykłym folderze, są przekazywane.</p>
 </div>
 
-<div class="sect2"  id="bcq0kks">
+<div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Moving Existing iFolders to Different Locations</h2>
+<h2 class="title"> Przenoszenie istniejących iFolderów w inne miejsca</h2>
 
-<p class="para">To move an existing iFolder named <span class="filename">corporate</span> to a different location on the client machine: </p>
+<p class="para">Aby przenieść istniejący iFolder o nazwie <span class="filename">korporacja</span> w inne miejsce na komputerze klienckim: </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr4vli">
-<p class="para">Convert the <span class="filename">corporate</span> iFolder into a normal folder.</p>
+<p class="para">Przekształć iFolder <span class="filename">korporacja</span> w zwykły folder.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not delete the iFolder on the server.</p></div>
+<p class="para"><em class="title">WAŻNE:</em>Nie wolno usuwać iFolderu znajdującego się na serwerze.</p></div>
 
-<p class="para">For more information, see <a href="reverting.html">Reverting an iFolder to a Normal Folder</a>.</p></li>
+<p class="para">Więcej informacji można znaleźć w dokumencie <a href="reverting.html">Przywracanie iFolderu do postaci zwykłego folderu</a>.</p></li>
 <li class="step" id="bcr4vww">
-<p class="para">Move the <span class="filename">corporate</span> folder to a different location. </p>
+<p class="para">Przenieść folder <span class="filename">korporacja</span> w inne miejsce. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not change the folder name while it is being moved.</p></div>
+<p class="para"><em class="title">WAŻNE:</em>Podczas przenoszenia nie wolno zmieniać nazwy folderu.</p></div>
 </li>
 <li class="step" id="bcr4w5o">
-<p class="para">In the iFolder browser window, select the <span class="filename">corporate</span> iFolder on the server, then click <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">W oknie przeglądarki iFolderów wybierz iFolder <span class="filename">korporacja</span>, który znajduje się na serwerze, a następnie kliknij opcję <span class="guimenu">Scalanie z folderem</span>.</p></li>
 <li class="step" id="bcr4y94">
-<p class="para">Select the <span class="filename">corporate</span> folder on the local machine, then click <span class="guimenu">OK</span> to merge the content.</p>
+<p class="para">Zaznacz folder <span class="filename">korporacja</span> znajdujący się na komputerze lokalnym, a następnie kliknij przycisk <span class="guimenu">OK</span>, aby scalić zawartość.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>If you use <span class="guimenu">Sychronize Now</span> (instead of <span class="guimenu">Merge to folder</span>), as described in <a href="movelocation.html">Moving an iFolder</a>, it checks for all the data in the iFolder on the server, and synchronizes all the data.Thus it increases data transfering time. In other hand, <span class="guimenu">Merge to folder </span>minimize the data transfer as it only merges the contents of the iFolder and the normal folder.</p></div>
+<p class="para"><em class="title">UWAGA:</em>Użycie opcji <span class="guimenu">Synchronizuj teraz</span> (zamiast opcji <span class="guimenu">Scal z folderem</span>), zgodnie z opisem w temacie <a href="movelocation.html">Przenoszenie iFolderu</a>, powoduje sprawdzanie wszystkich danych w folderze iFolder znajdującym się na serwerze oraz ich synchronizowanie. Zatem czas przesyłania danych wydłuża się. Z drugiej strony opcja <span class="guimenu">Scal z folderem</span> minimalizuje przesyłanie danych, ponieważ tylko scala zawartość iFolderu ze zwykłym folderem.</p></div>
 
-<p class="para">For more information on merging, see <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>.</p></li></ol>
+<p class="para">Więcej informacji dotyczących scalania można znaleźć w temacie <a href="merge.html#bcq0ign">Scalanie iFolderu z folderem</a>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bcq0l8i">
+<div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Merging a Migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7</h2>
+<h2 class="title"> Scalanie iFolderu 2.<span class="replaceable">x</span> migrowanego do iFolderu 3.7</h2>
 
-<p class="para">You can merge a migrated 2.x iFolder and iFolder 3.7 iFolder. For more information on migration, see <a href="coexistmig.html">Novell iFolder Migration And Upgrade</a>. </p>
-<p class="para">After migration, the 2.<span class="replaceable">x</span> iFolders are moved to the iFolder 3.7 server. You can choose to download the migrated iFolders on the 3.7 server to the client machine. However, those iFolders might already exist on the client machine. If this is the case, use the merge functionality to avoid unnecessary data transfer from server to the client. </p>
-<p class="para">To merge a migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7,</p>
+<p class="para">Migrowany iFolder 2.x można scalić z iFolderem programu iFolder 3.7. Więcej informacji dotyczących migracji można znaleźć w temacie <a href="coexistmig.html">Migracja i uaktualnienie programu Novell iFolder</a>. </p>
+<p class="para">Po migracji iFoldery 2.<span class="replaceable">x</span> są przenoszone na serwer iFolder 3.7. Użytkownik może pobrać migrowane iFoldery z serwera 3.7 na komputer lokalny. Jednak te iFoldery mogą już istnieć na tym komputerze. Jeśli tak jest, należy użyć funkcji scalania, aby uniknąć niepotrzebnego przesyłania danych z serwera do klienta. </p>
+<p class="para">Aby scalić migrowany iFolder 2.<span class="replaceable">x</span> z iFolderem 3.7.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr6eex">
-<p class="para">Migrate the 2.<span class="replaceable">x</span> iFolders to the iFolder 3.7 domain.</p></li>
+<p class="para">Przeprowadź migrację iFolderów 2.<span class="replaceable">x</span> do domeny iFolderów 3.7.</p></li>
 <li class="step" id="bcr6f1n">
-<p class="para">Convert the 2.<span class="replaceable">x</span> iFolders on the local machine to normal folders.</p></li>
+<p class="para">Przekształć iFoldery 2.<span class="replaceable">x</span> znajdujące się na komputerze lokalnym do postaci zwykłych folderów.</p></li>
 <li class="step" id="bcr6f5l">
-<p class="para">Select the server copy of each iFolder and click <span class="replaceable">Merge to folder</span>.</p></li>
+<p class="para">Wybierz kopię każdego iFolderu znajdującą się na serwerze i kliknij opcję <span class="replaceable">Scalanie z folderem</span>.</p></li>
 <li class="step" id="bcr6is8">
-<p class="para">To merge the content, select the normal folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Aby scalić zawartość, wybierz zwykły folder i kliknij przycisk <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Aby uzyskać więcej informacji, patrz sekcja <a href="legal.html">Informacje prawne</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
 </body>
 </html>

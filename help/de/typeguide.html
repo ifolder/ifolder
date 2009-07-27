@@ -1,67 +1,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="de" lang="de">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="de" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:34" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for File Types and Sizes to Not Synchronize</title>
+<title>Richtlinien für nicht zu synchronisierende Dateitypen und -größen</title>
 <script type="text/javascript">
-  var prev_link = "locguide.html";
-  var next_link = "nameconv.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "typeguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="typeguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for File Types and Sizes to Not Synchronize</h1>
-
-<p class="para">When the iFolder client is used, your iFolder administrator might specify file type restrictions and maximum file size restrictions at the system, user, LDAPGroup or iFolder level. Your account might also be restricted in the amount of space you can use for the data in the iFolders you own. When you participate in other iFolders, the space consumed on the server is counted against the owner of that iFolder.</p>
-<p class="para">Some file types are not good candidates for synchronization, such as operating system files, hidden files created by a file manager, or databases that are implemented as a collection of linked files. You might include only key file types used for your business, or exclude files that are likely unrelated to business, such as <span class="filename">.mp3</span> files. </p>
-<div class="sect2"  id="bctogsl">
-
-<h2 class="title"> Operating System Files</h2>
-
-<p class="para">You should not convert system directories to iFolders. Most system files change infrequently and it is better to keep an image file of your basic system and key software than to attempt to synchronize those files to the server.</p>
+<div class='nav' id='topnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
-<div class="sect2"  id="bctogyn">
 
-<h2 class="title"> Hidden Files</h2>
+<div class="sect1" id="typeguide">
 
-<p class="para">If your file system uses hidden files to track display preferences, your administrator might restrict those file types to exclude them from being synchronized on your system. Usually, hidden files are relevant only to the particular computer where they were created, and they change every time the file or directory is accessed. You do not need to keep these files, and synchronizing them results in repeated file conflict errors. </p>
-<p class="para">For example, iFolder automatically excludes two hidden file manager files called <span class="filename">thumbs.db</span> and <span class="filename">.DS_Store</span>.</p>
+<h1 class="title"> Richtlinien für nicht zu synchronisierende Dateitypen und -größen</h1>
+
+<p class="para">Wenn der iFolder-Client verwendet wird, kann der iFolder-Administrator Einschränkungen für den Dateityp und die maximale Dateigröße auf System-, Benutzer-. LDAP-Gruppen- und iFolder-Ordner-Ebene festlegen.   Für Ihr Konto können auch Einschränkungen bezüglich des Speicherplatzes angegeben werden, den Sie für die Daten in den iFolder-Ordnern verwenden können, deren Eigentümer Sie sind. Wenn Sie andere iFolder-Ordner benutzen, zählt der auf dem Server verwendete Speicher für den Eigentümer des betreffenden iFolder-Ordners.</p>
+<p class="para">Einige Dateitypen eignen sich nicht besonders gut für die Synchronisierung, beispielsweise Dateien von Betriebssystemen, verborgene Dateien, die von einem Datei-Manager erstellt wurden, oder Datenbanken, die als Sammlung verbundener Dateien implementiert werden. Sie können festlegen, dass nur wichtige Dateien aufgenommen werden sollen, die Sie geschäftlich verwenden, oder Dateien ausschließen, die mit hoher Wahrscheinlichkeit nichts mit Ihrer Arbeit zu tun haben, wie beispielsweise <span class="filename">.mp3</span>-Dateien. </p>
+<div class="sect2" id="bctogsl">
+
+<h2 class="title"> Betriebssystemdateien</h2>
+
+<p class="para">Systemverzeichnisse sollten nicht in iFolder-Ordner umgewandelt werden. Die meisten Systemdateien ändern sich in unregelmäßigen Abständen, sodass es besser ist, eine Image-Datei Ihres Basissystems und der wichtigsten Software zu speichern, als zu versuchen, diese Dateien auf dem Server zu synchronisieren.</p>
 </div>
 
-<div class="sect2"  id="bctoh6r">
+<div class="sect2" id="bctogyn">
 
-<h2 class="title"> Database Files</h2>
+<h2 class="title"> Verborgene Dateien</h2>
 
-<p class="para">iFolder synchronizes individual files or the changed portions of individual files; it does not synchronize files as a set. If you have a database file that is implemented as a collection of linked files, do not try to synchronize them in an iFolder.</p>
-<p class="para">Do not try to synchronize your GroupWise® data by making the GroupWise archive, cache, or remote directories into iFolders. If you do this, the GroupWise data files become corrupted after synchronizing the file a few times. GroupWise needs the files in the archive to be maintained as a set of files.</p>
+<p class="para">Wenn Ihr Dateisystem verborgene Dateien zur Aufzeichnung der Anzeigeeinstellungen verwendet, kann Ihr Administrator Beschränkungen für diese Dateitypen verhängen, sodass diese von der Synchronisierung auf Ihrem System ausgenommen werden. Normalerweise sind verborgene Dateien nur für den Computer relevant, auf dem sie erstellt wurden, und sie ändern sich bei jedem Zugriff auf die Datei bzw. das Verzeichnis. Sie müssen diese Dateien nicht behalten und Ihre Synchronisierung führt zu wiederholten Fehlern aufgrund von Dateikonflikten. </p>
+<p class="para">So schließt iFolder beispielsweise automatisch zwei verborgene Dateimanager-Dateien (<span class="filename">thumbs.db</span> und <span class="filename">.DS_store</span>) aus.</p>
+</div>
+
+<div class="sect2" id="bctoh6r">
+
+<h2 class="title"> Datenbankdateien</h2>
+
+<p class="para">iFolder synchronisiert einzelne Dateien bzw. die geänderten Teile einzelner Dateien. Dateien werden nicht als Gruppe synchronisiert. Wenn Sie eine Datenbankdatei verwenden, die als Sammlung verbundener Dateien implementiert ist, sollten Sie nicht versuchen, diese Dateien in einem iFolder-Ordner zu synchronisieren.</p>
+<p class="para">Versuchen Sie nicht, Ihre GroupWise®-Daten zu synchronisieren, indem Sie das GroupWise-Archiv, den Cache oder Remote-Verzeichnisse in iFolder-Ordner umwandeln. Wenn Sie dies tun, werden die GroupWise-Datendateien fehlerhaft, nachdem die Datei einige Male synchronisiert wird. Für GroupWise müssen die Dateien im Archiv als Gruppe von Dateien beibehalten werden.</p>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="nameconv.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
 </body>
 </html>

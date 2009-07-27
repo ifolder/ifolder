@@ -1,94 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-cn" lang="zh-cn">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Logging In to an iFolder Account</title>
+<title>登录 iFolder 帐户</title>
 <script type="text/javascript">
-  var prev_link = "accounts.html";
-  var next_link = "accountdetails.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "login";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="login">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Logging In to an iFolder Account</h1>
+<div class='nav' id='topnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
 
-<p class="para">You can work locally with files in the iFolder directories at any time. You must be logged in to an iFolder account to synchronize the user list, synchronize iFolder data, upload new iFolders, download shared iFolders, share iFolders, and manage iFolders. You can log in separately and be logged in concurrently to multiple accounts. </p>
-<p class="para">Use one of the following login methods for each account:</p>
+
+<div class="sect1" id="login">
+
+<h1 class="title"> 登录 iFolder 帐户</h1>
+
+<p class="para">可以随时在本地访问 iFolder 目录中的文件。您必须登录 iFolder 帐户以同步用户列表、同步 iFolder 数据、上载新的 iFolder、下载共享 iFolder、共享 iFolder 以及管理 iFolder。可以分别登录也可以同时登录多个帐户。 </p>
+<p class="para">对每个帐户使用以下登录方法之一：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="b40gpos">
-            <p class="title"><em class="title">Log In Automatically:</em>
-            Enable <span class="guimenu">Remember My Password</span> for your iFolder account if you want to log in automatically whenever the iFolder client starts. You can enable <span class="guimenu">Remember My Password</span> when you configure the account or by modifying the account settings later.</p>
+            <p class="title"><em class="title">自动登录：</em>
+            如果您希望在 iFolder 客户端启动的时候自动登录，则启用 iFolder 帐户的<span class="guimenu">“记住口令”</span>。当您配置帐户或在以后修改帐户设置时，可以启用<span class="guimenu">“在此计算机上记住口令”</span>。</p>
           </div>
 
-<p class="listitem">Whenever your password changes, automatic authentication fails gracefully the next time you attempts to log in to the iFolder account. iFolder prompts you to log in, then you can enter the new password. Enable <span class="guimenu">Remember My Password</span> again if desired.</p></li>
+<p class="listitem">只要更改了口令，自动鉴定就会在您下次试图登录到 iFolder 帐户时失败。在 iFolder 提示您登录时，可以输入新口令，且如果需要的话，再次选中<span class="guimenu">“记住口令”</span>复选框。</p></li>
 <li class="listitem">
 <div class="formalpara" id="b40gq44">
-            <p class="title"><em class="title">Log In As Needed:</em>
-            Disable <span class="guimenu">Remember My Password</span> if you want to log in to an iFolder account only as needed.</p>
+            <p class="title"><em class="title">按需登录：</em>
+            如果希望仅在需要时登录到 iFolder 帐户，请取消选中<span class="guimenu">“记住口令”</span>复选框。</p>
           </div>
 </li></ul></div>
 
-<p class="para">To enable or disable <span class="guimenu">Remember My Password</span> for an existing iFolder account:</p>
+<p class="para">要对现有 iFolder 帐户启用或禁用<span class="guimenu">“记住口令”</span>功能：</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwrn0v">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span> to open the iFolder Preferences dialog box to the <span class="guimenu">Accounts</span> tab.
+<p class="para">在通知区域中右击<span class="guimenu">“iFolder 服务”</span><img src="images/ifolder22.png" alt="iFolder 应用程序图标" title="iFolder 应用程序图标" class="inline" /> 图标，然后选择<span class="guimenu">“帐户”</span>以打开“iFolder 首选设置”对话框并进入<span class="guimenu">“帐户”</span>选项卡。
     </p></li>
 <li class="step" id="bvwrn0w">
-<p class="para">Select the iFolder account, then click <span class="guimenu">Properties</span> to view its setting in the <span class="guimenu">Properties </span>dialog box.</p></li>
+<p class="para">选择 iFolder 帐户，然后单击<span class="guimenu">“属性”</span>以查看其在<span class="guimenu">“属性”</span>对话框中的设置。</p></li>
 <li class="step" id="bvwrhna">
-<p class="para">Click the<span class="guimenu"> Identity </span>tab.</p></li>
+<p class="para">单击<span class="guimenu">“身份”</span>选项卡。</p></li>
 <li class="step" id="bvwrhn9">
-<p class="para">Select (enable) or deselect (disable) <span class="guimenu">Remember My Password</span>.</p></li>
+<p class="para">选择（启用）或取消选择（禁用）<span class="guimenu">“记住口令”</span>。</p></li>
+<li class="step" id="bkfamxm">
+<p class="para">在<span class="guimenu">“口令”</span>字段输入口令。</p></li>
 <li class="step" id="b41npf3">
-<p class="para">Click <span class="guimenu">OK</span> for successful completion.</p></li>
+<p class="para">单击<span class="guimenu">“关闭”</span>即可成功完成。</p></li>
 <li class="step" id="b41nqa7">
-<p class="para">Click <span class="guimenu">OK</span> in the <span class="guimenu">iFolder Properties </span>dialog box to save your changes and log in to the server.</p></li></ol>
+<p class="para">单击<span class="guimenu">“iFolder 属性”</span>对话框中的<span class="guimenu">“关闭”</span>保存更改并登录到服务器。</p></li></ol>
 </div>
 
-<p class="para">To log in to an iFolder account:</p>
+<p class="para">要登录 iFolder 帐户，请执行以下操作：</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvwntnx">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Accounts</span>.
+<p class="para">在通知区域中右击<span class="guimenu">“iFolder 服务”</span><img src="images/ifolder22.png" alt="iFolder 应用程序图标" title="iFolder 应用程序图标" class="inline" /> 图标，然后选择<span class="guimenu">“帐户”</span>。
     </p></li>
 <li class="step" id="bvwnufo">
-<p class="para">Select the iFolder account, then select the <span class="guimenu">Online</span> check box next to it.</p></li>
+<p class="para">选择 iFolder 帐户，然后选择它旁边的<span class="guimenu">“联机”</span>复选框。</p></li>
 <li class="step" id="bvwnv0e">
-<p class="para">If prompted for a password, specify the password, then click <span class="guimenu">Connect</span>.</p>
-<p class="para">If <span class="guimenu">Remember My Password</span> is enabled for the account, you are not prompted to enter a password unless your password has expired. </p>
-<p class="para">If login fails, an error message reports the cause, such as password failure. </p></li>
+<p class="para">如果提示需要输入口令，则指定口令，然后单击<span class="guimenu">“连接”</span>。</p>
+<p class="para">如果已启用该帐户的<span class="guimenu">“记住口令”</span>，除非您的口令已过期，否则不会提示您输入口令。 </p>
+<p class="para">如果登录失败，则出现报告原因的错误讯息，例如口令失败。 </p></li>
 <li class="step" id="bvws3f9">
-<p class="para">On successful connection, close the <span class="guimenu">iFolder Preferences</span> dialog box.</p></li></ol>
+<p class="para">连接成功后，关闭<span class="guimenu">“iFolder 首选设置”</span>对话框。</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accounts.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accountdetails.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
 </body>
 </html>

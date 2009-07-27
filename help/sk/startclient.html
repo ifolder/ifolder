@@ -1,108 +1,117 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="sk" lang="sk">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Starting the iFolder Client</title>
+<title>Spustenie klienta aplikácie iFolder</title>
 <script type="text/javascript">
-  var prev_link = "accountsprefs.html";
-  var next_link = "accounts.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "startclient";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="startclient">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Starting the iFolder Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
 
-<p class="para">When iFolder is running, the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon" class="inline" /> icon appears in the notification area of the taskbar. iFolder is integrated in the desktop environment. The iFolder emblem (a green “i”) <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> appears on iFolders when they are viewed in a file manager, on the desktop, or in the iFolder browser. The encrypted iFolder is indicated by the <img src="images/ifolder_encrypted_fold.png" alt="iFolder Icon " class="inline" /> emblem (locked folder).
+
+<div class="sect1" id="startclient">
+
+<h1 class="title"> Spustenie klienta aplikácie iFolder</h1>
+
+<p class="para">Ak je aplikácia iFolder spustená, v oblasti upozornení panela úloh pracovnej plochy sa zobrazí ikona <span class="guimenu">Služby aplikácie iFolder</span><img src="images/ifolder22.png" alt="ikona aplikácie iFolder." title="ikona aplikácie iFolder." class="inline" /> Klient iFolder je integrovaný do pracovného prostredia počítača.  Symbol priečinka iFolder (zelené písmeno i) <img src="images/ifolder32.png" alt="Ikona priečinka iFolder" title="Ikona priečinka iFolder" class="inline" /> sa zobrazuje na priečinkoch iFolder pri prezeraní v správcovi súborov, na pracovnej ploche alebo v prehľadávači aplikácie iFolder. Šifrovaný priečinok iFolder označuje symbol <img src="images/ifolder_encrypted_fold.png" alt="Ikona priečinka iFolder" title="Ikona priečinka iFolder" class="inline" /> (uzamknutý priečinok).
   </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>The notification area of the taskbar must be enabled in order for the <span class="guimenu">iFolder Services</span> icon to be displayed when iFolder is running. </p></div>
+<p class="para"><em class="title">DÔLEŽITÉ:</em>Ak chcete, aby bola pri spustení aplikácie iFolder zobrazená ikona <span class="guimenu">Služby aplikácie iFolder</span>, musí byť povolená oblasť upozornení na paneli úloh. </p></div>
 
-<p class="para">You can work locally with files in your local iFolders at any time. Whenever the iFolder client is running, it logs the changes you make to local iFolder data as you work. If you make changes to local iFolder data when iFolder is not running, iFolder identifies and logs the differences the next time you start iFolder.</p>
-<p class="para">When iFolder is not running, iFolders appear in the file manager or on the desktop. You can access files in your local copy of an iFolder, but you cannot manage iFolders. In addition, you must log in to an account to create an iFolder or synchronize its files.</p>
+<p class="para">Na lokálnom počítači môžete so súbormi v miestnych priečinkoch iFolder pracovať kedykoľvek.  Po každom spustení klienta iFolder sú zaznamenávané zmeny, ktoré ste popri práci vykonali s údajmi v miestnych priečinkoch iFolder. Ak vykonáte zmeny v údajoch v miestnych priečinkoch iFolder počas doby keď nebola aplikácia iFolder spustená, identifikuje klient iFolder zmeny a zaznamená ich pri ďalšom spustení aplikácie iFolder.</p>
+<p class="para">Ak nie je aplikácia iFolder spustená, priečinky iFolder sa zobrazujú v správcovi súborov alebo na pracovnej ploche. Môžete pristupovať k súborom v miestnej kópii priečinka iFolder ale nemôžete spravovať priečinky iFolder.  Ak chcete vytvoriť priečinok iFolder alebo zosynchronizovať jeho súbory, musíte sa navyše prihlásiť na konto.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>During account creation, user login happens through SSL. When you are prompted to accept the server certificate, you must validate the certificate and accept it for a successful connection.</p></div>
+<p class="para"><em class="title">POZNÁMKA:</em>Počas vytvárania konta prebieha prihlasovanie používateľa pomocou protokolu SSL. Kvôli úspešnému pripojeniu musíte po výzve na prijatie certifikátu servera overiť a prijať certifikát.</p></div>
 
-<p class="para">For information about stopping the iFolder client, see <a href="stopclient.html">Exiting the iFolder Client</a>.</p>
-<div class="sect2"  id="b4064a7">
+<p class="para">Informácie o zastavení klienta aplikácie iFolder nájdete v časti <a href="stopclient.html">Ukončenie klienta aplikácie iFolder</a>.</p>
+<div class="sect2" id="b4064a7">
 
-<h2 class="title"> Linux</h2>
+<h2 class="title"> Systém Linux</h2>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b40miua">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#b40miua">Automatické spustenie klienta iFolder po prihlásení</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb73z">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb73z">Ručné spustenie klienta iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b40miua">
+<div class="sect3" id="b40miua">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Automatické spustenie klienta iFolder po prihlásení</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to the desktop, do one of the following:</p>
+<p class="para">Ak chcete povoliť automatické spustenie klienta iFolder po prihlásení sa na počítač, pokračujte jedným z nasledujúcich postupov:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, click <span class="guimenu">More Applications</span>, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Add to Startup Programs</span> from the menu.</p>
-<div class="informalfigure">
-                    <img src="images/if_apbrmenu_a.png" alt="iFolder 3 Application Browser Menu" />
-                  </div>
-</li>
+<p class="listitem">Otvorte ponuku s aplikáciami, kliknite na tlačidlo <span class="guimenu">Viac aplikácií</span>, nájdite aplikáciu <span class="guimenu">iFolder 3</span> a kliknite na ňu pravým tlačidlom a vyberte z ponuky možnosť <span class="guimenu">Pridať k programom pri spustení</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li>
+<p class="listitem">Uistite sa, že po odhlásení je aplikácia iFolder spustená a uložte nastavenie relácie.  Túto možnosť relácie môžete vybrať pri prihlásení sa na počítač.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal window, log in as the <span class="systemitem">root</span> user, then run <span class="filename">/opt/gnome/bin/gnome-session-properties</span> to add iFolder as a program to start when you log in to your computer.</p></li></ul></div>
+<p class="listitem">Otvorte okno terminálu, prihláste sa ako <span class="systemitem">koreňový</span> používateľ a spustením príkazu<span class="filename">/opt/gnome/bin/gnome-session-properties</span> pridajte klienta iFolder medzi programy, ktoré sa spustia pri prihlásení na počítač.</p></li></ul></div>
 
-<p class="para">To disable iFolder from starting automatically on login, do one of the following:</p>
+<p class="para">Ak chcete klientovi iFolder zakázať automatické spustenie pri prihlásení, pokračujte jedným z nasledujúcich postupov:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open the applications menu, locate and right-click <span class="guimenu">iFolder 3</span>, then select <span class="guimenu">Remove from Startup Programs</span>.</p></li>
+<p class="listitem">Otvorte ponuku s aplikáciami, nájdite aplikáciu <span class="guimenu">iFolder 3</span> a kliknite na ňu pravým tlačidlom. Následne vyberte možnosť <span class="guimenu">Odstrániť z programov pri spustení</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Make sure iFolder is not running when you log out, then save the session setup. Select this session option when you log in to the desktop.</p></li></ul></div>
+<p class="listitem">Uistite sa, že po odhlásení je aplikácia iFolder spustená a uložte nastavenie relácie.  Túto možnosť relácie môžete vybrať pri prihlásení sa na počítač.</p></li></ul></div>
 
 </div>
 
-<div class="sect3"  id="b4tb73z">
+<div class="sect3" id="b4tb73z">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Ručné spustenie klienta iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Log in to your computer with the local Linux user identity you want to use when you create iFolders.</p></li>
+<p class="para">Prihláste sa na počítač s miestnou identitou používateľa systému Linux, ktorú chcete použiť pri vytvorení priečinkov iFolder.</p></li>
 <li class="step" id="bw18fdr">
-<p class="para">Use one of the following methods to start iFolder:</p>
+<p class="para">Na spustenie aplikácie iFolder použite jeden z nasledujúcich spôsobov:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">In the taskbar, open the applications menu, click <span class="guimenu">More Applications</span>, locate <span class="guimenu">iFolder 3</span> by searching or scrolling through the available options, right-click iFolder 3, then select <span class="guimenu">Start iFolder 3</span>.</p></li>
+<p class="listitem">Na paneli úloh otvorte ponuku s aplikáciami, kliknite na tlačidlo <span class="guimenu">Viac aplikácií</span>, vyhľadávaním alebo prezeraním dostupných možností nájdite aplikáciu <span class="guimenu">iFolder 3</span>, kliknite pravým tlačidlom na tlačidlo iFolder 3 a vyberte možnosť <span class="guimenu">Spustiť klienta iFolder 3</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, then enter</p><pre class="screen">
+<p class="listitem">Otvorte prostredie terminálu a zadajte príkaz</p><pre class="screen">
 /usr/bin/ifolder
 </pre></li></ul></div>
 </li></ol>
@@ -112,125 +121,125 @@
 
 </div>
 
-<div class="sect2"  id="b406cyo">
+<div class="sect2" id="b406cyo">
 
-<h2 class="title"> Windows</h2>
+<h2 class="title"> Systém Windows</h2>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb7g5">Starting iFolder Automatically on Logon</a>
+              <a href="startclient.html#b4tb7g5">Automatické spustenie klienta iFolder po prihlásení</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b4tb879">Starting iFolder Manually</a>
+              <a href="startclient.html#b4tb879">Ručné spustenie klienta iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="b4tb7g5">
+<div class="sect3" id="b4tb7g5">
 
-<h3 class="title"> Starting iFolder Automatically on Logon</h3>
+<h3 class="title"> Automatické spustenie klienta iFolder po prihlásení</h3>
 
-<p class="para">To start iFolder automatically when you log in to the desktop:</p>
+<p class="para">Automatické spustenie aplikácie iFolder po prihlásení k pracovnej ploche:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41mcvg">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
+<p class="para">Kliknite pravým tlačidlom na ikonu <span class="guimenu">Služby aplikácie iFolder</span> <img src="images/ifolder22.png" alt="ikona aplikácie iFolder" title="ikona aplikácie iFolder" class="inline" />, výberom možnosti <span class="guimenu">Preferencie</span> otvorte dialógové okno Preferencie aplikácie iFolder na karte <span class="guimenu">Všeobecné</span>.
       </p></li>
 <li class="step" id="b41mcvh">
-<p class="para">Select <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Vyberte možnosť <span class="guimenu">Spustiť aplikáciu iFolder pri prihlásení sa na počítač</span> a kliknite na tlačidlo <span class="guimenu">Použiť</span>.</p></li>
 <li class="step" id="b41mcvi">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">OK</span> zatvorte dialógové okno Preferencie aplikácie iFolder.</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically when you log on to the desktop:</p>
+<p class="para">Ak chcete zakázať automatické spustenie aplikácie iFolder po prihlásení na počítač:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41m94h">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> icon, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.</p></li>
+<p class="para">Kliknite pravým tlačidlom na ikonu <span class="guimenu">Služby aplikácie iFolder</span>, výberom položky <span class="guimenu">Preferencie</span> otvorte dialógové okno Preferencie aplikácie iFolder na karte <span class="guimenu">Všeobecné</span>.</p></li>
 <li class="step" id="b41m9ty">
-<p class="para">Deselect <span class="guimenu">Start iFolder When logging in to the Desktop</span>, then click <span class="guimenu">Apply</span>.</p></li>
+<p class="para">Zrušte výber možnosti <span class="guimenu">Spustiť aplikáciu iFolder pri prihlásení sa na počítač</span> a kliknite na tlačidlo <span class="guimenu">Použiť</span>.</p></li>
 <li class="step" id="b41mac7">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolders Preferences dialog box.</p></li></ol>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">OK</span> zatvorte dialógové okno Preferencie aplikácie iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="b4tb879">
+<div class="sect3" id="b4tb879">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Ručné spustenie klienta iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Log in to the computer with the local Windows user identity you want to use when you create iFolders.</p></li>
+<p class="para">Prihláste sa na počítač s miestnou identitou používateľa systému Windows, ktorú chcete použiť pri vytvorení priečinkov iFolder.</p></li>
 <li class="step" id="bw08fxx">
-<p class="para">If iFolder does not start automatically on successful logon, start iFolder by clicking <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programs</span> > <span class="guimenu">iFolder 3</span></span>, then select the <span class="guimenu">iFolder 3 Client</span> application. </p></li></ol>
+<p class="para">Ak sa aplikácia iFolder nespustí automaticky po úspešnom prihlásení, spustite aplikáciu iFolder kliknutím na tlačidlá <span class="menuchoice"><span class="guimenu">Štart</span> > <span class="guimenu">Programy</span> > <span class="guimenu"> &gt; iFolder 3</span></span> a vyberte aplikáciu <span class="guimenu">Klient iFolder 3</span>. </p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<div class="sect2"  id="b406d69">
+<div class="sect2" id="b406d69">
 
-<h2 class="title"> Macintosh</h2>
+<h2 class="title"> Systém Macintosh</h2>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcpho1i">Starting iFolder Automatically on Login</a>
+              <a href="startclient.html#bcpho1i">Automatické spustenie klienta iFolder po prihlásení</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcphogg">Starting iFolder Manually</a>
+              <a href="startclient.html#bcphogg">Ručné spustenie klienta iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bcpho1i">
+<div class="sect3" id="bcpho1i">
 
-<h3 class="title"> Starting iFolder Automatically on Login</h3>
+<h3 class="title"> Automatické spustenie klienta iFolder po prihlásení</h3>
 
-<p class="para">To enable iFolder to start automatically when you log in to your Macintosh computer, add iFolder to the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Ak chcete, aby sa aplikácia iFolder spustila automaticky pri prihlásení sa k počítaču so systémom Macintosh, pridajte ju k položkám <span class="guimenu">Po spustení</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
-<p class="para">Start iFolder.</p></li>
+<p class="para">Spustite aplikáciu iFolder.</p></li>
 <li class="step" id="bcphuse">
-<p class="para">From the dock, right-click the iFolder icon and select the option <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, press the Ctrl key, click the iFolder icon, then select <span class="guimenu">Open at Login</span>.</p></li></ol>
+<p class="para">V doku kliknite pravým tlačidlom na ikonu aplikácie iFolder a vyberte možnosť <span class="guimenu">Otvoriť pri prihlásení</span>.</p>
+<p class="para">alebo</p>
+<p class="para">V doku stlačte kláves Ctrl, kliknite na ikonu aplikácie iFolder a vyberte možnosť <span class="guimenu">Otvoriť pri prihlásení</span>.</p></li></ol>
 </div>
 
-<p class="para">To disable iFolder from starting automatically, remove iFolder from the <span class="guimenu">Startup Items</span>.</p>
+<p class="para">Ak chcete zabrániť automatickému spúšťaniu aplikácie iFolder, odstráňte ju z položiek <span class="guimenu">Pri spustení</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcpi1cj">
-<p class="para">From the dock, right-click the iFolder icon, and deselect <span class="guimenu">Open at Login</span>.</p>
-<p class="para">or</p>
-<p class="para">From the dock, right-click or Ctrl-click the iFolder icon, then deselect <span class="guimenu">Open at Login.</span></p></li></ol>
+<p class="para">V doku kliknite pravým tlačidlom na ikonu aplikácie iFolder a zrušte výber možnosti <span class="guimenu">Otvoriť pri prihlásení</span>.</p>
+<p class="para">alebo</p>
+<p class="para">V doku podržte kláves Ctrl a kliknite na ikonu aplikácie iFolder alebo na ňu kliknite pravým tlačidlom a zrušte výber možnosti <span class="guimenu">Otvoriť pri prihlásení.</span></p></li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bcphogg">
+<div class="sect3" id="bcphogg">
 
-<h3 class="title"> Starting iFolder Manually</h3>
+<h3 class="title"> Ručné spustenie klienta iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Log in to your computer with the local Macintosh user identity you want to use when you create iFolders.</p></li>
+<p class="para">Prihláste sa na počítač s miestnou identitou používateľa systému Macintosh, ktorú chcete použiť pri vytvorení priečinkov iFolder.</p></li>
 <li class="step" id="bw08fy2">
-<p class="para">Use one of the following methods to start iFolder: </p>
+<p class="para">Na spustenie aplikácie iFolder použite jeden z nasledujúcich spôsobov: </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Open <span class="guimenu">the Applications</span> directory on <span class="systemitem">Macintosh HD</span>, select <span class="guimenu">Applications</span>, then double-click <span class="guimenu"> iFolder 3</span>.</p></li>
+<p class="listitem">Otvorte adresár <span class="guimenu">Aplikácie</span> na <span class="systemitem">pevnom disku so systémom Macintosh</span> a vyberte možnosť <span class="guimenu">Aplikácie</span>. Potom dvakrát kliknite na aplikáciu <span class="guimenu">iFolder 3</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Type <span class="command">iFolder</span> in the spotlight (Apple button + Spacebar or click the magnifying glass icon on top right) then click the <span class="guimenu">iFolder 3</span> under Applications.</p></li>
+<p class="listitem">Do zvýrazneného poľa (kláves Apple + medzerník alebo kliknutie na ikonu lupy vpravo hore) zadajte príkaz <span class="command">iFolder</span> a potom kliknite na aplikáciu <span class="guimenu">iFolder 3</span> pod položkou Aplikácie.</p></li>
 <li class="listitem">
-<p class="listitem">Open a terminal shell, log in as the root user, then enter </p><pre class="screen">
+<p class="listitem">Otvorte terminálové rozhranie, prihláste sa ako koreňový používateľ a zadajte reťazec </p><pre class="screen">
 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3
 </pre></li></ul></div>
 </li></ol>
@@ -242,8 +251,13 @@
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
 </body>
 </html>

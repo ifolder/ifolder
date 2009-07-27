@@ -1,93 +1,111 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="sk" lang="sk">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Upgrading iFolder 3.x Clients</title>
+<title>Inovácia aplikácie iFolder 3.x Klienti</title>
 <script type="text/javascript">
-  var prev_link = "migration.html";
-  var next_link = "bctrxs4.html";
-  var parentfile = "../coexistmig.html";
-  var parenttoc = "../toc_coexistmig.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bctryt7">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Upgrading iFolder 3.<span class="replaceable">x</span> Clients</h1>
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
 
-<p class="para">This section discusses the following:</p>
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> Inovácia aplikácie iFolder 3.<span class="replaceable">x</span> Klienti</h1>
+
+<p class="para">Táto časť popisuje nasledujúce témy:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Automatická inovácia na aplikáciu iFolder 3.7</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">Ručná inovácia na aplikáciu iFolder 3.7</a>
           </p></li></ul></div>
 
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Before upgrading your 3.4.1 client, you must back up your local Simias store. If you don’t do the backup, you lose all configuration information from the computer because it deletes the Simias store when the upgrade fails.</p></div>
+<p class="para"><em class="title">DÔLEŽITÉ:</em>Pred inováciou klienta verzie 3.4.1 musíte zálohovať lokálny ukladací priestor procesu Simias. Ak nevykonáte zálohu, stratíte všetky informácie o konfigurácii, ktoré sú v počítači uložené, pretože ak inovácia zlyhá, ukladací priestor procesu Simias bude odstránený.</p></div>
 
-<div class="sect2"  id="bctryt8">
+<div class="sect2" id="bctryt8">
 
-<h2 class="title"> Automatically Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Automatická inovácia na aplikáciu iFolder 3.7</h2>
 
-<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you can not connect to the iFolder 3.7 domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
+<p class="para">Automatické inovácia je možná, iba ak máte prístupové práva na úrovni koreňového používateľa, pretože súčasťou tohto procesu je inštalácia balíkov súborov RPM.  V priebehu inovácie je požadované heslo koreňového používateľa. Ak nemáte prístupové práva koreňového používateľa, automatická inštalácia balíku neprebehne. Balíky klientov však budú prevzaté do dočasného umiestnenia. Klient systému Linux bude prevzatý do umiestnenia <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. To vám umožňuje spustiť inováciu neskôr, pretože umiestnenie obsahuje dva inštalačné skripty, ktoré môžete spustiť ručne. Kým klienta neinovujete, nebudete sa môcť pripojiť do domény aplikácie iFolder 3.7 pomocou klienta aplikácie iFolder 3.<span class="replaceable">x</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
-<p class="para">From an iFolder 3.<span class="replaceable">x</span> client earlier than iFolder 3.7, try to connect to the iFolder server. You are prompted about whether you want to upgrade.</p></li>
+<p class="para">Pomocou klienta aplikácie iFolder 3.<span class="replaceable">x</span>, staršej verzie než iFolder 3.7, sa pokúste pripojiť k serveru aplikácie iFolder. Zobrazí sa výzva na inováciu.</p></li>
 <li class="step" id="bctryta">
-<p class="para">Click <span class="guimenu">Yes</span> to automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Áno</span> automaticky inovujete svojho klienta aplikácie iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
-<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
+<p class="para">Pre aplikáciu iFolder 3.4.1 platí, že ak kliknete na možnosť <span class="guimenu">Nie</span> a pokúsite sa pomocou klienta aplikácie iFolder 3.4.1 pripojiť k serveru iFolder 3.7, zobrazí sa chybové hlásenie. Správu zavriete kliknutím na tlačidlo <span class="guimenu">OK</span>.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>An iFolder 3.<span class="replaceable">x</span> client (other than iFolder 3.4.1 clients) connects to iFolder 3.7 server even if you choose not to upgrade. Although the 3.<span class="replaceable">x</span> client stays connected to the 3.7 server, you cannot perform any of the iFolder operations with this client. When you attempt to convert an existing folder to an iFolder, the server does not consider those changes, and displays an error message that the server is unavailable. The only operation that you can perform is that download the new RPMs from the server to install iFolder 3.7.</p></div>
+<p class="para"><em class="title">POZNÁMKA:</em>Klient iFolder 3.<span class="replaceable">x</span> (okrem klienta aplikácie iFolder verzie 3.4.1) sa pripojí k serveru aplikácie iFolder 3.7 i v prípade, že ste inováciu odmietli. I keď bude klient verzie 3.<span class="replaceable">x</span> pripojený k serveru verzie 3.7, nebudete môcť pomocou tohto klienta vykonávať žiadne operácie aplikácie iFolder. Ak sa pokúsite zmeniť existujúci priečinok na priečinok iFolder, server tieto zmeny nezoberie na vedomie a zobrazí chybové hlásenie s oznámením o nedostupnosti servera. Jedinou dostupnou operáciou je prevzatie nových balíkov RPM zo servera. Potom môžete nainštalovať aplikáciu iFolder 3.7.</p></div>
 
 </div>
 
-<div class="sect2"  id="bbjs0lm">
+<div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Manually Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Ručná inovácia na aplikáciu iFolder 3.7</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjefu4">
-<p class="para">Open a terminal. At the command prompt, run <span class="command">install-ifolder.sh</span>.</p></li>
+<p class="para">Otvorte terminál. Do príkazového riadku zadajte reťazec <span class="command">install-ifolder.sh</span>.</p></li>
 <li class="step" id="bbjeh6h">
-<p class="para">Enter the root password when it is requested.</p>
-<p class="para">This closes the iFolder client if it is already running, then it updates the XSP Web server and iFolder client along with the Nautilus-ifolder3 plug-in.</p></li>
+<p class="para">Po zobrazení výzvy zadajte heslo koreňového používateľa.</p>
+<p class="para">Tým zatvoríte klienta aplikácie iFolder, ak je spustený. Potom prebehne aktualizácia webového servera XSP a klienta aplikácie iFolder zároveň s doplnkom Nautilus-ifolder3.</p></li>
 <li class="step" id="bbjehh4">
-<p class="para">Start iFolder from the <span class="guimenu">Application</span> menu.</p></li></ol>
+<p class="para">Pomocou ponuky <span class="guimenu">Aplikácia</span> spustite aplikáciu iFolder.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
 </body>
 </html>

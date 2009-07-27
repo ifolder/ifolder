@@ -1,145 +1,155 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="sk" lang="sk">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:38" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migrating from iFolder 2.x to iFolder 3.7</title>
+<title>Prechod z verzie klienta iFolder 2.x na verziu klienta iFolder 3.7</title>
 <script type="text/javascript">
-  var prev_link = "coexistmig.html";
-  var next_link = "bctryt7.html";
-  var parentfile = "../coexistmig.html";
-  var parenttoc = "../toc_coexistmig.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "migration";
+  var parentId = "coexistmig";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="migration">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Migrating from iFolder 2.<span class="replaceable">x</span> to iFolder 3.7</h1>
+<div class='nav' id='topnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
 
-<p class="para">This section discusses the following:</p>
+
+<div class="sect1" id="migration">
+
+<h1 class="title"> Prechod z verzie klienta iFolder 2.<span class="replaceable">x</span> na verziu klienta iFolder 3.7</h1>
+
+<p class="para">Táto časť popisuje nasledujúce témy:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6kho">Understanding the Migration Process</a>
+            <a href="migration.html#bax6kho">Porozumenie procesu prechodu</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6esx">Migration Procedure</a>
+            <a href="migration.html#bax6esx">Postup prenosu</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bax6kho">
+<div class="sect2" id="bax6kho">
 
-<h2 class="title"> Understanding the Migration Process</h2>
+<h2 class="title"> Porozumenie procesu prechodu</h2>
 
-<p class="para">Novell iFolder provides a simple migration from iFolder 2.<span class="replaceable">x</span> to the iFolder client for Novell iFolder 3.7. The Migration Assistant provided in the iFolder client helps you migrate the existing iFolder 2.<span class="replaceable">x</span> data quickly and easily.</p>
-<p class="para">During the startup, the Migration Assistant detects the 2.<span class="replaceable">x</span> installation and prompts you to migrate your data. During the data migration, it prompts you again to convert the existing folders or to make a copy of the 2.<span class="replaceable">x</span> iFolder. For more information on this, refer <a href="migration.html#b8anh5z">Step 6</a>.</p>
-<p class="para">iFolder prompts you about the resynchronization of the files to 3.7 server, and asks whether you need to retain the 2.<span class="replaceable">x</span> client until the 3.7 completes synchronization. During this process, only the data get migrated, hence, the user has to set the preference in the new client. </p>
+<p class="para">Aplikácia Novell iFolder umožňuje jednoducho a rýchlo preniesť údaje v priečinkoch iFolder verzie 2.<span class="replaceable">x</span> na klienta verzie Novell iFolder 3.7. Asistent prechodu vo verzii klienta iFolder poskytuje pomoc pri prechode z jestvujúcej verzie iFolder 2.<span class="replaceable">x</span>.</p>
+<p class="para">Počas štartu Asistent rozpozná 2.<span class="replaceable">x</span> inštaláciu a vyzve vás preniesť svoje údaje.  Počas prenosu údajov vás znova vyzve previesť jestvujúce priečinky alebo vytvoriť kópiu 2.<span class="replaceable">x</span> priečinka iFolder.  Ďalšie informácie nájdete v časti <a href="migration.html#b8anh5z">Krok 6</a>.</p>
+<p class="para">Klient iFolder vás vyzve znova na opätovnú synchronizáciu súborov na server verzie 3.7, a spýta sa, či potrebujete ponechať 2.<span class="replaceable">x</span> klienta, až kým verzia 3.7 dokončí synchronizáciu.  Počas tohto procesu sú prenesené iba údaje, a preto používateľ musí zvoliť nastavenia nového klienta. </p>
 </div>
 
-<div class="sect2"  id="bax6esx">
+<div class="sect2" id="bax6esx">
 
-<h2 class="title"> Migration Procedure</h2>
+<h2 class="title"> Postup prenosu</h2>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Install the iFolder client for iFolder 3.7, then configure your account for the iFolder 3.7 enterprise server.</p>
-<p class="para">For information on installing the client and setting up the account, see <a href="accountsprefs.html">Managing iFolder Accounts and Preferences</a>.</p></li>
+<p class="para">Nainštalujte klienta aplikácie iFolder pre aplikáciu iFolder 3.7 a potom nakonfigurujte svoje konto pre podnikový server aplikácie iFolder 3.7.</p>
+<p class="para">Informácie o inštalácii klienta a nastavení konta nájdete v časti <a href="accountsprefs.html">Správa kont a preferencií aplikácie iFolder</a>.</p></li>
 <li class="step" id="b88immw">
-<p class="para">In the iFolder browser, create one or more iFolders on your local computer.</p>
-<p class="para">You can use any valid name for an iFolder. Do not create an iFolder in the same directory path as your current iFolder 2.<span class="replaceable">x</span> directory. For information, see <a href="createifolder.html">Creating and Uploading an iFolder</a>.</p></li>
+<p class="para">V prehľadávači iFolder vytvorte jeden alebo viac priečinkov iFolder na svojom lokálnom počítači.</p>
+<p class="para">Pre názov priečinku iFolder môžete použiť akýkoľvek platný názov.  Nevytvárajte priečinok iFolder v rovnakom adresári, ako je váš aktuálny priečinok iFolder 2.<span class="replaceable">x</span> adresár.  Ďalšie informácie nájdete v časti <a href="createifolder.html">Vytváranie a odovzdávanie priečinka iFolder</a>.</p></li>
 <li class="step" id="bb0b2z9">
-<p class="para">The iFolder displays a message about the existence of previous version data, and a request for a migration. </p>
-<p class="para">Click <span class="guimenu">OK</span> to open a list of available 2.<span class="replaceable">x</span> iFolders.</p></li>
+<p class="para">Aplikácia iFolder zobrazuje správu o existencii údajov predchádzajúcej verzie a požiadavke na prenos. </p>
+<p class="para">Kliknutím na možnosť <span class="guimenu">OK</span> otvoríte zoznam dostupných 2.<span class="replaceable">x</span> priečinkov iFolder.</p></li>
 <li class="step" id="b8annny">
-<p class="para">Select the 2.<span class="replaceable">x</span> iFolders you want to migrate.</p>
-<p class="para">Click <span class="guimenu">Migrate</span> to appear the Migration Assistant.</p>
+<p class="para">Vyberte 2.<span class="replaceable">x</span> priečinkov iFolder, ktoré chcete preniesť.</p>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Preniesť</span> zobrazíte asistenta prenosu.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also reach the Migration Assistant by <span class="guimenu">iFolder &gt; Migration &gt; Migrate from iFolder 2.x</span>.</p></div>
+<p class="para"><em class="title">POZNÁMKA:</em>Asistenta prenosu môžete otvoriť aj výberom položiek <span class="guimenu">iFolder &gt; Prenos &gt; Preniesť z verzie iFolder 2.x</span>.</p></div>
 
-<p class="para">Migration Assistant takes you through the Migration process to complete your data migration.</p></li>
+<p class="para">Asistent prenosu vás prevedie procesom prenosu a pomôže dokončiť prenos vašich údajov.</p></li>
 <li class="step" id="b8andsn">
-<p class="para"> Click<span class="guimenu"> Forward </span>to display the Migration options.</p></li>
+<p class="para"> Kliknutím na tlačidlo <span class="guimenu"> Ďalej </span>zobrazíte možnosti prenosu.</p></li>
 <li class="step" id="b8anh5z">
-<p class="para">Select one of the following:</p>
-<div class="informalfigure">
-                  <img src="images/a_mig_asst1.png" alt="" />
-                </div>
-
+<p class="para">Vyberte jednu z nasledujúcich možností:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migrate the iFolder and disconnect it from 2.x domain</span>:</em>
-              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> domain after migrating it to 3.7.</p>
+              <p class="title"><em class="title"><span class="guimenu">Preneste priečinok iFolder a odpojte ho od 2.x domény</span>:</em>
+               Výberom tejto metódy jestvujúci priečinok odpojíte od priečinka domény iFolder 2.<span class="replaceable">x</span> po prenose do verzie 3.7.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
-                <span class="guimenu">Create a copy of the iFolder and migrate:</span>
+                <span class="guimenu">Vytvoriť kópiu priečinka iFolder a preniesť:</span>
               </em>
-              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to the iFolder 3.7. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> domain even after you migrate the files to the iFolder 3.7.</p>
+               Zvolením tejto možnosti vytvoríte kópiu súborov priečinka iFolder 2<span class="replaceable">x</span> a prevediete ich na verziu iFolder 3.7. Týmto krokom súbory z priečinka iFolder 2 neodstránite.<span class="replaceable">x</span> a neodstránia sa ani po prenose na doménu verzie iFolder 3.7.</p>
             </div>
 
-<p class="para">If you select this option, you can also select<span class="guimenu"> Copy the parent folder</span> if you want to copy not only the contents of the 2.<span class="replaceable">x</span> folder, but the parent folder as well. If you leave this option deselected, only the contents of the selected folder will be migrated to 3.7. </p>
-<p class="para">Click <span class="guimenu">Browse</span> to find the location to save the migrated folder.</p>
-<p class="para">For example, <span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> is a 2.<span class="replaceable">x</span> iFolder and <span class="filename">dir1</span> and <span class="filename">dir2</span> are the directories under <span class="filename">ifolder2dir</span>. When you select the option <span class="guimenu">Copy the parent directory</span>, it create the <span class="filename">ifolder2dir </span>in the new location and the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are copied to it. If the option remains deselected, only the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are moved to the specified location.</p></li>
+<p class="para">Ak vyberte túto možnosť, môžete takisto vybrať možnosť <span class="guimenu"> Kopírovať nadriadený priečinok</span>, ak nechcete kopírovať len obsah priečinka 2.<span class="replaceable">x</span>, ale aj nadriadené priečinky.   Ak túto možnosť necháte nezačiarknutú, do domény verzie 3.7 budú prenesené len obsahy vybraných priečinkov. </p>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Prehľadávať</span>  nájdete umiestnenie na uloženie preneseného priečinka.</p>
+<p class="para">Napríklad <span class="filename">c:/Documents and Settings/&lt;názov používateľa&gt;/ifolder2dir</span> je 2.<span class="replaceable">x</span> priečinok iFolder a <span class="filename">dir1</span> a <span class="filename">dir2</span> sú adresáre pod priečinkom <span class="filename">ifolder2dir</span>.  Ak zvolíte možnosť <span class="guimenu">Kopírovať nadriadený adresár</span>, vytvorí sa priečinok <span class="filename">ifolder2dir</span>v novom umiestnení a adresáre <span class="filename">dir1</span> a <span class="filename">dir2</span> sa do neho skopírujú. Ak táto možnosť ostane nezačiarknutá, do zvoleného umiestnenia budú presunuté len adresáre <span class="filename">dir1</span> a <span class="filename">dir2</span>.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Click <span class="guimenu">Forward</span> to select the domain and Security options as follows:</p>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Ďalej</span> vyberiete doménu a Možnosti zabezpečenia:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Select the domain from the drop-down list.</p>
-<div class="informalfigure">
-                      <img src="images/if3_mig_asst2.png" alt="" />
-                    </div>
-</li>
+<p class="para">Vyberte doménu v rozbaľovacom zozname. </p></li>
 <li class="step" id="b8ao481">
-<p class="para">Select the desired security option:</p>
+<p class="para">Vyberte požadovanú možnosť zabezpečenia:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Encrypted</span> to encrypt the selected iFolder.</p>
-<p class="listitem">If you did not set your passphrase during login, iFolder prompts you to enter the passphrase. You can skip this option and set the passphrase later.</p>
-<p class="listitem">If you are not currently connected to the iFolder domain, it prompts you to connect to the domain.</p></li>
+<p class="listitem">Vyberte <span class="guimenu">Šifrované</span>, ak chcete zvolený priečinok iFolder zašifrovať.</p>
+<p class="listitem">Ak ste počas procesu prihlásenia nezadali prístupový výraz, klient iFolder vás vyzve výraz zadať.  Túto možnosť môžete preskočiť a výraz zadať neskôr.</p>
+<p class="listitem">Ak momentálne nie ste pripojený k doméne klienta iFolder, bude vyzvaní pripojiť sa k nej.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder 3.7 domain.</p>
-<p class="listitem">You can migrate an encrypted 2.<span class="guimenu">x</span> iFolder to shared folder. When you attempt to migrate an encrypted 2.<span class="replaceable">x</span> iFolder to a shared folder, it prompts you to verify the action.</p>
-<p class="listitem">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ul></div>
+<p class="listitem">Vyberte <span class="guimenu">Zdieľané </span>, ak chcete zdieľať priečinok iFolder s ostatnými členmi domény iFolder 3.7.</p>
+<p class="listitem">Môžete preniesť zašifrovaný priečinok iFolder verzie 2.<span class="guimenu">x</span> do zdieľaného adresára. Ak sa pokúsite preniesť šifrovaný 2.<span class="replaceable">x</span> do zdieľaného adresára. Zobrazí sa výzva na overenie akcie.</p>
+<p class="listitem">Potvrďte akciu kliknutím na tlačidlo <span class="guimenu">Áno</span>.</p></li></ul></div>
 </li></ol>
 </div>
 </li>
 <li class="step" id="b8ao7ou">
-<p class="para">Click <span class="guimenu">Forward</span> to migrate the selected iFolder.</p></li>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Ďalej</span> vybratý priečinok iFolder prenesiete.</p></li>
 <li class="step" id="b8ao9s7">
-<p class="para">Verify that the information you have entered is correct, if necessary, click <span class="guimenu">Back </span>to return to previous pages to make corrections. </p>
-<p class="para">If the given information is correct, click <span class="guimenu">Migrate </span>to begin migration.</p>
-<p class="para">Click <span class="guimenu">Back</span> to go back and make any necessary changes.</p></li>
+<p class="para">Overte si, že informácia, ktorú ste zadali je správna. Na predchádzajúce stránky sa môžete vrátiť kliknutím na tlačidlo  <span class="guimenu">Späť</span> a vykonať prípadné opravy. </p>
+<p class="para">Ak je zadaná informácia správna, kliknutím na tlačidlo <span class="guimenu">Preniesť </span>sa začne proces prenosu.</p>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Späť</span> sa vrátite na predchádzajúce stránky a môžete vykonať potrebné zmeny.</p></li>
 <li class="step" id="bb51sen">
-<p class="para">Click <span class="guimenu">Finish</span> to complete the migration.</p></li></ol>
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Dokončiť</span>  prenos dokončíte.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
 </body>
 </html>

@@ -1,70 +1,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="it" lang="it">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="it" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Removing Membership From a Shared iFolder</title>
+<title>Rimozione dell'appartenenza da una cartella iFolder condivisa</title>
 <script type="text/javascript">
-  var prev_link = "reverting.html";
-  var next_link = "deleting.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "bbb7rj2";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="bbb7rj2">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Sommario' title='Sommario' />Sommario</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Removing Membership From a Shared iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
 
-<p class="para">To remove membership from a downloaded shared iFolder:</p>
+
+<div class="sect1" id="bbb7rj2">
+
+<h1 class="title"> Rimozione dell'appartenenza da una cartella iFolder condivisa</h1>
+
+<p class="para">Per rimuovere l'appartenenza da una cartella iFolder condivisa scaricata:</p>
 <div class="procedure">
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>Individual members of an LDAPGroup are not allowed to remove their membership from an iFolder if that iFolder is shared with that LDAPGroup. </p></div>
+<p class="para"><em class="title">IMPORTANTE:</em>I singoli membri di un gruppo LDAP non sono autorizzati a rimuovere la propria appartenenza da una cartella iFolder, se quest'ultima è condivisa con il gruppo. </p></div>
 
 <ol class="steps">
 <li class="step" id="bbb7rz6">
-<p class="para">In the file manager or the iFolder browser, locate the iFolder that you want to remove your membership from. </p></li>
+<p class="para">Nel manager di file o nel browser delle cartelle iFolder, individuare la cartella iFolder da cui si desidera rimuovere l'appartenenza. </p></li>
 <li class="step" id="bbb7smi">
-<p class="para">Right-click the iFolder and select <span class="guimenu">Revert to a normal folder</span> to display the confirmation dialog box.</p></li>
+<p class="para">Fare clic con il pulsante destro del mouse sulla cartella iFolder e selezionare <span class="guimenu">Ripristina cartella normale</span>. Verrà visualizzata una finestra di dialogo di conferma.</p></li>
 <li class="step" id="bbb7sr7">
-<p class="para">In the confirmation dialog box, select <span class="guimenu">Also remove my membership from the iFolder</span>. </p></li>
+<p class="para">Nella finestra di dialogo, selezionare <span class="guimenu">Rimuovi anche appartenenza da questa cartella iFolder</span>. </p></li>
 <li class="step" id="bbb7uad">
-<p class="para">Click <span class="guimenu">Yes</span> to confirm.</p>
-<p class="para">The local copy of the iFolder is a normal folder and is no longer synchronized with the server. </p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">Sì</span> per confermare.</p>
+<p class="para">La copia locale della cartella iFolder è ora una cartella normale non più sincronizzata con il server. </p></li></ol>
 </div>
 
-<p class="para">To remove membership from a shared iFolder on the server:</p>
+<p class="para">Per rimuovere l'appartenenza da una cartella iFolder condivisa sul server:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbbbz9l">
-<p class="para">In the iFolder browser, locate the iFolder that you want to remove your membership from.</p></li>
+<p class="para">Nel browser delle cartelle iFolder, individuare la cartella iFolder da cui si desidera rimuovere l'appartenenza.</p></li>
 <li class="step" id="bbb7vru">
-<p class="para">Right-click the iFolder and <span class="guimenu">Select Remove my membership</span>.</p></li>
+<p class="para">Fare clic con il pulsante destro del mouse sulla cartella iFolder e selezionare <span class="guimenu">Rimuovi appartenenza</span>.</p></li>
 <li class="step" id="bbb7vzm">
-<p class="para">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ol>
+<p class="para">Fare clic su <span class="guimenu">OK</span> per confermare l'azione.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Per ulteriori informazioni, vedere <a href="legal.html">Note legali</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="reverting.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="deleting.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
+
 </body>
 </html>

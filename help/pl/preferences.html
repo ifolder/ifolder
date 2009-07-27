@@ -1,133 +1,156 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="pl" lang="pl">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Configuring iFolder Preferences for the Client</title>
+<title>Konfigurowanie preferencji iFolderów dla klienta</title>
 <script type="text/javascript">
-  var prev_link = "accountdetails.html";
-  var next_link = "firewall.html";
-  var parentfile = "../accountsprefs.html";
-  var parenttoc = "../toc_accountsprefs.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "preferences";
+  var parentId = "accountsprefs";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="preferences">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Configuring iFolder Preferences for the Client</h1>
+<div class='nav' id='topnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
+
+<div class="sect1" id="preferences">
+
+<h1 class="title"> Konfigurowanie preferencji iFolderów dla klienta</h1>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bvibeb7">
-<p class="para">Right-click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon in the notification area, then select <span class="guimenu">Preferences</span> to open the iFolder Preferences dialog box to the <span class="guimenu">General</span> tab.
-    </p>
-<div class="informalfigure">
-                <img src="images/if_preferences_a.png" alt="General Tab of the iFolder Preferences Dialog Box" />
-              </div>
-</li>
+<p class="para">Kliknij prawym przyciskiem myszy ikonę <span class="guimenu">Usługi iFolder</span> <img src="images/ifolder22.png" alt="Ikona aplikacji iFolder" title="Ikona aplikacji iFolder" class="inline" /> w obszarze powiadomień, a następnie wybierz opcję <span class="guimenu">Preferencje</span>, aby otworzyć okno dialogowe Preferencje programu iFolder i kartę <span class="guimenu">Ogólne</span>.
+    </p></li>
 <li class="step" id="bvibeba">
-<p class="para">Specify your preferences for the following:</p>
+<p class="para">Określ swoje preferencje dla następujących opcji:</p>
 <div class="informaltable">
 <table class="topbot-lines">
                 
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="btvqywm"></a>
-<p class="para">Parameter</p></th>
+<p class="para">Parametr</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Description</p></th>
+<p class="para">Opis</p></th>
 </tr>
               
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvr5uc"></a>
-<p class="para">Start iFolder When Logging In to the Desktop (Available only in Windows Client)</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
+<p class="para">Uruchom program iFolder podczas logowania do pulpitu (opcja dostępna tylko na kliencie z systemem Windows)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to launch iFolder whenever you log in with the local username where you set up the iFolder account. For those accounts where you have enabled <span class="guimenu">Remember My Password</span>, synchronization occurs in the background at the specified synchronization interval.</p>
-<p class="para">Deselect this option to start iFolder manually.</p></td>
+<p class="para">Zaznacz tę opcję, aby uruchamiać program iFolder podczas każdego logowania się przy użyciu lokalnej nazwy użytkownika, dla której zostało skonfigurowane konto programu iFolder. W przypadku kont, dla których włączono opcję Zapamiętaj moje hasło, synchronizacja jest wykonywana w tle z częstotliwością określoną przez interwał synchronizacji.</p>
+<p class="para">Odznacz tę opcję, aby uruchamiać program iFolder ręcznie.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
-<p class="para">Show Confirmation Dialog When Creating iFolders</p></td>
+<p class="para">Wyświetl okno dialogowe potwierdzenia po pomyślnym utworzeniu folderu iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to receive a confirmation message each time you create an iFolder, in addition to the normal visual cues such as the iFolder appearing in the list of iFolders.</p>
-<p class="para">Deselect this option to stop receiving the confirmation message.</p></td>
+<p class="para">Zaznacz to pole wyboru, aby poza zwykłymi wskazówkami, takimi jak pojawienie się folderu iFolder na liście, otrzymywać także komunikat z potwierdzeniem za każdym razem, gdy zostanie utworzony folder iFolder.</p>
+<p class="para">Odznacz to pole wyboru, aby wyłączyć otrzymywanie komunikatów z potwierdzeniem.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">Notify of Shared iFolders</p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<p class="para">Ukryj okno główne programu iFolder po uruchomieniu </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever you receive a new invitation to share an iFolder. </p>
-<p class="para">To view a list of iFolders that are available to download on your current computer, select <span class="guimenu">Show Available iFolders</span> in the iFolder browser whenever iFolder is running.</p></td>
+<p class="para">Odznacz to pole wyboru, aby okno programu iFolder było wyświetlane po uruchomieniu.</p>
+<p class="para">Zaznacz to pole wyboru, aby okno programu iFolder pozostawało ukryte po uruchomieniu.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
-<p class="para">Hide iFolder Tray Icon</p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<p class="para">Wyświetl dzienniki synchronizacji </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to hide the iFolder tray icon in the notification area.</p>
-<p class="para">Deselect this option to display the iFolder tray icon when iFolder is running.</p></td>
+<p class="para">Zaznacz to pole wyboru, aby dzienniki synchronizacji były wyświetlane po uruchomieniu.</p>
+<p class="para">Odznacz to pole wyboru, aby dzienniki synchronizacji były ukrywane po uruchomieniu.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
+<p class="para">Wyświetl powiadomienia o naruszeniu założeń </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Zaznacz to pole wyboru, aby włączyć komunikaty pojawiające się w obszarze powiadomień w przypadku naruszenia założeń. </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
+<p class="para">Powiadom, gdy foldery iFolder są współużytkowane </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Zaznacz to pole wyboru, aby włączyć komunikaty pojawiające się w obszarze powiadomień po otrzymaniu nowego zaproszenia do współużytkowania folderu iFolder.  </p>
+<p class="para">Aby przejrzeć listę folderów iFolder, które są dostępne do pobrania na bieżący komputer, wybierz opcję <span class="guimenu">Wyświetl dostępne iFoldery</span> w przeglądarce folderów iFolder, gdy jest uruchomiony program iFolder.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">Notify of Conflicts</p></td>
+<p class="para">Powiadom o konfliktach</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a conflict occurs when synchronizing files. </p>
-<p class="para">Deselect this option to disable the pop-up messages for synchronization conflicts.</p>
-<p class="para">Whenever conflicts occur, the<span class="guimenu"> iFolder Error </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> icon is displayed on the iFolder when iFolder is running.
+<p class="para">Zaznacz to pole wyboru, aby włączyć komunikaty pojawiające się w obszarze powiadomień po wystąpieniu konfliktu podczas synchronizowania plików. </p>
+<p class="para">Odznacz to pole wyboru, aby wyłączyć komunikaty o konfliktach synchronizacji.</p>
+<p class="para">Gdy wystąpi konflikt, na symbolu folderu iFolder zostanie wyświetlona ikona <span class="guimenu">Błąd iFolder </span><img src="images/ifolder-error_16.png" alt="" class="inline" />, jeśli program iFolder jest uruchomiony.
          </p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">Notify When a User Joins</p></td>
+<p class="para">Powiadom, gdy użytkownik dołączy do domeny iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to enable a pop-up message in the notification area whenever a user accepts an invitation to share an iFolder. Acceptance is keyed to when the user actually sets up the iFolder on his or her own computer. </p>
-<p class="para">Deselect this option to disable the pop-up messages for user share confirmation.</p>
-<p class="para">You can view a complete list of iFolder users whenever iFolder is running by selecting the iFolder, then clicking <span class="guimenu">Share with</span> to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></td>
+<p class="para">Zaznacz to pole wyboru, aby włączyć komunikaty pojawiające się w obszarze powiadomień po zaakceptowaniu przez użytkownika zaproszenia do współużytkowania folderu iFolder. </p>
+<p class="para">Odznacz to pole wyboru, aby wyłączyć te komunikaty.</p>
+<p class="para">Gdy program iFolder jest uruchomiony, można wyświetlić kompletną listę użytkowników programu iFolder, klikając przycisk <span class="guimenu">Współużytkuj z</span>, aby otworzyć okno dialogowe Właściwości iFolderów na karcie <span class="guimenu">Współużytkowanie</span>.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
-<p class="para">Synchronization</p></td>
+<p class="para">Synchronizacja</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
-                      <p class="title"><em class="title">Automatically Synchronize iFolders:</em>
-                      Select this check box to enable synchronization for all iFolders on this computer under your current local login or logon identity. Deselect the check box to disable synchronization.</p>
+                      <p class="title"><em class="title">Automatycznie synchronizuj iFoldery:</em>
+                       Zaznacz to pole wyboru, aby włączyć synchronizację dla wszystkich iFolderów na tym komputerze dla aktualnego identyfikatora logowania. Odznacz pole wyboru, aby wyłączyć synchronizację.</p>
                     </div>
 
 <div class="formalpara" id="byktwky">
-                      <p class="title"><em class="title">Synchronize iFolders Every:</em>
-                      Specify the minimum interval to use for synchronizing iFolders on this computer under your current local login or logon identity. Specify the value and units. The default is 5 minutes if this option is enabled. The minimum interval can be lowered to 5 seconds.</p>
+                      <p class="title"><em class="title">Synchronizuj iFoldery co:</em>
+                       Podaj najkrótszy interwał, który ma być używany przy synchronizacji iFolderów na tym komputerze dla aktualnego lokalnego identyfikatora logowania. Podaj wartość i jednostki. Jeśli ta opcja jest włączona, wartość domyślna wynosi 5 minut. Minimalną wartością interwału jest 5 sekund.</p>
                     </div>
 
-<p class="para">If you use the iFolder client with Novell iFolder 3.7, the effective minimum synchronization interval is always the largest value of the following settings:</p>
+<p class="para">Jeśli klient programu iFolder wykorzystywany jest z programem Novell iFolder 3.7, efektywny minimalny interwał synchronizacji jest zawsze największą wartością spośród następujących ustawień:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">The system policy default of zero (<span class="literal">0</span>), unless there is a user policy set. If a user policy is set, the user policy overrides the system policy, whether the user policy is larger or smaller in value.</p></li>
+<p class="listitem">Założenia systemu domyślnie zero (<span class="literal">0</span>), chyba że są skonfigurowane założenia dla użytkownika. Jeżeli skonfigurowane są założenia dla użytkownika, zastępują one założenia systemu niezależnie od tego, czy założenia użytkownika zawierają większą czy mniejszą wartość.</p></li>
 <li class="listitem">
-<p class="listitem">The local machine policy, or the setting on the client machine synchronizing with the server.</p></li>
+<p class="listitem">Założenia lokalnego komputera lub ustawienia na komputerze klienta synchronizującym się z serwerem.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder (collection) policy.</p></li></ul></div>
+<p class="listitem">Założenia programu iFolder (kolekcji).</p></li></ul></div>
 </td>
 </tr></table>
 </div>
 </li>
-<li class="step" id="bvibebi">
-<p class="para">When you are done, click <span class="guimenu">Apply</span> to apply your changes.</p></li>
 <li class="step" id="bvibebj">
-<p class="para">Click <span class="guimenu">OK</span> to close the iFolder Preferences dialog box.</p></li></ol>
+<p class="para">Kliknij przycisk <span class="guimenu">Zamknij</span>, aby zamknąć okno dialogowe Preferencje programu iFolder.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Aby uzyskać więcej informacji, patrz sekcja <a href="legal.html">Informacje prawne</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="firewall.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
+</div>
+
 </body>
 </html>

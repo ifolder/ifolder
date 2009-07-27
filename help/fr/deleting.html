@@ -1,157 +1,175 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="fr" lang="fr">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="fr" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Deleting an iFolder</title>
+<title>Suppression d'un dossier iFolder</title>
 <script type="text/javascript">
-  var prev_link = "bbb7rj2.html";
-  var next_link = "bbbcabq.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "deleting";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="deleting">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Deleting an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="bbb7rj2.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bbbcabq.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
 
-<p class="para">If you delete an iFolder from your collection, it deletes the local copy of the iFolder and its contents. It also can affect the share relationship for the iFolder, depending on the Access right you hold for it. </p>
-<p class="para">You can delete the local copy of the iFolder that is shared with the LDAPGroup you are a member of. However, you cannot delete your membership from that iFolder.</p>
-<p class="para">The following table outlines the effect on the share relationship and the member iFolders based on the Access right of the user who deletes the iFolder.</p>
+
+<div class="sect1" id="deleting">
+
+<h1 class="title"> Suppression d'un dossier iFolder</h1>
+
+<p class="para">Si vous supprimez un dossier iFolder de votre collection, cela entraîne la suppression de la copie locale de ce dossier et de son contenu. Cela peut également avoir des conséquences sur la relation de partage du dossier iFolder, en fonction du droit d'accès dont vous disposez sur le dossier. </p>
+<p class="para">Vous pouvez supprimer la copie locale du dossier iFolder qui est partagé avec le groupe LDAP dont vous êtes membre. En revanche, vous pouvez supprimer votre adhésion à ce dossier iFolder.</p>
+<p class="para">Le tableau suivant décrit les conséquences de la suppression sur la relation de partage et sur les dossiers iFolder membres en fonction du droit d'accès dont dispose l'utilisateur qui supprime le dossier iFolder.</p>
 <div class="table" id="b403b0h">
 <table class="topbot-lines">
             
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b403cby"></a>
-<p class="para">Access Right of theUser Who Deletes the iFolder</p></th>
+<p class="para">Droit d'accès de l'utilisateur qui supprime le dossier iFolder</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Share Relationship</p></th>
+<p class="para">Relation de partage</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Server Copy of the iFolder</p></th>
+<p class="para">Copie du dossier iFolder résidant sur le serveur</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Member Copies of the iFolder</p></th>
+<p class="para">Copies du dossier iFolder appartenant aux membres</p></th>
 </tr>
           
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cbz"></a>
-<p class="para">Owner</p></td>
+<p class="para">Propriétaire</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ends the share relationship for the iFolder</p></td>
+<p class="para">Rompt la relation de partage du dossier iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Deletes the iFolder metadata and contents from the server </p></td>
+<p class="para">Supprime du serveur les métadonnées et le contenu du dossier iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the iFolder to a normal folder for all users </p></td>
+<p class="para">Rétablit le dossier iFolder en dossier normal pour tous les utilisateurs </p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc0"></a>
-<p class="para">Full Control User</p></td>
+<p class="para">Utilisateur doté d'un contrôle total</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Removes the user from the share</p></td>
+<p class="para">Supprime l'utilisateur du dossier partagé</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
+<p class="para">Aucune conséquence</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc1"></a>
-<p class="para">Read/Write User</p></td>
+<p class="para">Utilisateur doté d'un accès en lecture-écriture</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Removes the membership of the user from the share</p></td>
+<p class="para">Supprime l'adhésion de l'utilisateur du dossier partagé</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
+<p class="para">Aucune conséquence</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc2"></a>
-<p class="para">Read Only User</p></td>
+<p class="para">Utilisateur doté d'un accès en lecture seule</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Removes the membership of the user from the share</p></td>
+<p class="para">Supprime l'adhésion de l'utilisateur du dossier partagé</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
+<p class="para">Aucune conséquence</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr></table>
 </div>
 
-<p class="para">The following table outlines the effect on the share relationship and the member iFolders based on the Access right of the LDAPGroup member who deletes the iFolder.</p>
+<p class="para">Le tableau suivant décrit les conséquences de la suppression sur la relation de partage et sur les dossiers iFolder membres en fonction du droit d'accès dont dispose le membre du groupe LDAP qui supprime le dossier iFolder.</p>
 <div class="table" id="bcx7q0q">
 <table class="topbot-lines">
             
 <tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bcx7tk4"></a>
-<p class="para">Access Right of the LDAPGroup Member who Deletes the iFolder</p></th>
+<p class="para">Droit d'accès du membre du groupe LDAP qui supprime le dossier iFolder</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Share Relationship</p></th>
+<p class="para">Relation de partage</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Server Copy of the iFolder</p></th>
+<p class="para">Copie du dossier iFolder résidant sur le serveur</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Memebr Copies of the iFolder</p></th>
+<p class="para">Copies du dossier iFolder appartenant aux membres</p></th>
 </tr>
           
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk5"></a>
-<p class="para">Owner</p></td>
+<p class="para">Propriétaire</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ends the share relationship for the iFolder</p></td>
+<p class="para">Rompt la relation de partage du dossier iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Deletes the iFolder metadata and contents from the server</p></td>
+<p class="para">Supprime du serveur les métadonnées et le contenu du dossier iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the iFolder to a normal folder for all users</p></td>
+<p class="para">Rétablit le dossier iFolder en dossier normal pour tous les utilisateurs</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk7"></a>
-<p class="para">Full Control LDAPGroup</p></td>
+<p class="para">Groupe LDAP avec contrôle total</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">No effect</p></td>
+<p class="para">Aucune conséquence</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Not allowed to delete the iFolder from the server</p></td>
+<p class="para">Non autorisé à supprimer le dossier iFolder du serveur</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk8"></a>
-<p class="para">Read/Write LDAPGroup</p></td>
+<p class="para">Groupe LDAP en lecture/écriture</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Not allowed to end the share relationship</p></td>
+<p class="para">Non autorisé à mettre fin à la relation de partage</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Not allowed to delete the iFolder from the server</p></td>
+<p class="para">Non autorisé à supprimer le dossier iFolder du serveur</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7zxx"></a>
-<p class="para">Read Only LDAPGroup</p></td>
+<p class="para">Groupe LDAP en lecture seule</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Not allowed end the share relationship</p></td>
+<p class="para">Non autorisé à mettre fin à la relation de partage</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Not allowed to delete the iFolder from the server</p></td>
+<p class="para">Non autorisé à supprimer le dossier iFolder du serveur</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Reverts the local copy of the iFolder to a normal folder</p></td>
+<p class="para">Rétablit la copie locale du dossier iFolder en un dossier normal</p></td>
 </tr></table>
 </div>
 
-<p class="para">Deleting an iFolder does not uninstall the iFolder client from your workstation.</p>
+<p class="para">La suppression d'un dossier iFolder ne désinstalle pas le client iFolder de votre poste de travail.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bq8ubrz">
-<p class="para">In a file manager or iFolder browser, locate the iFolder that you want to delete.</p></li>
+<p class="para">Dans un gestionnaire de fichiers ou dans le navigateur iFolder, localisez le dossier iFolder à supprimer.</p></li>
 <li class="step" id="bq8u9b1">
-<p class="para">Right-click the iFolder, then click <span class="guimenu">Delete</span>.</p></li></ol>
+<p class="para">Cliquez avec le bouton droit sur le dossier iFolder, puis cliquez sur <span class="guimenu">Supprimer</span>.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="bbb7rj2.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bbbcabq.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
 </body>
 </html>

@@ -1,127 +1,145 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="cs" lang="cs">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:54" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Merging iFolders</title>
+<title>Sloučení složek iFolder</title>
 <script type="text/javascript">
-  var prev_link = "viewhide.html";
-  var next_link = "setupifolder.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="merge">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Merging iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
 
-<p class="para">Merge helps you consolidate the iFolder data and minimize the data transfer between iFolder server and client. You can merge the content in an iFolder on the server with the content on an existing local machine folder content.</p>
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> Sloučení složek iFolder</h1>
+
+<p class="para">Slučování vám pomůže konsolidovat data složky iFolder a minimalizovat tak přenos dat mezi serverem a klientem iFolder. Obsah složky iFolder můžete sloučit na serveru s obsahem stávající složky v místním počítači.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>
+            <a href="merge.html#bcq0ign">Sloučení složek iFolder s normální složkou</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0kks">Moving Existing iFolders to Different Locations</a>
+            <a href="merge.html#bcq0kks">Přesunutí stávající složky iFolder do jiného umístění</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="merge.html#bcq0l8i">Merging a Migrated 2.x iFolder to iFolder 3.7</a>
+            <a href="merge.html#bcq0l8i">Slučování migrované složky iFolder 2.x do složky iFolder 3.7</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bcq0ign">
+<div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-to-Folder Merge</h2>
+<h2 class="title"> Sloučení složek iFolder s normální složkou</h2>
 
-<p class="para">You can merge an iFolder and a normal folder with the same name. For example, you can merge the content of an iFolder named <span class="filename">corporate</span> with that of a normal folder named <span class="filename">corporate</span>. </p>
-<p class="para">Assume that the <span class="filename">corporate</span> iFolder has three sub folders: <span class="filename">hr</span>, <span class="filename">finance</span> and <span class="filename">marketing</span>. You want to download the content of <span class="filename">corporate</span> iFolder to the folder named <span class="filename">corporate,</span> which contains only the <span class="filename">hr</span> and <span class="filename">finance</span> folders. In this case, you don’t need to download all the three folders to <span class="filename">the corporate</span> folder and increase the transer rate. Instead, you can merge the <span class="filename">corporate</span> iFolder to <span class="filename">the corporate</span> folder so that the <span class="guimenu">Merge to folder</span> feature intelligently avoids downloading the sub folders <span class="filename">hr</span> and <span class="filename">finance</span>, and downloads only <span class="filename">marketing</span> sub folder. If the data in the <span class="filename">corporate</span> iFolder and <span class="filename">corporate</span> folder is different, a version conflict is displayed. You can resolve the conflicts manually. Similarly, if filename conflict is displayed, you can resolve it manually.</p>
-<p class="para">To merge an iFolder on the server to an existing local machine folder content:</p>
+<p class="para">Složku aplikace iFolder můžete sloučit s normální složkou. Můžete například sloučit obsah složky iFolder pojmenované <span class="filename">podniková</span> s normální složkou pojmenovanou <span class="filename">podniková</span>. </p>
+<p class="para">Předpokládejme, že <span class="filename">podniková</span> složka iFolder má tři podsložky: <span class="filename">hr</span>, <span class="filename">finance</span> a <span class="filename">marketing</span>. Obsah <span class="filename">podnikové</span> složky iFolder si můžete stáhnout do složky pojmenované <span class="filename">podniková</span>, která bude obsahovat pouze složky <span class="filename">hr</span> a <span class="filename">finance</span>. V tomto případě nemusíte stahovat všechny tři složky do složky <span class="filename">podniková</span> a zvyšovat tak objem přenesených dat. Místo toho můžete sloučit <span class="filename">podnikovou</span> složku iFolder s <span class="filename">podnikovou</span> složkou tak, aby funkce <span class="guimenu">Sloučit se složkou</span> inteligentně zabránila stahování podsložek <span class="filename">hr</span> a <span class="filename">finance</span> a stáhne pouze data podsložky <span class="filename">marketing</span>. Pokud jsou data v <span class="filename">podnikové</span> složce iFolder a <span class="filename">podnikové</span> normální složce odlišná, zobrazí se konflikt verzí. Konflikt můžete vyřešit ručně. Podobně, pokud se zobrazí konflikt názvu souborů, můžete jej také vyřešit ručně.</p>
+<p class="para">Chcete-li sloučit složku iFolder na serveru s obsahem stávající složky v místním počítači:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr3w0i">
-<p class="para">In the iFolder browser, right-click the desired iFolder from the list of iFolders on the selected server, then select <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">V prohlížeči složky iFolder klepněte pravým tlačítkem na požadovanou složku iFolder ze seznamu složek iFolder na vybraném serveru, pak vyberte <span class="guimenu">Sloučit se složkou</span>.</p></li>
 <li class="step" id="bcr4m9d">
-<p class="para">Browse and select the folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Procházejte a vyberte složku a klepněte na tlačítko <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
-<p class="para">Now, the contents of these two folders are compared and the files that are not present in the folder is downloaded from the iFolder. The files that are not present in the iFolder, but available in the folder are uploaded.</p>
+<p class="para">Nyní je obsah těchto dvou složek porovnán a soubory, které nejsou k dispozici v normální složce, jsou staženy ze složky iFolder. Soubory, které nejsou k dispozici ve složce iFolder, ale jsou k dispozici ve složce normální, jsou vyslány.</p>
 </div>
 
-<div class="sect2"  id="bcq0kks">
+<div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Moving Existing iFolders to Different Locations</h2>
+<h2 class="title"> Přesunutí stávající složky iFolder do jiného umístění</h2>
 
-<p class="para">To move an existing iFolder named <span class="filename">corporate</span> to a different location on the client machine: </p>
+<p class="para">Chcete-li přesunout stávající složku iFolder pojmenovanou <span class="filename">podniková</span> do jiného umístění v klientském počítači: </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr4vli">
-<p class="para">Convert the <span class="filename">corporate</span> iFolder into a normal folder.</p>
+<p class="para">Převeďte <span class="filename">podnikovou</span> složku iFolder na normální složku.</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not delete the iFolder on the server.</p></div>
+<p class="para"><em class="title">DŮLEŽITÉ:</em>Složku iFolder na serveru nesmíte smazat.</p></div>
 
-<p class="para">For more information, see <a href="reverting.html">Reverting an iFolder to a Normal Folder</a>.</p></li>
+<p class="para">Další informace naleznete v části <a href="reverting.html">Převod složky iFolder na normální složku</a>.</p></li>
 <li class="step" id="bcr4vww">
-<p class="para">Move the <span class="filename">corporate</span> folder to a different location. </p>
+<p class="para">Přesuňte <span class="filename">podnikovou</span> složky do jiného umístění. </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You must not change the folder name while it is being moved.</p></div>
+<p class="para"><em class="title">DŮLEŽITÉ:</em>Nesmíte změnit název přesouvané složky.</p></div>
 </li>
 <li class="step" id="bcr4w5o">
-<p class="para">In the iFolder browser window, select the <span class="filename">corporate</span> iFolder on the server, then click <span class="guimenu">Merge to folder</span>.</p></li>
+<p class="para">V okně prohlížeče složek iFolder vyberte <span class="filename">podnikovou</span> složku iFolder na serveru, pak klepněte na <span class="guimenu">Sloučit se složkou</span>.</p></li>
 <li class="step" id="bcr4y94">
-<p class="para">Select the <span class="filename">corporate</span> folder on the local machine, then click <span class="guimenu">OK</span> to merge the content.</p>
+<p class="para">Vyberte <span class="filename">podnikovou</span> složku v místním počítači, pak klepněte na tlačítko <span class="guimenu">OK</span> a obsah slučte.</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>If you use <span class="guimenu">Sychronize Now</span> (instead of <span class="guimenu">Merge to folder</span>), as described in <a href="movelocation.html">Moving an iFolder</a>, it checks for all the data in the iFolder on the server, and synchronizes all the data.Thus it increases data transfering time. In other hand, <span class="guimenu">Merge to folder </span>minimize the data transfer as it only merges the contents of the iFolder and the normal folder.</p></div>
+<p class="para"><em class="title">POZNÁMKA:</em>Pokud podle popisu v části <a href="movelocation.html">Přesunutí složky iFolder</a> použijete možnost <span class="guimenu">Synchronizovat nyní</span> (místo možnosti <span class="guimenu">Sloučit se složkou</span>), dojde ke kontrole všech dat ve složce iFolder na serveru a synchronizaci všech dat. Doba pro přenos dat bude delší. Na druhou stranu funkce <span class="guimenu">Sloučit se složkou</span> minimalizuje přenosy, protože pouze slučuje obsah složky iFolder a normální složky.</p></div>
 
-<p class="para">For more information on merging, see <a href="merge.html#bcq0ign">iFolder-to-Folder Merge</a>.</p></li></ol>
+<p class="para">Další informace o slučování najdete v části <a href="merge.html#bcq0ign">Sloučení složek iFolder s normální složkou</a>.</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="bcq0l8i">
+<div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Merging a Migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7</h2>
+<h2 class="title"> Slučování migrované složky iFolder 2.<span class="replaceable">x</span> do složky iFolder 3.7</h2>
 
-<p class="para">You can merge a migrated 2.x iFolder and iFolder 3.7 iFolder. For more information on migration, see <a href="coexistmig.html">Novell iFolder Migration And Upgrade</a>. </p>
-<p class="para">After migration, the 2.<span class="replaceable">x</span> iFolders are moved to the iFolder 3.7 server. You can choose to download the migrated iFolders on the 3.7 server to the client machine. However, those iFolders might already exist on the client machine. If this is the case, use the merge functionality to avoid unnecessary data transfer from server to the client. </p>
-<p class="para">To merge a migrated 2.<span class="replaceable">x</span> iFolder to iFolder 3.7,</p>
+<p class="para">Můžete sloučit migrovanou složku 2.x iFolder se složkou iFolder 3.7. Další informace o migraci najdete v části <a href="coexistmig.html">Migrace a inovace aplikace Novell iFolder</a>. </p>
+<p class="para">Po migraci 2.<span class="replaceable">x</span> Složky iFolder jsou přesunuty na server iFolder 3.7. Můžete stáhnout migrované složky iFolder na serveru verze 3.7 do klientského počítače Nicméně tyto složky iFolder se mohou v klientském počítač již vyskytovat. V takovém případě použijte funkci slučování, vyhnete se tak zbytečnému přenosu dat ze serveru na klienta. </p>
+<p class="para">Chcete-li sloučit migrované složky verze 2.<span class="replaceable">x</span> iFolder se složkou verze iFolder 3.7,</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr6eex">
-<p class="para">Migrate the 2.<span class="replaceable">x</span> iFolders to the iFolder 3.7 domain.</p></li>
+<p class="para">Migrace složky verze 2.<span class="replaceable">x</span> iFolder s doménou verze iFolder 3.7.</p></li>
 <li class="step" id="bcr6f1n">
-<p class="para">Convert the 2.<span class="replaceable">x</span> iFolders on the local machine to normal folders.</p></li>
+<p class="para">Převod složek verze 2.<span class="replaceable">x</span> iFolder v místním počítači na normální složky.</p></li>
 <li class="step" id="bcr6f5l">
-<p class="para">Select the server copy of each iFolder and click <span class="replaceable">Merge to folder</span>.</p></li>
+<p class="para">Vyberte serverovou kopii každé složky iFolder a klepněte na <span class="replaceable">Sloučit se složkou</span>.</p></li>
 <li class="step" id="bcr6is8">
-<p class="para">To merge the content, select the normal folder and click <span class="guimenu">OK</span>.</p></li></ol>
+<p class="para">Chcete-li obsah sloučit, vyberte normální složku a klepněte na tlačítko <span class="guimenu">OK</span>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
 </body>
 </html>

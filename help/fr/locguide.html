@@ -1,98 +1,116 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="fr" lang="fr">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="fr" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:55" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for the Location and Use of iFolders</title>
+<title>Directives sur l'emplacement et l'utilisation des dossiers iFolder</title>
 <script type="text/javascript">
-  var prev_link = "myifolders.html";
-  var next_link = "typeguide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="locguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for the Location and Use of iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
 
-<p class="para">Generally, you can put iFolders anywhere on your local hard drive when you create an iFolder or set up an iFolder that is shared with you. However, there are some practical and specific limitations. Consider the following guidelines for placing and using iFolders on your computer:</p>
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> Directives sur l'emplacement et l'utilisation des dossiers iFolder</h1>
+
+<p class="para">En général, lorsque vous configurez un dossier iFolder partagé ou que vous en créez un, vous pouvez l'enregistrer n'importe où sur votre disque dur local. Toutefois, certaines pratiques et limitations sont imposées. Respectez les directives suivantes sur l'emplacement et l'utilisation des dossiers iFolder sur votre ordinateur :</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">An iFolder’s name must be a unique folder name in the directory where you put the iFolder.</p></li>
+<p class="listitem">Les dossiers iFolder doivent porter un nom unique dans le répertoire où ils se trouvent.</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder’s name cannot contain the following invalid characters:</p><pre class="screen">
+<p class="listitem">Un nom de dossier iFolder ne peut pas contenir les caractères non valides suivants :</p><pre class="screen">
 \/:*?"&lt;&gt;|;
 </pre>
-<p class="listitem">For other naming conventions, see <a href="nameconv.html">Naming Conventions for an iFolder and Its Folders and Files</a>.</p></li>
+<p class="listitem">Pour d'autres conventions de dénomination, reportez-vous à la section <a href="nameconv.html">Conventions de dénomination des fichiers et des dossiers d'un compte iFolder</a>.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder must reside on a local hard drive; the location cannot be on a network drive or non-physical drive.</p></li>
+<p class="listitem">Le dossier iFolder doit résider sur le disque dur local ; il ne peut pas figurer sur un lecteur de réseau ou un lecteur non physique.</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot exist at the root of the hard drive. </p></li>
+<p class="listitem">Il ne peut pas y avoir de dossier iFolder à la racine du disque dur. </p></li>
 <li class="listitem">
-<p class="listitem">An iFolder can be created only from a folder where you have the file system access rights to read and write files. When you set up a shared iFolder on a computer, you must have file system access rights to the folder where you are placing the iFolder.</p></li>
+<p class="listitem">Vous ne pouvez créer un dossier iFolder qu'à partir d'un dossier dans lequel vous disposez de droits d'accès en lecture et en écriture dans le système de fichiers. Lorsque vous configurez un dossier iFolder partagé sur un ordinateur, vous devez disposer de droits d'accès au dossier de destination du dossier iFolder.</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in an applications folder such as the Program Files folder.</p></li>
+<p class="listitem">Un dossier iFolder ne peut pas contenir un dossier d'applications comme le dossier Program Files, ni résider dans un tel dossier.</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder cannot contain or reside in the iFolder metadata folder. The default location of the metadata folder is as follows:</p>
+<p class="listitem">Un dossier iFolder ne peut pas contenir un dossier de métadonnées iFolder, ni résider dans un tel dossier. L'emplacement par défaut du dossier de métadonnées est le suivant :</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bx09dxu">
-                <p class="title"><em class="title">Linux:</em>
-                In your home folder in the <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span> subdirectory</p>
+                <p class="title"><em class="title">Linux :</em>
+                Dans le dossier d'accueil, dans le sous-ré<span class="filename">pertoire &lt;Répertoire privé&gt;\.local\share</span>\<span class="filename">simias</span></p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bx09ffv">
-                <p class="title"><em class="title">Windows:</em>
-                In the <span class="filename">C:\Documents and Settings\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span> directory</p>
+                <p class="title"><em class="title">Windows :</em>
+                Dans le répertoire <span class="filename">C:\Documents and Settings\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span></p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bcto9jx">
                 <p class="title"><em class="title">Macintosh:</em>
-                In the <span class="filename">$HOME/.local/share/simias</span></p>
+                Dans le répertoire <span class="filename">$HOME/.local/share/simias</span></p>
               </div>
 </li></ul></div>
 </li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in other iFolders, including your Novell iFolder 2.<span class="replaceable">x</span> iFolder.</p>
-<p class="listitem">iFolder does not support network folders as iFolders. For example, iFolders cannot be the users’ network-based /home directories that are mapped to the users’ workstations. iFolder also does not support WebDAV access for users from their desktop to their iFolder collection on the iFolder server’s user-data volume.</p></li>
+<p class="listitem">Un dossier iFolder ne peut pas contenir d'autres dossiers iFolder, y compris votre dossier iFolder Novell iFolder 2.<span class="replaceable">x</span>, ni résider dans de tels dossiers.</p>
+<p class="listitem">iFolder ne prend pas en charge les dossiers réseau en tant que dossiers iFolder. Par exemple, les dossiers iFolder ne peuvent pas être les répertoires réseau/privé qui sont assignés aux postes de travail des utilisateurs. iFolder ne prend pas non plus en charge l'accès WebDAV des utilisateurs à leur collection iFolder se trouvant sur le volume de données utilisateur du serveur iFolder, à partir de leur Bureau.</p></li>
 <li class="listitem">
-<p class="listitem">Although you can log in to more than one iFolder account at a time, an iFolder can be associated with only one iFolder account. You cannot synchronize one iFolder against multiple accounts. When you create an iFolder, the iFolder can be shared only with other users and LDAPGroups that are provisioned in the same iFolder server or domain.</p></li>
+<p class="listitem">Même si vous pouvez vous loguer à plusieurs dossiers iFolder en même temps, un dossier iFolder ne peut être associé qu'à un seul compte iFolder. Vous ne pouvez pas synchroniser un dossier iFolder sur plusieurs comptes. Lorsque vous créez un dossier iFolder, celui-ci ne peut être partagé qu'avec d'autres utilisateurs et groupes LDAP assignés au même serveur/domaine iFolder.</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder is available to all the members of an LDAPGroup when it is shared with that LDAPGroup.</p></li>
+<p class="listitem">Un dossier iFolder est disponible pour tous les membres d'un groupe LDAP lorsqu'il est partagé avec ce groupe LDAP.</p></li>
 <li class="listitem">
-<p class="listitem">When multiple users share a computer, the local copies of your iFolders are private to your storage space on the disk if the file system supports privacy features, and if you configure your system to use them.</p>
-<p class="listitem">On Windows, NTFS includes built-in security features such as file and folder permissions and the Encrypting File System (EFS), which is the technology used to store encrypted files on NTFS volumes. These security features are not supported on FAT32 file systems. Make sure the local login identities for users (other than the Administrator identity, of course) do not have the Administrator rights or equivalent. The Administrator user has access to all files and directories on the computer. For shared computers where privacy and security are essential for each user, the users can encrypt their local copy of iFolder data with EFS or a third-party file system encryption.</p>
-<p class="listitem">Linux and Macintosh file systems are designed for multi-user environments. File permissions allow you to control access for the user, groups, and others. A user’s personal files are typically set with full permissions for the user and no access for the groups and others settings. </p>
-<p class="listitem">If you store iFolders locally on a FAT32 volume on Linux, it requires special handling because FAT32 file systems are not POSIX* compliant. For information, see <a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a>.</p></li>
+<p class="listitem">Lorsque plusieurs utilisateurs partagent le même ordinateur, les copies locales de vos dossiers iFolder ne sont accessibles qu'à partir de votre espace de stockage sur le disque et ce, si le système de fichiers prend en charge des fonctions de confidentialité et si vous configurez votre système pour les utiliser.</p>
+<p class="listitem">Sous Windows, NTFS comprend des fonctionnalités de sécurité intégrées telles que des autorisations de fichiers et de dossiers et le Système de codage des fichiers (EFS), une technologie utilisée pour stocker des fichiers codés sur des volumes NTFS. Ces fonctions de sécurité ne sont pas prises en charge sur les systèmes de fichiers FAT32. Assurez-vous que les identités de login local des utilisateurs (autres que l'identité Administrateur bien sûr) ne disposent pas des droits Administrateur ou équivalents. L'utilisateur Administrateur a accès à tous les fichiers et répertoires sur l'ordinateur. Pour les ordinateurs partagés sur lesquels la confidentialité et la sécurité sont essentielles pour chaque utilisateur, les utilisateurs peuvent coder leur copie locale des données iFolder avec l'EFS ou un codage de système de fichiers tiers.</p>
+<p class="listitem">Les systèmes de fichiers Linux et Macintosh sont conçus pour des environnements multiutilisateurs. Les autorisations de fichiers vous permettent de contrôler l'accès pour l'utilisateur, des groupes ou autres. Les fichiers personnels d'un utilisateur sont généralement configurés avec des paramètres accordant des autorisations totales à l'utilisateur et refusant l'accès aux groupes ou autres entités. </p>
+<p class="listitem">Le stockage local de dossiers iFolder sur un volume FAT32 sous Linux nécessite une manipulation particulière car les systèmes de fichiers FAT32 ne sont pas compatibles avec POSIX*. Pour plus d'informations, reportez-vous à <a href="createifolder.html#fat32mtpt">Création de dossiers iFolder sur un point de montage FAT32 (Linux)</a>.</p></li>
 <li class="listitem">
-<p class="listitem">If users of the same computer share iFolders, multiple copies of the iFolder can exist on the device, with a copy for each user who downloads it from the server. Different local login identities cannot share a single location for the shared iFolders.</p></li></ul></div>
+<p class="listitem">Si des utilisateurs du même ordinateur partagent des dossiers iFolder, plusieurs copies du même dossier iFolder peuvent exister sur la machine, avec une copie pour chaque utilisateur qui télécharge le dossier sur le serveur. Différentes identités de login local ne peuvent pas partager un emplacement unique pour les dossiers iFolder partagés.</p></li></ul></div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
 </body>
 </html>

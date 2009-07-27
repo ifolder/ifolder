@@ -1,56 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-tw" lang="zh-tw">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Creating and Uploading an iFolder</title>
+<title>建立和上傳 iFolder</title>
 <script type="text/javascript">
-  var prev_link = "ificons.html";
-  var next_link = "sharewith.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "createifolder";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="createifolder">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Creating and Uploading an iFolder</h1>
+<div class='nav' id='topnav'>
+  <a href="bkjj1f9.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="sharewith.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
 
-<p class="para">You can create an iFolder by converting an existing folder that satisfies the following guidelines: </p>
+
+<div class="sect1" id="createifolder">
+
+<h1 class="title"> 建立和上傳 iFolder</h1>
+
+<p class="para">您可以藉由轉換符合下列指示的現有資料夾來建立 iFolder： </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="locguide.html">Guidelines for the Location and Use of iFolders</a>
+            <a href="locguide.html">iiFolder 位置和使用指南</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="nameconv.html">Naming Conventions for an iFolder and Its Folders and Files</a>
+            <a href="nameconv.html">iFolder 及其資料夾和檔案的命名慣例</a>
           </p></li></ul></div>
 
-<p class="para">If the folder does not exist, you can browse to a location and create the new folder as part of the process. </p>
+<p class="para">如果該資料夾不存在，您可以瀏覽至某個位置並建立新資料夾作為程序的一部分。 </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You can share only the regular iFolders. Encrypted iFolders cannot be shared.</p></div>
+<p class="para"><em class="title">重要：</em>您只能共用一般 iFolder。加密的 iFolders 無法共用。</p></div>
 
-<p class="para">Within the iFolder, you can set up any subdirectory structure that suits your personal or corporate work habits. The subdirectory structure is constant across all member iFolders. Each workstation can specify a different parent directory for the shared iFolder.</p>
-<p class="para">When you exceeds the limit for number of iFolders an individual user can create, iFolder displays an error message. For example, if your administrator has set the policy for <span class="guimenu">Number of iFolder per user</span> to 10 and you attempt to create the eleventh iFolder, iFolder 3.7 notifies you about the policy violation.</p>
+<p class="para">在 iFolder 中，您可以設定任何次目錄結構，配合您個人或公司的工作習慣。 該次目錄結構在所有成員 iFolder 之間均保持不變。 每個工作站都可以為共用 iFolder 指定不同的父目錄。</p>
+<p class="para">當您超過個別使用者可以建立的 iFolder 數量限制時，iFolder 會顯示錯誤訊息。例如，如果您的管理員將<span class="guimenu">「每位使用者的 iFolder 數目」</span>政策設定為 10，然後您試圖建立第十一個 iFolder，iFolder 3.7 會通知您違反政策。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -63,131 +76,127 @@
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#bctq91g">Macintosh</a>
+            <a href="createifolder.html#bctq91g">跨平台用戶端</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a>
+            <a href="createifolder.html#fat32mtpt">在 FAT32 裝載點上建立 iFolder (Linux)</a>
           </p></li></ul></div>
 
-<div class="sect2"  id="bbrkjhr">
+<div class="sect2" id="bbrkjhr">
 
 <h2 class="title"> Linux</h2>
 
-<p class="para">You can create iFolders with a file manager or with the iFolder browser, which is available in the client application. Use the following methods to create an iFolder:</p>
+<p class="para">您可以使用檔案管理員或可在用戶端應用程式中使用的 iFolder 瀏覽器，建立 iFolder。使用下列方式建立 iFolder：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkq96">Creating iFolders in the iFolders Browser</a>
+              <a href="createifolder.html#bbrkq96">在 iFolder 瀏覽器中建立 iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkqnw">Creating iFolders in a File Manager</a>
+              <a href="createifolder.html#bbrkqnw">在檔案管理員中建立 iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bbrkq96">
+<div class="sect3" id="bbrkq96">
 
-<h3 class="title"> Creating iFolders in the iFolders Browser</h3>
+<h3 class="title"> 在 iFolder 瀏覽器中建立 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2gxbu">
-<p class="para">In the notification area, use one of the following methods to open the iFolder browser:</p>
+<p class="para">在通知區域中，使用下列其中一個方法開啟 iFolder 瀏覽器：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click the <span class="guimenu">iFolder Services</span> icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />.
+<p class="listitem">按一下<span class="guimenu">「iFolder 服務」</span>圖示<img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />。
         </p></li>
 <li class="listitem">
-<p class="listitem">Right-click the <span class="guimenu">iFolder Services</span> icon <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" />, then click <span class="guimenu">iFolders</span>.
+<p class="listitem">以滑鼠右鍵按一下<span class="guimenu">「iFolder 服務」</span>圖示<img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />，然後按一下<span class="guimenu">「iFolder」</span>。
         </p></li></ul></div>
 </li>
 <li class="step" id="bv2gxbv">
-<p class="para">Click <span class="guimenu">Upload a folder</span>.</p>
-<div class="informalfigure">
-                    <img src="images/if3_shared_a.png" alt="" />
-                  </div>
-</li>
+<p class="para">按一下<span class="guimenu">「建立 iFolder」</span>。</p></li>
 <li class="step" id="bv2gwvt">
-<p class="para">Under <span class="guimenu">More Options</span>, specify the <span class="guimenu">iFolder Account</span> you want to use for this iFolder.</p>
-<p class="para">If you have multiple iFolder accounts, the default account is listed first. Use the drop-down list to select a different account.</p></li>
+<p class="para">在<span class="guimenu">「更多選項」</span>之下，指定這個 iFolder 您要使用的<span class="guimenu">「iFolder 帳戶」</span>。</p>
+<p class="para">如果您有多個 iFolder 帳戶，則預設為列出的第一個帳戶。 使用下拉式清單以選取其他帳戶。</p></li>
 <li class="step" id="bv2guwr">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">在瀏覽器中，導覽至要建立 iFolder 的目錄。</p></li>
 <li class="step" id="bv2gv55">
-<p class="para">Select the normal folder you want to make an iFolder, using one of these methods:</p>
+<p class="para">選取您要轉換為 iFolder 的一般資料夾，然後使用下列方式之一：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the normal folder exists, select the folder, then click <span class="guimenu">Add</span>.</p></li>
+<p class="listitem">如果一般資料夾存在，則選取該資料夾，然後按一下<span class="guimenu">「新增」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">If the normal folder does not exist, click <span class="guimenu">Create Folder</span> to create it, select the newly created folder, then click <span class="guimenu">Add</span>.</p></li></ul></div>
+<p class="listitem">如果不存在一般資料夾，按一下<span class="guimenu">「建立資料夾」</span>以建立資料夾，選取新建立的資料夾，然後按一下<span class="guimenu">「新增」</span>。</p></li></ul></div>
 </li>
 <li class="step" id="b93crcv">
-<p class="para">Select the iFolder <span class="guimenu">Type</span> from the given options. You can decide whether you want to create an encrypted iFolder or a regular one.</p>
+<p class="para">從提供的選項中選取 iFolder <span class="guimenu">「類型」</span>。您可以決定要建立加密的 iFolder 或一般 iFolder。</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder administrator has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">重要：</em>只有 iFolder 管理員將您的加密規則設定為<span class="guimenu">「開啟」</span>時，您才可以建立加密的 iFolder。如果沒有，您只能建立一般 iFolder，而且預設會選取這個選項。在這個情況下，會關閉<span class="guimenu">「類型」</span>的兩個選項。</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If you have not set the passphrase during the login session, and you select <span class="guimenu">Passphrase Encryption</span>, it prompts you to enter the passphrase. Specify the passphrase in the Passphrase dialog box.</p></li>
+<p class="listitem">選取<span class="guimenu">「通關密語加密」</span>啟用選取的 iFolder 之加密功能。</p>
+<p class="listitem">如果您在登入會期中尚未設定通關密語，而且選取<span class="guimenu">「通關密語加密」</span>，系統會提示您輸入通關密語。在「通關密語」對話方塊中指定通關密語。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p>
-<p class="listitem">iFolder announces the availability of shared iFolders with a pop-up message in the notification area. Shared users can click the message to set up the iFolder at that time, or close the message and download the iFolder later.</p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「一般」</span>啟用選取之 iFolder 的共用功能。 </p>
+<p class="listitem">iFolder 會在通知區域以立現式訊息通知共用 iFolder 的可用性。共用的使用者可以按一下該訊息在這個時候設定 iFolder，或關閉訊息並於稍後下載 iFolder。</p></li></ul></div>
 </li>
 <li class="step" id="bfkhncz">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
+<p class="para">選取<span class="guimenu">「安全同步」</span>使您建立的 iFolder 中的檔案能夠進行安全同步。</p>
+<p class="para">您可以為一般和加密的 iFolder 啟用安全通道。選取這個選項後，iFolder 可讓您使用安全通道進行伺服器和本地電腦上 iFolder 間的同步。</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also enable secure sync for a selected iFolder on your machine by using the right-click iFolder &gt; Properties option in the iFolder main window. For that, right-click the iFolder and select <span class="guimenu">Properties</span> and in the General tab, select the <span class="guimenu">Secure Sync</span> check box.</p></div>
+<p class="para"><em class="title">附註：</em>您也可以用滑鼠右鍵按一下 iFolder 主視窗中的「iFolder」&gt;「內容」選項，為電腦上選取的 iFolder 啟用安全同步。要執行此操作，請以滑鼠右鍵按一下 iFolder，並選取<span class="guimenu">「內容」</span>，然後在「一般」索引標籤中選取<span class="guimenu">「安全同步」</span>核取方塊。</p></div>
 </li>
 <li class="step" id="bwb5ss4">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the <span class="guimenu">iFolders on This Computer</span> list.</p></li>
+<p class="para">按一下<span class="guimenu">「確定」</span>。</p>
+<p class="para">iFolder 會出現在<span class="guimenu">「此電腦上的 iFolder」</span>清單中。</p></li>
 <li class="step" id="bwb5tng">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">如果出現<span class="guimenu">「iFolder 已建立」</span>訊息，請執行下列其中一項：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do Not Show This Message Again</span> to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to <span class="guimenu">iFolder Preferences</span>, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「不要再顯示這個訊息」</span>以停用未來的通知，然後按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p>
+<p class="listitem">如果稍後您希望獲得該確認訊息，請移至<span class="guimenu">「iFolder 優先設定」</span>，選取<span class="guimenu">「建立 iFolder 時顯示確認對話方塊」</span>，然後按一下<span class="guimenu">「確定」</span>。</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bbrkqnw">
+<div class="sect3" id="bbrkqnw">
 
-<h3 class="title"> Creating iFolders in a File Manager</h3>
+<h3 class="title"> 在檔案管理員中建立 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bq6lwlg">
-<p class="para">Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</p></li>
+<p class="para">使用檔案管理員導覽至要轉換為 iFolder 的資料夾，然後選取該資料夾。</p></li>
 <li class="step" id="bq6lwlh">
-<p class="para">Use one of the following methods:</p>
+<p class="para">請使用下列其中一個方法：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Right-click the folder icon, then click <span class="guimenu">Convert to an iFolder.</span></p></li>
+<p class="listitem">以滑鼠右鍵按一下資料夾圖示，然後按一下<span class="guimenu">「轉換為 iFolder」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">On the toolbar, click <span class="menuchoice"><span class="guimenu">File</span> > <span class="guimenu">Convert to an iFolder</span></span>.</p></li></ul></div>
+<p class="listitem">在工具列上，按一下<span class="menuchoice"><span class="guimenu">「檔案」</span> > <span class="guimenu">「轉換成 iFolder」</span></span>。</p></li></ul></div>
 
-<p class="para">The folder icon <img src="images/folder_16.png" alt="Folder Icon" class="inline" /> changes to a folder with an overlay of the iFolder emblem <img src="images/ifolder32.png" alt="iFolder Icon " class="inline" /> (green “i”).
+<p class="para">資料夾圖示<img src="images/folder_16.png" alt="「資料夾圖示」" title="「資料夾圖示」" class="inline" />變更成重疊 iFolder 徽章<img src="images/ifolder32.png" alt="「iFolder 圖示」" title="「iFolder 圖示」" class="inline" /> (綠色的 “i”) 的資料夾。
       </p></li>
 <li class="step" id="bx19z0q">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">如果出現<span class="guimenu">「iFolder 已建立」</span>訊息，請執行下列其中一項：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do not show this message again </span>to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to iFolder Preferences, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「不要再顯示這個訊息」</span>關閉未來的通知，然後按一下<span class="guimenu">「關閉」</span>離開訊息。</p>
+<p class="listitem">如果稍後您希望獲得該確認訊息，請移至「iFolder 優先設定」，選取<span class="guimenu">「建立 iFolder 時顯示確認對話方塊」</span>，然後按一下<span class="guimenu">「確定」</span>。</p></li></ul></div>
 </li></ol>
 </div>
 
@@ -195,123 +204,123 @@
 
 </div>
 
-<div class="sect2"  id="bbrkjtk">
+<div class="sect2" id="bbrkjtk">
 
 <h2 class="title"> Windows</h2>
 
-<p class="para">You can create iFolders with a file manager or with the iFolder browser, which is available in the client application. Use the following methods to create an iFolder:</p>
+<p class="para">您可以使用檔案管理員或可在用戶端應用程式中使用的 iFolder 瀏覽器，建立 iFolder。使用下列方式建立 iFolder：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkmqg">Creating iFolders in the iFolders Browser</a>
+              <a href="createifolder.html#bbrkmqg">在 iFolder 瀏覽器中建立 iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkln6">Creating iFolders in a File Manager</a>
+              <a href="createifolder.html#bbrkln6">在檔案管理員中建立 iFolder</a>
             </p></li></ul></div>
 
-<div class="sect3"  id="bbrkmqg">
+<div class="sect3" id="bbrkmqg">
 
-<h3 class="title"> Creating iFolders in the iFolders Browser</h3>
+<h3 class="title"> 在 iFolder 瀏覽器中建立 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbrkmv4">
-<p class="para">In the notification area, use one of the following methods to open the iFolder browser:</p>
+<p class="para">在通知區域中，使用下列其中一個方法開啟 iFolder 瀏覽器：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click the <span class="guimenu">iFolder Services</span> <img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon.
+<p class="listitem">按一下<span class="guimenu">「iFolder 服務」</span><img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />圖示。
         </p></li>
 <li class="listitem">
-<p class="listitem">Right-click the <span class="guimenu">iFolder Services </span><img src="images/ifolder22.png" alt="iFolder Application Icon " class="inline" /> icon, then click <span class="guimenu">iFolders</span>.
+<p class="listitem">以滑鼠右鍵按一下<span class="guimenu">「iFolder 服務」</span><img src="images/ifolder22.png" alt="「iFolder 應用程式圖示」" title="「iFolder 應用程式圖示」" class="inline" />圖示，然後按一下<span class="guimenu">「iFolder」</span>。
         </p></li></ul></div>
 </li>
 <li class="step" id="bbrkn5v">
-<p class="para">Click <span class="guimenu">Upload a folder</span>.</p></li>
+<p class="para">按一下<span class="guimenu">「建立 iFolder」</span>。</p></li>
 <li class="step" id="bbrknbe">
-<p class="para">From the drop-down list, select the iFolder account you want to use for this iFolder.</p>
-<p class="para">If you have multiple iFolder accounts, the default account is listed first. You can use the drop-down list to select a different account.</p></li>
+<p class="para">從下拉式清單選取這個 iFolder 您要使用的 iFolder 帳戶。</p>
+<p class="para">如果您有多個 iFolder 帳戶，則預設為列出的第一個帳戶。 您可以使用下拉式清單選取不同的帳戶。</p></li>
 <li class="step" id="bbrknpo">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">在瀏覽器中，導覽至要建立 iFolder 的目錄。</p></li>
 <li class="step" id="bbrknvw">
-<p class="para">Select the normal folder you want to make an iFolder, using one of these methods:</p>
+<p class="para">選取您要轉換為 iFolder 的一般資料夾，然後使用下列方式之一：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">If the normal folder exists, select the folder, then click <span class="guimenu">OK</span>.</p></li>
+<p class="listitem">如果存在一般資料夾，則選取該資料夾，然後按一下<span class="guimenu">「確定」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">If the normal folder does not exist, click <span class="guimenu">Make New Folder</span> to create it, and select the newly created folder.</p></li></ul></div>
+<p class="listitem">如果不存在一般資料夾，則按一下<span class="guimenu">「建立新資料夾」</span>建立，然後選取新建立的資料夾。</p></li></ul></div>
 </li>
 <li class="step" id="bbrko5o">
-<p class="para">Select the iFolder type from one of the following from the given options:</p>
+<p class="para">從下列提供的選項中選取 iFolder 類型：</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder Administrators has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">重要：</em>只有 iFolder 管理員將您的加密規則設定成<span class="guimenu">「開啟」</span>之後，您才可以建立加密的 iFolder。如果沒有，您只能建立一般 iFolder，而且預設會選取這個選項。在這個情況下，會關閉<span class="guimenu">「類型」</span>的兩個選項。</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If your administrator has set your encryption policy to <span class="emphasis">On</span>, you are permitted to create encrypted or shared iFolders. </p>
-<p class="listitem">If you did not set the passphrase during the login session, and you select <span class="guimenu">Passphrase Encryption</span>, it prompts you to enter the passphrase.</p></li>
+<p class="listitem">選取<span class="guimenu">「通關密語加密」</span>啟用選取的 iFolder 之加密功能。</p>
+<p class="listitem">如果管理者已經將您的加密政策設定成<span class="emphasis">「開啟」</span>，您就可以建立加密的 iFolder 或共用 iFolder。 </p>
+<p class="listitem">如果您在登入會期中未設定通關密語，而且選取<span class="guimenu">「通關密語加密」</span>，系統會提示您輸入通關密語。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p>
+<p class="listitem">選取<span class="guimenu">「一般」</span>啟用選取之 iFolder 的共用功能。 </p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>When you share your iFolder with other iFolder members, iFolder announces the availability of shared iFolders with a pop-up message in the notification area. Shared users can click the message to set up the iFolder at that time, or close the message to download the iFolder later.</p></div>
+<p class="para"><em class="title">附註：</em>當您與其他 iFolder 成員共用 iFolder 時，iFolder 會在通知區域使用立現式訊息，宣告共用 iFolder 的可用性。共用的使用者可以按一下訊息在這個時候設定 iFolder，或關閉訊息稍後再下載 iFolder。</p></div>
 </li></ul></div>
 </li>
 <li class="step" id="bfq5bu3">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p>
+<p class="para">選取<span class="guimenu">「安全同步」</span>使您建立的 iFolder 中的檔案能夠進行安全同步。</p>
+<p class="para">您可以為一般和加密的 iFolder 啟用安全通道。選取這個選項後，iFolder 可讓您使用安全通道進行伺服器和本地電腦上 iFolder 間的同步。</p>
 <div class="note">
-<p class="para"><em class="title">NOTE:</em>You can also enable secure sync for a selected iFolder on your machine by using the right-click iFolder &gt; Properties option in the iFolder main window. For that, right-click the iFolder and select <span class="guimenu">Properties</span> and in the General tab, select the <span class="guimenu">Secure Sync</span> check box.</p></div>
+<p class="para"><em class="title">附註：</em>您也可以用滑鼠右鍵按一下 iFolder 主視窗中的「iFolder」&gt;「內容」選項，為電腦上選取的 iFolder 啟用安全同步。要執行此操作，請以滑鼠右鍵按一下 iFolder，並選取<span class="guimenu">「內容」</span>，然後在「一般」索引標籤中選取<span class="guimenu">「安全同步」</span>核取方塊。</p></div>
 </li>
 <li class="step" id="bbrkofc">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the <span class="guimenu">iFolders on This Computer</span> list.</p></li>
+<p class="para">按一下<span class="guimenu">「確定」</span>。</p>
+<p class="para">iFolder 會出現在<span class="guimenu">「此電腦上的 iFolder」</span>清單中。</p></li>
 <li class="step" id="bbrkoum">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">如果出現<span class="guimenu">「iFolder 已建立」</span>訊息，請執行下列其中一項：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do not show this message again</span> to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to <span class="guimenu">iFolder Preferences</span>, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「不要再顯示這個訊息」</span>關閉未來的通知，然後按一下<span class="guimenu">「關閉」</span>離開訊息。</p>
+<p class="listitem">如果稍後您希望獲得該確認訊息，請移至<span class="guimenu">「iFolder 優先設定」</span>，選取<span class="guimenu">「建立 iFolder 時顯示確認對話方塊」</span>，然後按一下<span class="guimenu">「確定」</span>。</p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<div class="sect3"  id="bbrkln6">
+<div class="sect3" id="bbrkln6">
 
-<h3 class="title"> Creating iFolders in a File Manager</h3>
+<h3 class="title"> 在檔案管理員中建立 iFolder</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbrklt7">
-<p class="para">Use the file manager to navigate to the folder you want to convert to an iFolder, then select the folder.</p></li>
+<p class="para">使用檔案管理員導覽至要轉換為 iFolder 的資料夾，然後選取該資料夾。</p></li>
 <li class="step" id="bbrklxp">
-<p class="para">Use one of the following methods:</p>
+<p class="para">請使用下列其中一個方法：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Right-click the folder icon, then click <span class="guimenu">Convert to an iFolder.</span></p></li>
+<p class="listitem">以滑鼠右鍵按一下資料夾圖示，然後按一下<span class="guimenu">「轉換為 iFolder」</span>。</p></li>
 <li class="listitem">
-<p class="listitem">On the toolbar, click <span class="menuchoice"><span class="guimenu">File</span> > <span class="guimenu">Convert to an iFolder</span></span>.</p></li></ul></div>
+<p class="listitem">在工具列上，按一下<span class="menuchoice"><span class="guimenu">「檔案」</span> > <span class="guimenu">「轉換成 iFolder」</span></span>。</p></li></ul></div>
 
-<p class="para">The folder icon <img src="images/if3_folder.png" alt="iFolder Icon " class="inline" /> changes to a folder with an overlay of the iFolder emblem (green “i”) .
+<p class="para">資料夾圖示<img src="images/if3_folder.png" alt="「iFolder 圖示」" title="「iFolder 圖示」" class="inline" />會變更成重疊 iFolder 徽章 (綠色的 “i”) 的資料夾
       </p></li>
 <li class="step" id="bbrkm5l">
-<p class="para">If the <span class="guimenu">iFolder Created</span> message appears, do one of the following:</p>
+<p class="para">如果出現<span class="guimenu">「iFolder 已建立」</span>訊息，請執行下列其中一項：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Close</span> to dismiss the message.</p></li>
+<p class="listitem">按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Do Not Show This Message Again </span>to disable future notifications, then click <span class="guimenu">Close</span> to dismiss the message.</p>
-<p class="listitem">If you later decide that you want to get confirmation messages, go to iFolder Preferences, select <span class="guimenu">Show Confirmation Dialog When Creating iFolders</span>, then click <span class="guimenu">OK</span>.</p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「不要再顯示這個訊息」</span>以停用未來的通知，然後按一下<span class="guimenu">「關閉」</span>，關閉該訊息。</p>
+<p class="listitem">如果稍後您希望獲得該確認訊息，請移至「iFolder 優先設定」，選取<span class="guimenu">「建立 iFolder 時顯示確認對話方塊」</span>，然後按一下<span class="guimenu">「確定」</span>。</p></li></ul></div>
 </li></ol>
 </div>
 
@@ -319,86 +328,86 @@
 
 </div>
 
-<div class="sect2"  id="bctq91g">
+<div class="sect2" id="bctq91g">
 
-<h2 class="title"> Macintosh</h2>
+<h2 class="title"> 跨平台用戶端</h2>
 
-<p class="para">You can create iFolders with the iFolder browser, which is available in the client application.</p>
+<p class="para">您可以使用用戶端應用程式中提供的 iFolder 瀏覽器建立 iFolder。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bctqam6">
-<p class="para">Click the <span class="guimenu">iFolder Services</span> icon from the dock to open the iFolder browser.</p></li>
+<p class="para">從固定點按一下<span class="guimenu">「iFolder 服務」</span>圖示開啟 iFolder 瀏覽器。</p></li>
 <li class="step" id="bctqam7">
-<p class="para">Use one of the following methods to open the browser.</p>
+<p class="para">使用下列其中一個方法開啟瀏覽器。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">New</span> in the toolbar</p></li>
+<p class="listitem">按一下工具列中的<span class="guimenu">「新增」</span></p></li>
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">File &gt; New</span> in the menu bar</p></li></ul></div>
+<p class="listitem">按一下功能表列中的<span class="guimenu">「檔案」&gt;「新增」</span></p></li></ul></div>
 </li>
 <li class="step" id="bctqam9">
-<p class="para">In the browser, navigate to the directory where you want to create an iFolder.</p></li>
+<p class="para">在瀏覽器中，導覽至要建立 iFolder 的目錄。</p></li>
 <li class="step" id="bctqama">
-<p class="para">Select the normal folder you want to make into an iFolder, then click <span class="guimenu">Open</span>.</p></li>
+<p class="para">選取要改成 iFolder 的一般資料夾，然後按一下<span class="guimenu">「開啟」</span>。</p></li>
 <li class="step" id="bfq5e1a">
-<p class="para">Select the iFolder type from one of the following from the given options:</p>
+<p class="para">從下列提供的選項中選取 iFolder 類型：</p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>You are permitted to create encrypted iFolders only if your iFolder Administrators has set your encryption policy to <span class="guimenu">On</span>. If not, you can create only regular iFolders, and this option is selected by default. In this case, both the options for <span class="guimenu">Type</span> are disabled.</p></div>
+<p class="para"><em class="title">重要：</em>只有 iFolder 管理員將您的加密規則設定成<span class="guimenu">「開啟」</span>之後，您才可以建立加密的 iFolder。如果沒有，您只能建立一般 iFolder，而且預設會選取這個選項。在這個情況下，會關閉<span class="guimenu">「類型」</span>的兩個選項。</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Passphrase Encryption</span> to enable encryption for the selected iFolder.</p>
-<p class="listitem">If your administrator has set your encryption policy to <span class="emphasis">On</span>, you are permitted to create encrypted or shared iFolders. </p>
-<p class="listitem">If you did not set the passphrase during the login session, and you select <span class="guimenu">Passphrase</span>  > <span class="guimenu">Encryption</span>, it prompts you to enter the passphrase.</p></li>
+<p class="listitem">選取<span class="guimenu">「通關密語加密」</span>啟用選取的 iFolder 之加密功能。</p>
+<p class="listitem">如果管理者已經將您的加密政策設定成<span class="emphasis">「開啟」</span>，您就可以建立加密的 iFolder 或共用 iFolder。 </p>
+<p class="listitem">如果您在登入會期中未設定通關密語，而且選取<span class="guimenu">「通關密語</span> > <span class="guimenu">加密」</span>，系統會提示您輸入通關密語。</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Regular</span> to enable sharing for the selected iFolder. </p></li></ul></div>
+<p class="listitem">選取<span class="guimenu">「一般」</span>啟用選取之 iFolder 的共用功能。 </p></li></ul></div>
 </li>
 <li class="step" id="bfq5e6z">
-<p class="para">Select <span class="guimenu">Secure Sync</span> to enable secure synchronization of files in the iFolder you are creating.</p>
-<p class="para">You can enable secure channel for both regular and encrypted iFolders. With this option selected, iFolder allows you use a secure channel to synchronize between iFolder on the server and on the local machine.</p></li>
+<p class="para">選取<span class="guimenu">「安全同步」</span>使您建立的 iFolder 中的檔案能夠進行安全同步。</p>
+<p class="para">您可以為一般和加密的 iFolder 啟用安全通道。選取這個選項後，iFolder 可讓您使用安全通道進行伺服器和本地電腦上 iFolder 間的同步。</p></li>
 <li class="step" id="bctqamc">
-<p class="para">Click <span class="guimenu">OK</span>.</p>
-<p class="para">The iFolder appears in the iFolder browser window.</p></li></ol>
+<p class="para">按一下<span class="guimenu">「確定」</span>。</p>
+<p class="para">iFolder 隨即出現在 iFolder 瀏覽器視窗中。</p></li></ol>
 </div>
 
 </div>
 
-<div class="sect2"  id="fat32mtpt">
+<div class="sect2" id="fat32mtpt">
 
-<h2 class="title"> Creating iFolders on a FAT32 Mount Point (Linux)</h2>
+<h2 class="title"> 在 FAT32 裝載點上建立 iFolder (Linux)</h2>
 
-<p class="para">On Linux, iFolder supports creating and using iFolders on a mount point for a FAT32 file system. Before you can create new iFolders or set up shared iFolders on a FAT32 volume on your Linux computer, the iFolder user must own the FAT32 mount point where you want to store the iFolders, and the <span class="filename">/etc/fstab</span> file must explicitly identify the iFolder user’s local user ID for the mount point. </p>
+<p class="para">在 Linux 上，iFolder 支援在 FAT32 檔案系統的裝載點上建立及使用 iFolder。iFolder 使用者必須擁有您要儲存 iFolder 的 FAT32 裝載點，且 <span class="filename">/etc/fstab</span> 檔案必須明確識別該裝載點之 iFolder 使用者的本地使用者 ID，您才可以在 Linux 電腦的 FAT32 卷冊上建立新的 iFolder 或設定共用 iFolder。 </p>
 <div class="important">
-<p class="para"><em class="title">IMPORTANT:</em>This is required because FAT32 does not support file permissions. Any other file system that does not support permissions has the same issue.</p></div>
+<p class="para"><em class="title">重要：</em>此為必要條件，因為 FAT32 不支援檔案許可權。任何其他不支援許可權的檔案系統都會有相同的問題。</p></div>
 
-<p class="para">For dual boot systems, you can access the data in iFolders as normal folders from the system where the folder is not set up as an iFolder. If you set up the folder as an iFolder on both platforms, the data set is stored in two different iFolders on the server, which consumes double your allocated server disk resources.</p>
-<p class="para">Because the FAT32 file system does not support POSIX file system permissions, make sure the iFolder user is the local owner of the mount point. Modify the <span class="filename">/etc/fstab</span> file to set the user ID (UID) parameter of the user’s local login identity to the iFolder user who creates iFolders on that mount point.</p>
+<p class="para">若為雙開機系統，您可以如同在未將資料夾設為 iFolder 的系統中存取一般資料夾一樣，存取 iFolder 中的資料。 如果您在兩個平台中同時將資料夾設為 iFolder，則資料集會儲存在伺服器上兩個不同的 iFolder 中，這將耗費兩倍的已配置伺服器磁碟資源。</p>
+<p class="para">因為 FAT32 檔案系統不支援 POSIX 檔案系統許可權，請確定 iFolder 使用者是裝載點的本地擁有者。 請修改 <span class="filename">/etc/fstab</span> 檔案，將使用者本地登入識別的使用者 ID (UID) 參數設為在該裝載點上建立 iFolder 的 iFolder 使用者。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bwenpgg">
-<p class="para">Log in to your computer as the <span class="systemitem">root</span> user.</p></li>
+<p class="para">以 <span class="systemitem">root</span> 使用者登入電腦。</p></li>
 <li class="step" id="bwen6om">
-<p class="para">Create the directory where you want to mount the FAT32 file system. At a command prompt, enter</p><pre class="screen">
+<p class="para">建立要裝載 FAT32 檔案系統的目錄。 在指令提示下，輸入</p><pre class="screen">
 mkdir /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>
 </pre>
-<p class="para">Replace <span class="filename"><span class="replaceable">username</span></span> with the username of the user who plans to use the FAT32 drive for iFolders. Replace <span class="filename"><span class="replaceable">fsmount</span></span> with the directory name you want to use as the mount point. For example, if the username is <span class="filename"><span class="replaceable">jsmith</span></span> and the directory name is <span class="filename"><span class="replaceable">fat32mntpt</span></span> for a FAT32 drive or partition, enter</p><pre class="screen">
+<p class="para">將 <span class="filename"><span class="replaceable">username</span></span> 取代為要將 FAT32 磁碟機用於 iFolder 之使用者的使用者名稱。 將 <span class="filename"><span class="replaceable">fsmount</span></span> 取代為要用做裝載點的目錄名稱。 例如，如果 FAT32 磁碟機或分割區的使用者名稱為 <span class="filename"><span class="replaceable">jsmith</span></span>，目錄名稱為 <span class="filename"><span class="replaceable">fat32mntpt</span></span>，則輸入</p><pre class="screen">
 mkdir /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemec8">
-<p class="para">Mount the FAT32 drive at the desired mount point. At a command prompt, enter</p><pre class="screen">
+<p class="para">將 FAT32 磁碟機裝載到想要的裝載點。 在指令提示下，輸入</p><pre class="screen">
 mount -t vfat /dev/<span class="replaceable">hda1</span> /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount </span>
 </pre>
-<p class="para">Replace <span class="filename">/dev/<span class="replaceable">hda1</span></span> with the device or partition name of the non-Linux device. Replace <span class="filename"><span class="replaceable">username</span></span> with the username of the iFolder user. Replace <span class="filename"><span class="replaceable">fsmount</span></span> with the directory name you want to use as the mount point. </p>
-<p class="para">Continuing the example, where the FAT32 file system (<span class="literal">vfat</span>) is on the <span class="filename">hda4</span> device (<span class="filename"><span class="replaceable">/dev/hda4</span></span>), the username is <span class="filename"><span class="replaceable">jsmith</span></span>, and the mount point directory is <span class="filename">/home/<span class="replaceable">jsmith</span>/<span class="replaceable">fat32mntpt</span></span>, enter</p><pre class="screen">
+<p class="para">將 <span class="filename">/dev/<span class="replaceable">hda1</span></span> 取代為非 Linux 裝置的裝置或分割區名稱。 將 <span class="filename"><span class="replaceable">username</span></span> 取代為 iFolder 使用者的使用者名稱。 將 <span class="filename"><span class="replaceable">fsmount</span></span> 取代為要用做裝載點的目錄名稱。 </p>
+<p class="para">繼續範例，其中 FAT32 檔案系統 (<span class="literal">vfat</span>) 位於 <span class="filename">hda4</span> 裝置 (<span class="filename"><span class="replaceable">/dev/hda4</span></span>)，使用者名稱為 <span class="filename"><span class="replaceable">jsmith</span></span>，裝載點目錄為 <span class="filename">/home/<span class="replaceable">jsmith</span>/<span class="replaceable">fat32mntpt</span></span>，請輸入</p><pre class="screen">
 mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemszm">
-<p class="para">Edit the <span class="filename">/etc/fstab</span> file by adding the <span class="literal">uid=username</span> parameter of the iFolder user on the line that defines the FAT32 mount point.</p><pre class="screen">
+<p class="para">編輯 <span class="filename">/etc/fstab</span> 檔案，即在定義 FAT32 裝載點的行上新增 iFolder 使用者的 <span class="literal">uid=username</span> 參數。</p><pre class="screen">
 /dev/<span class="replaceable">hda1</span>  /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>  <span class="replaceable">vfat</span>  uid=<span class="replaceable">username</span>
 </pre>
-<p class="para">Continuing the example, modify <span class="filename">/etc/fstab</span> file by adding <span class="literal">uid=jsmith</span> to the mount point:</p><pre class="screen">
+<p class="para">繼續範例，將 <span class="literal">uid=jsmith</span> 新增至裝載點以修改 <span class="filename">/etc/fstab</span> 檔案：</p><pre class="screen">
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
@@ -407,8 +416,13 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="bkjj1f9.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="sharewith.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
 </body>
 </html>

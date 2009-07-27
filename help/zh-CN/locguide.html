@@ -1,98 +1,116 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <!-- saved from url=(0014)about:internet -->
-<html>
+<html xml:lang="zh-cn" lang="zh-cn">
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Language" content="en" />
+<meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, March 06, 2009 13:28" />
-<meta name="Content-Date" content="Mon, 03 Jun 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2008" />
+<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
+<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Guidelines for the Location and Use of iFolders</title>
+<title>iFolder 的位置和用途的准则</title>
 <script type="text/javascript">
-  var prev_link = "myifolders.html";
-  var next_link = "typeguide.html";
-  var parentfile = "../myifolders.html";
-  var parenttoc = "../toc_myifolders.html";
-  if(parent.location != location) { parent.loadMenu(); }
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
 </script>
-<script type="text/javascript" src="ui/jsglobal.js"></script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="ui/topnav.js"></script>
 
-<div class="sect1"  id="locguide">
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
 
-<h1 class="title"> Guidelines for the Location and Use of iFolders</h1>
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
 
-<p class="para">Generally, you can put iFolders anywhere on your local hard drive when you create an iFolder or set up an iFolder that is shared with you. However, there are some practical and specific limitations. Consider the following guidelines for placing and using iFolders on your computer:</p>
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> iFolder 的位置和用途的准则</h1>
+
+<p class="para">通常情况下，当您创建 iFolder 或者设置共享的 iFolder 时，可以将 iFolder 放置在您的本地硬盘驱动器的任何地方。但是，有一些实际和特定的限制。在您的计算机上放置和使用 iFolder 时请考虑以下规范：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">An iFolder’s name must be a unique folder name in the directory where you put the iFolder.</p></li>
+<p class="listitem">在您放置 iFolder 的目录中，iFolder 的名称必须是一个唯一的文件夹名。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder’s name cannot contain the following invalid characters:</p><pre class="screen">
+<p class="listitem">iFolder 的名称不能包含以下这些无效的字符：</p><pre class="screen">
 \/:*?"&lt;&gt;|;
 </pre>
-<p class="listitem">For other naming conventions, see <a href="nameconv.html">Naming Conventions for an iFolder and Its Folders and Files</a>.</p></li>
+<p class="listitem">有关其他命名规则，请参阅<a href="nameconv.html">iFolder 及其文件夹和文件的命名约定</a>。</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder must reside on a local hard drive; the location cannot be on a network drive or non-physical drive.</p></li>
+<p class="listitem">iFolder 必须位于本地磁盘驱动器上；该位置不能在网络驱动器或非物理驱动器上。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot exist at the root of the hard drive. </p></li>
+<p class="listitem">iFolder 不能位于硬盘驱动器的根位置。 </p></li>
 <li class="listitem">
-<p class="listitem">An iFolder can be created only from a folder where you have the file system access rights to read and write files. When you set up a shared iFolder on a computer, you must have file system access rights to the folder where you are placing the iFolder.</p></li>
+<p class="listitem">可以仅从文件夹中创建 iFolder，而且您对该文件夹中的文件拥有读和写的文件系统访问权限。当在计算机上设置共享的 iFolder 时，您必须对要放置 iFolder 的文件夹拥有文件系统访问权限。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in an applications folder such as the Program Files folder.</p></li>
+<p class="listitem">iFolder 不能包含应用程序文件夹（例如，“Program Files”文件夹），也不能驻留在其中。</p></li>
 <li class="listitem">
-<p class="listitem">The iFolder cannot contain or reside in the iFolder metadata folder. The default location of the metadata folder is as follows:</p>
+<p class="listitem">iFolder 不能包含 iFolder 元数据文件夹，也不能驻留在其中。元数据文件夹的默认位置如下：</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bx09dxu">
-                <p class="title"><em class="title">Linux:</em>
-                In your home folder in the <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span> subdirectory</p>
+                <p class="title"><em class="title">Linux：</em>
+                在您的主文件夹（<span class="filename">&lt;用户主目录&gt;\.local\share</span><span class="filename">simias</span>）子目录中</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bx09ffv">
-                <p class="title"><em class="title">Windows:</em>
-                In the <span class="filename">C:\Documents and Settings\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span> directory</p>
+                <p class="title"><em class="title">Windows：</em>
+                在 <span class="filename">C:\Documents and Settings\\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span> 目录中</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bcto9jx">
-                <p class="title"><em class="title">Macintosh:</em>
-                In the <span class="filename">$HOME/.local/share/simias</span></p>
+                <p class="title"><em class="title">Macintosh：</em>
+                在 <span class="filename">$HOME/.local/share/simias</span> 中</p>
               </div>
 </li></ul></div>
 </li>
 <li class="listitem">
-<p class="listitem">An iFolder cannot contain or reside in other iFolders, including your Novell iFolder 2.<span class="replaceable">x</span> iFolder.</p>
-<p class="listitem">iFolder does not support network folders as iFolders. For example, iFolders cannot be the users’ network-based /home directories that are mapped to the users’ workstations. iFolder also does not support WebDAV access for users from their desktop to their iFolder collection on the iFolder server’s user-data volume.</p></li>
+<p class="listitem">iFolder 不能包含或属于其他 iFolder，包括 Novell iFolder 2.<span class="replaceable">x</span> iFolder。</p>
+<p class="listitem">iFolder 不支持作为 iFolder 的网络文件夹。例如，iFolder 无法成为用户映射到用户工作站的基于网络的目录/主目录。iFolder 也不支持用户通过 WebDAV 从桌面访问 iFolder 服务器的用户数据卷上的 iFolder 集合。</p></li>
 <li class="listitem">
-<p class="listitem">Although you can log in to more than one iFolder account at a time, an iFolder can be associated with only one iFolder account. You cannot synchronize one iFolder against multiple accounts. When you create an iFolder, the iFolder can be shared only with other users and LDAPGroups that are provisioned in the same iFolder server or domain.</p></li>
+<p class="listitem">虽然您可以一次同时登录到多个 iFolder 帐户中，但 iFolder 仅可以与一个 iFolder 帐户相关联。无法将一个 iFolder 和多个帐户进行同步。创建一个 iFolder 时，只能与同一个 iFolder 服务器或域中配置的其他用户和 LDAP 组共享该 iFolder。</p></li>
 <li class="listitem">
-<p class="listitem">An iFolder is available to all the members of an LDAPGroup when it is shared with that LDAPGroup.</p></li>
+<p class="listitem">与一个 LDAP 组共享某一 iFolder 时，该 LDAP 组的所有成员都可以使用该 iFolder。</p></li>
 <li class="listitem">
-<p class="listitem">When multiple users share a computer, the local copies of your iFolders are private to your storage space on the disk if the file system supports privacy features, and if you configure your system to use them.</p>
-<p class="listitem">On Windows, NTFS includes built-in security features such as file and folder permissions and the Encrypting File System (EFS), which is the technology used to store encrypted files on NTFS volumes. These security features are not supported on FAT32 file systems. Make sure the local login identities for users (other than the Administrator identity, of course) do not have the Administrator rights or equivalent. The Administrator user has access to all files and directories on the computer. For shared computers where privacy and security are essential for each user, the users can encrypt their local copy of iFolder data with EFS or a third-party file system encryption.</p>
-<p class="listitem">Linux and Macintosh file systems are designed for multi-user environments. File permissions allow you to control access for the user, groups, and others. A user’s personal files are typically set with full permissions for the user and no access for the groups and others settings. </p>
-<p class="listitem">If you store iFolders locally on a FAT32 volume on Linux, it requires special handling because FAT32 file systems are not POSIX* compliant. For information, see <a href="createifolder.html#fat32mtpt">Creating iFolders on a FAT32 Mount Point (Linux)</a>.</p></li>
+<p class="listitem">当多名用户共享一台计算机时，如果文件系统支持隐私功能并且您将系统配置为使用这些隐私功能，则您的 iFolder 本地副本对于磁盘上的储存空间是私用的。</p>
+<p class="listitem">在 Window 上，NTFS 包括内置安全性功能，例如文件和文件夹许可权限，以及加密文件系统 (EFS)，这些功能是用于在 NTFS 卷上储存加密文件的技术。FAT32 文件系统上不支持这些安全性功能。确保用户的本地登录身份（当然是非管理员身份）不具有管理员的权限或与其等效的权限。管理员用户有访问计算机上所有文件和目录的权限。对于每个用户都很注重隐私和安全性的共享计算机，用户可以使用 EFS 或第三方文件系统加密对其 iFolder 数据的本地副本进行加密。</p>
+<p class="listitem">Linux 和 Macintosh 文件系统专用于多用户环境。使用文件权限可以控制用户、用户组及其他人员的访问权限。通常，使用用户的完全权限设置用户的个人文件，组和其他设置没有访问权限。 </p>
+<p class="listitem">如果您将 iFolder 储存在本地 Linux 的 FAT32 卷上，则需要特殊处理，因为 FAT32 文件系统与 POSIX* 不兼容。有关信息，请参见<a href="createifolder.html#fat32mtpt">在 FAT32 装入点上创建 iFolder (Linux)</a>。</p></li>
 <li class="listitem">
-<p class="listitem">If users of the same computer share iFolders, multiple copies of the iFolder can exist on the device, with a copy for each user who downloads it from the server. Different local login identities cannot share a single location for the shared iFolders.</p></li></ul></div>
+<p class="listitem">如果同一台计算机的多个用户共享 iFolder，则该计算机上将存在 iFolder 的多个副本，以便每个用户可以从服务器上下载一个副本。不同的本地登录身份不能共享一个共享 iFolder 的位置。</p></li></ul></div>
 
 </div>
 
-<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
 
-<script type="text/javascript" src="ui/bottomnav.js"></script>
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
 </body>
 </html>
