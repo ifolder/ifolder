@@ -128,8 +128,7 @@ namespace Novell.Wizard
             DomainInformation[] domains;
             DomainInformation selectedDomainInfo = null;
             domains = this.simiasWebService.GetDomains(true);
-            Status passPhraseStatus = null;
-
+            
             //check for equality
             if (this.newPassphrase.Text != this.confirmPassphrase.Text)
             {
@@ -162,6 +161,7 @@ namespace Novell.Wizard
                     if (status.statusCode != StatusCodes.Success)
                     {
                         MessageBox.Show(Resources.loginError,TrayApp.Properties.Resources.authenticateError,MessageBoxButtons.OK,MessageBoxIcon.Error);
+                       (Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll();          
                         return -999;
                       
                     }
@@ -174,8 +174,8 @@ namespace Novell.Wizard
 
             {
                 MessageBox.Show(Resources.loginError, TrayApp.Properties.Resources.authenticateError, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                           
-                    return -999;
+                (Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll();    
+                 return -999;
                
             
             }

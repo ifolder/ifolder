@@ -681,6 +681,7 @@ namespace Novell.FormsTrayApp
 				this.domainID = domainItem.ID;
 				System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
                 this.PerformResetPassword(this.domainID, this.oldpassword.Text, this.newPassword.Text);
+                (Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll(); 
 			}
 			catch(Exception)
 			{
