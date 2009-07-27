@@ -340,7 +340,7 @@ namespace Novell.iFolder
                                 userDir+="/"+parts[i];
                         userDir+="/reg/"+parts[i];
                         string homeLoc="";
-                        if( System.IO.File.Exists(userDir+"/folderpath"))
+                        if( System.IO.File.Exists(userDir+"/folderpath") && System.IO.File.Exists(userDir+"/encryptionstatus"))
                         {
                                 StreamReader  reader = new StreamReader(userDir+"/encryptionstatus");
                                 homeLoc = reader.ReadLine();
