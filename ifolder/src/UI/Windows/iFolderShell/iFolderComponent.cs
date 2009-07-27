@@ -309,6 +309,9 @@ namespace Novell.iFolderCom
                 bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
                 if (!IsMaster)
                     revertiFolder.removeFromServer.Text = resourceManager.GetString("AlsoRemoveMembership");
+
+                revertiFolder.removeFromServer.Enabled = simws.GetDomainInformation(ifolder.DomainID).Authenticated;
+
                 if (revertiFolder.ShowDialog() == DialogResult.Yes)
                 {
                     Cursor.Current = Cursors.WaitCursor;
