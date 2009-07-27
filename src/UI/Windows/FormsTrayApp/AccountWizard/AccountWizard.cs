@@ -490,9 +490,7 @@ namespace Novell.Wizard
         /// <param name="domainName">Domain Name</param>
         private string GetDefaultPath(string userName, string domainName)
 		{
-			string appdata = System.Environment.GetEnvironmentVariable("APPDATA");
-			int i = appdata.LastIndexOf("\\");
-			appdata = appdata.Substring(0, i);
+            string appdata = System.Environment.GetEnvironmentVariable("USERPROFILE");
 			appdata = appdata + Resource.GetString("ifolderDirText") + "\\" + domainName + "\\" + userName ;
 			return appdata;
 		}
