@@ -3907,3 +3907,8 @@ msgid ""
 "_Location:"
 msgstr ""
 "_Location:"
+
+msgid ""
+"Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr""
+"Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
