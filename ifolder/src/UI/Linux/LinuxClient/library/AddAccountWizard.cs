@@ -700,7 +700,7 @@ namespace Novell.iFolder
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
 			// row 3
-			securityLabel = new Label("Security:");
+			securityLabel = new Label(Util.GS("Security:"));
 			table.Attach( securityLabel, 1,2, 2,3, AttachOptions.Fill | AttachOptions.Shrink, 0,0,0);
 			//l.Xalign = 0.0F;
 			encryptionCheckButton = new RadioButton(Util.GS("Passphrase Encryption"));
