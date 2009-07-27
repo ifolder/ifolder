@@ -260,7 +260,7 @@ namespace Novell.iFolder
 			newPassPhrase.Changed += new EventHandler(UpdateSensitivity);	
 
 			// Row 4	
-			lbl = new Label(Util.GS("_Re-type passphrase")+":");
+			lbl = new Label(Util.GS("_Re-type passphrase:"));
 			table.Attach(lbl, 0,1, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			lbl.LineWrap = true;
