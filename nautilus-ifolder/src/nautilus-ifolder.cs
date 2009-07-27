@@ -227,7 +227,8 @@ namespace Novell.iFolder.Nautilus
 					deleteFromServerCB = new CheckButton(Util.GS("Also _delete this iFolder from the server"));
 				else
 					deleteFromServerCB = new CheckButton(Util.GS("Also _remove my membership from this iFolder"));
-				
+
+				deleteFromServerCB.Sensitive = simws.GetDomainInformation(ifolder.DomainID).Authenticated;
 				dialog.ExtraWidget = deleteFromServerCB;
 
 				int rc = dialog.Run();
