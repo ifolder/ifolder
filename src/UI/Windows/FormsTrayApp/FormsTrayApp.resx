@@ -1133,4 +1133,7 @@ Are you sure you want to exit the Application ?</value>
   <data name="selectoption">
     <value>Click Ok to Merge Or Cancel to select a different location</value>
   </data>
+  <data name="Exiterror">
+    <value>An error has occurred while connecting to the iFolder server. Exit the client and restart.</value>
+  </data>
 </root>
