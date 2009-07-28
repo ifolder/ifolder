@@ -258,7 +258,7 @@ namespace Novell.AutoAccount
                                     if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                         (string.Compare(newIter.Current.Value, "false", true) == 0))
                                     {
-                                        userAccount[i].DefaultAccount = Boolean.Parse(newIter.Current.Value);
+                                        userAccount[i].DefaultAccount = Boolean.Parse(newIter.Current.Value.ToLower());
                                     }
                                     else
                                     {
@@ -287,7 +287,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                     (string.Compare(newIter.Current.Value, "false", true) == 0))
                                 {
-                                    userAccount[i].RememberPassword = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].RememberPassword = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -300,7 +300,7 @@ namespace Novell.AutoAccount
                                     if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                         (string.Compare(newIter.Current.Value, "false", true) == 0))
                                     {
-                                        userAccount[i].NeedDefaultiFolder = Boolean.Parse(newIter.Current.Value);
+                                        userAccount[i].NeedDefaultiFolder = Boolean.Parse(newIter.Current.Value.ToLower());
                                     }
                                     else
                                     {
@@ -327,7 +327,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                     (string.Compare(newIter.Current.Value, "false", true) == 0))
                                 {
-                                    userAccount[i].Encrypted = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].Encrypted = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -339,7 +339,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                     (string.Compare(newIter.Current.Value, "false", true) == 0))
                                 {
-                                    userAccount[i].SecureSync = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].SecureSync = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -351,7 +351,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true ) == 0) ||
                                     string.Compare(newIter.Current.Value, "false", true) == 0)
                                 {
-                                    userAccount[i].ForceMerge = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].ForceMerge = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -367,7 +367,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                     (string.Compare(newIter.Current.Value, "false", true) == 0))
                                 {
-                                    userAccount[i].RememberPassphrase = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].RememberPassphrase = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -382,7 +382,7 @@ namespace Novell.AutoAccount
                                 if ((string.Compare(newIter.Current.Value, "true", true) == 0) ||
                                     (string.Compare(newIter.Current.Value, "false", true) == 0))
                                 {
-                                    userAccount[i].PromptForInvalidCert = Boolean.Parse(newIter.Current.Value);
+                                    userAccount[i].PromptForInvalidCert = Boolean.Parse(newIter.Current.Value.ToLower());
                                 }
                                 else
                                 {
@@ -419,24 +419,24 @@ namespace Novell.AutoAccount
                         switch (newIter.Current.Name)
                         {
                             case iFolderCreationConfirmationXML:
-                                iFolderCreationConfirmation = Boolean.Parse(newIter.Current.Value);
+                                iFolderCreationConfirmation = Boolean.Parse(newIter.Current.Value.ToLower());
                                 break;
                             case iFolderShareNotifyXML:
-                                iFolderShareNotify = Boolean.Parse(newIter.Current.Value);
+                                iFolderShareNotify = Boolean.Parse(newIter.Current.Value.ToLower());
                                 break;
                             case userJoinNotifyXML:
-                                userJoinNotify = Boolean.Parse(newIter.Current.Value);
+                                userJoinNotify = Boolean.Parse(newIter.Current.Value.ToLower());
                                 break;
                             case conflictNotifyXML:
-                                conflictNotify = Boolean.Parse(newIter.Current.Value);
+                                conflictNotify = Boolean.Parse(newIter.Current.Value.ToLower());
                                 break;
                             case autoSyncXML:
-                                autoSync = Boolean.Parse(newIter.Current.Value);
-                                if ( autoSync )
+                                autoSync = Boolean.Parse(newIter.Current.Value.ToLower());
+                                if (autoSync)
                                 {
                                     if (newIter.Current.MoveToFirstAttribute())
                                     {
-                                        syncInterval = Int32.Parse(newIter.Current.Value);                                        
+                                        syncInterval = Int32.Parse(newIter.Current.Value);
 
                                         if (newIter.Current.MoveToNextAttribute())
                                         {
@@ -467,8 +467,10 @@ namespace Novell.AutoAccount
                                         }
 
                                         newIter.Current.MoveToParent();
-                                    }   
+                                    }
                                 }
+                                else
+                                    syncInterval = System.Threading.Timeout.Infinite;
                                 
                                 break;
                         }

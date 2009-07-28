@@ -9,34 +9,34 @@
             <xs:sequence>
               <xs:element name="server" type="xs:string" minOccurs="1" maxOccurs="1" />
               <xs:element name="user-id" type="xs:string" minOccurs="1" maxOccurs="1" />
-              <xs:element name="remember-password" type="xs:boolean" minOccurs="1" maxOccurs="1" default="false" />
-              <xs:element name="prompt-to-accept-cert" type="xs:boolean" minOccurs="1" maxOccurs="1" default="false" />
+              <xs:element name="remember-password" type="xs:string" minOccurs="1" maxOccurs="1" default="false" />
+              <xs:element name="prompt-to-accept-cert" type="xs:string" minOccurs="1" maxOccurs="1" default="false" />
               <xs:element name="default-ifolder" minOccurs="1" maxOccurs="1">
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="path" type="xs:string" minOccurs="1" maxOccurs="1" />
-                    <xs:element name="encrypted" type="xs:boolean" minOccurs="1" maxOccurs="1" />
-                    <xs:element name="securesync" type="xs:boolean" minOccurs="1" maxOccurs="1" /> 
-		    <xs:element name="forcemerge" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="encrypted" type="xs:string" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="securesync" type="xs:string" minOccurs="1" maxOccurs="1" /> 
+		    <xs:element name="forcemerge" type="xs:string" minOccurs="1" maxOccurs="1" />
                   </xs:sequence>
-                  <xs:attribute name="default" type="xs:boolean" default="false"/>
+                  <xs:attribute name="default" type="xs:string" default="false"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
-            <xs:attribute name="default" type="xs:boolean" />
+            <xs:attribute name="default" type="xs:string" />
           </xs:complexType>
         </xs:element>
         <xs:element name="general-preferences" minOccurs="0">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="iFolder-creation-confirmation" type="xs:boolean" minOccurs="1" maxOccurs="1" default="true" />
-              <xs:element name="iFolder-share-notify" type="xs:boolean" minOccurs="1" maxOccurs="1" default="true" />
-              <xs:element name="user-join-notify" type="xs:boolean" minOccurs="1" maxOccurs="1" default="true" />
-              <xs:element name="conflict-notify" type="xs:boolean" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="iFolder-creation-confirmation" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="iFolder-share-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="user-join-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="conflict-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
               <xs:element name="auto-sync" nillable="true" minOccurs="1" maxOccurs="1" default="true" >
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:boolean">
+                    <xs:extension base="xs:string">
                       <xs:attribute name="interval" type="xs:integer" default="300" />
 		      <xs:attribute name="duration" default="seconds">
 			<xs:simpleType>
