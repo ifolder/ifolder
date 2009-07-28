@@ -2016,6 +2016,16 @@ msgstr ""
 "No"
 
 msgid ""
+"_Yes"
+msgstr ""
+"_Yes"
+
+msgid ""
+"_No"
+msgstr ""
+"_No"
+
+msgid ""
 "Co_nnect"
 msgstr ""
 "Co_nnect"
@@ -3422,6 +3432,16 @@ msgid ""
 "Accept"
 msgstr ""
 "Accept"
+
+msgid ""
+"_Deny"
+msgstr ""
+"_Deny"
+
+msgid ""
+"_Accept"
+msgstr ""
+"_Accept"
 
 msgid ""
 "Information Not Available"

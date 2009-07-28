@@ -280,14 +280,14 @@ public class iFolderMsgDialog : Dialog
 			case ButtonSet.YesNo:
 		//		this.AddButton(Stock.No, ResponseType.No);
 		//		defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
-				this.AddButton(Util.GS("No"), ResponseType.No);
-				defaultButton = this.AddButton(Util.GS("Yes"), ResponseType.Yes);
+				this.AddButton(Util.GS("_No"), ResponseType.No);
+				defaultButton = this.AddButton(Util.GS("_Yes"), ResponseType.Yes);
 				break;
 			case ButtonSet.AcceptDeny:
 		//		this.AddButton(Stock.No, ResponseType.No);
 		//		defaultButton = this.AddButton(Stock.Yes, ResponseType.Yes);
-				this.AddButton(Util.GS("Deny"), ResponseType.No);
-				defaultButton = this.AddButton(Util.GS("Accept"), ResponseType.Yes);
+				this.AddButton(Util.GS("_Deny"), ResponseType.No);
+				defaultButton = this.AddButton(Util.GS("_Accept"), ResponseType.Yes);
 				break;
 		}
 		
