@@ -59,7 +59,6 @@ namespace Novell.Wizard
             this.domainComboBox.Name = "domainComboBox";
             this.domainComboBox.Size = new System.Drawing.Size(194, 21);
             this.domainComboBox.TabIndex = 4;
-            this.domainComboBox.SelectedIndexChanged += new System.EventHandler(this.domainComboBox_SelectedIndexChanged);
             // 
             // recoveryAgent
             // 

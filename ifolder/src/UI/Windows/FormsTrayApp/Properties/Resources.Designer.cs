@@ -475,6 +475,24 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encryption is not enabled for this account. Contact your system administrator to enable encryption..
+        /// </summary>
+        internal static string encryptionNotSet {
+            get {
+                return ResourceManager.GetString("encryptionNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Not Encrypted.
+        /// </summary>
+        internal static string encryptionNotSetHeading {
+            get {
+                return ResourceManager.GetString("encryptionNotSetHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to enterPassphrasePage.
         /// </summary>
         internal static string enterPassphrasePageName {
@@ -1065,6 +1083,24 @@ namespace TrayApp.Properties {
         internal static string passphraseNotEqualError {
             get {
                 return ResourceManager.GetString("passphraseNotEqualError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase is not set for this account..
+        /// </summary>
+        internal static string passphraseNotSet {
+            get {
+                return ResourceManager.GetString("passphraseNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passphrase Not Set.
+        /// </summary>
+        internal static string passphraseNotSetHeading {
+            get {
+                return ResourceManager.GetString("passphraseNotSetHeading", resourceCulture);
             }
         }
         

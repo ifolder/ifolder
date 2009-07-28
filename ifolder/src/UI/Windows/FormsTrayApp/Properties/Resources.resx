@@ -651,8 +651,20 @@
   </data>
   <data name="remove" xml:space="preserve">
     <value>Remove</value>
-   </data>
+  </data>
   <data name="noPassphrase" xml:space="preserve">
     <value>Passphrase not provided</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Encryption is not enabled for this account. Contact your system administrator to enable encryption.</value>
+  </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Account Not Encrypted</value>
+  </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Passphrase is not set for this account.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Passphrase Not Set</value>
   </data>
 </root>
