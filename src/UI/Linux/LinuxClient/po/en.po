@@ -3724,9 +3724,9 @@ msgstr""
 "Select the account for which the passphrase must to be reset."
 
 msgid ""
-"Click Next to proceed."
+"Click Forward to proceed."
 msgstr ""
-"Click Next to proceed."
+"Click Forward to proceed."
 
 msgid ""
 "_New passphrase"
@@ -3952,3 +3952,24 @@ msgid ""
 "Conflict Bin Path"
 msgstr""
 "Conflict Bin Path"
+
+msgid ""
+"Account Not Encrypted"
+msgstr ""
+"Account Not Encrypted"
+
+msgid ""
+"Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr ""
+"Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+
+msgid ""
+"Passphrase Not Set"
+msgstr ""
+"Passphrase Not Set"
+
+msgid ""
+"Passphrase is not set for this account."
+msgstr ""
+"Passphrase is not set for this account."
+

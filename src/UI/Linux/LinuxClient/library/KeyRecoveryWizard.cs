@@ -304,7 +304,7 @@ namespace Novell.iFolder
 			l2.MnemonicWidget = domainComboBox;
 
                         //Row 3
-                        Label l3 = new Label(Util.GS("Click Next to proceed."));
+                        Label l3 = new Label(Util.GS("Click Forward to proceed."));
                         table.Attach(l3, 0, 1, 7, 8,
                                 AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
                         l3.LineWrap = true;
@@ -318,14 +318,39 @@ namespace Novell.iFolder
                 private void OnDomainSelectionPagePrepared(object o, Gnome.PreparedArgs args)
                 {
                     this.Title = Util.GS("Passphrase Recovery Wizard");
-			DomainSelectionUpdateSensitivity();
+		//	DomainSelectionUpdateSensitivity();
+			KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
                 }
 
 
             private bool OnDomainSelectionPageValidated(object obj, EventArgs args)
 
             {
-                        DomainController domController = DomainController.GetDomainController();
+                        
+			DomainController domController = DomainController.GetDomainController();
+
+			if( ifws.GetSecurityPolicy(this.selectedDomain) == 0)
+			{
+				 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Account Not Encrypted"), Util.GS("Encryption is not enabled for this account. Contact your system administrator to enable encryption."), Util.GS(""));
+                                 dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
+				return false;
+	
+			}
+			
+			if(!simws.IsPassPhraseSet(this.selectedDomain))
+			{
+				iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase Not Set"), Util.GS("Passphrase is not set for this account."), Util.GS(""));
+                                 dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
+				return false;
+
+			}
+			 
 			string raName = domController.GetRAName(this.selectedDomain);
 			if(raName == "DEFAULT")
 			{
@@ -339,7 +364,7 @@ namespace Novell.iFolder
 
                private void OnDomainChangedEvent( object o, EventArgs args)
                 {
-                	DomainSelectionUpdateSensitivity();
+                	//DomainSelectionUpdateSensitivity();
 		}
 		
 		private void DomainSelectionUpdateSensitivity()
