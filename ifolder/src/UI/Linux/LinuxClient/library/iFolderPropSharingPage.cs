@@ -657,7 +657,7 @@ namespace Novell.iFolder
     										member.FamilyName,
     										member.UserID,
     										null,
-    										"ReadWrite" );
+    										"ReadOnly" );
 	
 									TreeIter iter = 
 										UserTreeStore.AppendValues(newUser);
