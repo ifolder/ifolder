@@ -269,7 +269,9 @@
 		return SYNC_ACTION_LOCAL;
 	else if([actStr compare:@"NoPassphrase"] == 0)
 		return SYNC_ACTION_NOPASSPHRASE;
-	else
+	else if([actStr compare:@"DisabledSync"] == 0)
+		return SYNC_ACTION_DISABLEDSYNC;
+		else
 		return SYNC_ACTION_STOP;
 }
 @end

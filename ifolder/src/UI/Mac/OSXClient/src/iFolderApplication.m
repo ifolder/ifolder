@@ -1097,6 +1097,19 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 			break;
 		}
+		case SYNC_ACTION_DISABLEDSYNC:
+		{
+			if(ifolder != nil)
+			{
+				[ifolder setSyncState:SYNC_STATE_DISABLEDSYNC];
+				itemSyncCount = 0;
+				NSString* syncMessage = [NSString stringWithFormat:NSLocalizedString(@"Synchronization Disable for %@",@"iFolder disabled on admin"),[cse name]];
+				[self addLogTS:syncMessage];
+				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
+			}
+			break;
+		}
+		
 		case SYNC_ACTION_NOPASSPHRASE:
 		{
 			if(ifolder != nil)
@@ -1109,6 +1122,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			}
 			break;
 		}
+			
 		case SYNC_ACTION_START:
 		{
 			if(ifolder != nil)

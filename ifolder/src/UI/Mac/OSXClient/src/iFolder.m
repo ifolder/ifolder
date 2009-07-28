@@ -416,6 +416,15 @@
 			//Set the status
 			[properties setObject:NSLocalizedString(@"Passphrase not provided", @"No passphrase iFolder Status Message") forKey:@"Status"];
 		}
+		
+		else if([self syncState] == SYNC_STATE_DISABLEDSYNC)
+		{
+			//Set the image
+			statusImage = [NSImage imageNamed:@"ifolder-waiting48"];
+			//Set the status
+			[properties setObject:NSLocalizedString(@"Waiting to synchronize", @"iFolder Status Message") forKey:@"Status"];
+		}
+				
 		else if([ [properties objectForKey:@"HasConflicts"] boolValue])
 		{
 			//Set the image
@@ -423,6 +432,7 @@
 			//Set the status
 			[properties setObject:NSLocalizedString(@"Has conflicts", @"iFolder Status Message") forKey:@"Status"];
 		}
+		
 		else if([self syncState] == SYNC_STATE_DISCONNECTED)
 		{
 			//Set the image
