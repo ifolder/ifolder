@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="server" xml:space="preserve">
+    <value>Сервер</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>Объединить "{0}" в ...</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>Это действие приведет к удалению папки iFolder и всех ее файлов с сервера. Действительно удалить "{0}" с сервера?</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>При отмене изменений папки iFolder произошла ошибка.</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>enterPassphrasePage</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>Просмотр доступных папок iFolder</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Синхронизация запущена: {0}</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>Ожидание соединения</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>Ключевая фраза сброшена с использованием файла секрета и пароля к нему.</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>Нельзя открыть общий доступ к зашифрованной папке iFolder. Допускается совместное использование только обычных папок.</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Не настроено</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>Мб</value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>InfoPage</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Удаление каталога: {0}</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Не удается получить старый файл данных. Повторите попытку.</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Синхронизация запущена: {0}</value>
+  </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>&amp;Подтверждение ключевой фразы:</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Используемое место на диске</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Выбрать учетную запись</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>ExportPage</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>Н/Д</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>При чтении папки iFolders произошла ошибка</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>Имя пользователя:</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>Поиск новых папок iFolder завершен</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Подробнее</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Получить старый файл данных</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>Выбранное расположение находится в сети или не на физическом диске. Папки iFolder должны размещаться на физических дисках. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Получает зашифрованный файл ключа с сервера и сохраняет его в локальной системе.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Найдено изменение в каталоге: {0}</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>&amp;Удалить</value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Удалите членство из {0}</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>&amp;Агент восстановления:</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>При удалении папки iFolder произошла ошибка.</value>
+  </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>&amp;Пароль:</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>Файлы/папки для синхронизации</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>&amp;Одноразовый пароль: </value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Незавершенная синхронизация</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>Пароль файла &amp;секрета:</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>Адрес электронной почты:</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Записи журнала очищены.</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Мастер восстановления ключевой фразы</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>passphraseRecoveryWizard</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Мастер восстановления ключевой фразы</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>Выбранное расположение находится внутри папки данных iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Удаление файла: {0}</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>Для восстановления утерянной ключевой фразы требуется файл секрета (закрытый ключ сертификата) и его пароль или файл данных, предоставляемый администратором.</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Найдены изменения в файле: {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Проверка изменений: {0}</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Дисковая квота</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>У меня есть файл &amp;секрета и пароль к нему</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>Ошибка открытия iFolder</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>Папку iFolder можно объединить только с папкой с таким же именем. Выберите папку, имя которой совпадает с именем папки iFolder, и повторите попытку.</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Не удается прочитать папки iFolder</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> содержит папку с тем же именем, что и папка iFolder.</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Удаление на сервере: {0}</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Не удается сбросить ключевую фразу. Повторите попытку.</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Время последней синхронизации</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Скрыть доступные папки iFolder</value>
+  </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Доступно для загрузки</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Не удается открыть папку iFolder {0}.</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>Ожидание синхронизации</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Не удается отправить старый файл данных</value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Доступно</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>Это действие приведет к удалению членства из папки iFolder, а также к удалению папки iFolder из списка </value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>Указанный &amp;выше файл зашифрован?</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Синхронизация каталога: {0}</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Выберите вариант восстановления ключевой фразы.</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>При выходе из приложения Novell iFolder изменения, вносимые в папку iFolder, более не будут отслеживаться. При следующем входе в систему Novell iFolder согласует все различия между вашей папкой iFolder и сервером.</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Зашифрованный</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Задать новую ключевую фразу</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} эл. для синхронизации</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>Ошибка восстановления iFolder</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>Сбой аутентификации</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>Расположение файла секрета недопустимо</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>Загрузить "{0}" в ...</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>Уч&amp;етная запись iFolder:</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Автоматическая синхронизация</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Поиск новых папок iFolder...</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Загрузка каталога: {0}</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>Ошибка синхронизации iFolder</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Недопустимое расположение</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Выберите учетную запись, для которой требуется сбросить ключевую фразу.</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>байт</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Конфликтует</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>Гб</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>Мб</value>
+  </data>
+  <data name="na" xml:space="preserve">
+    <value>Н/Д</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>Кб</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>Выбранное расположение включает папку Windows. Папка Windows не может содержать папку iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>Ра&amp;сположение файла секрета: </value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Выберите этап восстановления ключевой фразы</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>У меня есть новый файл д&amp;анных, полученный от администратора.</value>
+  </data>
+  <data name="acceptError" xml:space="preserve">
+    <value>При попытке загрузить папку iFolder произошло исключение.</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Используется</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>Да&amp;лее</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>Старый файл данных успешно отправлен. </value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Подключить</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Владелец</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>Зашифрованный файл ключа успешно экспортирован.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>EmailPage</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>Ключевая фраза успешно сброшена.</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>Удалить iFolder</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>Поздравляем! Ключевая фраза сброшена. Теперь для доступа к данным можно использовать новую ключевую фразу.</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>Папка не существует</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>finalPage</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Отправка каталога: {0}</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>Количество папок iFolder</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>{0} эл. не синхронизировано</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Удалить мое членство</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Доступно места на диске</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Сервер недоступен</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>У вас недостаточно прав для доступа к выбранному расположению. Папку iFodler можно создать только в папке, для которой у вас имеются права на чтение и запись файлов. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Не удается открыть совместный доступ к папке iFolder</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Отправка файла: {0}</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Эскизы</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Синхронизация файла: {0}</value>
+  </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>Значения в полях новой ключевой фразы и подтверждения не совпадают.</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>Ошибка iFolder</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>При синхронизации папки iFolder произошла ошибка.</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Удалить с сервера</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>Выбранное расположение находится внутри другой папки iFolder. Папки iFolder не могут содержаться в других папках iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Также удалить мое членство</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>Сбой сброса ключевой фразы</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Отправьте этот файл администратору, который расшифрует файл ключа и перешлет его вам. Этот расшифрованный файл ключа можно затем использовать для сброса ключевой фразы с помощью второго варианта мастера.</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Введите расположение файла XML.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>Выбранное расположение уже содержит папку, имя которой совпадает с именем этой папки iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>Рас&amp;положение нового файла данных</value>
+  </data>
+  <data name="access" xml:space="preserve">
+    <value>Доступ</value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>Ра&amp;сположение для сохранения старого файла данных:</value>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Обычная</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>SuccessPage</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Разъединить</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>Работу мастера можно прервать на любом этапе и вернуться к следующим этапам позднее с помощью этой страницы         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>У меня &amp;нет файла секрета или файла данных.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>SelectionPage</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Неограничено</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Не удается пройти аутентификацию в домене. Выполнен выход из учетной записи. Войдите в систему и повторите попытку.</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>отмена</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>Выбранное расположение включает папку Program Files. Папка Program Files не может содержать папку iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportPage</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>Не удается сбросить ключевую фразу. Выполнен выход из учетной записи. Войдите в систему и повторите попытку.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>Расположение нового файла данных недопустимо</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Выйти из приложения</value>
+  </data>
+  <data name="logEntriesCleared1" xml:space="preserve">
+    <value>Записи журнала очищены.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>Если вам неизвестны эти параметры, можно воспользоваться данным мастером для экспорта старого файла данных, который можно отправить по почте администратору. Администратор расшифрует его и вернет вам: этот новый файл данных затем можно использовать для сброса ключевой фразы.</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Проверка изменений</value>
+  </data>
+  <data name="domainSelectionPageSecond" xml:space="preserve">
+    <value>Щелкните "Далее" для продолжения.</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>Ключевая фраза сброшена с помощью расшифрованного файла ключа.</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Синхронизация</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Не удается прочитать папки iFolder</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>domainSelectionPage</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>параметры_сервера_по_умолчанию</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>У вас есть одна учетная запись. Щелкните "Далее" для продолжения.</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>Имена папки и папки iFolder должны совпадать</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Неприменимо</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Доступно</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>&amp;Новая ключевая фраза:</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>назад</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>справка</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>далее</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>используется</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Загрузка файла: {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>Ошибка синхронизации iFolder</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Синхронизовано: {0}</value>
+  </data>
+</root>
