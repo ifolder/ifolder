@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>Unisci "{0}" a ...</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>Consente di eliminare la cartella iFolder e i file in essa contenuti dal server. Rimuovere "{0}" dal server?</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>È stato rilevato un errore nel corso del ripristino della cartella iFolder.</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>PaginaImmissioneStringaCifratura</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>Visualizza cartelle iFolder disponibili</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Sincronizzazione avviata: {0}</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>In attesa di connessione</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>Stringa di cifratura reimpostata utilizzando file segreto e relativa password.</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>Impossibile condividere una cartella iFolder cifrata. È possibile condividere solo le cartelle normali</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Non impostato</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>PaginaInformazioni</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Cancellazione directory in corso: {0}</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Impossibile ottenere il file di dati precedente. Riprovare</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Sincronizzazione avviata: {0}</value>
+  </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>&amp;Conferma stringa di cifratura:</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Spazio su disco utilizzato</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Seleziona conto</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>EsportaPagina</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>È stato rilevato un errore nel corso della lettura delle cartelle iFolder</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>Nome utente:</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>Controllo nuove cartelle iFolder completato</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Ottieni file di dati precedente</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>L'ubicazione selezionata si trova su una rete o su un'unità non fisica. Le cartelle iFolder devono trovarsi su un'unità fisica. Selezionare un'ubicazione differente e riprovare.</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Ottiene il file chiave cifrato dal server e lo memorizza in locale.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Modifica rilevata nella directory: {0}</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>&amp;amp:Cancella</value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Rimuovere appartenenza da {0}</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>&amp;Agente di recupero:</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>È stato rilevato un errore nel corso della rimozione della cartella iFolder.</value>
+  </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>&amp;Password:</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Sconosciuto</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>File/Cartelle da sincronizzare</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>&amp;Password monouso: </value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Sincronizzazione non completata</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>&amp;Password file segreto:</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>Indirizzo e-mail:</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Voci di log deselezionate.</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Procedura guidata per il recupero della stringa di cifratura</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>ProceduraGuidataRecuperoStringaDiCifratura</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Procedura guidata per il recupero della stringa di cifratura</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>L'ubicazione selezionata si trova nella cartella dati iFolder. Selezionare un'ubicazione differente e riprovare.</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Cancellazione file in corso:{0}</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>Per recuperare una stringa di cifratura persa, è necessario disporre del file segreto (chiave privata del certificato) e la relativa password o del file di dati dall'Amministratore.</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Modifiche rilevate nel file: {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Controllo delle modifiche in corso: {0}</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Quota disco</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>L'utente dispone del file &amp;segreto e della relativa password</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>Errore di apertura cartella iFolder</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>È possibile unire una cartella iFolder solo a una cartella con lo stesso nome. Selezionare una cartella con lo stesso nome della cartella iFolder e riprovare</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Impossibile leggere cartelle iFolder</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> contiene una cartella con lo stesso nome della cartella iFolder.</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Cancellazione sul server in corso: {0}</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Impossibile reimpostare la stringa di cifratura. Riprovare.</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Fine</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Ultimo orario sincronizzazione</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Nascondi cartelle iFolder disponibili</value>
+  </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Disponibile per il download</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Impossibile aprire la cartella iFolder {0}.</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Guida</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>In attesa di sincronizzazione</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Impossibile inviare file di dati precedenti</value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>PaginaProceduraGuidataSingola</value>
+  </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Disponibile</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>Questa operazione rimuove l'appartenenza da iFolder e la cartella iFolder dall'elenco </value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>Il file &amp;è cifrato?</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Sincronizzazione directory in corso: {0}</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Selezionare un'opzione per recuperare la stringa di cifratura.</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>Se si esce dall'applicazione Novell iFolder, le modifiche della cartella iFolder non verranno più tracciate. Al login successivo, Novell iFolder aggiorna tutte le differenze presenti tra la cartella iFolder dell'utente e il server</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Cifrato</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Imposta nuova stringa di cifratura</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} elementi da sincronizzare</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>Errore ripristino iFolder</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>Autenticazione non riuscita</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>Ubicazione file segreto non valida</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>Download di "{0}" in ...</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>Conto &amp;iFolder:</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Sincronizzazione automatica</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Verifica</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Controllo nuove cartelle iFolder in corso...</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Download della directory in corso: {0}</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>Errore di sincronizzazione cartella iFolder</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Ubicazione non valida</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Selezionare il conto per cui si desidera reimpostare la stringa di cifratura.</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Sfoglia</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>Byte</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Con conflitti</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="na" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>L'ubicazione selezionata include la cartella Windows. Tale cartella non può contenere una cartella iFolder. Selezionare un'ubicazione differente e riprovare.</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>&amp;Ubicazione file segreto: </value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Selezionare il passaggio di recupero della stringa di cifratura</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>L'utente dispone del nuovo file di &amp;dati inviato dall'Amministratore.</value>
+  </data>
+  <data name="acceptError" xml:space="preserve">
+    <value>Si è verificata un'eccezione durante il tentativo di download della cartella iFolder.</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Utilizzato</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>&amp;Avanti</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>File di dati precedente inviato correttamente. </value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Connetti</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Proprietario</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>File chiave cifrato esportato correttamente.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>PaginaE-mail</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>Stringa di cifratura reimpostata correttamente.</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>Cancella iFolder</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>La stringa di cifratura è stata correttamente reimpostata. È ora possibile utilizzare la nuova stringa di cifratura per accedere ai dati.</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Indietro</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>Cartella inesistente</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>PaginaFinale</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Upload directory in corso: {0}</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>N. di cartelle iFolder</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>{0} elementi non sincronizzati</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Rimuovi appartenenza</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Spazio su disco disponibile</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Server non disponibile</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>Non si dispone dei sufficienti diritti di accesso per l'ubicazione selezionata. È possibile creare la cartella iFolder solo in cartelle per cui si dispone dei diritti di lettura e di scrittura dei file. Selezionare una differente ubicazione e riprovare.</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Impossibile condividere la cartella iFolder</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Upload file in corso: {0}</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Anteprime</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Sincronizzazione file in corso: {0}</value>
+  </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>I valori relativi a nuova password e password di conferma non corrispondono.</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>Errore cartella iFolder</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>È stato rilevato un errore nel corso della sincronizzazione della cartelle iFolder.</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Cancella dal server</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>L'ubicazione selezionata è interna a un'altra cartella iFolder. Le cartelle iFolder non possono esistere in altre iFolder. Selezionare un'ubicazione differente e riprovare.</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Rimuovere inoltre appartenenza</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Cancella</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>Reimpostazione stringa di cifratura non riuscita</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Inviare il file all'Amministratore, il quale eseguirà la decifratura del file chiave e lo invierà nuovamente all'utente. L'utente può utilizzare il file chiave decifrato per reimpostare la stringa di cifratura utilizzando la seconda opzione della procedura guidata.</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Immettere l'ubicazione di un file xml.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>L'ubicazione selezionata contiene già una cartella nominata come la cartella iFolder. Selezionare un'ubicazione differente e riprovare.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>&amp;Ubicazione nuovo file di dati</value>
+  </data>
+  <data name="access" xml:space="preserve">
+    <value>Accesso</value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>&amp;Ubicazione in cui salvare il file di dati precedente:</value>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Normale</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>PaginaSuccesso</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Disconnetti</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>È possibile uscire dalla procedura guidata in qualsiasi momento e lavorare sui passaggi successivi in seguito utilizzando questa pagina         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>&amp;Nessun file segreto o file di dati.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>PaginaSelezione</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Illimitato</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Impossibile eseguire l'autenticazione al dominio. L''utente ha effettuato il logout dal domino. Effettuare il login e riprovare.</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>annulla</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>L'ubicazione selezionata comprende la cartella Programmi. La cartella Programmi non può essere una cartella iFolder. Selezionare una differente ubicazione e riprovare.</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportaPagina</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>Impossibile reimpostare la stringa di cifratura. L''utente ha effettuato il logout dal conto. Effettuare il login e riprovare.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>Nuova ubicazione file di dati non valida</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Esci dall'applicazione</value>
+  </data>
+  <data name="logEntriesCleared1" xml:space="preserve">
+    <value>Voci di log deselezionate.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>Se non si dispone di tali parametri, è possibile utilizzare la procedura guidata per esportare i file di dati precedenti. È possibile inviare via e-mail tali file all'Amministratore, il quale eseguirà la decifratura e li invierà nuovamente all'utente. L'utente può quindi utilizzare il nuovo file di dati decifrato per reimpostare la stringa di cifratura.</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Controllo delle modifiche in corso</value>
+  </data>
+  <data name="domainSelectionPageSecond" xml:space="preserve">
+    <value>Fare clic su Avanti per proseguire.</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>La stringa di cifratura reimpostata utilizzando il file chiave decifrato.</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Sincronizzazione in corso</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Impossibile leggere cartelle iFolder</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>PaginaSelezioneDominio</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>Default_server</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>L'utente dispone di un conto singolo. Fare clic su Avanti per proseguire.</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>Quindi, il nome della cartella e della cartella iFolder devono essere gli stessi</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Non applicabile</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Disponibile</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>&amp;Nuova stringa di cifratura:</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>indietro</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>guida</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>avanti</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>utilizzato</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Download file in corso: {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Rimuovi</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>Errore di sincronizzazione cartella iFolder</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>PaginaProceduraGuidataSingola</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Sincronizzato: {0}</value>
+  </data>
+</root>

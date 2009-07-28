@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="server" xml:space="preserve">
+    <value>Kiszolgáló</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>A(z) "{0}" összefésülése...</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>Ezzel törli az iFolder mappát és annak fájljait a kiszolgálóról. Biztosan eltávolítja a következőt a kiszolgálóról: "{0}"?</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>Hiba történt az iFolder visszaalakítása közben.</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>enterPassphrasePage</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>Elérhető iFolder mappák megjelenítése</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Szinkronizálás megkezdve: {0}</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>Várakozás a kapcsolódásra</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>A hozzáférési kód át lett állítva a titkos fájl és annak jelszava használatával.</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>Titkosított iFolder mappát nem lehet megosztani. Megosztásra csak normál mappák jelölhetők ki.</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Nincs beállítva</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>InfoPage</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Könyvtár törlése: {0}</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Nem sikerült beolvasni a régi adatfájlt. Próbálkozzon újra.</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Szinkronizálás megkezdve: {0}</value>
+  </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>&amp;Hozzáférési kód megerősítése:</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Felhasznált lemezterület</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Fiók kijelölése</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>ExportPage</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>–</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>Hiba történt az iFolder mappák olvasásakor</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>Felhasználónév:</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>Az új iFolder mappák keresése befejeződött</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Régi adatfájl beszerzése</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>A kijelölt hely hálózati vagy nem fizikai meghajtón található. Az iFolder mappáknak fizikai meghajtón kell lenniük. Válasszon másik helyet, majd próbálkozzon újra.</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Lekéri a titkosított kulcsfájlt a kiszolgálóról, és helyileg tárolja.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Változás található a könyvtárban: {0}</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>&amp;amp:Törlés</value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Tagság megszüntetése a következőben: {0}</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>&amp;Helyreállítási ügynök:</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>Hiba történt az iFolder eltávolításakor.</value>
+  </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>&amp;Jelszó:</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Ismeretlen</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>Szinkronizálandó fájlok/mappák</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>&amp;Egyszeri jelszó: </value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Befejezetlen szinkronizálás</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>&amp;Titkos fájl jelszava:</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>E-mail cím:</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Naplóbejegyzések törölve.</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Hozzáférési kód helyreállítása varázsló</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>passphraseRecoveryWizard</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Üdvözli a Hozzáférési kód helyreállítása varázsló!</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>A kiválasztott hely az iFolder adatmappáján belül van. Válasszon másik helyet, és próbálkozzon újra.</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Fájl törlése: {0}</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>Elveszett hozzáférési kód kiderítéséhez a titkos fájlra (a tanúsítványhoz tartozó személyes kulcsra) és annak jelszavára van szüksége, vagy az adatfájlt kell elkérnie a rendszergazdától.</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Változás található a fájlban: {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Változások keresése: {0}</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Lemezkvóta</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>Megvan &amp;a titkos fájl és a jelszava</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>iFolder-megnyitási hiba</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>iFolder mappa csak vele azonos nevű mappával fésülhető össze. Válasszon az iFolder mappával egyező nevű mappát, és próbálkozzon újra.</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Nem lehet olvasni az iFolder mappákat</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> egyik mappájának a neve azonos az iFolder mappa nevével.</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Törlés a kiszolgálón: {0}</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Nem sikerült a hozzáférési kód átállítása. Próbálkozzon újra.</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Befejezés</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Utolsó szinkronizálás ideje</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Az elérhető iFolder mappák elrejtése</value>
+  </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Letölthető</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Nem lehet megnyitni a(z) {0} iFolder mappát.</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>Várakozás a szinkronizálásra</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Nem sikerült elküldeni a régi adatfájlt</value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Használható</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>Ezzel megszünteti a tagságot az iFolder mappában, és a listából eltávolítja az iFolder mappát. </value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>A &amp;fenti fájl titkosítva van?</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Könyvtár szinkronizálása: {0}</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Válasszon egy lehetőséget a hozzáférési kód helyreállításához.</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>Ha kilép a Novell iFolder alkalmazásból, az iFolder mappájában végrehajtott változások követése megszűnik. A következő bejelentkezéskor a Novell iFolder egyezteti a különbségeket az iFolder mappa és a kiszolgáló között.</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Titkosított</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Új hozzáférési kód beállítása</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} szinkronizálandó elem</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>iFolder-visszaalakítási hiba</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>Sikertelen hitelesítés</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>A titkos fájl helye érvénytelen</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>"{0}" letöltése...</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>&amp;iFolder-fiók:</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Automatikus szinkronizálás</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Ellenőrzés</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Új iFolder mappák keresése...</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Könyvtár letöltése: {0}</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>iFolder-szinkronizálási hiba</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Érvénytelen hely</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Jelölje ki azt a fiókot, amelynek a hozzáférési kódját át kell állítani.</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Tallózás</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>bájt</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Ütközéseket tartalmaz</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="na" xml:space="preserve">
+    <value>–</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>A kiválasztott hely tartalmazza a Windows mappát. A Windows mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, majd próbálkozzon újra.</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>&amp;Titkos fájl helye: </value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Hozzáférési kód helyreállítási lépésének kijelölése</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>Megvan a &amp;rendszergazdától kapott új adatfájl.</value>
+  </data>
+  <data name="acceptError" xml:space="preserve">
+    <value>Kivétel történt az iFolder letöltésére tett kísérlet közben.</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Felhasználva</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>&amp;Tovább</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>Sikerült a régi adatfájl elküldése. </value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Kapcsolódás</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Tulajdonos</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>A titkosított kulcsfájl exportálása sikerült.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>EmailPage</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>A hozzáférési kódot sikerült átállítani.</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>iFolder törlése</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>Gratulálunk! Sikeresen átállította a hozzáférési kódot. Most már ezzel az új kóddal férhet hozzá az adataihoz.</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Vissza</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>A mappa nem létezik</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>finalPage</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Könyvtár feltöltése: {0}</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>iFolder mappák száma</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>{0} elem nincs szinkronizálva</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Saját tagság megszüntetése</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Szabad lemezterület</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Nem érhető el a kiszolgáló</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>Nincs megfelelő hozzáférése a kijelölt helyhez. iFolder mappa csak olyan mappában hozható létre, amelyben van a fájlokhoz írási és olvasási joga. Válasszon másik helyet, és próbálkozzon újra.</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Az iFolder mappa nem osztható meg</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Fájl feltöltése: {0}</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Miniatűrök</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Fájl szinkronizálása: {0}</value>
+  </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>Az új és a megerősítő hozzáférési kód mezőjébe beírt érték nem egyezik.</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>iFolder-hiba</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>Hiba történt az iFolder szinkronizálásakor.</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Törlés a kiszolgálóról</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>A kiválasztott hely egy másik iFolder mappában van. Az iFolder mappa nem lehet másik iFolder mappában. Válasszon másik helyet, majd próbálkozzon újra.</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Szűnjön meg a tagságom is</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>Nem sikerült átállítani a hozzáférési kódot</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Küldje el ezt a fájlt a rendszergazdának, aki visszafejti a kulcsfájlt, majd visszaküldi Önnek. Ez a visszafejtett kulcsfájl használható aztán a hozzáférési kód átállításához a varázsló második beállításának megadásakor.</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Adja meg egy XML-fájl helyét.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>A kiválasztott helyen már van egy ugyanolyan nevű mappa, mint ez az iFolder mappa. Válasszon másik helyet, és próbálja meg újra.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>&amp;Új adatfájl helye</value>
+  </data>
+  <data name="access" xml:space="preserve">
+    <value>Hozzáférés</value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>&amp;A régi adatfájl mentésének helye:</value>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Normál</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>SuccessPage</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Kapcsolatbontás</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>Bármelyik lépésnél bezárhatja a varázslót, és a részlépéseket elvégezheti később ezen lap segítségével         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>&amp;Nincs titkos fájl vagy adatfájl.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>SelectionPage</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Korlátlan</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Nem lehet elvégezni a hitelesítést a tartományban. A rendszer kijelentkeztette a fiókból. Jelentkezzen be, és próbálkozzon újra.</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>mégse</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>A kiválasztott hely tartalmazza a Program Files mappát. A Program Files mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, majd próbálkozzon újra.</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportPage</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>A hozzáférési kód nem állítható át. Ki van jelentkezve a fiókból. Jelentkezzen be, és próbálkozzon újra.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>Az új adatfájl helye érvénytelen</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Kilépés az alkalmazásból</value>
+  </data>
+  <data name="logEntriesCleared1" xml:space="preserve">
+    <value>Naplóbejegyzések törölve.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>Ha ezek a paraméterek nem állnak rendelkezésre, ezzel a varázslóval exportálhatja a régi adatfájlt, azt elküldheti a rendszergazdának, aki visszafejti, majd visszaküldi Önnek. Az új adatfájllal aztán átállíthatja a hozzáférési kódot.</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Változások keresése</value>
+  </data>
+  <data name="domainSelectionPageSecond" xml:space="preserve">
+    <value>A folytatáshoz kattintson a Tovább gombra.</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>A hozzáférési kód át lett állítva a visszafejtett kulcsfájl használatával.</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Szinkronizálás</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Nem lehet olvasni az iFolder mappákat</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>domainSelectionPage</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>Kiszolgálói_alapértelmezés</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>Egy fiókja van. A folytatáshoz kattintson a Tovább gombra.</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>A mappa és az iFolder nevének egyeznie kell</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Nem értelmezhető</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Használható</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>&amp;Új hozzáférési kód:</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>vissza</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>súgó</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>tovább</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>felhasználva</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Felhasználó</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Fájl letöltése: {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Eltávolítás</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>iFolder-szinkronizálási hiba</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Szinkronizálva: {0}</value>
+  </data>
+</root>
