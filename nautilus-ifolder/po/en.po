@@ -74,6 +74,12 @@ msgstr ""
 msgid "<b>_Path:</b>"
 msgstr ""
 
+msgid "<b>_Account:</b>"
+msgstr ""
+
+msgid "<b>_Location:</b>"
+msgstr ""
+
 #: src/nautilus-ifolder.c:1583
 msgid "The iFolder could not be reverted."
 msgstr ""
