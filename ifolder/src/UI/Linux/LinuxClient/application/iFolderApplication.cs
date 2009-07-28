@@ -505,6 +505,14 @@ namespace Novell.iFolder
 			if (LoginDialog == null)
 			{
 				DomainInformation dom = domainController.GetDomain(domainID);
+				//Random Authentication exception found during Login
+				//Due race condition, Login window prompted even if domain got connected with another therad
+				//Verifing domain authentication status before prompting Login Dialog		
+				if(dom.Authenticated)	
+				{
+					return;
+				}
+				
 				if (dom != null)
 				{
 					LoginDialog =
