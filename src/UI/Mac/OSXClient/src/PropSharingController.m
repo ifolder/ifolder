@@ -460,7 +460,7 @@
 			
 			NSArray *allUsers = [usersController arrangedObjects];
 			int counter = 0;
-			for(counter=1; counter<[allUsers count]; counter++)
+			for(counter=0; counter<[allUsers count]; counter++)
 			{
 				User *curUser = [allUsers objectAtIndex:counter];
 				if([[curUser UserID] compare:oldOwnerID] == 0)
