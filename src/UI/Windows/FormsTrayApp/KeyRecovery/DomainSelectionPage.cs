@@ -119,43 +119,40 @@ namespace Novell.Wizard
                wizard = (KeyRecoveryWizard)this.Parent;
                GetLoggedInDomains();
            
-               ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
+               ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel|KeyRecoveryWizardButtons.Next;
                domainComboBox.Focus();
-                UpdateSensitivity();
+                
  
         }
 
-        private void domainComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-            UpdateSensitivity();
-        }
-
-        private void UpdateSensitivity()
-        {
-
-            if ((ifWebService.GetSecurityPolicy(this.SelectedDomain.ID) != 0) && simiasWebService.IsPassPhraseSet(this.SelectedDomain.ID))
-            {
-                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel | KeyRecoveryWizardButtons.Next;
-            }
-
-            else
-
-                ((KeyRecoveryWizard)this.Parent).WizardButtons = KeyRecoveryWizardButtons.Cancel;
-        }
-
-
         internal override int ValidatePage(int currentIndex)
         {
-            string RAName = this.ifWebService.GetRAName(SelectedDomain.ID);
+           
+            if (ifWebService.GetSecurityPolicy(this.SelectedDomain.ID) == 0)
+            {
+                MessageBox.Show(TrayApp.Properties.Resources.encryptionNotSet, TrayApp.Properties.Resources.encryptionNotSetHeading, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+            }
 
-            if (RAName != "DEFAULT" && RAName != null)
-                currentIndex = wizard.MaxPages - 8;
+            else if (!simiasWebService.IsPassPhraseSet(this.SelectedDomain.ID)) 
+            {
+                MessageBox.Show(TrayApp.Properties.Resources.passphraseNotSet, TrayApp.Properties.Resources.passphraseNotSetHeading, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+            }
 
-            else
-                currentIndex = wizard.MaxPages - 9;
-            
-            return base.ValidatePage(currentIndex);
+            else 
+            {
+                string RAName = this.ifWebService.GetRAName(SelectedDomain.ID);
+
+                if (RAName != "DEFAULT" && RAName != null)
+                    currentIndex = wizard.MaxPages - 8;
+
+                else
+                    currentIndex = wizard.MaxPages - 9;
+
+               currentIndex = base.ValidatePage(currentIndex);
+            }
+            return currentIndex;
         }
     }
 }
