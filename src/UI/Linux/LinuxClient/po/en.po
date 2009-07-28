@@ -3927,3 +3927,8 @@ msgid ""
 "_iFolder Account"
 msgstr""
 "_iFolder Account"
+
+msgid ""
+"Conflict Bin Path"
+msgstr""
+"Conflict Bin Path"
