@@ -3447,7 +3447,7 @@ namespace Novell.iFolderCom
 	
 						if (lvitem == null)
 						{
-							user.Rights = "ReadWrite";
+                            user.Rights = "ReadOnly";
 							user.State = inviting;
 							addiFolderUserToListView(user);
 						}
