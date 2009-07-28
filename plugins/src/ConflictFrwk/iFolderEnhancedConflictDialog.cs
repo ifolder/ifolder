@@ -340,7 +340,7 @@ namespace Novell.EnhancedConflictResolution
 			lable.Xalign = 0.0F;
 			lable.MnemonicWidget = DirectoryPath;
 
-			BrowseButton = new Button("_Browse");
+			BrowseButton = new Button(Util.GS("_Browse"));
 			actionTable.Attach(BrowseButton, 3,4, 2,3, AttachOptions.Fill, 0,0,0);
 			BrowseButton.Clicked += new EventHandler(OnBrowseButtonClicked);
 
