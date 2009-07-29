@@ -3973,3 +3973,17 @@ msgid ""
 msgstr ""
 "Passphrase is not set for this account."
 
+msgid ""
+"Available for download"
+msgstr ""
+"Available for download"
+
+msgid ""
+"Available: {0}"
+msgstr ""
+"Available: {0}"
+
+msgid ""
+"Used: {0}"
+msgstr ""
+"Used: {0}"
