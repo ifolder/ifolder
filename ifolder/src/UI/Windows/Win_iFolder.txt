@@ -257,6 +257,7 @@
 	<res>
 		clear32.png
 		conflict32.png
+		delete_48.png
 		encrypt-ilock-48.png
 		encrypt_ilock_48.gif
 		ifolder-add-account48.png
