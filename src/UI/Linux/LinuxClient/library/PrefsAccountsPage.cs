@@ -1093,8 +1093,9 @@ namespace Novell.iFolder
  					LogoutDomain(domainInfo);
 				}
 			}
-
-		    UpdateDomainStatus(domainInfo.ID);
+			iFolderWindow ifwin = Util.GetiFolderWindow();
+		        ifwin.UpdateiFolderCount(domainInfo);	
+		        UpdateDomainStatus(domainInfo.ID);
 
 			// Reenable the ability for the user to toggle the checkbox
 			onlineToggleButton.Activatable = true;

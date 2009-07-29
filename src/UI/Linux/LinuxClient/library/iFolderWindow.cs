@@ -186,6 +186,7 @@ namespace Novell.iFolder
 		public Label labeliFolderCount = null;
 	//	public Label labeliDiskQouta = null;
 		public Label labeliDiskUsed = null;
+		public Label labelDiskQuota = null;
 		public Label labeliDiskAvailable = null;
 		public Label labelName = null;
 		public Label labelOwner = null;
@@ -1346,6 +1347,7 @@ namespace Novell.iFolder
 
 		public void UpdateListViewItems(bool flag)
 		{
+			string ifstate = null;
 			TreeIter iter;
 			viewstore.Clear();
 			if( (iFolderFilter).GetIterFirst( out iter ))
@@ -1363,7 +1365,8 @@ namespace Novell.iFolder
 						{
 						    displayName = displayName.Substring(0,displayableName) + "...";
 						}
-                                        	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, holder.StateString, holder);
+						ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
+                                        	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
                                 	}
 				}
 				catch(Exception)
@@ -1503,8 +1506,18 @@ namespace Novell.iFolder
        */
 
             //####################### ADD LABEL
+			lable = "";
+			lable = string.Format(Util.GS("Disk Quota: {0}"),lable); 
+		    	labelDiskQuota = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+
+	        	actionsVBox.PackStart(labelDiskQuota, false, false, 0);
+		    	labelDiskQuota.UseMarkup = true;
+			labelDiskQuota.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
+		    	labelDiskQuota.Xalign = 0.0F;
+
+            //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Disk Used: {0}"),lable); 
+			lable = string.Format(Util.GS("Used: {0}"),lable); 
 		    labeliDiskUsed = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
 	        actionsVBox.PackStart(labeliDiskUsed, false, false, 0);
@@ -1515,13 +1528,13 @@ namespace Novell.iFolder
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Disk Available: {0}"),lable); 
-		    labeliDiskAvailable = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+			lable = string.Format(Util.GS("Available: {0}"),lable); 
+		        labeliDiskAvailable = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
-	        actionsVBox.PackStart(labeliDiskAvailable, false, false, 0);
-		    labeliDiskAvailable.UseMarkup = true;
+	        	actionsVBox.PackStart(labeliDiskAvailable, false, false, 0);
+		    	labeliDiskAvailable.UseMarkup = true;
 			labeliDiskAvailable.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
-		    labeliDiskAvailable.Xalign = 0.0F;
+		    	labeliDiskAvailable.Xalign = 0.0F;
 
             //####################### ADD SPACE
 		     actionsVBox.PackStart(new Label(""), false, false, 4);
@@ -1529,7 +1542,6 @@ namespace Novell.iFolder
 			//###############ADDED BUTTON FOR CONNECT/DISCONECT 
 			serverStat = new Button();	
 			serverStat.Label = Util.GS("N/A");
-			serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 			serverStat.Clicked += new EventHandler(OnserverStatButtonHandler);
 			actionsVBox.PackStart(serverStat, false, false, 0);
 
@@ -1560,7 +1572,6 @@ namespace Novell.iFolder
 						//####Login Domain	 
 						prefsWin.ToggelDomain(ServerDomain, true);
 						//serverStat.Label = Util.GS("Disconnect");
-						//serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 
 						//#######Updating Server Image based on selected Domain connection status
 						serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
@@ -1570,7 +1581,6 @@ namespace Novell.iFolder
 						//######Logout Domain	 
 						prefsWin.ToggelDomain(ServerDomain, false);
 						serverStat.Label = string.Format(Util.GS("Connect"));
-						serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 
 						//#######Updating Server Image based on selected Domain connection status
 						serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
@@ -1670,17 +1680,30 @@ namespace Novell.iFolder
 				&& labeliDiskAvailable != null /*&& labeliDiskQouta != null */
 				&& currentDomain != null)
 			 {
-			     UriBuilder serverUri = new UriBuilder(currentDomain.HostUrl);	
-		     	     labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
-		     	     labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
-		     	   //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
-			     PopulateUsedAvailableQuotaData(currentDomain);
-		             labeliDiskUsed.Text =string.Format(Util.GS("Disk Available: {0}"),diskQuotaAvailable);
-  	         	     labeliDiskAvailable.Text =  string.Format(Util.GS("Disk Used: {0}"), diskQuotaUsed); 
+				 UriBuilder serverUri = new UriBuilder(currentDomain.HostUrl);	
+				 labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
+				 labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
+				 //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
+				 PopulateUsedAvailableQuotaData(currentDomain);
+				 labeliDiskAvailable.Text =string.Format(Util.GS("Available: {0}"),diskQuotaAvailable);
+				 labeliDiskUsed.Text =  string.Format(Util.GS("Used: {0}"), diskQuotaUsed); 
 
 			 }
 
 		}
+
+		//Update iFolder Count related to the pass domain 
+ 		//OR if pass null as parameter then current highlighted domain	
+		public void UpdateiFolderCount(DomainInformation currentDomain)
+                {
+                        DomainInformation domain = currentDomain;       
+                        if(null == domain)
+                        {
+                                domain =  UpdateCurrentServer();
+                        }
+                        labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(domain.ID).Length);
+                }	
+
 
 		public void UpdateServerStatButton()
 		{
@@ -1691,14 +1714,12 @@ namespace Novell.iFolder
 				 {
 					//TODO: Use Label.Markup for assining text	 
 					serverStat.Label = string.Format(Util.GS("Disconnect"));
-					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_connect_128.png"));
 				 
 				 }
 				 else if(ServerDomain != null)
 				 {
 					serverStat.Label = string.Format(Util.GS("Connect"));
-					serverStat.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-warning16.png")));
 					serverImg.Pixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder_discon_128.png"));
 				 
 				 }
@@ -3211,7 +3232,7 @@ namespace Novell.iFolder
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
 			iFolderViewGroup group = (iFolderViewGroup)serverGroups[args.DomainID];
-            group.VisibleWhenEmpty = false;
+            		group.VisibleWhenEmpty = false;
 			iFolderViewItem[] viewItems = localGroup.Items;
 			
 			foreach(iFolderViewItem item in viewItems)
@@ -3693,7 +3714,7 @@ namespace Novell.iFolder
                         double tmpValue=0;
                         DiskSpace ds = null;
                         ds = ifws.GetUserDiskSpace(domainMemberUserID);
-			if(ds.UsedSpace == 0)
+			if(ds.UsedSpace == -1)
                  	{
                                 QuotaUsedLabel = Util.GS("N/A"); 
                         }
@@ -3724,12 +3745,12 @@ namespace Novell.iFolder
    				QoutaAvailable = string.Format("{0} {1}", temp, Util.GS("MB"));
 			}
 
-			if (ds.Limit == 0)
+			if (ds.Limit == -1)
 			{
-               QoutaAvailable = Util.GS("Unlimited");   
+               			QoutaAvailable = Util.GS("Unlimited");   
 			}
             
-            return QoutaAvailable;
+            		return QoutaAvailable;
 		}
 
 		private bool SynchronizedFoldersFilterFunc(TreeModel model, TreeIter iter)
@@ -3888,9 +3909,10 @@ namespace Novell.iFolder
 						ResolveConflictsButton.Sensitive = false;
 
 
-					if( ( ( holder.iFolder.State == "WaitSync" ) 
-                                              || ( holder.iFolder.State == "Local" ) )   
-				 	  && (holder.State == iFolderState.Synchronizing) )
+					if( ( ( (holder.iFolder.State == "WaitSync") || (holder.iFolder.State == "Local") )   
+				 	    && (holder.State == iFolderState.Synchronizing) )
+					    || (holder.iFolder.Role.Equals("Master"))	
+					  )
 					{
 						RemoveiFolderButton.Sensitive = false;
 					}
@@ -4822,8 +4844,8 @@ namespace Novell.iFolder
 			{
 				case Simias.Client.Event.Action.StartLocalSync:
 				{
-                    this.RevertMenuItem.Sensitive = false; 
-				    this.RemoveiFolderButton.Sensitive = false;
+                    		        this.RevertMenuItem.Sensitive = false; 
+				        this.RemoveiFolderButton.Sensitive = false;
 						
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
@@ -4845,8 +4867,8 @@ namespace Novell.iFolder
 				case Simias.Client.Event.Action.StartSync:
 				{
 					//DeActivate the Revert Button and Options
-                    this.RevertMenuItem.Sensitive = false; 
-				    this.RemoveiFolderButton.Sensitive = false;
+                    		        this.RevertMenuItem.Sensitive = false; 
+				        this.RemoveiFolderButton.Sensitive = false;
 					if (args.Name != null && args.Name.StartsWith("POBox:"))
 					{
 						DomainInformation domain = domainController.GetPOBoxDomain(args.ID);
