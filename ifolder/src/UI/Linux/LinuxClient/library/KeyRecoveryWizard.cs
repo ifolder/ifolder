@@ -378,7 +378,7 @@ namespace Novell.iFolder
 
             private Gnome.DruidPage  CreateEnterPassphrasePage()
             {
-		EnterPassphrasePage = new modelKeyPage(Util.GS("Set New Passphrase"), KeyRecoveryPixbuf, null);
+		EnterPassphrasePage = new modelKeyPage(Util.GS("Set new passphrase"), KeyRecoveryPixbuf, null);
 
                 EnterPassphrasePage.CancelClicked += new Gnome.CancelClickedHandler(OnCancelClicked);
 
@@ -393,7 +393,7 @@ namespace Novell.iFolder
                 table.BorderWidth = 12;
 
                 // Row 1
-                Label l = new Label(Util.GS("iFolder Account") + ":");
+                Label l = new Label(Util.GS("_iFolder Account") + ":");
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 0, 1,
                         AttachOptions.Fill, 0, 0, 0);
@@ -405,7 +405,7 @@ namespace Novell.iFolder
                 l.MnemonicWidget = iFolderAcc;
 
                 // Row 3
-                l = new Label(Util.GS("New Passphrase") + ":");
+                l = new Label(Util.GS("_New passphrase") + ":");
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 1, 2,
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
@@ -418,7 +418,7 @@ namespace Novell.iFolder
                 l.MnemonicWidget = newPassphrase;
 
                 // Row 4
-                l = new Label(Util.GS("Confirm Passphrase") + ":");
+                l = new Label(Util.GS("_Confirm passphrase") + ":");
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 2, 3,
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
@@ -442,7 +442,7 @@ namespace Novell.iFolder
                         AttachOptions.Expand | AttachOptions.Fill, 0, 0, 0);
                 l.MnemonicWidget = userName;
 
-		 l = new Label(Util.GS("_Password") + ":");
+		 l = new Label(Util.GS("_Password:"));
                 l.Xalign = 0.0F;
                 table.Attach(l, 0, 1, 4, 5,
                         AttachOptions.Fill | AttachOptions.Expand, 0, 0, 0);
@@ -761,7 +761,7 @@ namespace Novell.iFolder
                         table.BorderWidth = 12;
 
                         // Row 1
-                        Label l = new Label(Util.GS("iFolder Account")+":");
+                        Label l = new Label(Util.GS("_iFolder Account")+":");
                         table.Attach(l, 0,1, 0,1,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         l.LineWrap = true;
@@ -1126,7 +1126,7 @@ namespace Novell.iFolder
                         l.MnemonicWidget = oneTimePassphrase;
 
                         // Row 3
-                        l = new Label(Util.GS("_New Passphrase")+":");
+                        l = new Label(Util.GS("_New passphrase")+":");
                         l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -1138,7 +1138,7 @@ namespace Novell.iFolder
                         l.MnemonicWidget = importPageNewPassphrase;
 
 						 // Row 4
-                        l = new Label("_Confirm Passphrase"+":");
+                        l = new Label("_Confirm passphrase"+":");
                         l.Xalign = 0.0F;
                         table.Attach(l, 0,1, 5,6,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
@@ -1363,7 +1363,7 @@ namespace Novell.iFolder
 
                         //Row 4
 
-                         Label lb4 = new Label(Util.GS("_New Passphrase")+":");
+                         Label lb4 = new Label(Util.GS("_New passphrase")+":");
                         table.Attach(lb4, 0,1, 3,4,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb4.LineWrap = true;
@@ -1380,7 +1380,7 @@ namespace Novell.iFolder
 
                         //Row 6
 
-                        Label lb5 = new Label(Util.GS("_Confirm Passphrase") + ":");
+                        Label lb5 = new Label(Util.GS("_Confirm passphrase") + ":");
                         table.Attach(lb5, 0,1, 4,5,
                                 AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
                         lb5.LineWrap = true;
