@@ -298,9 +298,6 @@ namespace Novell.iFolder
                                 domainComboBox.Active = 0;
                         // read domains from domain controller...
                         table.Attach(domainComboBox, 1,2,5,6, AttachOptions.Fill, 0,0,0);
-
-
-                        domainComboBox.Changed += new EventHandler(OnDomainChangedEvent);
 			l2.MnemonicWidget = domainComboBox;
 
                         //Row 3
@@ -362,19 +359,6 @@ namespace Novell.iFolder
                 return true;
             }
 
-               private void OnDomainChangedEvent( object o, EventArgs args)
-                {
-                	//DomainSelectionUpdateSensitivity();
-		}
-		
-		private void DomainSelectionUpdateSensitivity()
-		{
-			 if( ifws.GetSecurityPolicy(this.selectedDomain) != 0 && simws.IsPassPhraseSet(this.selectedDomain))
-				 KeyRecoveryDruid.SetButtonsSensitive(false, true, true, true);
-
-			else
-				KeyRecoveryDruid.SetButtonsSensitive(false, false, true, true);
-	}	
 
             private Gnome.DruidPage  CreateEnterPassphrasePage()
             {
@@ -844,18 +828,17 @@ namespace Novell.iFolder
                 {
                         string domainID = this.selectedDomain;
                         DomainController domController = DomainController.GetDomainController();
-                        string raName = domController.GetRAName(domainID);
-                        //email.Text = Util.GS("Information Not Available");
-                        if( raName ==null || raName == "")
+			 string emailID = null;
+                        
+			try{
+			string raName = domController.GetRAName(domainID);
+			byte [] RACertificateObj = domController.GetRACertificate(domainID, raName);
+                        if( RACertificateObj != null && RACertificateObj.Length != 0)
                         {
-                                recoveryAgent.Text = Util.GS("Information Not Available");
-                        }
-                        else
-                        {
-                                //parsing the RAName by '='
-                                char [] EmailParser = {'='};
-                                string [] ParsedString = raName.Split(EmailParser);
-                                //string emailID = "";
+                               System.Security.Cryptography.X509Certificates.X509Certificate Cert = new System.Security.Cryptography.X509Certificates.X509Certificate(RACertificateObj);
+				emailID	= Cert.GetIssuerName();
+				char[] EmailParser = {'=',','};
+                                string [] ParsedString = emailID.Split(EmailParser);
                                 if (ParsedString.Length > 1)
                                 {
                                         for(int x = 0; x < ParsedString.Length; x++)
@@ -863,15 +846,21 @@ namespace Novell.iFolder
                                                 // Iterate through the parsed string to again parse for '@' to get mail-id
                                                 char [] FinalEmailParser = {'@'};
                                                 string [] FinalParsedString = ParsedString[x].Split(FinalEmailParser);
-                                                if(FinalParsedString.Length > 1)
+                                                if(FinalParsedString != null && FinalParsedString.Length > 1)
                                                 {
                                                         emailAddress = ParsedString[x];
-                                                      //  email.Text = emailID;
+                                                        
                                                 }
                                         }
                                 }
                                 recoveryAgent.Text = raName;
-				          }
+				this.emailID.Text = emailAddress;
+			}}
+			catch(Exception e)
+			{
+				
+			}
+			
                 }
 				
 

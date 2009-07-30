@@ -512,6 +512,7 @@ namespace Novell.iFolder
 			DomainController domController = DomainController.GetDomainController();
 			Debug.PrintLine(string.Format("domain id is: {0}", domainID));
 			RAList = domController.GetRAList(domainID);
+			recoveryAgentCombo.AppendText(Util.GS("Server_Default"));
 			if( RAList != null)
 			{
 	            		foreach (string raagent in RAList )
@@ -523,7 +524,6 @@ namespace Novell.iFolder
 			{
 				Debug.PrintLine("No recovery agent present");
 			}
-			recoveryAgentCombo.AppendText(Util.GS("Server_Default"));
 			recoveryAgentCombo.Active = 0;
 		}
 
