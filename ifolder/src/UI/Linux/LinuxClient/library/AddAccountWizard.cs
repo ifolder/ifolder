@@ -600,7 +600,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
-			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the passphrase"));
+			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
 			table.Attach(RememberPassPhraseCheckButton, 2,3, 3,4,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 
