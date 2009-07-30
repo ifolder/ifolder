@@ -211,38 +211,33 @@ namespace Novell.Wizard
         /// <param name="selectedDomain">Domain selected in the combo box</param>
         private void DisplayRAName(DomainItem selectedDomain)
         {
+            string emailID = null;
             try
             {
                 string RAName = this.ifWebService.GetRAName(selectedDomain.ID);
-                if (RAName == null || RAName == "")
-                {
-                    this.recoveryAgent.Text = ""; 
-                    return;
-                }
-                else
-                {
-
-                    this.recoveryAgent.Text = RAName;
-                    char[] EmailParser = { '=' };
-                    string[] ParsedString = RAName.Split(EmailParser);
-                    string emailID = "";
-                    if (ParsedString.Length > 1)
-                    {
+                byte[] CertificateObj = this.simiasWebService.GetRACertificateOnClient(selectedDomain.ID,RAName);
+                System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(CertificateObj);
+              
+                 this.recoveryAgent.Text = RAName;
+                 emailID = cert.Issuer;
+                 char[] EmailParser = { '=',',' };
+                 string[] ParsedString = emailID.Split(EmailParser);
+                 if (ParsedString != null && ParsedString.Length > 1)
+                 {
                         for (int x = 0; x < ParsedString.Length; x++)
                         {
                             char[] FinalEmailParser = { '@' };
                             string[] FinalParsedString = ParsedString[x].Split(FinalEmailParser);
                             if (FinalParsedString.Length > 1)
                             {
-                                emailID = ParsedString[x];
-                                emailAddress = emailID;
-                                //this.emailID.Text = emailID;
+                                emailAddress = ParsedString[x];
+                                
+                                
                             }
                         }
                     }
                 }
-            }
-            catch (Exception)
+             catch (Exception)
             {
                // MessageBox.Show("DisplayRAName : {0}", ex.Message);
             }
