@@ -656,20 +656,36 @@ namespace Novell.AutoAccount
         private bool AddDomainHelper(UserAccount userAccount, bool acceptPassword)
         {
             bool status = false;
-            string pwd = "";
-            if (acceptPassword)
+            do
             {
-                status = EnterPasswordPopup.ShowEnterPasswordPopup(userAccount.Server, userAccount.UserName, out pwd, userAccount.RememberPassword);
-                if (status)
+                string pwd = "";
+                if (acceptPassword)
                 {
-                    userAccount.Password = pwd;
-                    //Novell.FormsTrayApp.FormsTrayApp.log.Info("Password accepted is {0} Status : {1}", userAccount.Password, status);
+                    status = EnterPasswordPopup.ShowEnterPasswordPopup(userAccount.Server, userAccount.UserName, out pwd, userAccount.RememberPassword);
+                    if (status)
+                    {
+                        userAccount.Password = pwd;
+                        //Novell.FormsTrayApp.FormsTrayApp.log.Info("Password accepted is {0} Status : {1}", userAccount.Password, status);
+                    }
+                    else 
+                        break;
                 }
-            }
-            Connecting con = new Connecting(ifWebService, simws, simiasManager, userAccount.Server, userAccount.UserName, userAccount.Password, userAccount.DefaultAccount, userAccount.RememberPassword, userAccount.PromptForInvalidCert );
-            con.EnterpriseConnect += new Connecting.EnterpriseConnectDelegate(AutoAccount_EnterpriseConnect);
-            Novell.FormsTrayApp.FormsTrayApp.log.Debug("Invoking CreateDomain--> Server: {0} UserName: {1}", userAccount.Server, userAccount.UserName);
-            status = CreateDomain(con);
+                Connecting con = new Connecting(ifWebService, simws, simiasManager, userAccount.Server, userAccount.UserName, userAccount.Password, userAccount.DefaultAccount, userAccount.RememberPassword, userAccount.PromptForInvalidCert);
+                con.EnterpriseConnect += new Connecting.EnterpriseConnectDelegate(AutoAccount_EnterpriseConnect);
+                Novell.FormsTrayApp.FormsTrayApp.log.Debug("Invoking CreateDomain--> Server: {0} UserName: {1}", userAccount.Server, userAccount.UserName);
+                status = CreateDomain(con);
+                if (status == false)
+                {
+                    System.Resources.ResourceManager resourceManager = new System.Resources.ResourceManager(typeof(Connecting));
+                    MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("serverConnectError"),
+                                resourceManager.GetString("serverConnectErrorTitle"),
+                                "",
+                                MyMessageBoxButtons.OK,
+                                MyMessageBoxIcon.Error,
+                                MyMessageBoxDefaultButton.Button1);
+                    mmb.ShowDialog();
+                }
+            } while (status == false);
             Novell.FormsTrayApp.FormsTrayApp.log.Info("CreateDomain--> Server: {0} UserName: {1} Result: {2}", userAccount.Server, userAccount.UserName, status);
             return status;
         }
