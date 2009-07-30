@@ -409,7 +409,12 @@ namespace Novell.AutoAccount
                                 conflictNotify = Boolean.Parse(newIter.Current.Value);
                                 break;
                             case autoSyncXML:
-				if (newIter.Current.MoveToFirstAttribute())
+				bool autoSync = Boolean.Parse(newIter.Current.Value);
+				if( autoSync == false)
+				{
+					syncInterval = System.Threading.Timeout.Infinite;
+				}
+				else if (newIter.Current.MoveToFirstAttribute())
                                 {
                                 	syncInterval = Int32.Parse(newIter.Current.Value);                                        
 
@@ -688,28 +693,47 @@ namespace Novell.AutoAccount
         /// <returns>true if successful</returns>
         private bool AddDomainHelper(UserAccount userAccount, bool acceptPassword)
         {
+	    bool invalidcredentials = false;
             bool status = false;
-            if( userAccount.Password == "" && acceptPassword )
-            {
-                status = EnterPasswordDialog.ShowEnterPasswordDialog( userAccount );
-                if( !status )
-                    return status;
-            }
-            AddDomainThread addDomainThread =
-                new AddDomainThread(
-                    DomainController.GetDomainController(),
-                    userAccount.Server,
-                    userAccount.UserName,
-                    userAccount.Password,
-                    userAccount.RememberPassword,
-                    userAccount.DefaultAccount);
+	    do
+	    {
+	            if( userAccount.Password == "" && acceptPassword )
+        	    {
+                	status = EnterPasswordDialog.ShowEnterPasswordDialog( userAccount );
+	                if( !status )
+        	            return status;
+	            }
+        	    AddDomainThread addDomainThread =
+                	new AddDomainThread(
+	                    DomainController.GetDomainController(),
+        	            userAccount.Server,
+                	    userAccount.UserName,
+	                    userAccount.Password,
+        	            userAccount.RememberPassword,
+                	    userAccount.DefaultAccount);
             
-            addDomainThread.AddDomainSerial();
-            if( addDomainThread.Domain != null  )
-                iFolderWindow.log.Info("Name {0}, host {1}", addDomainThread.Domain.Name, addDomainThread.Domain.Host );
-            else
-                iFolderWindow.log.Info("Domain is null");
-            return OnAddDomainCompleted( addDomainThread );
+	            addDomainThread.AddDomainSerial();
+        	    if( addDomainThread.Domain != null  )
+                	iFolderWindow.log.Info("Name {0}, host {1}", addDomainThread.Domain.Name, addDomainThread.Domain.Host );
+	            else
+        	        iFolderWindow.log.Info("Domain is null");
+		    status = OnAddDomainCompleted( addDomainThread, out invalidcredentials );
+		    if( invalidcredentials)
+		    {
+			userAccount.Password = "";
+                        iFolderMsgDialog  dg = new iFolderMsgDialog(
+                                        null,
+                                        iFolderMsgDialog.DialogType.Error,
+                                        iFolderMsgDialog.ButtonSet.Ok,
+                                        "",
+                                        Util.GS("The username or password is invalid"),
+                                        Util.GS("Please try again."));
+                        dg.Run();
+                        dg.Hide();
+                        dg.Destroy();
+		    }
+	    }while (invalidcredentials == true);
+	    return status;
         }
         
         /// <summary>
@@ -817,8 +841,9 @@ namespace Novell.AutoAccount
         /// </summary>
         /// <param name="addDomainThread"></param>
         /// <returns></returns>
-        private bool OnAddDomainCompleted(AddDomainThread addDomainThread)
+        private bool OnAddDomainCompleted(AddDomainThread addDomainThread, out bool invalidcredentials)
         {
+	    invalidcredentials = false;
             DomainInformation dom = addDomainThread.Domain;
             Exception e = addDomainThread.Exception;
             bool success = false;
@@ -1027,6 +1052,7 @@ namespace Novell.AutoAccount
                     }
                     break;
                 case StatusCodes.InvalidCredentials:
+		    invalidcredentials = true;
                     break;
                 default:
                     iFolderWindow.log.Info("Failed to connect {0}", dom.StatusCode);
