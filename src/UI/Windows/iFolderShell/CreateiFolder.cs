@@ -1629,14 +1629,16 @@ namespace Novell.iFolderCom
 			this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             this.pictureBox1.Image = Image.FromFile(System.IO.Path.Combine( loadpath, @"res\ifolder-banner-scaler.png"));
 			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
+            System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
+            this.RecoveryAgentCombo.Items.Add(resources.GetString("serverDefaultRA"));
+
             foreach( string rAgent in rAgents)
 			{
 				this.RecoveryAgentCombo.Items.Add( rAgent ); 
 				//MessageBox.Show(String.Format("Adding {0}", rAgent));
 			}
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(CreateiFolder));
+            this.RecoveryAgentCombo.SelectedIndex = 0;
             
-            this.RecoveryAgentCombo.Items.Add( resources.GetString("serverDefaultRA"));
 		}
 
 		private void Passphrase_TextChanged(object sender, System.EventArgs e)

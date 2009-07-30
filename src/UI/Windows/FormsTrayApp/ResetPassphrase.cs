@@ -552,16 +552,17 @@ namespace Novell.FormsTrayApp
 			this.recoveryAgentCombo.Items.Clear();
 			try
 			{
-				string[] rAgents= this.simws.GetRAListOnClient(this.DomainID);
+                this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
+                string[] rAgents= this.simws.GetRAListOnClient(this.DomainID);
 				foreach( string rAgent in rAgents)
 				{
 					this.recoveryAgentCombo.Items.Add( rAgent ); 
 				}
+                this.recoveryAgentCombo.SelectedIndex = 0;
 			}
 			catch(Exception)
 			{
 			}
-			this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
             
 		}
 
