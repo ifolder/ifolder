@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-07-29 08:57\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1590,7 +1590,7 @@ msgid "_Remember my password"
 msgstr "Zapamiętaj _moje hasło"
 
 msgid "_Remember password on this computer"
-msgstr "Zapamiętaj _hasło na tym komputerze"
+msgstr "_Zapamiętaj hasło na tym komputerze"
 
 msgid "Verify and Connect"
 msgstr "Sprawdź i połącz"
@@ -1926,7 +1926,7 @@ msgid "_Add"
 msgstr "_Dodawanie"
 
 msgid "_Users to add:"
-msgstr "_Użytkownicy do dodania:"
+msgstr "Uż_ytkownicy do dodania:"
 
 msgid "Users to Add..."
 msgstr "Użytkownicy do dodania..."
@@ -1962,7 +1962,7 @@ msgid "_Account Settings..."
 msgstr "_Ustawienia konta..."
 
 msgid "View _available iFolders"
-msgstr "Wyświetl d_ostępne iFoldery"
+msgstr "Wyświetl _dostępne iFoldery"
 
 msgid "_Migrate"
 msgstr "_Migracja"
@@ -2565,7 +2565,7 @@ msgid "Change password"
 msgstr "Zmień hasło"
 
 msgid "_Change Password"
-msgstr "_Zmień hasło"
+msgstr "Zmień _hasło"
 
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Hasło zostało pomyślnie zmienione. Zaloguj się do domeny, używając nowego hasła."
@@ -2805,7 +2805,8 @@ msgid "Display synchronization _logs"
 msgstr "_Wyświetl dzienniki synchronizacji"
 
 msgid "Display notifications for _policy violations"
-msgstr "Wyświetl _powiadomienia o naruszeniu założeń"
+msgstr "Wyświetl powiadomienia o _naruszeniu założeń"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Ukryj okno _główne programu iFolder po uruchomieniu"
+

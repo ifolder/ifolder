@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-07-29 08:50\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,7 @@ msgstr "Disponible: "
 #: src/LinuxClient/library/AccountDialog.cs:258 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
 msgid "full"
-msgstr "LLENO"
+msgstr "lleno"
 
 #: src/LinuxClient/library/AccountDialog.cs:263 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
@@ -2809,3 +2809,4 @@ msgstr "Mostrar notificaciones de infracciones de _directivas"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Ocultar la ventana _principal de iFolder durante el inicio"
+
