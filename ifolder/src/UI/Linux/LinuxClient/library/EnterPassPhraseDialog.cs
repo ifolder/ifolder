@@ -233,6 +233,7 @@ namespace Novell.iFolder
 			RATreeStore = new ListStore(typeof(string));
 			RATreeView.Model = RATreeStore;
                         RAList = domainController.GetRAList(DomainID);
+			 RATreeStore.AppendValues(Util.GS("Server_Default"));
 			if( RAList == null)
 			{
 				Debug.PrintLine(" no recovery agent present:");
@@ -244,7 +245,6 @@ namespace Novell.iFolder
 				Debug.PrintLine(String.Format("raagent:{0}", raagent));
                             RATreeStore.AppendValues (raagent);
 			}
-			RATreeStore.AppendValues(Util.GS("Server_Default"));
 			// RA Name Column
 			TreeViewColumn raNameColumn = new TreeViewColumn();
 			raNameColumn.Title = Util.GS("Recovery Agents");
