@@ -1156,13 +1156,16 @@ namespace Novell.AutoAccount
                 }
 
                 dir.Create();
-                iFolderWindow.log.Info("Downloading default iFolder at path {0}", path);
-                ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, path);
-                iFolderWindow.log.Info("Value of force merge {0}", acct.ForceMerge.ToString());
                 if (!acct.ForceMerge)
-                    ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, path);
+		{
+			iFolderWindow.log.Info("Downloading default iFolder at path {0}", path);
+			ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, path);
+		}
                 else
-                    ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, Path.Combine(path, defaultiFolder.Name), true);
+		{
+			iFolderWindow.log.Info("Value of force merge {0}", acct.ForceMerge.ToString());
+			ifdata.AcceptiFolderInvitation(defaultiFolder.ID, defaultiFolder.DomainID, Path.Combine(path, defaultiFolder.Name), true);
+		}
 
                 return true;
             }
