@@ -296,6 +296,7 @@ namespace Novell.iFolder
 				simiasEventBroker.FileSyncEventFired +=
 					new FileSyncEventHandler(OniFolderFileSyncEvent);
 			}
+			this.SetSizeRequest(730, 520);
 		}
 		
 		~iFolderWindow()
@@ -981,6 +982,7 @@ namespace Novell.iFolder
 			/// Search
 			///
 			HBox searchHBox = new HBox(false, 4);
+			searchHBox.WidthRequest = 110;
 			ButtonControl.PackEnd(searchHBox, false, false, 0);
 			
 			SearchEntry = new Entry();
@@ -1008,6 +1010,7 @@ namespace Novell.iFolder
 			string[] list = {Util.GS("Open Panel"),Util.GS("Close Panel"),Util.GS("Thumbnail View"),Util.GS("List View") };
 		    viewList = new ComboBoxEntry (list);	
 			viewList.Active = 0;
+			viewList.WidthRequest = 110;
 			viewList.Changed += new EventHandler(OnviewListIndexChange);
 		
 			//#########ADD DUMMY VBOX FOR ALLINGEMENT
@@ -1038,7 +1041,7 @@ namespace Novell.iFolder
 
 			//##########END BACKGROUND COLOR	 
 			HBox whiteBoard = new HBox(false,0);
-			whiteBoard.HeightRequest = 55;
+			whiteBoard.HeightRequest = 50;
 		   
 		    //##########CALL FUNCTION TO CREATE 3 VBOX AND APPEND TO HBOX	
 			
