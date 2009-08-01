@@ -1520,7 +1520,8 @@ namespace Novell.iFolder
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Used: {0}"),lable); 
+			//lable = string.Format(Util.GS("Used: {0}"),lable); 
+			lable = string.Format(Util.GS("Used:") + lable); 
 		    labeliDiskUsed = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
 	        actionsVBox.PackStart(labeliDiskUsed, false, false, 0);
@@ -1531,7 +1532,7 @@ namespace Novell.iFolder
 
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Available: {0}"),lable); 
+			lable = string.Format(Util.GS("Available:") + lable); 
 		        labeliDiskAvailable = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
 
 	        	actionsVBox.PackStart(labeliDiskAvailable, false, false, 0);
@@ -1688,8 +1689,9 @@ namespace Novell.iFolder
 				 labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
 				 //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
 				 PopulateUsedAvailableQuotaData(currentDomain);
-				 labeliDiskAvailable.Text =string.Format(Util.GS("Available: {0}"),diskQuotaAvailable);
-				 labeliDiskUsed.Text =  string.Format(Util.GS("Used: {0}"), diskQuotaUsed); 
+				 labeliDiskAvailable.Text =string.Format(Util.GS("Available:") + diskQuotaAvailable);
+				 //labeliDiskUsed.Text =  string.Format(Util.GS("Used: {0}"), diskQuotaUsed); 
+				 labeliDiskUsed.Text =  string.Format(Util.GS("Used:") + diskQuotaUsed); 
 
 			 }
 
