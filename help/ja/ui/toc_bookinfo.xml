@@ -2,10 +2,10 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="" level="1" id="bookinfo">
- <title>Novell iFolder 3.7 Cross-Platform Help</title>
- <entry leaf="false" id="overview">Overview of iFolder</entry>
- <entry leaf="false" id="accountsprefs">Managing iFolder Accounts and Preferences</entry>
- <entry leaf="false" id="myifolders">Managing iFolders</entry>
- <entry leaf="false" id="coexistmig">Novell iFolder Migration And Upgrade</entry>
- <entry leaf="true" id="legal">Legal Notices</entry>
+ <title>Novell iFolder 3.7クロスプラットフォームのヘルプ</title>
+ <entry leaf="false" id="overview">概要 - iFolder</entry>
+ <entry leaf="false" id="accountsprefs">iFolderアカウントと初期設定の管理</entry>
+ <entry leaf="false" id="myifolders">iFolderの管理</entry>
+ <entry leaf="false" id="coexistmig">Novell iFolderの移行とアップグレード</entry>
+ <entry leaf="true" id="legal">保証と著作権</entry>
 </tocsection>

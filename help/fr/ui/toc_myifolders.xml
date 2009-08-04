@@ -2,26 +2,26 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="myifolders">
- <title>Managing iFolders</title>
- <entry leaf="true" id="locguide">Guidelines for the Location and Use of iFolders</entry>
- <entry leaf="true" id="typeguide">Guidelines for File Types and Sizes to Not Synchronize</entry>
- <entry leaf="true" id="nameconv">Naming Conventions for an iFolder and Its Folders and Files</entry>
- <entry leaf="true" id="ificons">Understanding iFolder Icons</entry>
- <entry leaf="true" id="bkjj1f9">iFolder Browser</entry>
- <entry leaf="true" id="createifolder">Creating and Uploading an iFolder</entry>
- <entry leaf="true" id="sharewith">Sharing an iFolder</entry>
- <entry leaf="true" id="viewhide">Viewing and Hiding Available iFolders</entry>
- <entry leaf="true" id="merge">Merging iFolders</entry>
- <entry leaf="true" id="setupifolder">Downloading an Available iFolder</entry>
- <entry leaf="true" id="propifolders">Viewing and Configuring Properties of an iFolder</entry>
- <entry leaf="true" id="managingpassphrse">Managing Passphrases for Encrypted iFolders</entry>
- <entry leaf="true" id="bkmgmdj">Changing the Password</entry>
- <entry leaf="true" id="ifquota">Setting an iFolder Quota</entry>
- <entry leaf="true" id="sync">Synchronizing Files</entry>
- <entry leaf="true" id="conflicts">Resolving File Conflicts</entry>
- <entry leaf="true" id="movelocation">Moving an iFolder</entry>
- <entry leaf="true" id="reverting">Reverting an iFolder to a Normal Folder</entry>
- <entry leaf="true" id="bbb7rj2">Removing Membership From a Shared iFolder</entry>
- <entry leaf="true" id="deleting">Deleting an iFolder</entry>
- <entry leaf="true" id="bbbcabq">What’s Next</entry>
+ <title>Gestion des dossiers iFolder</title>
+ <entry leaf="true" id="locguide">Directives sur l'emplacement et l'utilisation des dossiers iFolder</entry>
+ <entry leaf="true" id="typeguide">Directives sur les types et les tailles de fichier à ne pas synchroniser</entry>
+ <entry leaf="true" id="nameconv">Conventions de dénomination des fichiers et des dossiers d'un compte iFolder</entry>
+ <entry leaf="true" id="ificons">Présentation des icônes iFolder</entry>
+ <entry leaf="true" id="bkjj1f9">Navigateur iFolder</entry>
+ <entry leaf="true" id="createifolder">Création et téléchargement d'un dossier iFolder</entry>
+ <entry leaf="true" id="sharewith">Partage d'un iFolder</entry>
+ <entry leaf="true" id="viewhide">Affichage et masquage des dossiers iFolder disponibles</entry>
+ <entry leaf="true" id="merge">Fusion de dossiers iFolder</entry>
+ <entry leaf="true" id="setupifolder">Téléchargement d'un dossier iFolder disponible</entry>
+ <entry leaf="true" id="propifolders">Affichage et configuration des propriétés d'un dossier iFolder</entry>
+ <entry leaf="true" id="managingpassphrse">Gestion des phrases secrètes pour les dossiers iFolder codés</entry>
+ <entry leaf="true" id="bkmgmdj">Modification du mot de passe</entry>
+ <entry leaf="true" id="ifquota">Définition d'un quota iFolder</entry>
+ <entry leaf="true" id="sync">Synchronisation des fichiers</entry>
+ <entry leaf="true" id="conflicts">Résolution des conflits de fichiers</entry>
+ <entry leaf="true" id="movelocation">Déplacement d'un dossier iFolder</entry>
+ <entry leaf="true" id="reverting">Conversion d'un dossier iFolder en dossier normal</entry>
+ <entry leaf="true" id="bbb7rj2">Suppression d'une adhésion d'un dossier iFolder partagé</entry>
+ <entry leaf="true" id="deleting">Suppression d'un dossier iFolder</entry>
+ <entry leaf="true" id="bbbcabq">Étapes suivantes</entry>
 </tocsection>

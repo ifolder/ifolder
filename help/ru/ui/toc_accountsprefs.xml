@@ -2,16 +2,16 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="accountsprefs">
- <title>Managing iFolder Accounts and Preferences</title>
- <entry leaf="true" id="startclient">Starting the iFolder Client</entry>
- <entry leaf="true" id="accounts">Configuring an iFolder Account</entry>
- <entry leaf="true" id="login">Logging In to an iFolder Account</entry>
- <entry leaf="true" id="accountdetails">Viewing and Modifying iFolder Account Settings</entry>
- <entry leaf="true" id="preferences">Configuring iFolder Preferences for the Client</entry>
- <entry leaf="true" id="firewall">Configuring Local Firewall Settings for iFolder Traffic</entry>
- <entry leaf="true" id="virusscan">Configuring Local Virus Scanner Settings for iFolder Traffic</entry>
- <entry leaf="true" id="delacct">Deleting an iFolder Account</entry>
- <entry leaf="true" id="logout">Logging Out of an iFolder Account</entry>
- <entry leaf="true" id="stopclient">Exiting the iFolder Client</entry>
- <entry leaf="true" id="b9lvmk9">What’s Next</entry>
+ <title>Управление учетными записями и настройками iFolder</title>
+ <entry leaf="true" id="startclient">Запуск клиента iFolder</entry>
+ <entry leaf="true" id="accounts">Конфигурирование учетной записи iFolder</entry>
+ <entry leaf="true" id="login">Регистрация с помощью учетной записи iFolder</entry>
+ <entry leaf="true" id="accountdetails">Просмотр и изменение настроек учетной записи iFolder</entry>
+ <entry leaf="true" id="preferences">Конфигурирование настроек iFolder для клиента</entry>
+ <entry leaf="true" id="firewall">Конфигурирование параметров локального брандмауэра для трафика iFolder</entry>
+ <entry leaf="true" id="virusscan">Конфигурирование параметров локальной антивирусной программы для трафика iFolder</entry>
+ <entry leaf="true" id="delacct">Удаление учетной записи iFolder</entry>
+ <entry leaf="true" id="logout">Разрегистрация учетной записи iFolder</entry>
+ <entry leaf="true" id="stopclient">Завершение работы с клиентом iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">Что дальше</entry>
 </tocsection>
