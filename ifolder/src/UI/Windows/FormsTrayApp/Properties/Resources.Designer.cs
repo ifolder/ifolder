@@ -646,6 +646,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Folder by same name already exists.
+        /// </summary>
+        internal static string Folderexists {
+            get {
+                return ResourceManager.GetString("Folderexists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MB.
         /// </summary>
         internal static string freeSpaceUnits {
@@ -1038,6 +1047,15 @@ namespace TrayApp.Properties {
         internal static string notApplicalbeText {
             get {
                 return ResourceManager.GetString("notApplicalbeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select OK to merge or Cancel to select a different location.
+        /// </summary>
+        internal static string OkMergeCancel {
+            get {
+                return ResourceManager.GetString("OkMergeCancel", resourceCulture);
             }
         }
         

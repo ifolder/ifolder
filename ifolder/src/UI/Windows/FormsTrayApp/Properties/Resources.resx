@@ -667,4 +667,10 @@
   <data name="passphraseNotSetHeading" xml:space="preserve">
     <value>Passphrase Not Set</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Folder by same name already exists</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Select OK to merge or Cancel to select a different location</value>
+  </data>
 </root>
