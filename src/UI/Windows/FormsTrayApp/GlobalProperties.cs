@@ -2163,7 +2163,7 @@ namespace Novell.FormsTrayApp
                                 }
                                 if( System.IO.Directory.Exists( Path.Combine(path,ifolder.Name)) )
                                 {
-                                    MyMessageBox mmb = new MyMessageBox("Select OK to Merge or Cancel to select a different location", "Folder by same name already exists", String.Empty, MyMessageBoxButtons.OKCancel, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
+                                    MyMessageBox mmb = new MyMessageBox(Resources.OkMergeCancel,Resources.Folderexists, String.Empty, MyMessageBoxButtons.OKCancel, MyMessageBoxIcon.Question, MyMessageBoxDefaultButton.Button1);
 		                            if (mmb.ShowDialog() == DialogResult.OK)
 				                    {
                                         ifWebService.MergeiFolder(ifolder.DomainID, ifolder.ID, Path.Combine(path, ifolder.Name));
