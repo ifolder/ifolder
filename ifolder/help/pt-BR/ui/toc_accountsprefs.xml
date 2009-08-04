@@ -2,16 +2,16 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="accountsprefs">
- <title>Managing iFolder Accounts and Preferences</title>
- <entry leaf="true" id="startclient">Starting the iFolder Client</entry>
- <entry leaf="true" id="accounts">Configuring an iFolder Account</entry>
- <entry leaf="true" id="login">Logging In to an iFolder Account</entry>
- <entry leaf="true" id="accountdetails">Viewing and Modifying iFolder Account Settings</entry>
- <entry leaf="true" id="preferences">Configuring iFolder Preferences for the Client</entry>
- <entry leaf="true" id="firewall">Configuring Local Firewall Settings for iFolder Traffic</entry>
- <entry leaf="true" id="virusscan">Configuring Local Virus Scanner Settings for iFolder Traffic</entry>
- <entry leaf="true" id="delacct">Deleting an iFolder Account</entry>
- <entry leaf="true" id="logout">Logging Out of an iFolder Account</entry>
- <entry leaf="true" id="stopclient">Exiting the iFolder Client</entry>
- <entry leaf="true" id="b9lvmk9">What’s Next</entry>
+ <title>Gerenciando as contas e preferências do iFolder</title>
+ <entry leaf="true" id="startclient">Iniciando o cliente iFolder</entry>
+ <entry leaf="true" id="accounts">Configurando uma conta do iFolder</entry>
+ <entry leaf="true" id="login">Efetuando login em uma conta do iFolder</entry>
+ <entry leaf="true" id="accountdetails">Visualizando e modificando configurações da conta do iFolder</entry>
+ <entry leaf="true" id="preferences">Configurando as preferências do iFolder para o cliente</entry>
+ <entry leaf="true" id="firewall">Configurando as definições de firewall local para o tráfego do iFolder</entry>
+ <entry leaf="true" id="virusscan">Configurando as definições do programa de varredura de vírus local para o tráfego do iFolder</entry>
+ <entry leaf="true" id="delacct">Apagando uma conta do iFolder</entry>
+ <entry leaf="true" id="logout">Efetuando logout de uma conta do iFolder</entry>
+ <entry leaf="true" id="stopclient">Saindo do cliente iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">O que acontece em seguida</entry>
 </tocsection>
