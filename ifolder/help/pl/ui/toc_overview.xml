@@ -2,11 +2,11 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="overview">
- <title>Overview of iFolder</title>
- <entry leaf="true" id="benefits">Benefits of iFolder</entry>
- <entry leaf="true" id="bawqltp">The iFolder Client</entry>
- <entry leaf="true" id="bawqmpe">iFolder Account</entry>
- <entry leaf="true" id="ovwxplat">Cross-Platform Considerations</entry>
- <entry leaf="true" id="keyfeatures">Key Features of iFolder</entry>
- <entry leaf="true" id="ovwnext">What’s Next</entry>
+ <title>Przegląd programu iFolder</title>
+ <entry leaf="true" id="benefits">Zalety programu iFolder</entry>
+ <entry leaf="true" id="bawqltp">Klient programu iFolder</entry>
+ <entry leaf="true" id="bawqmpe">Konto iFolder</entry>
+ <entry leaf="true" id="ovwxplat">Kwestie dotyczące wykorzystania różnych platform</entry>
+ <entry leaf="true" id="keyfeatures">Podstawowe funkcje programu iFolder</entry>
+ <entry leaf="true" id="ovwnext">Co dalej</entry>
 </tocsection>
