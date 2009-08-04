@@ -2,16 +2,16 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="accountsprefs">
- <title>Managing iFolder Accounts and Preferences</title>
- <entry leaf="true" id="startclient">Starting the iFolder Client</entry>
- <entry leaf="true" id="accounts">Configuring an iFolder Account</entry>
- <entry leaf="true" id="login">Logging In to an iFolder Account</entry>
- <entry leaf="true" id="accountdetails">Viewing and Modifying iFolder Account Settings</entry>
- <entry leaf="true" id="preferences">Configuring iFolder Preferences for the Client</entry>
- <entry leaf="true" id="firewall">Configuring Local Firewall Settings for iFolder Traffic</entry>
- <entry leaf="true" id="virusscan">Configuring Local Virus Scanner Settings for iFolder Traffic</entry>
- <entry leaf="true" id="delacct">Deleting an iFolder Account</entry>
- <entry leaf="true" id="logout">Logging Out of an iFolder Account</entry>
- <entry leaf="true" id="stopclient">Exiting the iFolder Client</entry>
- <entry leaf="true" id="b9lvmk9">What’s Next</entry>
+ <title>Zarządzanie kontami i preferencjami programu iFolder</title>
+ <entry leaf="true" id="startclient">Uruchamianie klienta programu iFolder</entry>
+ <entry leaf="true" id="accounts">Konfigurowanie konta programu iFolder</entry>
+ <entry leaf="true" id="login">Logowanie do konta programu iFolder</entry>
+ <entry leaf="true" id="accountdetails">Wyświetlanie i modyfikowanie ustawień konta iFolder</entry>
+ <entry leaf="true" id="preferences">Konfigurowanie preferencji iFolderów dla klienta</entry>
+ <entry leaf="true" id="firewall">Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</entry>
+ <entry leaf="true" id="virusscan">Konfigurowanie lokalnego skanera antywirusowego w celu umożliwienia komunikacji programu iFolder</entry>
+ <entry leaf="true" id="delacct">Usuwanie konta iFolder</entry>
+ <entry leaf="true" id="logout">Wylogowanie się z konta programu iFolder</entry>
+ <entry leaf="true" id="stopclient">Zamykanie klienta programu iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">Co dalej</entry>
 </tocsection>

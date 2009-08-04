@@ -2,16 +2,16 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="accountsprefs">
- <title>Managing iFolder Accounts and Preferences</title>
- <entry leaf="true" id="startclient">Starting the iFolder Client</entry>
- <entry leaf="true" id="accounts">Configuring an iFolder Account</entry>
- <entry leaf="true" id="login">Logging In to an iFolder Account</entry>
- <entry leaf="true" id="accountdetails">Viewing and Modifying iFolder Account Settings</entry>
- <entry leaf="true" id="preferences">Configuring iFolder Preferences for the Client</entry>
- <entry leaf="true" id="firewall">Configuring Local Firewall Settings for iFolder Traffic</entry>
- <entry leaf="true" id="virusscan">Configuring Local Virus Scanner Settings for iFolder Traffic</entry>
- <entry leaf="true" id="delacct">Deleting an iFolder Account</entry>
- <entry leaf="true" id="logout">Logging Out of an iFolder Account</entry>
- <entry leaf="true" id="stopclient">Exiting the iFolder Client</entry>
- <entry leaf="true" id="b9lvmk9">What’s Next</entry>
+ <title>Správa kont a preferencií aplikácie iFolder</title>
+ <entry leaf="true" id="startclient">Spustenie klienta aplikácie iFolder</entry>
+ <entry leaf="true" id="accounts">Konfigurácia konta aplikácie iFolder</entry>
+ <entry leaf="true" id="login">Prihlásenie sa na konto aplikácie iFolder</entry>
+ <entry leaf="true" id="accountdetails">Zobrazenie a zmena nastavenia konta aplikácie iFolder</entry>
+ <entry leaf="true" id="preferences">Konfigurácia preferencií aplikácie iFolder pre klienta</entry>
+ <entry leaf="true" id="firewall">Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</entry>
+ <entry leaf="true" id="virusscan">Konfigurácia lokálnych nastavení zisťovania vírusov pre prevádzku aplikácie iFolder</entry>
+ <entry leaf="true" id="delacct">Odstránenie konta aplikácie iFolder</entry>
+ <entry leaf="true" id="logout">Odhlásenie sa z konta aplikácie iFolder</entry>
+ <entry leaf="true" id="stopclient">Ukončenie klienta aplikácie iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">Čo nasleduje ďalej</entry>
 </tocsection>

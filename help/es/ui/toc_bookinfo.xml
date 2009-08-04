@@ -2,10 +2,10 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="" level="1" id="bookinfo">
- <title>Novell iFolder 3.7 Cross-Platform Help</title>
- <entry leaf="false" id="overview">Overview of iFolder</entry>
- <entry leaf="false" id="accountsprefs">Managing iFolder Accounts and Preferences</entry>
- <entry leaf="false" id="myifolders">Managing iFolders</entry>
- <entry leaf="false" id="coexistmig">Novell iFolder Migration And Upgrade</entry>
- <entry leaf="true" id="legal">Legal Notices</entry>
+ <title>ayuda interplataforma Novell iFolder 3.7</title>
+ <entry leaf="false" id="overview">Descripción general de iFolder</entry>
+ <entry leaf="false" id="accountsprefs">Gestión de cuentas y preferencias de iFolder</entry>
+ <entry leaf="false" id="myifolders">Gestión de carpetas iFolder</entry>
+ <entry leaf="false" id="coexistmig">Migración y actualización de Novell iFolder</entry>
+ <entry leaf="true" id="legal">Información legal</entry>
 </tocsection>

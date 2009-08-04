@@ -2,26 +2,26 @@
 <!-- saved from url=(0014)about:internet -->
 
 <tocsection parent="bookinfo" level="2" id="myifolders">
- <title>Managing iFolders</title>
- <entry leaf="true" id="locguide">Guidelines for the Location and Use of iFolders</entry>
- <entry leaf="true" id="typeguide">Guidelines for File Types and Sizes to Not Synchronize</entry>
- <entry leaf="true" id="nameconv">Naming Conventions for an iFolder and Its Folders and Files</entry>
- <entry leaf="true" id="ificons">Understanding iFolder Icons</entry>
- <entry leaf="true" id="bkjj1f9">iFolder Browser</entry>
- <entry leaf="true" id="createifolder">Creating and Uploading an iFolder</entry>
- <entry leaf="true" id="sharewith">Sharing an iFolder</entry>
- <entry leaf="true" id="viewhide">Viewing and Hiding Available iFolders</entry>
- <entry leaf="true" id="merge">Merging iFolders</entry>
- <entry leaf="true" id="setupifolder">Downloading an Available iFolder</entry>
- <entry leaf="true" id="propifolders">Viewing and Configuring Properties of an iFolder</entry>
- <entry leaf="true" id="managingpassphrse">Managing Passphrases for Encrypted iFolders</entry>
- <entry leaf="true" id="bkmgmdj">Changing the Password</entry>
- <entry leaf="true" id="ifquota">Setting an iFolder Quota</entry>
- <entry leaf="true" id="sync">Synchronizing Files</entry>
- <entry leaf="true" id="conflicts">Resolving File Conflicts</entry>
- <entry leaf="true" id="movelocation">Moving an iFolder</entry>
- <entry leaf="true" id="reverting">Reverting an iFolder to a Normal Folder</entry>
- <entry leaf="true" id="bbb7rj2">Removing Membership From a Shared iFolder</entry>
- <entry leaf="true" id="deleting">Deleting an iFolder</entry>
- <entry leaf="true" id="bbbcabq">What’s Next</entry>
+ <title>iFolder mappák kezelése</title>
+ <entry leaf="true" id="locguide">Irányelvek az iFolder mappák helyéhez és használatához</entry>
+ <entry leaf="true" id="typeguide">Irányelvek – nem szinkronizálandó fájlméretek és fájltípusok</entry>
+ <entry leaf="true" id="nameconv">Az iFolder mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</entry>
+ <entry leaf="true" id="ificons">Az iFolder ikonok – áttekintés</entry>
+ <entry leaf="true" id="bkjj1f9">Az iFolder-böngésző</entry>
+ <entry leaf="true" id="createifolder">iFolder mappa létrehozása és feltöltése</entry>
+ <entry leaf="true" id="sharewith">iFolder megosztása</entry>
+ <entry leaf="true" id="viewhide">Elérhető iFolder mappák megtekintése és elrejtése</entry>
+ <entry leaf="true" id="merge">iFolder mappák összefésülése</entry>
+ <entry leaf="true" id="setupifolder">Elérhető iFolder mappa letöltése</entry>
+ <entry leaf="true" id="propifolders">iFolder tulajdonságainak megtekintése és beállítása</entry>
+ <entry leaf="true" id="managingpassphrse">A titkosított iFolder mappák hozzáférési kódjainak kezelése</entry>
+ <entry leaf="true" id="bkmgmdj">A jelszó módosítása</entry>
+ <entry leaf="true" id="ifquota">iFolder-kvóta beállítása</entry>
+ <entry leaf="true" id="sync">Fájlok szinkronizálása</entry>
+ <entry leaf="true" id="conflicts">A fájlütközések feloldása</entry>
+ <entry leaf="true" id="movelocation">iFolder áthelyezése</entry>
+ <entry leaf="true" id="reverting">iFolder visszaalakítása normál mappává</entry>
+ <entry leaf="true" id="bbb7rj2">Tagság megszüntetése megosztott iFolder mappában</entry>
+ <entry leaf="true" id="deleting">iFolder törlése</entry>
+ <entry leaf="true" id="bbbcabq">Mi legyen a következő lépés</entry>
 </tocsection>
