@@ -147,7 +147,7 @@ namespace Novell.Wizard
 			//
 			// browsebutton
 			//
-            this.BrowseButton.Location = new Point(this.defaultValuePos + this.LocationEntry.Width + 10, this.label1.Location.Y - 4);
+            this.BrowseButton.Location = new Point(this.defaultValuePos + this.LocationEntry.Width + 4, this.label1.Location.Y - 4);
             this.BrowseButton.Text = this.resManager.GetString("BrowseText"); //"Browse";			
             this.BrowseButton.TabIndex = 3;
             this.BrowseButton.Click += new EventHandler(BrowseButton_Click);
@@ -163,11 +163,11 @@ namespace Novell.Wizard
 			this.encryptionCheckButton.Text = this.resManager.GetString("EncryptedText");//"Encrypted";
             this.encryptionCheckButton.TabIndex = 4;
             
-            this.sslCheckButton.Location = new Point(this.defaultValuePos + this.encryptionCheckButton.Width + 20, this.label2.Location.Y);
+            this.sslCheckButton.Location = new Point(this.defaultValuePos + this.encryptionCheckButton.Width + 10, this.label2.Location.Y);
             this.sslCheckButton.Text = this.resManager.GetString("SharableText");//"Shared";
             this.sslCheckButton.TabIndex = 5;
 
-            this.SecureSync.Location = new Point(this.sslCheckButton.Location.X + this.sslCheckButton.Width + 20, this.label2.Location.Y - 3);
+            this.SecureSync.Location = new Point(this.sslCheckButton.Location.X + this.sslCheckButton.Width + 10, this.label2.Location.Y - 3);
             this.SecureSync.Text = this.resManager.GetString("SecureSync"); //Secure Sync
             this.SecureSync.TabIndex = 6;
                      
@@ -623,7 +623,7 @@ namespace Novell.Wizard
             this.label1.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
 
             this.strSize = graphics.MeasureString(this.BrowseButton.Text, this.BrowseButton.Font);
-            this.BrowseButton.Size = new Size(75, ((int)this.strSize.Width / 75 + 1) * 16 + 10);
+            this.BrowseButton.Size = new Size(80, ((int)this.strSize.Width / 80 + 1) * 16 + 10);
 
             this.strSize = graphics.MeasureString(this.label2.Text, this.label2.Font);
             this.label2.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
