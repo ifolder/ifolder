@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-08-04 19:33\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "Um iFolder bei der Anmeldung zu starten, lassen Sie iFolder beim Abmelde
 msgid "Notification"
 msgstr "Benachrichtigung"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Benachrichtigung bei _Freigabe von iFolder-Ordnern"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Benachrichtigen bei _Freigabe von iFolder-Ordnern"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Benachrichtigung bei _Freigabe von iFolder-Ordnern"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1678,6 +1678,12 @@ msgstr "Ja"
 
 msgid "No"
 msgstr "Nein"
+
+msgid "_Yes"
+msgstr "_Ja"
+
+msgid "_No"
+msgstr "_Nein"
 
 msgid "Co_nnect"
 msgstr "Verbi_nden"
@@ -2327,8 +2333,8 @@ msgstr "Standort auswählen..."
 msgid "Download Default iFolder:"
 msgstr "Standard-iFolder-Ordner herunterladen:"
 
-msgid "Download default iFolder"
-msgstr "Standard-iFolder herunterladen"
+msgid "_Download default iFolder"
+msgstr "_Standard-iFolder herunterladen"
 
 msgid "Next"
 msgstr "Weiter"
@@ -2521,6 +2527,12 @@ msgstr "Verweigern"
 
 msgid "Accept"
 msgstr "Akzeptieren"
+
+msgid "_Deny"
+msgstr "_Verweigern"
+
+msgid "_Accept"
+msgstr "_Akzeptieren"
 
 msgid "Information Not Available"
 msgstr "Informationen nicht verfügbar"
@@ -2809,3 +2821,22 @@ msgstr "Benachrichtigung für _Richtlinienverletzungen anzeigen"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "iFolder-_Hauptfenster beim Starten ausblenden"
+
+msgid "_Location:"
+msgstr "_Standort:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Warten Sie, bis iFolder gestartet wird...\n\nDrücken Sie <a href=\"CancelStartup\">hier</a>, um den Vorgang abzubrechen."
+
+msgid "Save as..."
+msgstr "Speichern unter..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Agent für die Passwortsatzwiederherstellung"
+
+msgid "_iFolder Account"
+msgstr "_iFolder-Konto"
+
+msgid "Conflict Bin Path"
+msgstr "Pfad zur Konfliktübersicht"
+

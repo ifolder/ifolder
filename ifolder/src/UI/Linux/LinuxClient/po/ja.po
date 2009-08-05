@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "ログイン時にiFolderを起動するには、ログアウトする�
 msgid "Notification"
 msgstr "通知"
 
+msgid "Notify when iFolders are _shared"
+msgstr "iFoldersが共有されたときに通知(_S)"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "共有されたiFolderの通知(_D)"
-
-msgid "Notify when iFolders are _shared"
-msgstr "iFoldersが共有されたときに通知(_S)"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1678,6 +1678,12 @@ msgstr "はい"
 
 msgid "No"
 msgstr "いいえ"
+
+msgid "_Yes"
+msgstr "はい(_Y)"
+
+msgid "_No"
+msgstr "いいえ(_N)"
 
 msgid "Co_nnect"
 msgstr "接続(_N)"
@@ -2327,8 +2333,8 @@ msgstr "場所を選択する..."
 msgid "Download Default iFolder:"
 msgstr "デフォルトのiFolderのダウンロード:"
 
-msgid "Download default iFolder"
-msgstr "デフォルトのiFolderのダウンロード"
+msgid "_Download default iFolder"
+msgstr "デフォルトのiFolderをダウンロード(_D)"
 
 msgid "Next"
 msgstr "次へ"
@@ -2521,6 +2527,12 @@ msgstr "拒否"
 
 msgid "Accept"
 msgstr "受諾"
+
+msgid "_Deny"
+msgstr "拒否(_D)"
+
+msgid "_Accept"
+msgstr "受諾(_A)"
 
 msgid "Information Not Available"
 msgstr "情報がありません"
@@ -2809,3 +2821,22 @@ msgstr "ポリシー違反の通知を表示する(_P)"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "起動時にiFolderメインウィンドウを表示しない(_M)"
+
+msgid "_Location:"
+msgstr "場所(_L):"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "iFolderが起動するまでお待ちください...\n\nキャンセルするには<a href=\"CancelStartup\">ここ</a>をクリックしてください。"
+
+msgid "Save as..."
+msgstr "名前を付けて保存..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "パスフレーズ回復ウィザード"
+
+msgid "_iFolder Account"
+msgstr "_iFolderアカウント(_I)"
+
+msgid "Conflict Bin Path"
+msgstr "競合ファイルのパス"
+

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-29 08:49\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "Para iniciar o iFolder no login, deixe-o em execução durante o logout 
 msgid "Notification"
 msgstr "Notificação"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Notifique quando iFolders forem _compartilhados"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Notificar pa_stas do iFolder compartilhadas"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Notifique quando iFolders forem _compartilhados"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1679,6 +1679,12 @@ msgstr "Sim"
 msgid "No"
 msgstr "Não"
 
+msgid "_Yes"
+msgstr "_Sim"
+
+msgid "_No"
+msgstr "_Não"
+
 msgid "Co_nnect"
 msgstr "Co_nectar"
 
@@ -1935,10 +1941,10 @@ msgid "iFolder"
 msgstr "iFolder"
 
 msgid "_Upload a folder..."
-msgstr "_Fazer upload de uma pasta..."
+msgstr "Fa_zer upload de uma pasta..."
 
 msgid "_Upload a Folder..."
-msgstr "_Fazer upload de uma pasta..."
+msgstr "Fa_zer upload de uma pasta..."
 
 msgid "_Download..."
 msgstr "_Download..."
@@ -2327,8 +2333,8 @@ msgstr "Selecionar Local..."
 msgid "Download Default iFolder:"
 msgstr "Fazer o Download do iFolder Padrão:"
 
-msgid "Download default iFolder"
-msgstr "Fazer download do iFolder padrão"
+msgid "_Download default iFolder"
+msgstr "_Fazer download do iFolder padrão"
 
 msgid "Next"
 msgstr "Próximo"
@@ -2521,6 +2527,12 @@ msgstr "Negar"
 
 msgid "Accept"
 msgstr "Aceitar"
+
+msgid "_Deny"
+msgstr "_Negar"
+
+msgid "_Accept"
+msgstr "_Aceitar"
 
 msgid "Information Not Available"
 msgstr "Informações Não Disponíveis"
@@ -2809,4 +2821,22 @@ msgstr "Exibir notiifcações de _violações de política"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Ocultar janela _principal do ifolder na inicialização"
+
+msgid "_Location:"
+msgstr "_Localização:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Aguarde enquanto o iFolder é iniciado...\n\nClique <a href=\"CancelStartup\">aqui</a> para cancelar."
+
+msgid "Save as..."
+msgstr "Gravar como..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Assistente de Recuperação de Frase Secreta"
+
+msgid "_iFolder Account"
+msgstr "_Conta do iFolder"
+
+msgid "Conflict Bin Path"
+msgstr "Caminho da Pasta de Conflito"
 

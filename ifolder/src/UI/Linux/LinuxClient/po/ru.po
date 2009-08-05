@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:55\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "Чтобы запустить iFolder при входе в систем�
 msgid "Notification"
 msgstr "Оповещение"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Уведомлять об от_крытии совместного доступа к папкам iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Оповещение об общеиспользуе_мых папках iFolder"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Уведомлять об от_крытии совместного доступа к папкам iFolder"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1678,6 +1678,12 @@ msgstr "Да"
 
 msgid "No"
 msgstr "Нет"
+
+msgid "_Yes"
+msgstr "_Да"
+
+msgid "_No"
+msgstr "_Нет"
 
 msgid "Co_nnect"
 msgstr "Под_ключить"
@@ -2327,8 +2333,8 @@ msgstr "Выбрать расположение..."
 msgid "Download Default iFolder:"
 msgstr "Загрузить папку iFolder по умолчанию:"
 
-msgid "Download default iFolder"
-msgstr "Загрузить папку iFolder по умолчанию"
+msgid "_Download default iFolder"
+msgstr "_Загрузить папку iFolder по умолчанию"
 
 msgid "Next"
 msgstr "Далее"
@@ -2521,6 +2527,12 @@ msgstr "Запретить"
 
 msgid "Accept"
 msgstr "Принять"
+
+msgid "_Deny"
+msgstr "_Запретить"
+
+msgid "_Accept"
+msgstr "_Принять"
 
 msgid "Information Not Available"
 msgstr "Информация отсутствует"
@@ -2809,3 +2821,22 @@ msgstr "Отображать уведомления при _нарушении �
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Скрывать главное _окно iFolder при запуске"
+
+msgid "_Location:"
+msgstr "_Расположение:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Подождите, пока запустится iFolder.\n\nНажмите <a href=\"CancelStartup\">здесь</a>, чтобы отменить."
+
+msgid "Save as..."
+msgstr "Сохранить как..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Мастер восстановления контрольной фразы"
+
+msgid "_iFolder Account"
+msgstr "_Учетная запись iFolder"
+
+msgid "Conflict Bin Path"
+msgstr "Путь к корзине"
+

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-08-04 19:33\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -164,7 +164,7 @@ msgstr "Úplná"
 #: src/LinuxClient/library/AccountDialog.cs:263 
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
 msgid "empty"
-msgstr "[Prázdné]"
+msgstr "prázdné"
 
 #: src/LinuxClient/library/AccountDialog.cs:273 
 #: src/LinuxClient/library/AccountDialog.cs:275
@@ -730,7 +730,7 @@ msgstr "S_ynchronizovat teď"
 
 #: src/LinuxClient/library/iFolderWindow.cs:560 
 msgid "_Revert to a Normal Folder"
-msgstr "Z_měnit na normální složku"
+msgstr "Změn_it na normální složku"
 
 #: src/LinuxClient/library/iFolderWindow.cs:578 
 msgid "i_Folder"
@@ -1365,12 +1365,12 @@ msgstr "Pokud chcete při přihlášení spustit aplikaci iFolder, nechte ji př
 msgid "Notification"
 msgstr "Upozornění"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Upozornit na sdíl_ení složek iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Upozornění na s_dílené složky iFolder"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Upozornit na sdíl_ení složek iFolder"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1679,6 +1679,12 @@ msgstr "Ano"
 msgid "No"
 msgstr "Ne"
 
+msgid "_Yes"
+msgstr "_Ano"
+
+msgid "_No"
+msgstr "_Ne"
+
 msgid "Co_nnect"
 msgstr "_Připojit"
 
@@ -1914,7 +1920,7 @@ msgid "Account:"
 msgstr "Č. účtu:"
 
 msgid "Add Users"
-msgstr "Add Users"
+msgstr "Přidat uživatele"
 
 msgid "Add users to this iFolder"
 msgstr "Přidat uživatele k této složce iFolder"
@@ -1974,7 +1980,7 @@ msgid "Import Decrypted Keys"
 msgstr "Importovat dešifrované klíče"
 
 msgid "Change _Passphrase"
-msgstr "Změnit _heslo"
+msgstr "Změnit _přístupovou frázi"
 
 msgid "_Security"
 msgstr "_Zabezpečení"
@@ -2226,7 +2232,7 @@ msgid "Account Name:"
 msgstr "Název účtu:"
 
 msgid "Change Passphrase"
-msgstr "Změnit heslo"
+msgstr "Změnit přístupovou frázi"
 
 msgid "Enter passphrase"
 msgstr "Zadat heslo"
@@ -2327,8 +2333,8 @@ msgstr "Vyberte umístění..."
 msgid "Download Default iFolder:"
 msgstr "Stáhnout výchozí složku iFolder:"
 
-msgid "Download default iFolder"
-msgstr "Stáhnout výchozí složku iFolder"
+msgid "_Download default iFolder"
+msgstr "_Stáhnout výchozí složku iFolder"
 
 msgid "Next"
 msgstr "Další"
@@ -2521,6 +2527,12 @@ msgstr "Odmítnout"
 
 msgid "Accept"
 msgstr "Schválit"
+
+msgid "_Deny"
+msgstr "_Odmítnout"
+
+msgid "_Accept"
+msgstr "_Schválit"
 
 msgid "Information Not Available"
 msgstr "Informace nejsou k dispozici"
@@ -2809,3 +2821,22 @@ msgstr "Zobrazit _upozornění při porušení zásad"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Skrýt při _spuštění hlavní okno aplikace iFolder"
+
+msgid "_Location:"
+msgstr "_Umístění:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Počkejte na spuštění složky iFolder...\n\nKlepnutím <a href=\"CancelStartup\">sem</a> lze akci zrušit."
+
+msgid "Save as..."
+msgstr "Uložit jako..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Průvodce obnovením hesla"
+
+msgid "_iFolder Account"
+msgstr "Účet _iFolder"
+
+msgid "Conflict Bin Path"
+msgstr "Cesta koše konfliktů"
+
