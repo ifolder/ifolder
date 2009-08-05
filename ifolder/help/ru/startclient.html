@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
+<meta name="Generation-Date" content="Thursday, July 30, 2009 13:14" />
 <meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
@@ -52,7 +52,7 @@
 <p class="para"><em class="title">ВАЖНО.</em>Необходимо включить область оповещений на панели задач, чтобы при запуске приложения iFolder на ней отображался значок <span class="guimenu">Сервисы iFolder</span>. </p></div>
 
 <p class="para">Работать локально с фалами в локальных папках iFolder можно в любое время. Если клиент iFolder запущен, во время работы с папками все изменения локальной папки данных iFolder протоколируются. Если локальные данные папки iFolder изменяются, когда приложение iFolder не запущено, при последующем запуске приложение iFolder определяет и протоколирует все изменения.</p>
-<p class="para">Если приложение iFolder не запущено, папки iFolder отображаются в менеджере файлов или на рабочей станции. Можно получить доступ к файлам в локальной копии папки iFolder, но управлять папками iFolder нельзя. Кроме того, необходимо зарегистрироваться с помощью учетной записи, чтобы иметь возможность создавать папку iFolder или синхронизировать ее файлы.</p>
+<p class="para">Если приложение iFolder не запущено, папки iFolder отображаются в менеджере файлов или на рабочей станции. Можно получить доступ к файлам в локальной копии папки iFolder, но управлять папками iFolder нельзя. Кроме того, необходимо выполнить вход с помощью учетной записи, чтобы иметь возможность создавать папку iFolder или синхронизировать ее файлы.</p>
 <div class="note">
 <p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Во время создания учетной записи вход пользователя в систему выполняется по протоколу SSL. При получении запроса о том, чтобы принять сертификат сервера, для успешного соединения необходимо проверить сертификат и принять его.</p></div>
 
@@ -65,7 +65,7 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#b40miua">Автоматический запуск iFolder при регистрации</a>
+              <a href="startclient.html#b40miua">Автоматический запуск iFolder при входе</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
@@ -74,25 +74,25 @@
 
 <div class="sect3" id="b40miua">
 
-<h3 class="title"> Автоматический запуск iFolder при регистрации</h3>
+<h3 class="title"> Автоматический запуск iFolder при входе</h3>
 
-<p class="para">Чтобы настроить автоматический запуск iFolder при регистрации в компьютере, выполните одно из следующих действий:</p>
+<p class="para">Чтобы настроить автоматический запуск iFolder при входе на компьютер, выполните одно из следующих действий:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">Откройте меню приложений, щелкните <span class="guimenu">More Applications</span> (Приложения), найдите и щелкните правой кнопкой <span class="guimenu">iFolder 3</span>, затем в меню выберите <span class="guimenu">Add to Startup Programs</span> (Добавить в запуск программ).</p></li>
 <li class="listitem">
-<p class="listitem">При разрегистрации убедитесь, что приложение iFolder запущено, затем сохраните настройки сеанса. При регистрации в компьютере выберите этот сеанс.</p></li>
+<p class="listitem">При выходе убедитесь, что приложение iFolder запущено, затем сохраните настройки сеанса. При входе на компьютер выберите этот сеанс.</p></li>
 <li class="listitem">
-<p class="listitem">Откройте окно терминала, зарегистрируйтесь в качестве пользователя <span class="systemitem">root</span>, затем введите команду <span class="filename">/opt/gnome/bin/gnome-session-properties</span>, чтобы добавить iFolder в качестве программы, которая будет загружаться при регистрации в компьютере.</p></li></ul></div>
+<p class="listitem">Откройте окно терминала, войдите в качестве пользователя <span class="systemitem">root</span>, затем введите команду <span class="filename">/opt/gnome/bin/gnome-session-properties</span>, чтобы добавить iFolder в качестве программы, которая будет загружаться при входе на компьютер.</p></li></ul></div>
 
-<p class="para">Чтобы отключить автоматический запуск iFolder при регистрации, выполните одно из следующих действий:</p>
+<p class="para">Чтобы отключить автоматический запуск iFolder при входе, выполните одно из следующих действий:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">Откройте меню приложений, найдите и щелкните правой кнопкой <span class="guimenu">iFolder 3</span>, затем выберите <span class="guimenu">Remove from Startup Programs</span> (Удалить из запуска программ).</p></li>
 <li class="listitem">
-<p class="listitem">При разрегистрации убедитесь, что приложение iFolder не запущено, затем сохраните настройки сеанса. При регистрации в компьютере столе выберите этот сеанс.</p></li></ul></div>
+<p class="listitem">При выходе убедитесь, что приложение iFolder не запущено, затем сохраните настройки сеанса. При входе на компьютер столе выберите этот сеанс.</p></li></ul></div>
 
 </div>
 
@@ -103,7 +103,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Linux, которого необходимо использовать для создания папок iFolder.</p></li>
+<p class="para">Войдите на компьютер в качестве локального пользователя Linux, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw18fdr">
 <p class="para">Для запуска iFolder используйте один из следующих способов:</p>
 <div class="itemizedlist">
@@ -140,25 +140,25 @@
 
 <h3 class="title"> Автоматический запуск iFolder при входе</h3>
 
-<p class="para">Порядок настройки автоматического запуска iFolder при регистрации на рабой станции:</p>
+<p class="para">Порядок настройки автоматического запуска iFolder при входе на рабочую станцию:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41mcvg">
 <p class="para">Щелкните правой кнопкой значок <span class="guimenu">Сервисы iFolder</span> <img src="images/ifolder22.png" alt="Значок приложения iFolder " title="Значок приложения iFolder " class="inline" />, затем выберите <span class="guimenu">Настройки</span>, чтобы открыть диалоговое окно "Настройки iFolder" на вкладке <span class="guimenu">Общие</span>.
       </p></li>
 <li class="step" id="b41mcvh">
-<p class="para">Выберите <span class="guimenu">Запуск iFolder при регистрации в рабочей станции </span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
+<p class="para">Выберите <span class="guimenu">Запуск iFolder при входе на рабочую станцию </span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
 <li class="step" id="b41mcvi">
 <p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы закрыть диалоговое окно "Настройки iFolder".</p></li></ol>
 </div>
 
-<p class="para">Порядок отключения автоматического запуска iFolder при регистрации в рабочей станции:</p>
+<p class="para">Порядок отключения автоматического запуска iFolder при входе на рабочую станцию:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b41m94h">
 <p class="para">Щелкните правой кнопкой значок <span class="guimenu">Сервисы iFolder</span>, затем выберите <span class="guimenu">Настройки</span>, чтобы открыть диалоговое окно "Настройки iFolder" на вкладке <span class="guimenu">Общие</span>.</p></li>
 <li class="step" id="b41m9ty">
-<p class="para">Отмените выбор параметра <span class="guimenu">Запуск iFolder при регистрации в рабочей станции</span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
+<p class="para">Отмените выбор параметра <span class="guimenu">Запуск iFolder при входе на рабочую станцию</span>, затем щелкните <span class="guimenu">Применить</span>.</p></li>
 <li class="step" id="b41mac7">
 <p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы закрыть диалоговое окно "Настройки iFolder".</p></li></ol>
 </div>
@@ -172,7 +172,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Windows, которого необходимо использовать для создания папок iFolder.</p></li>
+<p class="para">Войдите на компьютер в качестве локального пользователя Windows, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw08fxx">
 <p class="para">Если после успешной входа в систему приложение iFolder не было запущено автоматически, запустите iFolder, щелкнув <span class="menuchoice"><span class="guimenu">Пуск</span> > <span class="guimenu">Программы &gt;</span> > <span class="guimenu">iFolder 3</span></span>, затем выберите приложение <span class="guimenu">iFolder 3 Client</span> (Клиент iFolder 3). </p></li></ol>
 </div>
@@ -189,7 +189,7 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="startclient.html#bcpho1i">Автоматический запуск iFolder при регистрации</a>
+              <a href="startclient.html#bcpho1i">Автоматический запуск iFolder при входе</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
@@ -198,26 +198,26 @@
 
 <div class="sect3" id="bcpho1i">
 
-<h3 class="title"> Автоматический запуск iFolder при регистрации</h3>
+<h3 class="title"> Автоматический запуск iFolder при входе</h3>
 
-<p class="para">Для разрешения автоматического запуска клиента iFolder при регистрации в компьютере Macintosh добавьте iFolder в <span class="guimenu">Startup Items</span> (Автозагрузка).</p>
+<p class="para">Для разрешения автоматического запуска клиента iFolder при входе на компьютер Macintosh добавьте iFolder в <span class="guimenu">Startup Items</span> (Автозагрузка).</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
 <p class="para">Запустите iFolder.</p></li>
 <li class="step" id="bcphuse">
-<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder и выберите параметр <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p>
+<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder и выберите опцию <span class="guimenu">Open at Login</span> (Открывать при входе).</p>
 <p class="para">или</p>
-<p class="para">На панели быстрого запуска приложений нажмите клавишу Ctrl, щелкните значок iFolder, затем выберите <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p></li></ol>
+<p class="para">На панели быстрого запуска приложений нажмите клавишу Ctrl, щелкните значок iFolder, затем выберите <span class="guimenu">Open at Login</span> (Открывать при входе).</p></li></ol>
 </div>
 
 <p class="para">Чтобы отменить автоматический запуск приложения iFolder, удалите iFolder из списка <span class="guimenu">Startup Items</span> (Автозагрузка).</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcpi1cj">
-<p class="para">В прикреплении щелкните правой кнопкой значок iFolder и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p>
+<p class="para">В прикреплении щелкните правой кнопкой значок iFolder и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при входе).</p>
 <p class="para">или</p>
-<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder или нажмите клавишу Ctrl и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при регистрации).</p></li></ol>
+<p class="para">На панели быстрого запуска приложений щелкните правой кнопкой значок iFolder или нажмите клавишу Ctrl и отмените выбор параметра <span class="guimenu">Open at Login</span> (Открывать при входе).</p></li></ol>
 </div>
 
 </div>
@@ -229,7 +229,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Зарегистрируйтесь на компьютере в качестве локального пользователя Macintosh, которого необходимо использовать для создания папок iFolder.</p></li>
+<p class="para">Войдите на компьютер в качестве локального пользователя Macintosh, которого необходимо использовать для создания папок iFolder.</p></li>
 <li class="step" id="bw08fy2">
 <p class="para">Для запуска iFolder используйте один из следующих способов: </p>
 <div class="itemizedlist">
@@ -239,7 +239,7 @@
 <li class="listitem">
 <p class="listitem">Введите <span class="command">iFolder</span> в выделенном поле (кнопка Apple + пробел, либо щелкните значок лупы в верхнем правом углу), затем щелкните <span class="guimenu">iFolder 3</span> в списке приложений.</p></li>
 <li class="listitem">
-<p class="listitem">Откройте терминальную оболочку, зарегистрируйтесь в качестве пользователя root, затем введите </p><pre class="screen">
+<p class="listitem">Откройте терминальную оболочку, выполните вход в качестве пользователя root, затем введите </p><pre class="screen">
 /Applications/iFolder 3.app/Contents/MacOS/iFolder 3
 </pre></li></ul></div>
 </li></ol>
