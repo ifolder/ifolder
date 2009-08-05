@@ -44,8 +44,8 @@ namespace Novell.iFolder
 		private DomainInformation[]	domains;
 		private ComboBox			domainComboBox;
 	//	private ComboBox			security_lvl_ComboBox;
-		private CheckButton			Encryption;
-		private CheckButton 			SSL;
+//		private CheckButton			Encryption;
+//		private CheckButton 			SSL;
 		private string				initialPath;
 		private string copyDir;
 		iFolderWebService			ifws;
@@ -121,7 +121,7 @@ namespace Novell.iFolder
 				else
 					this.SetResponseSensitive(ResponseType.Ok, false);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				this.SetResponseSensitive(ResponseType.Ok, false);
 			}

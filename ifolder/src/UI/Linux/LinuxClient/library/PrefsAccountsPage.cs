@@ -660,7 +660,6 @@ namespace Novell.iFolder
 							// No recovery agent present;
 					//		return;
 						// }
-						int result;
 						iFolderWebService ifws = DomainController.GetiFolderService();
 						int policy = ifws.GetSecurityPolicy(args.DomainID);
 						if( policy % 2 == 0)
@@ -830,13 +829,13 @@ namespace Novell.iFolder
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = true;
 				}
-				catch(Exception ex) 
+				catch(Exception) 
 				{
 					return false;
 				}
 			}
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				return false;
 			}
@@ -869,7 +868,7 @@ namespace Novell.iFolder
 					ifdata.Refresh();
 //				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				iFolderMsgDialog dg = new iFolderMsgDialog(
 					topLevelWindow,

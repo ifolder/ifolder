@@ -47,9 +47,9 @@ namespace Novell.iFolder
 	/// </summary>
 	public class MigrationDialog : Dialog
 	{
-                private Gtk.Window                              topLevelWindow;
-                private iFolderWebService               ifws;
-		private SimiasWebService 		simws;
+                //private Gtk.Window                              topLevelWindow;
+                //private iFolderWebService               ifws;
+		//private SimiasWebService 		simws;
                 private iFolderTreeView         AccTreeView;
                 private ListStore                       AccTreeStore;
                 private Button                          MigrateButton;
@@ -119,10 +119,10 @@ namespace Novell.iFolder
 		public MigrationDialog( Gtk.Window topWindow, iFolderWebService ifws, SimiasWebService simws, bool ShowForMerge, String ifolderName)
 			//: base (Util.GS("iFolder Migration"))
 		{
-                        this.topLevelWindow = topWindow;
+                       // this.topLevelWindow = topWindow;
 			this.Modal = false;
-                        this.ifws = ifws;
-			this.simws = simws;
+                        //this.ifws = ifws;
+			//this.simws = simws;
 			this.iFolderName = ifolderName;
                         curDomains = new Hashtable();
 			CreateWidgets();
@@ -298,7 +298,7 @@ namespace Novell.iFolder
                 {
                         string id = (string) tree_model.GetValue(iter, 0);
                         string uname = GetName(id);
-                        string loc = GetHomeLocation(id);
+//                        string loc = GetHomeLocation(id);
                         ((CellRendererText) cell).Text = uname;
                 }
 
@@ -395,14 +395,14 @@ namespace Novell.iFolder
 
                                 tSelect.GetSelected(out tModel, out iter);
                                 string id = (string) tModel.GetValue(iter, 0);
-				string status = GetEncryptionStatus(id);
+/*				string status = GetEncryptionStatus(id);
 				bool stat = false;;
 				if( status == null)
 					stat = false;
 				else if( status == "BLWF")
 					stat = true;
 				else
-					stat = false;
+					stat = false;*/
 				String Location = GetHomeLocation(id);
 				this.UserName = GetName( id);
 				DirectoryInfo dir = new DirectoryInfo( Location );
@@ -495,7 +495,7 @@ namespace Novell.iFolder
 				if(System.IO.Directory.Exists(str+"/.novell/ifolder/reg/"+UserName))
 				        System.IO.Directory.Delete(str+"/.novell/ifolder/reg/"+UserName, true);
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 			}
 		}
@@ -517,7 +517,7 @@ namespace Novell.iFolder
                         {
                                 if(dirs[i] != str+"/reg" && dirs[i] != str+"/Save")
                                 {
-					String UserName = GetName( dirs[i] );
+//					String UserName = GetName( dirs[i] );
 					String HomeLoc = GetHomeLocation( dirs[i] );
 					DirectoryInfo dInfo = new DirectoryInfo( HomeLoc );
 					if( dInfo != null)

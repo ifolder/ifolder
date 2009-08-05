@@ -47,14 +47,14 @@ namespace Novell.iFolder
 		private Button BrowseButton;
 		private Entry location;
 		private Entry email;
-		private Entry oldPassPhrase;
-		private Entry newPassPhrase;
-		private Entry retypePassPhrase;
+//		private Entry oldPassPhrase;
+//		private Entry newPassPhrase;
+//		private Entry retypePassPhrase;
 		private Entry recoveryAgentCombo;
-		private string[] RAList;
+//		private string[] RAList;
 		private string DomainID;
 		private DomainInformation[] domains;
-		private CheckButton savePassPhrase;
+//		private CheckButton savePassPhrase;
 	
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;

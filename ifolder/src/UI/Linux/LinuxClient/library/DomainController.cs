@@ -125,7 +125,7 @@ namespace Novell.iFolder.Controller
 				ifws.Url = localServiceUrl + "/iFolder.asmx";
 				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				ifws = null;
 				throw new Exception("Unable to create ifolder web service in DomainController");
@@ -136,7 +136,7 @@ namespace Novell.iFolder.Controller
 				simws.Url = localServiceUrl + "/Simias.asmx";
 				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				simws = null;
 				throw new Exception("Unable to create simias web service in DomainController");
@@ -207,7 +207,7 @@ namespace Novell.iFolder.Controller
 				{
 					domains = simws.GetDomains(false);
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					domains = null;
 				}
@@ -406,18 +406,6 @@ namespace Novell.iFolder.Controller
 			if(status.statusCode != StatusCodes.Success)
 			{	
 				return false;	
-				// passphrase invalid, re enter once again, 
-				iFolderMsgDialog dialog = new iFolderMsgDialog(
-														null,
-														iFolderMsgDialog.DialogType.Error,
-														iFolderMsgDialog.ButtonSet.None,
-														Util.GS("Error setting the passphrase"),
-														Util.GS("Unable to reset the passphrase"),
-														Util.GS("Please try again"));
-				dialog.Run();
-				dialog.Hide();
-				dialog.Destroy();
-				dialog = null;
 			}		
 			else
 				return true;
@@ -689,7 +677,7 @@ namespace Novell.iFolder.Controller
 							else
 								simws.SetDomainCredentials(domainID, null, CredentialType.None);
 						}
-						catch (Exception e)
+						catch (Exception)
 						{
 						}
 					}
@@ -697,7 +685,7 @@ namespace Novell.iFolder.Controller
 					status = HandleDomainLoggedIn(domainID, status);
 				}
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				status = null;
 			}
@@ -1383,7 +1371,7 @@ namespace Novell.iFolder.Controller
 				{
 					domain = simws.GetDomainInformation(args.DomainID);
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					// FIXME: Add in some type of error logging to show that we
 					// weren't able to get information about a newly added domain

@@ -114,8 +114,8 @@ namespace Novell.iFolder
 		private bool waitForPassphrase;
 		private bool upload;
 		private iFolderWeb defaultiFolder;
-		
-		private bool CertAcceptedCond1 = false;
+//                private bool CertAcceptedCond1 = false;
+	
 		private ArrayList ServersForCertStore = new ArrayList();
 		
 		private Gdk.Pixbuf				AddAccountPixbuf;
@@ -139,14 +139,11 @@ namespace Novell.iFolder
 		///
 
 	        private iFolderTreeView RATreeView;
-	        private ScrolledWindow  RAScrolledWindow;
 	        private Entry           PassPhraseEntry;
 	        private Entry           PassPhraseVerifyEntry;
 	        private CheckButton	RememberPassPhraseCheckButton;
-	        private string[]        RAList;
 	        private ListStore       RATreeStore;
 	        private bool            PassPhraseSet;
-	        private bool            RememberPassPhrase;
 		private Label		RetypePassPhraseLabel;
 		private Label		SelectRALabel;
 		private bool AlreadyPrepared;
@@ -160,7 +157,6 @@ namespace Novell.iFolder
 		private Entry LocationEntry;
 		private CheckButton CreateDefault;
 		private Button BrowseButton;
-		private string DefaultPath;
 		private Label locationLabel;
 		private Label securityLabel;
 
@@ -225,7 +221,7 @@ namespace Novell.iFolder
 		public AddAccountWizard(SimiasWebService simws, string serv) : this(simws)
 		{
             ServerNameEntry.Text = serv;
-            ServerNameEntry.Editable = false;
+            ServerNameEntry.IsEditable = false;
         }
         
         /// <summary>
@@ -895,7 +891,6 @@ namespace Novell.iFolder
 		private void UpdateUserInformationPageSensitivity(object o, EventArgs args)
 		{
 			string currentUserName = UserNameEntry.Text;
-			string currentPassword = PasswordEntry.Text;
 			if (currentUserName != null /*&& currentPassword != null*/)
 			{
 				currentUserName = currentUserName.Trim();
@@ -1390,7 +1385,6 @@ namespace Novell.iFolder
 			bool NextPage = true;
 			string publicKey = null;
 			string memberUID = null;
-			iFolderData ifdata = iFolderData.GetData();
 			
 			try
 			{
@@ -1809,13 +1803,13 @@ namespace Novell.iFolder
 								}
 								ServerNameEntry.Text = string.Copy(serverName);
 								simws.StoreCertificate(byteArray, serverName);
-								CertAcceptedCond1 = true;
+//								CertAcceptedCond1 = true;
 								ServersForCertStore.Add(serverName);
 								OnConnectClicked(o, args);
 							}
 							else
 							{
-								CertAcceptedCond1 = false;	
+//								CertAcceptedCond1 = false;	
 								simws.RemoveCertFromTable(serverName);
 							}
 						}
@@ -1852,13 +1846,13 @@ namespace Novell.iFolder
 								}
 								ServerNameEntry.Text = string.Copy(serverName);
 								simws.StoreCertificate(byteArray, serverName);
-								CertAcceptedCond1 = true;
+//								CertAcceptedCond1 = true;
 								ServersForCertStore.Add(serverName);
 								OnConnectClicked(o, args);
 							}
 							else
 							{
-								CertAcceptedCond1 = false;	
+//								CertAcceptedCond1 = false;	
 								simws.RemoveCertFromTable(serverName);
 							}
 
@@ -2195,7 +2189,7 @@ namespace Novell.iFolder
                 if(null != aaw)
                     aaw.Maximize();
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 //iFolderWindow.log.Info("Excepion in Pop of ShowNextWizard. {0} {1}", e.GetType(), e.Message);
                 return false;

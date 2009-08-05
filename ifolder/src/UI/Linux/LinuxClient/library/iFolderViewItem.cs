@@ -284,7 +284,7 @@ namespace Novell.iFolder
 								Gdk.InterpType.Bilinear,
 								255);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				dest = null;
 			}

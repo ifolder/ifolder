@@ -74,7 +74,7 @@ public class BigList : Gtk.DrawingArea {
 	bool is_dragging = false;
 	bool reloaded = true;
 	public bool CanDeselect = false;
-	int old_selected;
+//	int old_selected;
 	
 	int currentWidth = 50; // pixels
 	
@@ -205,7 +205,6 @@ public class BigList : Gtk.DrawingArea {
 	{
 		Gdk.EventScroll es = args.Event;
                 double newloc = 0.0;
-		double newdisp = 0.0;
 		int steps = Math.Max (rows / 6, 2);
 
                 switch (es.Direction){
@@ -307,7 +306,7 @@ public class BigList : Gtk.DrawingArea {
 		if (a.Event.Button == 1)
 			is_dragging = false;
 
-		old_selected = Selected;
+//		old_selected = Selected;
 	}
 
 	int HitTest (double y)
@@ -387,8 +386,7 @@ public class BigList : Gtk.DrawingArea {
         {
 
 		int max_steps = 25;
-		int displ, len, ht;
-		string temp_str = "";
+		int displ;
 
 		Gdk.Window win = args.Event.Window;
 		Gdk.Rectangle area = args.Event.Area;

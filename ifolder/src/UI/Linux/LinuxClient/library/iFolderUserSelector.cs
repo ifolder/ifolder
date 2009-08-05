@@ -742,7 +742,7 @@ namespace Novell.iFolder
 					simws.FindCloseMembers(domainID, searchContext);
 					searchContext = null;
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 				}
 			}

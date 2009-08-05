@@ -43,7 +43,6 @@ namespace Novell.iFolder
 	public class iFolderAcceptDialog : FileChooserDialog
 	{
 		private string	initialPath;
-		private bool merge;
 		
         /// <summary>
         /// Gets the Path selected

@@ -539,12 +539,12 @@ namespace Novell.iFolder
 			if (domain.Authenticated)
 			{
 				ServerAddressEntry.Sensitive = false;
-				ServerAddressEntry.Editable = false;
+				ServerAddressEntry.IsEditable = false;
 			}
 			else
 			{
 				ServerAddressEntry.Sensitive = true;
-				ServerAddressEntry.Editable = true;
+				ServerAddressEntry.IsEditable = true;
 			}
 		}
 	
@@ -848,7 +848,7 @@ namespace Novell.iFolder
 
 				// Prevent the uesr from modifying the address
 				ServerAddressEntry.Sensitive = false;
-				ServerAddressEntry.Editable = false;
+				ServerAddressEntry.IsEditable = false;
 			}
 		}
 		
@@ -865,7 +865,7 @@ namespace Novell.iFolder
 
 				// Allow the user to modify the address
 				ServerAddressEntry.Sensitive = true;
-				ServerAddressEntry.Editable = true;
+				ServerAddressEntry.IsEditable = true;
 			}
 		}
 		
