@@ -9,7 +9,7 @@
     level1ID = parent.theMenu.findEntry('/bookinfo.html', 'url', 'right');
     if (level1ID == -1)
     {
-      level1ID = parent.theMenu.addChild(level0ID, "", "Novell iFolder 3.7 Cross-Platform Help", "../bookinfo.html", "zFLDR xB.0000.0000.", "Novell iFolder 3.7 Cross-Platform Help");
+      level1ID = parent.theMenu.addChild(level0ID, "", "OES 2 SP1: Novell iFolder 3.7 Cross-Platform Help", "../bookinfo.html", "zFLDR xB.0000.0000.", "OES 2 SP1: Novell iFolder 3.7 Cross-Platform Help");
       level2ID = parent.theMenu.addChild(level1ID, "Folder", "Overview of iFolder", "../overview.html", "zFLDR xC.0000.0000.0001.", "Overview of iFolder");
       parent.theMenu.entry[level2ID].FirstChild = -2;
       parent.theMenu.entry[level2ID].onToggle = 'parent.theMenu.loadScript("../overview.html","../toc_overview.html", true)';
