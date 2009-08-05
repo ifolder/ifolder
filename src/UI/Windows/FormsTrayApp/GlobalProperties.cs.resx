@@ -249,6 +249,12 @@
   <data name="&gt;&gt;menuViewAvailable.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="toolStripLabel1.Text" xml:space="preserve">
+    <value>Filtr</value>
+  </data>
+  <data name="toolStripLabel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>31, 22</value>
+  </data>
   <data name="&gt;&gt;menuSecurity.Name" xml:space="preserve">
     <value>menuSecurity</value>
   </data>
@@ -328,7 +334,7 @@
     <value>Sd&amp;ílet s...</value>
   </data>
   <data name="menuShare.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="titleLastSyncTime.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -414,14 +420,11 @@
   <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="menuSyncNow.Text" xml:space="preserve">
     <value>S&amp;ynchronizovat nyní</value>
   </data>
   <data name="menuSyncNow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="&gt;&gt;MenuResolve.Name" xml:space="preserve">
     <value>MenuResolve</value>
@@ -442,7 +445,7 @@
     <value>4</value>
   </data>
   <data name="CtxMenuOpen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="CtxMenuOpen.Text" xml:space="preserve">
     <value>&amp;Otevřít</value>
@@ -547,7 +550,7 @@
     <value>panel2</value>
   </data>
   <data name="MenuRevert.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="MenuRevert.Text" xml:space="preserve">
     <value>Obnovit na normální složku</value>
@@ -592,7 +595,7 @@
     <value>&amp;Stáhnout</value>
   </data>
   <data name="MenuAccept.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="menuActionClose.Text" xml:space="preserve">
     <value>&amp;Zavřít</value>
@@ -694,13 +697,13 @@
     <value>toolStripBtnMerge</value>
   </data>
   <data name="menuSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>195, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="toolStripMenuLeftPane.Text" xml:space="preserve">
     <value>Informace o serveru iFolder</value>
   </data>
   <data name="toolStripMenuLeftPane.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>172, 22</value>
   </data>
   <data name="&gt;&gt;menuActionCreate.Name" xml:space="preserve">
     <value>menuActionCreate</value>
@@ -718,7 +721,7 @@
     <value>False</value>
   </data>
   <data name="menuSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>195, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="titleLastSyncTime.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -739,7 +742,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleServerorSize" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,0,Percent,0,Absolute,20" /&gt;&lt;Rows Styles="Percent,0,Percent,0,Percent,0" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleServerorSize" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,52.76461,Percent,47.23539,Absolute,20" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,33.33333,Percent,33.33333" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="titleEncrypted.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Left</value>
@@ -910,7 +913,7 @@
     <value>14, 108</value>
   </data>
   <data name="menuProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="menuProperties.Text" xml:space="preserve">
     <value>&amp;Vlastnosti...</value>
@@ -991,7 +994,7 @@
     <value>Odstranit &amp;ze serveru</value>
   </data>
   <data name="MenuRemove.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1036,7 +1039,7 @@
     <value>224, 464</value>
   </data>
   <data name="menuResetPassphrase.Text" xml:space="preserve">
-    <value>Změnit &amp;heslo</value>
+    <value>Změnit &amp;přístupovou frázi</value>
   </data>
   <data name="migrationMenuItem.Text" xml:space="preserve">
     <value>Migrovat složku iFolder</value>
@@ -1126,7 +1129,7 @@
     <value>&amp;Sloučit</value>
   </data>
   <data name="MenuMerge.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="titleOwner.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -1180,7 +1183,7 @@
     <value>Ře&amp;šení konfliktů</value>
   </data>
   <data name="MenuResolve.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="&gt;&gt;menuActionShare.Name" xml:space="preserve">
     <value>menuActionShare</value>
@@ -1256,6 +1259,12 @@
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 122</value>
+  </data>
+  <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
+    <value>toolStripLabel1</value>
+  </data>
+  <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="titleEncrypted.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1810,7 +1819,7 @@
     <value>O&amp;bnovit</value>
   </data>
   <data name="MenuRefresh.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 22</value>
+    <value>209, 22</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>657, 544</value>
@@ -1855,7 +1864,7 @@
     <value>listView1</value>
   </data>
   <data name="iFolderContextMenu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>199, 242</value>
+    <value>210, 242</value>
   </data>
   <data name="LoginLogoff.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 289</value>
@@ -1912,7 +1921,7 @@
     <value>222, 75</value>
   </data>
   <data name="toolStripMenuThumbnails.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 22</value>
+    <value>172, 22</value>
   </data>
   <data name="toolStripMenuThumbnails.Text" xml:space="preserve">
     <value>Miniatury</value>
@@ -1945,7 +1954,7 @@
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MenuResolveSeperator.Size" type="System.Drawing.Size, System.Drawing">
-    <value>195, 6</value>
+    <value>206, 6</value>
   </data>
   <data name="&gt;&gt;menuActionRemove.Name" xml:space="preserve">
     <value>menuActionRemove</value>
