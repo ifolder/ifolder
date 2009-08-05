@@ -104,6 +104,8 @@ namespace Simias.UserMovement
                 /// </summary>
 		private static Domain domain;
 
+		private static  string currentiFolderID = "";
+
                 /// <summary>
                 /// enum to denote iFolder move state
                 /// </summary>
@@ -176,11 +178,13 @@ namespace Simias.UserMovement
 				int state = member.iFolderMoveState(domain.ID, false, ifDataMove.iFolderID, 0, 0);
 				if(state == (int)iFolderMoveState.Completed )	
 				{
+					log.Debug("State completed for: {0}", ifDataMove.iFolderName);
 					member.iFolderMoveState(domain.ID, true, ifDataMove.iFolderID, 0, 0);
 					return true;
 				}
 				else if(state == (int)iFolderMoveState.NotStarted)	
 				{
+					log.Debug("State already moved for: {0}", ifDataMove.iFolderName);
 					if(store.GetCollectionByID(ifDataMove.iFolderID) != null)
                                 		return true;
 				}
@@ -211,6 +215,11 @@ namespace Simias.UserMovement
 							return false;
 						}
 					}
+				}
+				if( currentiFolderID == ifDataMove.iFolderID )
+				{
+					log.Debug("Not adding in the queue since this iFolder is being synced now. {0}", currentiFolderID);
+					return false;
 				}
 				eventQueue.Enqueue( ifDataMove );
 				log.Debug("Add: iFolder id {0} is included in the queue", ifDataMove.iFolderID);
@@ -265,17 +274,22 @@ namespace Simias.UserMovement
 						member = domain.GetMemberByID(ifDataMove.MemberUserID);
 						if(member != null)
 						{
+							currentiFolderID = ifDataMove.iFolderID;
 							member.iFolderMoveState(domain.ID, true, ifDataMove.iFolderID, (int)iFolderMoveState.Started, 0);
 							if(!Collection.DownloadCollectionLocally(ifDataMove.iFolderID, ifDataMove.iFolderName, ifDataMove.DomainID, ifDataMove.HostID, ifDataMove.DirNodeID, ifDataMove.MemberUserID, ifDataMove.colMemberNodeID, ifDataMove.iFolderLocalPath))
-							{	
+							{
+								currentiFolderID = "";	
 								log.Debug( "downloadifolder returned false for {0} ",ifDataMove.iFolderID );
 								Add(ifDataMove);
 								Thread.Sleep(5 * 1000);
 							}
 							else
 							{
+								/// Recreate the catalog entry...
+								Simias.Server.Catalog.RecreateEntryForCollection(ifDataMove.iFolderID);
 								member.iFolderMoveState(domain.ID, true, ifDataMove.iFolderID, (int)iFolderMoveState.Completed, 0);
 							}
+							currentiFolderID = "";
 						}
 						else
 						{
@@ -288,6 +302,10 @@ namespace Simias.UserMovement
 						log.Debug( "Data ProcessEvents: Expection {0} {1} received for {2}",e.Message, e.StackTrace, ifDataMove.iFolderID );
 						Add(ifDataMove);
 						Thread.Sleep(30 * 1000);
+					}
+					finally
+					{
+						currentiFolderID = "";
 					}
 				}
 				QueueProcessingState = false;

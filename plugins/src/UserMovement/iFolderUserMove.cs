@@ -659,6 +659,7 @@ namespace Simias.UserMovement
                         if( status == true )
                         {
                                 col.Commit(col.Delete());
+				Thread.Sleep(5000);
                                 log.Debug("MoveiFolderData: deleted the collection on this host... ");
                                 Catalog.SetHostForCollection(iFolderID, NewServer.UserID);
                                 Catalog.RemoveCollectionForMovement(iFolderID);
