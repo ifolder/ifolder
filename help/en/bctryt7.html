@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, June 10, 2009 13:31" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7 or later Versions</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7 or later Versions</a>
           </p></li></ul></div>
 
 <div class="important">
@@ -63,9 +63,9 @@
 
 <div class="sect2" id="bctryt8">
 
-<h2 class="title"> Automatically Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Automatically Upgrading to iFolder 3.7 or later Versions</h2>
 
-<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you can not connect to the iFolder 3.7 domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
+<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you cannot connect to the iFolder 3.7 or later domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
@@ -74,15 +74,12 @@
 <p class="para">Click <span class="guimenu">Yes</span> to automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
 </div>
 
-<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
-<div class="note">
-<p class="para"><em class="title">NOTE:</em>An iFolder 3.<span class="replaceable">x</span> client (other than iFolder 3.4.1 clients) connects to iFolder 3.7 server even if you choose not to upgrade. Although the 3.<span class="replaceable">x</span> client stays connected to the 3.7 server, you cannot perform any of the iFolder operations with this client. When you attempt to convert an existing folder to an iFolder, the server does not consider those changes, and displays an error message that the server is unavailable. The only operation that you can perform is that download the new RPMs from the server to install iFolder 3.7.</p></div>
-
+<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 or later server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Manually Upgrading to iFolder 3.7</h2>
+<h2 class="title"> Manually Upgrading to iFolder 3.7 or later Versions</h2>
 
 <div class="procedure">
 <ol class="steps">

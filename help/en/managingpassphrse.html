@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, June 10, 2009 13:31" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
@@ -59,7 +59,7 @@
 <li class="step" id="bknk4gv">
 <p class="para">In the iFolder browser, click <span class="guimenu">Security &gt; Forgot Passphrase</span> to launch the wizard.</p></li>
 <li class="step" id="bknk53e">
-<p class="para">From the <span class="guimenu">iFolder Account</span> list, select the domain for which the passphrase must be reset and click <span class="guimenu">Next</span>.</p>
+<p class="para">From the <span class="guimenu">iFolder Account</span> list, select the domain for which the passphrase must be reset and click <span class="guimenu">Forward</span>.</p>
 <p class="para">During the iFolder account creation process, if Server_Default option was selected as the recovery agent, then the Set New Passphrase page is displayed.To reset the new passphrase, see <a href="managingpassphrse.html#bknigkn">Resetting the passphrase when recovery agent is Server_Default</a>.</p>
 <p class="para">On the other hand, if you selected a recovery agent other than Server_Default, then you must reset the passphrase using <a href="managingpassphrse.html#bknigq8">Resetting the passphrase when recovery agent is not Server_Default</a>.</p></li></ol>
 </div>
@@ -74,9 +74,9 @@
 <li class="step" id="bknkrbv">
 <p class="para">In the Set New Passphrase page, specify the new passphrase in the <span class="guimenu">New Passphrase </span>field.</p></li>
 <li class="step" id="bknkt5g">
-<p class="para">Re-enter the new passphrase in the <span class="guimenu">Confirm Passphrase</span> field and click <span class="guimenu">Next</span>.</p></li>
+<p class="para">Re-enter the new passphrase in the <span class="guimenu">Confirm Passphrase</span> field<span class="guimenu"></span>.</p></li>
 <li class="step" id="bknkxtk">
-<p class="para">Specify the username and password in the <span class="guimenu">Username</span> and <span class="guimenu">Password</span> field, then click <span class="guimenu">Next</span>.</p></li>
+<p class="para">Specify the password in the <span class="guimenu">Password</span> field, then click <span class="guimenu">Forward</span>.</p></li>
 <li class="step" id="bknl4px">
 <p class="para">After the passphrase is reset successfully, click <span class="guimenu">Finish</span> to close the wizard.</p></li></ol>
 </div>
@@ -91,7 +91,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bknihtk">
-<p class="para">The Welcome page of the wizard displays information regarding the information you need to reset the passphrase. Click <span class="guimenu">Next</span> to display the Passphrase Recovery Mechanism page.</p></li>
+<p class="para">The Welcome page of the wizard displays information regarding the information you need to reset the passphrase. Click <span class="guimenu">Forward</span> to display the Passphrase Recovery Mechanism page.</p></li>
 <li class="step" id="bknihtm">
 <p class="para">There are three methods you can use within the wizard to reset your passphrase:</p>
 <div class="itemizedlist">
@@ -136,12 +136,12 @@
 <p class="para">Displays the list of configured iFolder accounts. By default the first logged in account is selected.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtt"></a>
-<p class="para">Location of the secret file</p></td>
+<p class="para">Location of secret file</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Denotes the location of the private key file of the certificate that can be obtained from the iFolder administrator.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtu"></a>
-<p class="para">Secret file password</p></td>
+<p class="para">Secret password</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Represents the password to the secret key file.</p></td>
 </tr>
@@ -151,7 +151,7 @@
 <p class="para">Represents the password that is used by the administrator to encrypt the new data file.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtw"></a>
-<p class="para">Location of the new data file</p></td>
+<p class="para">Location of new data file</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Denotes the location of the decrypted key file. The new data file is obtained from the iFolder administrator after performing an export operation of old data file.</p></td>
 </tr>
@@ -183,17 +183,17 @@
 <ol class="orderedlist">
             
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">I have the secret file and its password</span> option.</p></li>
+<p class="listitem">Select <span class="guimenu">I have the secret file and its password</span> option, then click <span class="guimenu">Forward</span>.</p></li>
             
 <li class="listitem">
 <p class="listitem">Fill in the following fields:</p>
 <div class="formalpara" id="bknm2yo">
-                <p class="title"><em class="title">Location of the secret file:</em>
+                <p class="title"><em class="title">Location of secret file:</em>
                 Specify the location of the secret file, or click the <span class="guimenu">Browse</span> button to locate and select the secret file.</p>
               </div>
 
 <div class="formalpara" id="bknm4il">
-                <p class="title"><em class="title">Secret file password:</em>
+                <p class="title"><em class="title">Secret Password:</em>
                 Specify the password to the secret file.</p>
               </div>
 
@@ -209,7 +209,7 @@
 </li>
             
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Next</span> to reset the passphrase.</p></li>
+<p class="listitem">Click <span class="guimenu">Forward</span> to reset the passphrase.</p></li>
             
 <li class="listitem">
 <p class="listitem">Click <span class="guimenu">Finish</span> to close the wizard.</p></li>
@@ -229,10 +229,10 @@
 <ol class="orderedlist">
             
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">I have the new data file sent by the administrator</span> option, then click <span class="guimenu">Next</span>.</p></li>
+<p class="listitem">Select <span class="guimenu">I have the new data file sent by the administrator</span> option, then click <span class="guimenu">Forward</span>.</p></li>
             
 <li class="listitem">
-<p class="listitem">In the <span class="guimenu">Location of the new data file</span> field, specify the location of the new data file, or click the <span class="guimenu">Browse </span>button to locate and select the new data file.</p></li>
+<p class="listitem">In the <span class="guimenu">Location of new data file</span> field, specify the location of the new data file, or click the <span class="guimenu">Browse </span>button to locate and select the new data file.</p></li>
             
 <li class="listitem">
 <p class="listitem">If the new data file that you receive from the administrator is encrypted, select <span class="guimenu">Is the above file encrypted?</span> check box. When you select this check box, the <span class="guimenu">One time password</span> field is enabled. </p></li>
@@ -247,7 +247,7 @@
 <p class="listitem"> In the <span class="guimenu">Confirm passphrase</span> field, re-enter the new passphrase.</p></li>
             
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Next </span>to reset the passphrase.</p></li>
+<p class="listitem">Click <span class="guimenu">Forward </span>to reset the passphrase.</p></li>
             
 <li class="listitem">
 <p class="listitem">Click <span class="guimenu">Finish</span> to close the wizard.</p></li>
@@ -264,13 +264,13 @@
 <ol class="orderedlist">
             
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">I have no secret file or data file</span> option, then click <span class="guimenu">Next</span>.</p></li>
+<p class="listitem">Select <span class="guimenu">I have no secret or data file</span> option, then click <span class="guimenu">Forward</span>.</p></li>
             
 <li class="listitem">
 <p class="listitem">In the <span class="guimenu">Location to save old data file</span> field, specify the location where the old data file must be saved or click the <span class="guimenu">Browse</span> button to specify the location to save the old data file. </p></li>
             
 <li class="listitem">
-<p class="listitem">Click <span class="guimenu">Next</span> to obtain the old data file. The location of the old data file and the email address of the iFolder administrator is displayed. You can use this information to obtain the new data file.</p></li>
+<p class="listitem">Click <span class="guimenu">Forward</span> to obtain the old data file. The location of the old data file and the email address of the iFolder administrator is displayed. You can use this information to obtain the new data file.</p></li>
             
 <li class="listitem">
 <p class="listitem">Click <span class="guimenu">Finish</span> to close the wizard.</p></li>
@@ -290,7 +290,7 @@
 
 <h2 class="title"> Changing the Passphrase</h2>
 
-<p class="para">For security reasons, you must change yout passphrase periodically. You can reset the passphrase by using the one-time passphrase sent by your Recovery agent.</p>
+<p class="para">For security reasons, you must change your passphrase periodically. You can reset the passphrase by using the one-time passphrase sent by your Recovery agent.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bkmh1hl">

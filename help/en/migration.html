@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, June 10, 2009 13:31" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migrating from iFolder 2.x to iFolder 3.7</title>
+<title>Migrating from iFolder 2.x to iFolder 3.7 or later</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> Migrating from iFolder 2.<span class="replaceable">x</span> to iFolder 3.7</h1>
+<h1 class="title"> Migrating from iFolder 2.<span class="replaceable">x</span> to iFolder 3.7 or later</h1>
 
 <p class="para">This section discusses the following:</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> Understanding the Migration Process</h2>
 
-<p class="para">Novell iFolder provides a simple migration from iFolder 2.<span class="replaceable">x</span> to the iFolder client for Novell iFolder 3.7. The Migration Assistant provided in the iFolder client helps you migrate the existing iFolder 2.<span class="replaceable">x</span> data quickly and easily.</p>
+<p class="para">Novell iFolder provides a simple migration from iFolder 2.<span class="replaceable">x</span> client to iFolder 3.7 or later client. The Migration Assistant provided in the iFolder client helps you migrate the existing iFolder 2.<span class="replaceable">x</span> data quickly and easily.</p>
 <p class="para">During the startup, the Migration Assistant detects the 2.<span class="replaceable">x</span> installation and prompts you to migrate your data. During the data migration, it prompts you again to convert the existing folders or to make a copy of the 2.<span class="replaceable">x</span> iFolder. For more information on this, refer <a href="migration.html#b8anh5z">Step 6</a>.</p>
-<p class="para">iFolder prompts you about the resynchronization of the files to 3.7 server, and asks whether you need to retain the 2.<span class="replaceable">x</span> client until the 3.7 completes synchronization. During this process, only the data get migrated, hence, the user has to set the preference in the new client. </p>
+<p class="para">iFolder prompts you about the resynchronization of the files to 3.7 or later server, and asks whether you need to retain the 2.<span class="replaceable">x</span> client until the synchronization is complete. During this process, only the data gets migrated, hence, the user has to set the preference in the new client. </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Install the iFolder client for iFolder 3.7, then configure your account for the iFolder 3.7 enterprise server.</p>
+<p class="para">Install the iFolder client for iFolder 3.7 or later server, then configure your account for the iFolder 3.7 or later enterprise server.</p>
 <p class="para">For information on installing the client and setting up the account, see <a href="accountsprefs.html">Managing iFolder Accounts and Preferences</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">In the iFolder browser, create one or more iFolders on your local computer.</p>
@@ -95,17 +95,17 @@
 <p class="para">Select one of the following:</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">Migrate the iFolder and disconnect it from 2.x domain</span>:</em>
-              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> domain after migrating it to 3.7.</p>
+              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> domain after migrating it to 3.7 or later.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Create a copy of the iFolder and migrate:</span>
               </em>
-              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to the iFolder 3.7. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> domain even after you migrate the files to the iFolder 3.7.</p>
+              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to iFolder 3.7 or later. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> domain even after you migrate the files to iFolder 3.7 or later.</p>
             </div>
 
-<p class="para">If you select this option, you can also select<span class="guimenu"> Copy the parent folder</span> if you want to copy not only the contents of the 2.<span class="replaceable">x</span> folder, but the parent folder as well. If you leave this option deselected, only the contents of the selected folder will be migrated to 3.7. </p>
+<p class="para">If you select this option, you can also select<span class="guimenu"> Copy the parent folder</span> if you want to copy not only the contents of the 2.<span class="replaceable">x</span> folder, but the parent folder as well. If you leave this option deselected, only the contents of the selected folder will be migrated to 3.7 or later. </p>
 <p class="para">Click <span class="guimenu">Browse</span> to find the location to save the migrated folder.</p>
 <p class="para">For example, <span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> is a 2.<span class="replaceable">x</span> iFolder and <span class="filename">dir1</span> and <span class="filename">dir2</span> are the directories under <span class="filename">ifolder2dir</span>. When you select the option <span class="guimenu">Copy the parent directory</span>, it create the <span class="filename">ifolder2dir </span>in the new location and the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are copied to it. If the option remains deselected, only the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are moved to the specified location.</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">If you did not set your passphrase during login, iFolder prompts you to enter the passphrase. You can skip this option and set the passphrase later.</p>
 <p class="listitem">If you are not currently connected to the iFolder domain, it prompts you to connect to the domain.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder 3.7 domain.</p>
+<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder domain.</p>
 <p class="listitem">You can migrate an encrypted 2.<span class="guimenu">x</span> iFolder to shared folder. When you attempt to migrate an encrypted 2.<span class="replaceable">x</span> iFolder to a shared folder, it prompts you to verify the action.</p>
 <p class="listitem">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ul></div>
 </li></ol>
