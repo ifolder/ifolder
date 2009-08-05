@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>等待同步</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>帳戶未加密</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>無法傳送舊資料檔</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>選取選項以復原您的密碼片語。</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>未提供密碼片語</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>如果您離開 Novell iFolder 應用程式，將不再追蹤您 iFolder 中的變更。當您下次登入時，Novell iFolder 將使您的 iFolder 與伺服器間的任何差異趨於一致</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>擁有者</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>未針對此帳戶設定密碼片語。</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>已成功輸出加密的金鑰檔案。</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>正在上載檔案：{0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>未針對此帳戶啟動加密。請聯絡您的系統管理員以啟動加密。</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>縮圖</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>選定位置包括「Program Files」資料夾。「Program Files」資料夾不能包含 iFolder。請選取其他位置，並再試一次。</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>未設定密碼片語</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

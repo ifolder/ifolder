@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Warten auf Synchronisierung</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Konto nicht verschlüsselt</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Alte Datendatei kann nicht gesendet werden</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Wählen Sie eine Option aus, um Ihren Passwortsatz wiederherzustellen.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Passwortsatz nicht vorhanden</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Wenn Sie die Anwendung Novell iFolder beenden, werden die Änderungen an Ihrem IFolder-Ordner nicht mehr aufgezeichnet. Bei der nächsten Anmeldung gleicht Novell iFolder alle Unterschiede zwischen Ihrem IFolder-Ordner und dem Server ab.</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Eigentümer</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Für dieses Konto wurde kein Passwortsatz festgelegt.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Die verschlüsselte Datei wurde erfolgreich exportiert.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Datei wird heraufgeladen: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Für dieses Konto ist keine Verschlüsselung aktiviert. Wenden Sie sich an den Systemadministrator, um die Verschlüsselung zu aktivieren.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Thumbnails</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>Der ausgewählte Standort enthält den Programme-Ordner. Der Programme-Ordner kann keinen iFolder-Ordner enthalten. Wählen Sie einen anderen Standort und versuchen Sie es erneut.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Passwortsatz nicht festgelegt</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

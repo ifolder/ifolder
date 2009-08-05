@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>En attente de synchronisation</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Compte non codé</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Impossible d'envoyer l'ancien fichier de données.</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Sélectionnez une option pour récupérer votre phrase secrète.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Phrase secrète non fournie</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Si vous quittez l'application Novell iFolder, le suivi des modifications de votre dossier iFolder ne sera plus effectué. Lors de votre prochain login, Novell iFolder harmonisera les différences entre votre dossier iFolder et le serveur.</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Propriétaire</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Aucune phrase secrète n'est définie pour ce compte.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Le fichier de clé codée a été exporté.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Téléchargement du fichier : {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Le codage n'est pas activé pour ce compte. Pour activer le codage, contactez votre administrateur système.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniatures</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>L'emplacement sélectionné comporte le dossier Program Files, or le dossier Program Files ne peut pas contenir de dossier iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Phrase secrète non définie</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

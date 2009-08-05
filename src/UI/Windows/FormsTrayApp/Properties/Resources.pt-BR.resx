@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Aguardando para sincronizar</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Conta Não Criptografada</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Não é possível enviar o arquivo de dados antigo</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Selecione uma opção para recuperar sua frase secreta.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Frase secreta não fornecida</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Se você sair do aplicativo Novell iFolder, as mudanças feitas no iFolder não serão mais monitoradas. Na próxima vez em que você efetuar login, o Novell iFolder reconciliará todas as diferenças entre o iFolder e o Servidor</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Proprietário</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>A frase secreta não está definida para esta conta.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>O arquivo de chave criptografado foi exportado com êxito.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Fazendo upload do arquivo: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>A criptografia não está habilitada para esta conta. Contate seu administrador de sistema para habilitar a criptografia.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniaturas</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>O local selecionado inclui a pasta Arquivos de Programas. A pasta Arquivos de Programas não pode conter um iFolder. Selecione outro local e tente novamente.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Frase secreta Não Definida</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportarPágina</value>

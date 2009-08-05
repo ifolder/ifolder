@@ -178,7 +178,7 @@
     <value>ExportPage</value>
   </data>
   <data name="notApplicable" xml:space="preserve">
-    <value>N/A</value>
+    <value>N/D</value>
   </data>
   <data name="iFolderError" xml:space="preserve">
     <value>Error al leer las carpetas iFolder.</value>
@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Esperando la sincronización</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Cuenta no cifrada</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>No es posible enviar el archivo de datos antiguo</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Seleccione una opción para recuperar su contraseña codificada.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Contraseña codificada no proporcionada</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Si sale de la aplicación iFolder de Novell, dejará de hacerse el seguimiento de los cambios realizados en la carpeta iFolder. La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre la carpeta iFolder y el servidor.</value>
@@ -397,7 +403,7 @@
     <value>MB</value>
   </data>
   <data name="na" xml:space="preserve">
-    <value>N/A</value>
+    <value>N/D</value>
   </data>
   <data name="kb" xml:space="preserve">
     <value>KB</value>
@@ -431,6 +437,9 @@
   </data>
   <data name="owner" xml:space="preserve">
     <value>Propietario</value>
+  </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>No se ha definido la contraseña codificada para esta cuenta.</value>
   </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>El archivo cifrado se ha exportado correctamente.</value>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Cargando el archivo: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>No se ha habilitado el cifrado para esta cuenta. Póngase en contacto con el administrador del sistema para habilitarlo.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniaturas</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>La ubicación seleccionada incluye la carpeta Archivos de programa. Esta carpeta no puede contener una iFolder. Seleccione una ubicación diferente e inténtelo de nuevo.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Contraseña codificada no definida</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

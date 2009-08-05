@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>In attesa di sincronizzazione</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Conto non cifrato</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Impossibile inviare file di dati precedenti</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Selezionare un'opzione per recuperare la stringa di cifratura.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Stringa di cifratura non fornita</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Se si esce dall'applicazione Novell iFolder, le modifiche della cartella iFolder non verranno più tracciate. Al login successivo, Novell iFolder aggiorna tutte le differenze presenti tra la cartella iFolder dell'utente e il server</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Proprietario</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Stringa di cifratura non impostata per il conto.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>File chiave cifrato esportato correttamente.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Upload file in corso: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Cifratura non abilitata per il conto. Contattare l'amministratore del sistema per abilitare la cifratura.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Anteprime</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>L'ubicazione selezionata comprende la cartella Programmi. La cartella Programmi non può essere una cartella iFolder. Selezionare una differente ubicazione e riprovare.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Stringa di cifratura non impostata</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportaPagina</value>

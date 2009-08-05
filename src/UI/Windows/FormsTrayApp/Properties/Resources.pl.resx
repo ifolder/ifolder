@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Oczekiwanie na zsynchronizowanie</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Konto nie jest szyfrowane</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Nie można wysłać starego pliku danych.</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Wybierz opcję odzyskiwania zwrotu hasłowego.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Nie podano zwrotu hasłowego</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Jeśli zakończysz pracę aplikacji Novell iFolder, zmiany w folderze iFolder nie będą już śledzone. Przy następnym zalogowaniu program Novell iFolder uzgodni wszystkie różnice między folderem iFolder a serwerem.</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Właściciel</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Nie ustawiono zwrotu hasłowego dla tego konta.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Zaszyfrowany plik klucza został pomyślnie wyeksportowany.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Przekazywanie pliku: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Szyfrowanie nie jest włączone dla tego konta. W sprawie jego włączenia skontaktuj się z administratorem systemu.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniatury</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>Wybrane położenie zawiera folder Program Files. Folder Program Files nie może zawierać folderu iFolder. Wybierz inne położenie i spróbuj ponownie.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Nie ustawiono zwrotu hasłowego</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>Strona importowania</value>
