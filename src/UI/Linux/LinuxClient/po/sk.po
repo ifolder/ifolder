@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-07 18:51\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "Ak chcete, aby sa po prihlásení spustila aplikácia iFolder, ponechajt
 msgid "Notification"
 msgstr "Upozornenie"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Upozorniť _na zdieľanie objektov iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Upozorniť na _zdieľané priečinky iFolder"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Upozorniť _na zdieľanie objektov iFolder"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1679,6 +1679,12 @@ msgstr "Áno"
 msgid "No"
 msgstr "Nie"
 
+msgid "_Yes"
+msgstr "_Áno"
+
+msgid "_No"
+msgstr "_Nie"
+
 msgid "Co_nnect"
 msgstr "Prip_ojiť"
 
@@ -1968,7 +1974,7 @@ msgid "_Migrate"
 msgstr "_Preniesť"
 
 msgid "_Forgot Passphrase"
-msgstr "_Zabudnutý prístupový výraz"
+msgstr "Z_abudnutý prístupový výraz"
 
 msgid "Import Decrypted Keys"
 msgstr "Importovať dešifrované kľúče"
@@ -2327,8 +2333,8 @@ msgstr "Vyberte umiestnenie..."
 msgid "Download Default iFolder:"
 msgstr "Prevziať predvolený priečinok iFolder:"
 
-msgid "Download default iFolder"
-msgstr "Prevziať predvolený priečinok iFolder"
+msgid "_Download default iFolder"
+msgstr "_Prevziať predvolený priečinok iFolder"
 
 msgid "Next"
 msgstr "Ďalej"
@@ -2521,6 +2527,12 @@ msgstr "Odmietnuť"
 
 msgid "Accept"
 msgstr "Prijať"
+
+msgid "_Deny"
+msgstr "_Odmietnuť"
+
+msgid "_Accept"
+msgstr "_Prijať"
 
 msgid "Information Not Available"
 msgstr "Informácie nie sú k dispozícii"
@@ -2809,3 +2821,22 @@ msgstr "Zobrazovať upozornenia na _porušenie politiky"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Skryť _hlavné okno priečinka ifolder pri spustení"
+
+msgid "_Location:"
+msgstr "_Umiestnenie:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Počkajte, kým sa spustí aplikácia iFolder...\n\nAk chcete jej spustenie zrušiť, kliknite <a href=\"CancelStartup\">tu</a>."
+
+msgid "Save as..."
+msgstr "Uložiť ako..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Sprievodca obnovením prístupového výrazu"
+
+msgid "_iFolder Account"
+msgstr "_Konto aplikácie iFolder"
+
+msgid "Conflict Bin Path"
+msgstr "Cesta Koša konfliktov"
+

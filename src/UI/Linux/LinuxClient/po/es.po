@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-29 08:50\n"
+"PO-Revision-Date: 2009-08-04 19:33\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "Para iniciar iFolder durante la entrada, al salir de la sesión, deje iF
 msgid "Notification"
 msgstr "Notificación"
 
+msgid "Notify when iFolders are _shared"
+msgstr "Notificar cuando se _compartan carpetas iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "Notificar carpetas de iFolder compartida_s"
-
-msgid "Notify when iFolders are _shared"
-msgstr "Notificar cuando se _compartan carpetas iFolder"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1678,6 +1678,12 @@ msgstr "Sí"
 
 msgid "No"
 msgstr "No"
+
+msgid "_Yes"
+msgstr "_Sí"
+
+msgid "_No"
+msgstr "_No"
 
 msgid "Co_nnect"
 msgstr "Co_nectar"
@@ -2327,8 +2333,8 @@ msgstr "Seleccionar ubicación..."
 msgid "Download Default iFolder:"
 msgstr "Descargar carpeta iFolder por defecto:"
 
-msgid "Download default iFolder"
-msgstr "Descargar la carpeta iFolder por defecto"
+msgid "_Download default iFolder"
+msgstr "_Descargar iFolder predeterminado"
 
 msgid "Next"
 msgstr "Siguiente"
@@ -2521,6 +2527,12 @@ msgstr "Denegar"
 
 msgid "Accept"
 msgstr "Aceptar"
+
+msgid "_Deny"
+msgstr "_Denegar"
+
+msgid "_Accept"
+msgstr "_Aceptar"
 
 msgid "Information Not Available"
 msgstr "No hay información disponible"
@@ -2809,4 +2821,22 @@ msgstr "Mostrar notificaciones de infracciones de _directivas"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "Ocultar la ventana _principal de iFolder durante el inicio"
+
+msgid "_Location:"
+msgstr "_Ubicación:"
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "Espere a que iFolder se inicie...\n\nPulse <a href=\"CancelStartup\">aquí</a> para cancelar."
+
+msgid "Save as..."
+msgstr "Guardar como..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "Asistente de recuperación de contraseña codificada"
+
+msgid "_iFolder Account"
+msgstr "_Cuenta de iFolder"
+
+msgid "Conflict Bin Path"
+msgstr "Vía de la bandeja de conflicto"
 

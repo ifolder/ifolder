@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-07-06 10:55\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1365,12 +1365,12 @@ msgstr "要在登录时启动 iFolder，请在注销并保存当前设置时保�
 msgid "Notification"
 msgstr "通知"
 
+msgid "Notify when iFolders are _shared"
+msgstr "共享 iFolders 后发出通知(_S)"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:163 
 msgid "Notify of share_d iFolders"
 msgstr "共享 iFolder 通知(_D)"
-
-msgid "Notify when iFolders are _shared"
-msgstr "共享 iFolders 后发出通知(_S)"
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:170 
 msgid "Notify when conflic_ts arise"
@@ -1678,6 +1678,12 @@ msgstr "是"
 
 msgid "No"
 msgstr "否"
+
+msgid "_Yes"
+msgstr "是(_Y)"
+
+msgid "_No"
+msgstr "否(_N)"
 
 msgid "Co_nnect"
 msgstr "连接(_N)"
@@ -2327,8 +2333,8 @@ msgstr "选择位置..."
 msgid "Download Default iFolder:"
 msgstr "下载默认 iFolder："
 
-msgid "Download default iFolder"
-msgstr "下载默认 iFolder"
+msgid "_Download default iFolder"
+msgstr "下载默认的 iFolder(_D)"
 
 msgid "Next"
 msgstr "下一个"
@@ -2521,6 +2527,12 @@ msgstr "拒绝"
 
 msgid "Accept"
 msgstr "接受"
+
+msgid "_Deny"
+msgstr "拒绝(_D)"
+
+msgid "_Accept"
+msgstr "接受(_A)"
 
 msgid "Information Not Available"
 msgstr "信息不可用"
@@ -2809,3 +2821,22 @@ msgstr "显示违反策略通知(_P)"
 
 msgid "Hide ifolder _main window at startup"
 msgstr "启动时隐藏 ifolder 主窗口(_M)"
+
+msgid "_Location:"
+msgstr "位置(_L)："
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "请等待 iFolder 启动...\n\n按<a href=\"CancelStartup\">此处</a>取消。"
+
+msgid "Save as..."
+msgstr "另存为..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "通行口令恢复向导"
+
+msgid "_iFolder Account"
+msgstr "iFolder 帐户(_I)"
+
+msgid "Conflict Bin Path"
+msgstr "冲突文件箱路径"
+
