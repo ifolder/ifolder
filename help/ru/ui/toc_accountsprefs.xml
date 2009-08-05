@@ -5,7 +5,7 @@
  <title>Управление учетными записями и настройками iFolder</title>
  <entry leaf="true" id="startclient">Запуск клиента iFolder</entry>
  <entry leaf="true" id="accounts">Конфигурирование учетной записи iFolder</entry>
- <entry leaf="true" id="login">Регистрация с помощью учетной записи iFolder</entry>
+ <entry leaf="true" id="login">Вход с помощью учетной записи iFolder</entry>
  <entry leaf="true" id="accountdetails">Просмотр и изменение настроек учетной записи iFolder</entry>
  <entry leaf="true" id="preferences">Конфигурирование настроек iFolder для клиента</entry>
  <entry leaf="true" id="firewall">Конфигурирование параметров локального брандмауэра для трафика iFolder</entry>
