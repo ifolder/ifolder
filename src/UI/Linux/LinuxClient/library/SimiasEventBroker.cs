@@ -301,7 +301,7 @@ namespace Novell.iFolder
 					simiasEventClient = null;
 				}
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				// ignore
 			}

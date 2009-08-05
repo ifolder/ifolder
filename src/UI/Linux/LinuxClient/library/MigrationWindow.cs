@@ -47,7 +47,7 @@ namespace Novell.iFolder
 	/// </summary>
 	public class MigrationWindow : Window
 	{
-                private Gtk.Window                              topLevelWindow;
+//              private Gtk.Window                              topLevelWindow;
                 private iFolderWebService               ifws;
 		private SimiasWebService 		simws;
                 private iFolderTreeView         AccTreeView;
@@ -62,7 +62,7 @@ namespace Novell.iFolder
 		public MigrationWindow( Gtk.Window topWindow, iFolderWebService ifws, SimiasWebService simws)
 			: base (Util.GS("iFolder Migration"))
 		{
-                        this.topLevelWindow = topWindow;
+//                      this.topLevelWindow = topWindow;
 			this.Modal = false;
                         this.ifws = ifws;
 			this.simws = simws;
@@ -234,7 +234,7 @@ namespace Novell.iFolder
                 {
                         string id = (string) tree_model.GetValue(iter, 0);
                         string uname = GetName(id);
-                        string loc = GetHomeLocation(id);
+//                      string loc = GetHomeLocation(id);
                         ((CellRendererText) cell).Text = uname;
                 }
 

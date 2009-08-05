@@ -400,7 +400,7 @@ namespace Novell.iFolder
 					SyncSpinButton.Value = CalculateSyncSpinValue(lastSyncInterval, currentSyncUnit);
 				}
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				lastSyncInterval = -1;
 				SyncSpinButton.Value = 0;

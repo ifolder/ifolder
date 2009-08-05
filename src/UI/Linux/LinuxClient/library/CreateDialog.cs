@@ -329,7 +329,7 @@ namespace Novell.iFolder
 				else
 					this.SetResponseSensitive(ResponseType.Ok, false);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				this.SetResponseSensitive(ResponseType.Ok, false);
 			}

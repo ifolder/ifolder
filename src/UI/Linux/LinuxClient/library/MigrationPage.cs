@@ -52,7 +52,7 @@ namespace Novell.iFolder
 	public class MigrationPage : VBox
 	{
 		private Gtk.Window				topLevelWindow;
-		private iFolderWebService 		ifws;
+//		private iFolderWebService 		ifws;
 		private iFolderTreeView		AccTreeView;
 		private ListStore			AccTreeStore;
 //		private Button 				AddButton;
@@ -68,7 +68,7 @@ namespace Novell.iFolder
 			: base()
 		{
 			this.topLevelWindow = topWindow;
-			this.ifws = ifws;
+//			this.ifws = ifws;
 			curDomains = new Hashtable();
 			
 			InitializeWidgets();
@@ -230,7 +230,7 @@ namespace Novell.iFolder
 		{
 			string id = (string) tree_model.GetValue(iter, 0);
 			string uname = GetName(id);
-			string loc = GetHomeLocation(id);
+//			string loc = GetHomeLocation(id);
 			((CellRendererText) cell).Text = uname;
 		}
 
@@ -278,7 +278,7 @@ namespace Novell.iFolder
 			else
 				((CellRendererText) cell).Text = "Folder does not Exist";
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 			}
 
@@ -306,7 +306,7 @@ namespace Novell.iFolder
 				TreeIter iter;
 
 				tSelect.GetSelected(out tModel, out iter);
-				string id = (string) tModel.GetValue(iter, 0);
+//				string id = (string) tModel.GetValue(iter, 0);
 				MigrationWizard migratewiz = null; //new MigrationWizard(GetName(id), GetHomeLocation(id), ifws, this);
 
 				migratewiz.TransientFor = topLevelWindow;

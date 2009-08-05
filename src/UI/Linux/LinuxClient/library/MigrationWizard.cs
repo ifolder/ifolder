@@ -87,7 +87,7 @@ namespace Novell.iFolder
 		private RadioButton 			deleteFromServer;
 		private RadioButton			copyToServer;
 		
-		private RadioButton 			group;
+//		private RadioButton 			group;
 
 		private CheckButton 			copyDir;
 		private Button				BrowseButton;
@@ -114,14 +114,14 @@ namespace Novell.iFolder
 		///
 
 	        private iFolderTreeView RATreeView;
-	        private ScrolledWindow  RAScrolledWindow;
+//	        private ScrolledWindow  RAScrolledWindow;
 	        private Entry           PassPhraseEntry;
 	        private Entry           PassPhraseVerifyEntry;
 	        private CheckButton	RememberPassPhraseCheckButton;
-	        private string[]        RAList;
+//	        private string[]        RAList;
 	        private ListStore       RATreeStore;
 	        private bool            PassPhraseSet;
-	        private bool            RememberPassPhrase;
+//	        private bool            RememberPassPhrase;
 		private Label		RetypePassPhraseLabel;
 		private Label		SelectRALabel;
 	
@@ -321,7 +321,7 @@ namespace Novell.iFolder
         private void OnBrowseButtonClicked(object o, EventArgs e)
 		{
 			System.IO.DirectoryInfo source = new System.IO.DirectoryInfo(location);
-			string destDir = LocationEntry.Text;
+//			string destDir = LocationEntry.Text;
 			string fileName = null;
 			if( copyDir.Active )
 			{
@@ -922,7 +922,7 @@ namespace Novell.iFolder
 				AccountDruid.SetButtonsSensitive(true , true, true, true);
 				ForwardButton.Sensitive = false;
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				iFolderMsgDialog errorMsg = new iFolderMsgDialog(null, 
 												iFolderMsgDialog.DialogType.Info,
@@ -1039,7 +1039,7 @@ namespace Novell.iFolder
 			{
             			destination.Create();
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				return success;
 			}
@@ -1060,7 +1060,7 @@ namespace Novell.iFolder
 		            file.CopyTo(System.IO.Path.Combine(destination.FullName, file.Name));
         		}
 		}
-		catch(Exception e)
+		catch(Exception)
 		{
 			return success;
 		}
@@ -1079,7 +1079,7 @@ namespace Novell.iFolder
 	        	    return CopyDirectory(dir, new DirectoryInfo(destinationDir));
         		}
 		}
-		catch(Exception e)
+		catch(Exception)
 		{
 			return success;
 		}
@@ -1144,7 +1144,7 @@ namespace Novell.iFolder
 					{
 						di.Create();
 					}
-					catch(Exception ex)
+					catch(Exception)
 					{
 						Debug.PrintLine("Unable to create directory for copy option..");
 						migrationStatus = false;

@@ -111,7 +111,7 @@ namespace Novell.iFolder
 			{
 				this.ifolder = this.ifws.GetiFolder(ifolder.ID);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				throw new ApplicationException(
 						"Unable to read the iFolder");
@@ -179,7 +179,7 @@ namespace Novell.iFolder
 			{
 				this.ifolder = this.ifws.GetiFolder(ifolderID);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				throw new ApplicationException(
 						"Unable to read the iFolder");

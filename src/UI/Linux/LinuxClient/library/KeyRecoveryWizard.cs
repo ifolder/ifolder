@@ -70,9 +70,9 @@ namespace Novell.iFolder
 
 	  	private bool                            ControlKeyPressed;
 	
-		private Button             	        	ForwardButton;
-	    private Button                          BackButton;
-        private Button                          FinishButton;
+		//private Button             	        	ForwardButton;
+	    	//private Button                          BackButton;
+        	//private Button                          FinishButton;
 		
 		        // private Image                                    iFolderBanner;
                 //private Image                            iFolderScaledBanner;
@@ -1792,6 +1792,7 @@ namespace Novell.iFolder
                                 HButtonBox hButtonBox = w as HButtonBox;
                                 foreach(Widget buttonWidget in hButtonBox)
                                 {
+					/*
                                         if (buttonWidget is Button)
                                         {
                                                 Button button = buttonWidget as Button;
@@ -1802,8 +1803,8 @@ namespace Novell.iFolder
                                                 else if (button.Label == "gtk-go-back")
 
                                                         BackButton = button;
-						
                                         }
+					*/
                                 }
                         }
                 }

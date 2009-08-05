@@ -608,7 +608,7 @@ namespace Novell.iFolder
 						{
 							fs = File.Create(filename);
 						}
-						catch (System.UnauthorizedAccessException uae)
+						catch (System.UnauthorizedAccessException)
 						{
 							iFolderMsgDialog dg = new iFolderMsgDialog(
 								this,
@@ -685,7 +685,7 @@ namespace Novell.iFolder
 	
 				fcd.Destroy();
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				iFolderMsgDialog dg = new iFolderMsgDialog(
 					this,

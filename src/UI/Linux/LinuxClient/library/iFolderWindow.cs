@@ -84,7 +84,7 @@ namespace Novell.iFolder
 		private ImageMenuItem		HelpMenuItem;
 		private MenuItem                RecoveryMenuItem;
 //		private MenuItem		ExportMenuSubItem;
-		private MenuItem 		ImportMenuSubItem;
+		//private MenuItem 		ImportMenuSubItem;
 	        private MenuItem                ResetPassMenuItem;
 		private MenuItem		ResetPasswordMenuItem;
 		private ImageMenuItem		AboutMenuItem;
@@ -132,7 +132,7 @@ namespace Novell.iFolder
 
 		private ScrolledWindow		iFoldersScrolledWindow,ifolderlistview;
 		private iFolderIconView	iFoldersIconView;
-		private HBox 				viewpane;
+//		private HBox 				viewpane;
 		public ListTreeView 			tv;
 		private static iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter,iFolderFilter,treeModelFilter;
@@ -4151,8 +4151,6 @@ namespace Novell.iFolder
             System.Object[] args = new System.Object[4];
             System.Object[] setPosArgs = new System.Object[1];
 
-            if( assemblyName != null )
-            {
                 try
                 {
                     Assembly idAssembly = Assembly.Load( assemblyName );
@@ -4181,11 +4179,6 @@ namespace Novell.iFolder
                 {
                    iFolderWindow.log.Info("Exception type {0} Message {1} StackTrace {2}", e.GetType(), e.Message, e.StackTrace ); 
                 }
-            }
-            else
-            {
-                iFolderWindow.log.Info("Enhanced Conflict Resolution functionality not available...");
-            }
             return status;
         }
 

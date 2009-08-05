@@ -141,7 +141,7 @@ namespace Novell.iFolder
 					"/iFolder.asmx";
 				LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				ifws = null;
 				throw new Exception("Unable to create ifolder web service");
@@ -154,7 +154,7 @@ namespace Novell.iFolder
 					"/Simias.asmx";
 				LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				simws = null;
 				throw new Exception("Unable to create simias web service");
@@ -261,7 +261,7 @@ namespace Novell.iFolder
 				{
 					ifolders = ifws.GetAlliFolders();
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 				 //TODO: Exception was found when domain is disconnected, were as foudn that
                                  // GetAlliFolders is returning exception, but not able locate as debugging shows 
@@ -356,7 +356,7 @@ namespace Novell.iFolder
 									if( ifws.CheckiFolder( key ) == false)
 										throw new Exception( "Invalid iFolderID");
 								}
-								catch(Exception ex)
+								catch(Exception)
 								{
 									DeliFolder(key);
 								}
@@ -716,7 +716,7 @@ namespace Novell.iFolder
 						}
 					}
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					ifHolder = null;
 				}
@@ -846,7 +846,7 @@ namespace Novell.iFolder
 						}
 					}
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					ifHolder = null;
 				}
@@ -929,7 +929,6 @@ namespace Novell.iFolder
 			lock(instanceLock)
 			{
 				iFolderHolder ifHolder = null;
-				string collectionID = GetiFolderID(ifolderID);
 //				iFolderWeb[] ifarray = ifws.GetAlliFolders();
 //				Debug.PrintLine(String.Format("The number of iFolders is: {0}", ifarray.Length));
 				iFolderWeb newifolder = null;
@@ -1100,7 +1099,7 @@ namespace Novell.iFolder
 					user = ifws.GetiFolderUserFromNodeID(
 						collectionID, nodeID);
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					user = null;	
 				}
@@ -1142,7 +1141,7 @@ namespace Novell.iFolder
 				{
 					ds = ifws.GetUserDiskSpace(UserID);
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					// Let this one go
 				}
@@ -1263,7 +1262,7 @@ namespace Novell.iFolder
 						SyncSize syncSize = ifws.CalculateSyncSize(args.CollectionID);
 						objectsToSync = syncSize.SyncNodeCount;
 					}
-					catch(Exception e)
+					catch(Exception)
 					{
 						objectsToSync = 1;
 					}

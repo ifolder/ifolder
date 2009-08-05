@@ -46,16 +46,16 @@ namespace Novell.iFolder
 		private ComboBox domainCombo;
 		private Button BrowseButton;
 		private Entry location;
-		private Label email;
+//		private Label email;
 		private Entry oneTimePassphrase;
-		private Entry newPassPhrase;
+//		private Entry newPassPhrase;
 		private Entry passPhrase;
 		private Entry retypePassPhrase;
-		private Label recoveryAgentCombo;
-		private string[] RAList;
-		private string DomainID;
+//		private Label recoveryAgentCombo;
+//		private string[] RAList;
+//		private string DomainID;
 		private DomainInformation[] domains;
-		private CheckButton savePassPhrase;
+//		private CheckButton savePassPhrase;
 		private iFolderWebService ifws;
 		private SimiasWebService simws;
 	
