@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Ожидание синхронизации</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Учетная запись не зашифрована</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Не удается отправить старый файл данных</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Выберите вариант восстановления ключевой фразы.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Ключевая фраза не указана</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>При выходе из приложения Novell iFolder изменения, вносимые в папку iFolder, более не будут отслеживаться. При следующем входе в систему Novell iFolder согласует все различия между вашей папкой iFolder и сервером.</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Владелец</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Ключевая фраза не задана для этой учетной записи.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Зашифрованный файл ключа успешно экспортирован.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Отправка файла: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Шифрование не включено для этой учетной записи. Чтобы включить его, обратитесь к системному администратору.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Эскизы</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>Выбранное расположение включает папку Program Files. Папка Program Files не может содержать папку iFolder. Выберите другое расположение и повторите попытку.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Ключевая фраза не задана</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

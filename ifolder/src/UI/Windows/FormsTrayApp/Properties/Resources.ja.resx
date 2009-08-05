@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>同期待機中</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>アカウントが暗号化されていません</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>古いデータファイルを送信できません</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>パスフレーズを回復するためのオプションを選択してください。</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>パスフレーズが指定されていません</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Novell iFolderアプリケーションを終了すると、iFolderで行った変更は追跡されません。次のログイン時にNovell iFolderによって、iFolderとサーバ間の相違が調整されます</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>所有者</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>このアカウントではパスフレーズが設定されていません。</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>暗号化されたキーファイルは正常にエクスポートされました。</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>ファイルをアップロードしています: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>このアカウントでは暗号化が有効になっていません。システム管理者に連絡して暗号化を有効にしてください。</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>サムネイル</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>選択された場所にはProgram Filesフォルダが含まれています。Program FilesフォルダにiFolderを含めることはできません。別の場所を選択し、再度実行してください。</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>パスフレーズが設定されていません</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>インポートページ</value>

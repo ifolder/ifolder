@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Čaká sa na synchronizáciu</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Konto nie je šifrované</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Nie je možné odoslať starý údajový súbor</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Vyberte možnosť obnovenia prístupového výrazu.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Prístupový výraz nie je k dispozícii</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Ak ukončíte aplikáciu Novell iFolder, sledovanie zmien v priečinku iFolder sa ukončí. Pri nasledujúcom prihlásení aplikácia Novell iFolder zosúladí všetky rozdiely medzi vaším priečinkom iFolder a serverom</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Vlastník</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Pre toto konto nie je nastavený prístupový výraz.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Šifrovaný súbor kľúča sa úspešne exportoval.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Odovzdáva sa súbor: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Pre toto konto nie je povolené šifrovanie. Požiadajte správcu systému o povolenie šifrovania.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniatúry</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>Vybraté umiestnenie obsahuje priečinok Program Files. Priečinok Program Files nemôže obsahovať priečinok iFolder. Vyberte iné umiestnenie a skúste to znova.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Prístupový výraz nie je nastavený</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

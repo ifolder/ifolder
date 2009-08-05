@@ -127,7 +127,7 @@
     <value>Ezzel törli az iFolder mappát és annak fájljait a kiszolgálóról. Biztosan eltávolítja a következőt a kiszolgálóról: "{0}"?</value>
   </data>
   <data name="iFolderRevertError" xml:space="preserve">
-    <value>Hiba történt az iFolder visszaalakítása közben.</value>
+    <value>Hiba történt az iFolder mappa visszaalakítása közben.</value>
   </data>
   <data name="enterPassphrasePageName" xml:space="preserve">
     <value>enterPassphrasePage</value>
@@ -301,13 +301,16 @@
     <value>Letölthető</value>
   </data>
   <data name="iFolderOpenError" xml:space="preserve">
-    <value>Nem lehet megnyitni a(z) {0} iFolder mappát.</value>
+    <value>Nem sikerült megnyitni a(z) {0} iFolder mappát.</value>
   </data>
   <data name="helpText" xml:space="preserve">
     <value>Súgó</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Várakozás a szinkronizálásra</value>
+  </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Nem titkosított fiók</value>
   </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Nem sikerült elküldeni a régi adatfájlt</value>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Válasszon egy lehetőséget a hozzáférési kód helyreállításához.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Nincs hozzáférési kód megadva</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Ha kilép a Novell iFolder alkalmazásból, az iFolder mappájában végrehajtott változások követése megszűnik. A következő bejelentkezéskor a Novell iFolder egyezteti a különbségeket az iFolder mappa és a kiszolgáló között.</value>
@@ -376,7 +382,7 @@
     <value>Érvénytelen hely</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
-    <value>Jelölje ki azt a fiókot, amelynek a hozzáférési kódját át kell állítani.</value>
+    <value>Jelölje ki azt a fiókot, amelynek az azonosítási kifejezését át kell állítani.</value>
   </data>
   <data name="browseText" xml:space="preserve">
     <value>Tallózás</value>
@@ -418,7 +424,7 @@
     <value>Kivétel történt az iFolder letöltésére tett kísérlet közben.</value>
   </data>
   <data name="usedQuota" xml:space="preserve">
-    <value>Felhasználva</value>
+    <value>Használatban</value>
   </data>
   <data name="nextText" xml:space="preserve">
     <value>&amp;Tovább</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Tulajdonos</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>A fiókhoz nincs hozzáférési kód beállítva.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>A titkosított kulcsfájl exportálása sikerült.</value>
   </data>
@@ -442,7 +451,7 @@
     <value>A hozzáférési kódot sikerült átállítani.</value>
   </data>
   <data name="removeTitle" xml:space="preserve">
-    <value>iFolder törlése</value>
+    <value>iFolder mappa törlése</value>
   </data>
   <data name="finalPageFirst" xml:space="preserve">
     <value>Gratulálunk! Sikeresen átállította a hozzáférési kódot. Most már ezzel az új kóddal férhet hozzá az adataihoz.</value>
@@ -483,6 +492,9 @@
   <data name="uploadFile" xml:space="preserve">
     <value>Fájl feltöltése: {0}</value>
   </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>A titkosítás nincs engedélyezve a fiókhoz. Kérje meg a rendszergazdát, hogy engedélyezze a titkosítást.</value>
+  </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniatűrök</value>
   </data>
@@ -493,7 +505,7 @@
     <value>Az új és a megerősítő hozzáférési kód mezőjébe beírt érték nem egyezik.</value>
   </data>
   <data name="errorTitle" xml:space="preserve">
-    <value>iFolder-hiba</value>
+    <value>iFolder hiba</value>
   </data>
   <data name="syncError" xml:space="preserve">
     <value>Hiba történt az iFolder szinkronizálásakor.</value>
@@ -505,7 +517,7 @@
     <value>A kiválasztott hely egy másik iFolder mappában van. Az iFolder mappa nem lehet másik iFolder mappában. Válasszon másik helyet, majd próbálkozzon újra.</value>
   </data>
   <data name="AlsoRemoveMembership" xml:space="preserve">
-    <value>Szűnjön meg a tagságom is</value>
+    <value>Tagság megszüntetése is</value>
   </data>
   <data name="delete" xml:space="preserve">
     <value>Törlés</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>A kiválasztott hely tartalmazza a Program Files mappát. A Program Files mappa nem tartalmazhat iFolder mappát. Válasszon másik helyet, majd próbálkozzon újra.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Nincs hozzáférési kód beállítva</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>

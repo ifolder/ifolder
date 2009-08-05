@@ -309,6 +309,9 @@
   <data name="WaitSync" xml:space="preserve">
     <value>Čekání na synchronizaci</value>
   </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Účet není zašifrovaný.</value>
+  </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Nelze odeslat starý datový soubor</value>
   </data>
@@ -329,6 +332,9 @@
   </data>
   <data name="selectionPageOne" xml:space="preserve">
     <value>Vyberte možnost pro obnovení vašeho hesla.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Heslo není zadáno.</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Pokud ukončíte aplikaci Novell iFolder, změny ve vaší složce iFolder nebudou nadále sledovány. Až se příště přihlásíte, aplikace Novell iFolder vyrovná případné rozdíly mezi vaší složkou iFolder a serverem.</value>
@@ -432,6 +438,9 @@
   <data name="owner" xml:space="preserve">
     <value>Vlastník</value>
   </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Pro tento účet není nastaveno heslo.</value>
+  </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Zašifrovaný soubor klíče byl úspěšně exportován.</value>
   </data>
@@ -482,6 +491,9 @@
   </data>
   <data name="uploadFile" xml:space="preserve">
     <value>Nahrávání souboru: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Šifrování není pro tento účet zapnuto. Požádejte správce systému o zapnutí šifrování.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Miniatury</value>
@@ -560,6 +572,9 @@
   </data>
   <data name="PathIncludesProgFilesDirError" xml:space="preserve">
     <value>Vybrané umístění zahrnuje složku Program Files. Složka Program Files nemůže obsahovat složku iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Heslo není nastaveno.</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>
