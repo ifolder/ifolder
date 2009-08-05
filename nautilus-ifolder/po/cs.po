@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-10-21 14:23-0600\n"
-"PO-Revision-Date: 2009-07-06 10:54\n"
+"PO-Revision-Date: 2009-08-04 19:33\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,12 @@ msgstr "<b>_Doména:</b>"
 #: src/nautilus-ifolder.c:1500
 msgid "<b>_Path:</b>"
 msgstr "<b>_Cesta:</b>"
+
+msgid "<b>_Account:</b>"
+msgstr "<b>_Účet:</b>"
+
+msgid "<b>_Location:</b>"
+msgstr "<b>_Umístění:</b>"
 
 #: src/nautilus-ifolder.c:1583
 msgid "The iFolder could not be reverted."
