@@ -101,7 +101,6 @@ namespace Novell.iFolder
 		/// is able to notify the user at the end when there's a
 		/// problem.
 		private string				collectionSynchronizing;
-		private iFolderHolder iFolderHolderSyncing;
 		private Hashtable			synchronizationErrors;
 
 		private DomainController	domainController;
@@ -295,7 +294,7 @@ namespace Novell.iFolder
 						ifws.Ping();
 						simiasRunning = true;
 					}
-					catch(Exception e)
+					catch(Exception)
 					{
 						simiasRunning = false;
 					}
@@ -566,7 +565,6 @@ namespace Novell.iFolder
 					try
 					{
 						string DomainID = LoginDialog.Domain;
-						string HostUrl = dom.Host;
 						Status status =
 							domainController.AuthenticateDomain(
 								LoginDialog.Domain,
@@ -590,7 +588,6 @@ namespace Novell.iFolder
                                                         // No recovery agent present;
                                                  //       return;
                                                 // }
-                                                int result;
 						int policy = ifws.GetSecurityPolicy(DomainID);
 						if( policy % 2 == 0)
 							break;
@@ -757,10 +754,10 @@ namespace Novell.iFolder
 					simws.StorePassPhrase( DomainID, vpd.PassPhrase, CredentialType.Basic, vpd.ShouldSavePassPhrase);
 					status = simws.IsPassPhraseSet(DomainID);
 				}
-				catch(Exception ex) {}
+				catch(Exception) {}
 			}
 			}
-			catch(Exception e)
+			catch(Exception)
 			{
 				return false;
 			}
@@ -896,7 +893,7 @@ namespace Novell.iFolder
 				case Simias.Client.Event.Action.StartSync:
 				{
 					collectionSynchronizing = args.ID;
-					iFolderHolderSyncing = ifdata.GetiFolder( collectionSynchronizing);
+				//	iFolderHolderSyncing = ifdata.GetiFolder( collectionSynchronizing);
 				// per iFolder synchronization log
 				//	if( iFolderHolderSyncing != null)
 				//		iFolderHolderSyncing.iflog = new iFolderLogWindow();
@@ -1208,8 +1205,9 @@ namespace Novell.iFolder
 					// Make sure the iFolder and Synchronization Windows are
 					// initialized so that they begin receiving events as soon
 					// as possible.
-					iFolderWindow ifwin = Util.GetiFolderWindow();
-					LogWindow logwin = Util.GetLogWindow(simiasManager);
+
+					Util.GetiFolderWindow();
+	                                Util.GetLogWindow(simiasManager);
 
 					// Bring up the accounts dialog if there are no domains
 //					GLib.Timeout.Add(500, new GLib.TimeoutHandler(PromptIfNoDomains));
@@ -1233,7 +1231,7 @@ namespace Novell.iFolder
 
 					try
 					{
-						bool stopped = simiasManager.Stop();
+						/*bool stopped = */simiasManager.Stop();
 					}
 					catch(Exception e)
 					{
@@ -1352,9 +1350,6 @@ namespace Novell.iFolder
             const string autoAccountPrefMethod = "SetPreferences";
             const string autoAccountFilePath = "AutoAccountFilePath";
 
-            const string enumNameStr = "Novell.AutoAccountHelper.ParseStatus";
-            const string enumSuccessStr = "Success";
-            const string enumErrorStr = "ParseError";
 
             string filePathValue;
             System.Object[] args = new System.Object[1];
@@ -1764,7 +1759,7 @@ namespace Novell.iFolder
 				}
 			}
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 			}
 			
@@ -1793,7 +1788,7 @@ namespace Novell.iFolder
 				{
 					try
 					{
-						bool stopped = simiasManager.Stop();
+						/*bool stopped =*/ simiasManager.Stop();
 					}
 					catch(Exception e)
 					{
@@ -2001,7 +1996,7 @@ namespace Novell.iFolder
 					return;
 				}
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Console.WriteLine("\n GetProcessesByName failed to fetch the list of processes");
 			}
@@ -2075,7 +2070,7 @@ namespace Novell.iFolder
 //				if(application.EventBroker != null)
 //					application.EventBroker.Deregister();
 
-				bool stopped = application.SimiasManager.Stop();
+				/*bool stopped =*/ application.SimiasManager.Stop();
 
 //				UnregisterWithDBus();
 				Application.Quit();
