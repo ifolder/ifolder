@@ -229,7 +229,7 @@
     <value>140, 26</value>
   </data>
   <data name="passphraseLabel.Text" xml:space="preserve">
-    <value>H&amp;ozzáférési kód megadása:</value>
+    <value>Az&amp;onosítási kifejezés megadása:</value>
   </data>
   <data name="newPassphrase.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -298,7 +298,7 @@
     <value>16, 98</value>
   </data>
   <data name="rememberPassphrase.Text" xml:space="preserve">
-    <value>&amp;A hozzáférési kód megjegyzése ezen a számítógépen</value>
+    <value>&amp;Az azonosítási kifejezés megjegyzése ezen a számítógépen</value>
   </data>
   <data name="rememberPassphrase.Size" type="System.Drawing.Size, System.Drawing">
     <value>232, 35</value>
@@ -520,7 +520,7 @@
     <value>$this</value>
   </data>
   <data name="retypePassphraseLabel.Text" xml:space="preserve">
-    <value>Ho&amp;zzáférési kód ismételt beírása:</value>
+    <value>A&amp;zonosítási kifejezés ismételt beírása:</value>
   </data>
   <data name="retypePassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 26</value>
@@ -574,7 +574,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="newPassphraseLabel.Text" xml:space="preserve">
-    <value>&amp;Új hozzáférési kód megadása:</value>
+    <value>&amp;Új azonosítási kifejezés megadása:</value>
   </data>
   <data name="newPassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 27</value>

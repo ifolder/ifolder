@@ -135,6 +135,9 @@
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="MigrateNCopy">
     <value>Kopie erstellen und mit dem 3.x-Server verbinden</value>
   </data>
@@ -495,8 +498,8 @@
   <data name="MigrationWelcomeTitle">
     <value>Willkommen beim iFolder-Migrationsassistenten</value>
   </data>
-  <data name="&gt;&gt;syncAnimateTimer.Type">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="PasswordTxt">
+    <value>&amp;Passwort</value>
   </data>
   <data name="ConnectText">
     <value>&amp;Verbinden</value>
@@ -832,8 +835,8 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="Exiterror">
+    <value>Beim Versuch, eine Verbindung zum iFolder-Server herzustellen, ist ein Fehler aufgetreten. Beenden Sie den Client und starten Sie ihn erneut.</value>
   </data>
   <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1061,9 +1064,6 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
-  </data>
   <data name="policyTypeFailure">
     <value>Dateityp-Beschränkungsrichtlinie verhinderte Synchronisierung: {0}</value>
   </data>
@@ -1124,7 +1124,7 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="PasswordTxt">
-    <value>&amp;Passwort</value>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
 </root>

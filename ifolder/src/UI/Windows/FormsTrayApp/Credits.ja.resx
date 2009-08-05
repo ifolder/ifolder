@@ -127,8 +127,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
+  <data name="listBox1.Items63">
+    <value />
   </data>
   <data name="listBox1.Items60">
     <value>	Martin Meredith</value>
@@ -288,9 +288,6 @@
   </data>
   <data name="listBox1.Items62">
     <value>	Niel M. Bornstein</value>
-  </data>
-  <data name="listBox1.Items63">
-    <value />
   </data>
   <data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

@@ -135,6 +135,9 @@
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
+  <data name="&gt;&gt;syncAnimateTimer.Type">
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="MigrateNCopy">
     <value>Crear una copia y conectarla al servidor 3.x</value>
   </data>
@@ -495,8 +498,8 @@
   <data name="MigrationWelcomeTitle">
     <value>Bienvenido al Asistente para la migración de iFolder</value>
   </data>
-  <data name="&gt;&gt;syncAnimateTimer.Type">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="PasswordTxt">
+    <value>&amp;Contraseña</value>
   </data>
   <data name="ConnectText">
     <value>C&amp;onectar</value>
@@ -832,8 +835,8 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <data name="Exiterror">
+    <value>Error al conectar con el servidor iFolder. Salga del cliente y reinicie.</value>
   </data>
   <data name="menuPreferences.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1061,9 +1064,6 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
-  </data>
   <data name="policyTypeFailure">
     <value>La directiva de restricción de tipo de archivo ha impedido la sincronización: {0}</value>
   </data>
@@ -1124,7 +1124,7 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="menuSeparator1.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
-  <data name="PasswordTxt">
-    <value>&amp;Contraseña</value>
+  <data name="menuProperties.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </data>
 </root>
