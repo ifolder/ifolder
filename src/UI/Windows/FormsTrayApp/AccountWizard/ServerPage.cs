@@ -60,7 +60,7 @@ namespace Novell.Wizard
 		private int defaultTextYPos = 110;
 		private int defaultSpacing = 16;
 		private int maxTextWidth = 420;
-		private int defaultTextWidth = 90;
+		private int defaultTextWidth = 100;
 
         private SizeF strSize;
 

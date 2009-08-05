@@ -57,7 +57,7 @@ namespace Novell.Wizard
         private int defaultTextXPos = 50;
         private int defaultTextYPos = 115;
         private int defaultSpacing = 16;
-        private int maxTextWidth = 440;
+        private int maxTextWidth = 460;
         private int defaultTextWidth = 80;
         private SizeF strSize;
 
@@ -107,13 +107,13 @@ namespace Novell.Wizard
             this.label3.TabIndex = 1;
             this.label3.Text = Resource.GetString("UNameTextbox") + ":";//"&Username:";
             this.strSize = graphics.MeasureString(this.label3.Text, this.label3.Font);
-            this.label3.Size = new System.Drawing.Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);			
+            this.label3.Size = new System.Drawing.Size(this.defaultTextWidth +10, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);			
 			// 
 			// username
 			// 
             this.username.Location = new System.Drawing.Point(this.defaultTextXPos + this.defaultTextWidth, this.label3.Location.Y - 2);
             this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(320, 20);
+            this.username.Size = new System.Drawing.Size(330, 20);
             this.username.TabIndex = 2;
             this.username.Text = "";
             this.username.TextChanged += new System.EventHandler(this.username_TextChanged);
@@ -132,7 +132,7 @@ namespace Novell.Wizard
             this.password.Location = new System.Drawing.Point(this.defaultTextXPos + this.defaultTextWidth, this.label4.Location.Y - 2);
             this.password.Name = "password";
             this.password.PasswordChar = '*';
-            this.password.Size = new System.Drawing.Size(320, 20);
+            this.password.Size = new System.Drawing.Size(330, 20);
             this.password.TabIndex = 4;
             this.password.Text = string.Empty;			
 			// 
