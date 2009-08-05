@@ -629,7 +629,7 @@
     <value>True</value>
   </data>
   <data name="verifyCert" xml:space="preserve">
-    <value>Az iFolder nem tudja ellenőrizni a következő iFolder kiszolgáló identitását: {0}.  Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certifica, ezzel viszont bizalmas adatait teheti kockára. Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
+    <value>Az iFolder nem tudja ellenőrizni a következő iFolder kiszolgáló identitását: {0}.  Ennek az iFolder kiszolgálónak a tanúsítványát ismeretlen hitelesítésszolgáltató írta alá. Előfordulhat, hogy olyan kiszolgálóhoz csatlakozik, amely csupán színleli, hogy ő a(z) {0}, és ezáltal bizalmas adatait teheti kockára. Mielőtt elfogadná a tanúsítványt, célszerű a rendszergazdával egyeztetnie. Elfogadja véglegesen a tanúsítványt, és folytatja a csatlakozást?</value>
   </data>
   <data name="help.Locked" type="System.Boolean, mscorlib">
     <value>False</value>
