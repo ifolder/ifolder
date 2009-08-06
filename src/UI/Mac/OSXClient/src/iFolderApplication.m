@@ -412,6 +412,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	ifconlog1(@"initializing Simias Events");
 	[self initializeSimiasEvents];
 
+
 	ifconlog1(@"Creating and loading iFolderData");
 	[[iFolderData sharedInstance] refresh:NO];
 
@@ -789,8 +790,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 		[simiasService release];
 
-		if(showLoginDialog)
+		iFolderDomain *dom = [[iFolderData sharedInstance] getDomain:[smne message]];
+		
+		if(showLoginDialog && (dom!=nil && ![dom authenticated]))
+		{
 			[self showLoginWindowTS:[smne message]];
+		}
 	}
 }
 
