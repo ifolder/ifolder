@@ -150,8 +150,8 @@ theMenu.refreshDHTML();
 }
 function syncTheToc(){
 if(parent.theMenu.amBusy==false){
-var _b=parent.frames["text"];
-if(_b&&(typeof _b.syncTocPage!="undefined")){
+var _b=parent.frames[3];
+if(_b&&_b.name=="text"&&(typeof _b.syncTocPage!="undefined")){
 _b.syncTocPage();
 }
 }

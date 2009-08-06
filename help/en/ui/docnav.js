@@ -803,7 +803,7 @@ var _cb=parent.location.protocol!="jar:"?parent.location.protocol:"";
 var _cc=_cb+"//"+parent.location.host+_ca.substring(0,_ca.lastIndexOf("/"));
 _c5=_c5.substring(_c5.indexOf("/")+1);
 var _cd=_cc+"/"+_c5;
-top.frames["menuChildLoader"].location.replace(_cd);
+top.frames[2].location.replace(_cd);
 }else{
 if(e.isopen&&_c6){
 this.markChildrenForDelete=_c7;
@@ -1024,9 +1024,6 @@ return def;
 }
 var p=getParm(s,"page","&");
 p=(p!="")?fixPath(p):def;
-if(p.search(/javascript:/i)!=-1){
-p=def;
-}
 if(m!=null){
 var e=m.findEntry(p,"URL","exact");
 if((e!=-1)&&_f7){
@@ -1126,7 +1123,7 @@ _101.add("DocumentMouseOver",ip+"doc_mo.gif",18,18);
 _101.add("DocumentSelected",ip+"doc_sel.gif",18,18);
 }
 function loadMenu(){
-if((theMenu)&&(theMenu.amBusy==false)&&frames["menuChildLoader"]){
+if((theMenu)&&(theMenu.amBusy==false)&&frames[2]){
 theMenu.loadScript(text.parentfile,text.parenttoc);
 }else{
 setTimeout("loadMenu()",200);
