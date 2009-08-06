@@ -3218,9 +3218,14 @@ namespace Novell.iFolder
 				AddServerGroup( args.DomainID );
 				group = (iFolderViewGroup)serverGroups[args.DomainID];
 			}
+			else
+			{
+				iFoldersIconView.AddGroup(group);
+			}		
+
+
 			group.VisibleWhenEmpty = true;
 			iFolderViewItem[] viewItems = localGroup.Items;
-			
 			foreach(iFolderViewItem item in viewItems)
 			{
 				iFolderHolder holder = item.Holder;
@@ -3237,9 +3242,13 @@ namespace Novell.iFolder
 		private void OnDomainLoggedOutEvent(object sender, DomainEventArgs args)
 		{
 			iFolderViewGroup group = (iFolderViewGroup)serverGroups[args.DomainID];
+			if (serverGroups.ContainsKey(args.DomainID))
+			{
+				iFoldersIconView.RemoveGroup(group);
+			}
             		group.VisibleWhenEmpty = false;
-			iFolderViewItem[] viewItems = localGroup.Items;
 			
+			iFolderViewItem[] viewItems = localGroup.Items;
 			foreach(iFolderViewItem item in viewItems)
 			{
 				iFolderHolder holder = item.Holder;
@@ -3270,7 +3279,10 @@ namespace Novell.iFolder
                                 if( ViewServeriFoldersMenuItem.Active == false && group.IsEmpty == true )
                                         iFoldersIconView.RemoveGroup(group);
                                 else
+				{
+					if(group.VisibleWhenEmpty == true)		
                                         iFoldersIconView.AddGroup(group);
+				}
 			}
 
 			ShowHideAllFoldersButtonText.Markup =
