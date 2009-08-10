@@ -877,11 +877,20 @@ namespace Simias.IdentitySynchronization
 				else
 					log.Debug( "DeleteGroupMembership GetMemberByDN returned null");
 			}
+			
+			Member GroupAsMember = domain.GetMemberByDN(groupDn);		
+			if ( GroupAsMember != null )
+			{
+				log.Debug("For a deleted group, there is no need of storing MembersList property, so delete that property");
+				GroupAsMember.Properties.DeleteProperties( "MembersList" );
+				domain.Commit(GroupAsMember);
+			}
+	
 			return;
 		}
 
 		/// <summary>
-		/// Method to delete the group entry from member object 
+		/// Method to modify the membersList entry from group object 
 		/// Used by UpdateMemberList method, Take all member list of this group and remove memberDn
 		/// </summary>
 		public void DeleteUserGroupMembership(string groupList,string memberDn)
@@ -1372,6 +1381,7 @@ namespace Simias.IdentitySynchronization
 						string dn =
 							cMember.Properties.GetSingleProperty( "DN" ).Value as string;
 
+					 	ProcessDeletedGroupEntries(State, cMember);
 						// See if this account has been previously disabled
 						if ( State.SDomain.IsLoginDisabled( cMember.UserID ) == true )
 						{
@@ -1386,60 +1396,9 @@ namespace Simias.IdentitySynchronization
 								// domain roster
 								if ( dt.AddSeconds( DeleteGracePeriod ) < DateTime.Now )
 								{
-									string group = null;
-									string [] groupIDs = null;
-									try
-									{
-										group = cMember.Properties.GetSingleProperty( "GroupType" ).Value as string;
-									}
-									catch{}
-									if(group != null && group != "" && String.Compare(group.ToLower(),"global") == 0)
-									{
-										string DN = null;
-										string membersList = "";
-										try
-										{
-											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
-											MultiValuedList mvl = cMember.Properties.GetProperties( "MembersList" );
-											if( mvl != null && mvl.Count > 0)
-											{
-												foreach( Property prop in mvl )
-												{
-													if( prop.Value != null)
-													{
-														membersList += prop.Value as string;
-														membersList += ";";
-													}
-												}
-											}
-										}
-										catch{}
-										if ( DN != null && DN != "" && membersList != "" )
-										{
-										       State.DeleteGroupMembership(membersList, dn );
-										}
-									}	
-									else if(group != null && group != "" && String.Compare(group.ToLower(),"local") == 0)
-									{
-										//local groups should not be deleted, because it is not synced.
-									}
-									else if(group == null || group == "" )
-									{
-										string DN = null;
-										string groupList = null;
-										try
-										{
-											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
-											groupList = cMember.Properties.GetSingleProperty( "UserGroups" ).Value as string;
-											groupIDs = State.SDomain.GetDeletedMembersGroupList(cMember.UserID);
-											log.Debug("tmp ProcessDeletedMembers, no of groups is :"+groupIDs.Length);
-										}
-										catch{log.Debug("ExceptionException!!!!");}
-										if ( DN != null && DN != "" && groupList != null && groupList != "")
-										{
-											State.DeleteUserGroupMembership(groupList,DN);
-										}
-									}
+									string [] groupIDs = State.SDomain.GetDeletedMembersGroupList(cMember.UserID);
+									if ( groupIDs != null )
+										log.Debug("This deleted member was member of {0} groups. ",groupIDs.Length);
 									DeletePOBox( State, cMember );
 									OrphanCollections( State, cMember, groupIDs );
 									RemoveMemberships( State, cMember );
@@ -1496,6 +1455,66 @@ namespace Simias.IdentitySynchronization
 				log.Error( e1.StackTrace );
 			}
 		}
+
+	public static void ProcessDeletedGroupEntries(IdentitySynchronization.State State, Member cMember)
+	{							
+		string dn =
+                               cMember.Properties.GetSingleProperty( "DN" ).Value as string;
+
+									string group = null;
+									try
+									{
+										group = cMember.Properties.GetSingleProperty( "GroupType" ).Value as string;
+									}
+									catch{}
+									if(group != null && group != "" && String.Compare(group.ToLower(),"global") == 0)
+									{
+										string DN = null;
+										string membersList = "";
+										try
+										{
+											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
+											MultiValuedList mvl = cMember.Properties.GetProperties( "MembersList" );
+											if( mvl != null && mvl.Count > 0)
+											{
+												foreach( Property prop in mvl )
+												{
+													if( prop.Value != null)
+													{
+														membersList += prop.Value as string;
+														membersList += ";";
+													}
+												}
+											}
+										}
+										catch{}
+										if ( DN != null && DN != "" && membersList != "" )
+										{
+										       State.DeleteGroupMembership(membersList, dn );
+										}
+									}	
+									else if(group != null && group != "" && String.Compare(group.ToLower(),"local") == 0)
+									{
+										//local groups should not be deleted, because it is not synced.
+									}
+									else if(group == null || group == "" )
+									{
+										string DN = null;
+										string groupList = null;
+										try
+										{
+											DN = cMember.Properties.GetSingleProperty( "DN" ).Value as string;
+											groupList = cMember.Properties.GetSingleProperty( "UserGroups" ).Value as string;
+										}
+										catch{log.Debug("ExceptionException!!!!");}
+										if ( DN != null && DN != "" && groupList != null && groupList != "")
+										{
+											State.DeleteUserGroupMembership(groupList,DN);
+										}
+									}
+
+		}
+
 		#endregion
 
 		#region Public Methods
