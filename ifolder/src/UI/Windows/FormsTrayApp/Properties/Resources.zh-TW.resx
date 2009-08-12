@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>正在同步檔案：{0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>已有同名資料夾存在</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>新密碼片語欄位與確認密碼片語欄位中的值不符。</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>可用</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>選取「確定」進行合併，或選取「取消」選取不同位置</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>新密碼片語(&amp;N)：</value>

@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>Синхронизация файла: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Папка с таким именем уже существует</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>Значения в полях новой ключевой фразы и подтверждения не совпадают.</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Доступно</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Щелкните "ОК", чтобы выполнить слияние, или "Отмена", чтобы выбрать другое расположение</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;Новая ключевая фраза:</value>

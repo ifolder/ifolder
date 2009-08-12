@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>Fájl szinkronizálása: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Már van ilyen nevű mappa.</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>Az új és a megerősítő hozzáférési kód mezőjébe beírt érték nem egyezik.</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Használható</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Az összefésüléshez kattintson az OK gombra, másik hely kijelöléséhez pedig a Mégse gombra.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;Új hozzáférési kód:</value>
