@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "Bem-vindo ao Agente de Recuperação de Frase Secreta"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Selecione a conta da qual a frase secreta deve ser redefinida."
 
-msgid "Click Next to proceed."
-msgstr "Clique em Avançar para continuar."
+msgid "Click Forward to proceed."
+msgstr "Clique em Avançar para  prosseguir."
 
 msgid "_New passphrase"
 msgstr "_Nova frase secreta"
@@ -2839,4 +2839,25 @@ msgstr "_Conta do iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Caminho da Pasta de Conflito"
+
+msgid "Account Not Encrypted"
+msgstr "Conta Não Criptografada"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "A criptografia não está habilitada para esta conta. Contate seu administrador de sistema para habilitar a criptografia."
+
+msgid "Passphrase Not Set"
+msgstr "Frase secreta Não Definida"
+
+msgid "Passphrase is not set for this account."
+msgstr "A frase secreta não está definida para esta conta."
+
+msgid "Available for download"
+msgstr "Disponível para download"
+
+msgid "Available: {0}"
+msgstr "Disponível: {0}"
+
+msgid "Used: {0}"
+msgstr "Usado: {0}"
 

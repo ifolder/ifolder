@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "Recupero guidato della stringa di cifratura"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Selezionare il conto per cui deve essere reimpostata la stringa di cifratura."
 
-msgid "Click Next to proceed."
-msgstr "Fare clic su Avanti per continuare."
+msgid "Click Forward to proceed."
+msgstr "Fare clic su Inoltra per andare avanti."
 
 msgid "_New passphrase"
 msgstr "_Nuova stringa di cifratura"
@@ -2839,4 +2839,25 @@ msgstr "_Conto iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Percorso cartella dei conflitti"
+
+msgid "Account Not Encrypted"
+msgstr "Conto non cifrato"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Cifratura non abilitata per il conto. Contattare l'amministratore del sistema per abilitare la cifratura."
+
+msgid "Passphrase Not Set"
+msgstr "Stringa di cifratura non impostata"
+
+msgid "Passphrase is not set for this account."
+msgstr "Stringa di cifratura non impostata per il conto."
+
+msgid "Available for download"
+msgstr "Disponibile per il download"
+
+msgid "Available: {0}"
+msgstr "Disponibili: {0}"
+
+msgid "Used: {0}"
+msgstr "In uso: {0}"
 

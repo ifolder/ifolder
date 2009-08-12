@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "欢迎使用通行口令恢复向导"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "选择必须重设置通行口令的帐户。"
 
-msgid "Click Next to proceed."
-msgstr "单击“下一步”继续。"
+msgid "Click Forward to proceed."
+msgstr "单击“前进”继续。"
 
 msgid "_New passphrase"
 msgstr "新通行口令(_N)"
@@ -2839,4 +2839,25 @@ msgstr "iFolder 帐户(_I)"
 
 msgid "Conflict Bin Path"
 msgstr "冲突文件箱路径"
+
+msgid "Account Not Encrypted"
+msgstr "帐户未加密"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "没有为此帐户启用加密。请联系系统管理员启用加密。"
+
+msgid "Passphrase Not Set"
+msgstr "未设置通行口令"
+
+msgid "Passphrase is not set for this account."
+msgstr "没有为此帐户设置通行口令。"
+
+msgid "Available for download"
+msgstr "可进行下载"
+
+msgid "Available: {0}"
+msgstr "可用： {0}"
+
+msgid "Used: {0}"
+msgstr "已使用：{0}"
 

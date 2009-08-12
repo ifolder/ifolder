@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:16\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,7 +2702,7 @@ msgstr "歡迎使用密碼片語復原精靈"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "選取必須重設密碼片語的帳戶。"
 
-msgid "Click Next to proceed."
+msgid "Click Forward to proceed."
 msgstr "按一下「下一步」繼續。"
 
 msgid "_New passphrase"
@@ -2839,4 +2839,25 @@ msgstr "iFolder 帳戶(_I)"
 
 msgid "Conflict Bin Path"
 msgstr "衝突容器路徑"
+
+msgid "Account Not Encrypted"
+msgstr "帳戶未加密"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "未針對此帳戶啟動加密。請聯絡您的系統管理員以啟動加密。"
+
+msgid "Passphrase Not Set"
+msgstr "未設定密碼片語"
+
+msgid "Passphrase is not set for this account."
+msgstr "未針對此帳戶設定密碼片語。"
+
+msgid "Available for download"
+msgstr "可供下載"
+
+msgid "Available: {0}"
+msgstr "可用的： {0}"
+
+msgid "Used: {0}"
+msgstr "已使用：{0}"
 

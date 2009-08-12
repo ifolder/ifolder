@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:33\n"
+"PO-Revision-Date: 2009-08-12 11:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2571,7 +2571,7 @@ msgid "User not found in simias."
 msgstr "Uživatel nebyl nalezen v nastavení simias."
 
 msgid "Could not change password, "
-msgstr "Nebylo možné změnit heslo,"
+msgstr "Nebylo možné změnit heslo, "
 
 msgid "Change password"
 msgstr "Změnit heslo"
@@ -2702,8 +2702,8 @@ msgstr "Vítejte v Průvodci obnovením hesla"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Vyberte účet, pro který je třeba resetovat heslo."
 
-msgid "Click Next to proceed."
-msgstr "Pokračujte klepnutím na tlačítko Další."
+msgid "Click Forward to proceed."
+msgstr "Pokračujte klepnutím na tlačítko Postoupit. "
 
 msgid "_New passphrase"
 msgstr "_Nové heslo"
@@ -2839,4 +2839,25 @@ msgstr "Účet _iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Cesta koše konfliktů"
+
+msgid "Account Not Encrypted"
+msgstr "Účet není zašifrovaný."
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Šifrování není pro tento účet zapnuto. Požádejte správce systému o zapnutí šifrování."
+
+msgid "Passphrase Not Set"
+msgstr "Heslo není nastaveno."
+
+msgid "Passphrase is not set for this account."
+msgstr "Pro tento účet není nastaveno heslo."
+
+msgid "Available for download"
+msgstr "Dostupné pro stažení"
+
+msgid "Available: {0}"
+msgstr "Dostupné: {0}"
+
+msgid "Used: {0}"
+msgstr "Používáno: {0}"
 

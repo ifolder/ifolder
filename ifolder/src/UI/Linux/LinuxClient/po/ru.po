@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "Вас приветствует мастер восстановлени�
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Выберите учетную запись, для которой нужно выполнить сброс контрольной фразы."
 
-msgid "Click Next to proceed."
-msgstr "Для продолжения нажмите кнопку \"Далее\"'."
+msgid "Click Forward to proceed."
+msgstr "Чтобы продолжить, нажмите кнопку \"Вперед\"."
 
 msgid "_New passphrase"
 msgstr "_Новая контрольная фраза"
@@ -2839,4 +2839,25 @@ msgstr "_Учетная запись iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Путь к корзине"
+
+msgid "Account Not Encrypted"
+msgstr "Учетная запись не зашифрована"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Шифрование не включено для этой учетной записи. Чтобы включить его, обратитесь к системному администратору."
+
+msgid "Passphrase Not Set"
+msgstr "Ключевая фраза не задана"
+
+msgid "Passphrase is not set for this account."
+msgstr "Ключевая фраза не задана для этой учетной записи."
+
+msgid "Available for download"
+msgstr "Доступно для загрузки"
+
+msgid "Available: {0}"
+msgstr "Доступно: {0}"
+
+msgid "Used: {0}"
+msgstr "Используется: {0}"
 
