@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>從 iFolder 2.x 移轉至 iFolder 3.7</title>
+<title>從 iFolder 2.x 升級到 iFolder 3.7 或更新版本</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> 從 iFolder 2.<span class="replaceable">x</span> 移轉至 iFolder 3.7</h1>
+<h1 class="title"> 從 iFolder 2.<span class="replaceable">x</span> 升級到 iFolder 3.7 或更新版本</h1>
 
 <p class="para">本節討論以下各項：</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> 瞭解移轉處理程序</h2>
 
-<p class="para">Novell iFolder 提供簡單移轉方式，從 iFolder 2.<span class="replaceable">x</span> 移轉至 Novell iFolder 3.7 的 iFolder 用戶端。iFolder 用戶端中所提供的「移轉助理」可協助您輕鬆快速地移轉現有的 iFolder 2.<span class="replaceable">x</span> 資料。</p>
+<p class="para">Novell iFolder 提供簡單移轉方式，從 iFolder 2.<span class="replaceable">x</span> 用戶端升級到 iFolder 3.7 或更新版本的用戶端。iFolder 用戶端中的「移轉助理」可協助您快速並輕鬆地移轉現有的 iFolder 2.<span class="replaceable">x</span> 資料。</p>
 <p class="para">在啟動期間，「移轉助理」會偵測 2.<span class="replaceable">x</span> 的安裝，並提示您移轉資料。在資料移轉期間，它會再次提示您轉換現有的資料夾或者製作 2.<span class="replaceable">x</span> iFolder 的複本。如需有關此作業的詳細資訊，請參閱 <a href="migration.html#b8anh5z">步驟 6</a>。</p>
-<p class="para">iFolder 會提示您重新同步化檔案至 3.7 伺服器，以及是否需要保留 2.<span class="replaceable">x</span> 用戶端直到 3.7 完成同步化的任務。在此程序中，只有資料會移轉，因此使用者必須在新用戶端中設定優先設定。 </p>
+<p class="para">iFolder 會提示您重新同步化檔案至 3.7 或更新版本的伺服器，並詢問您是否需要保留 2.<span class="replaceable">x</span> 用戶端，直到同步完成。 在此程序中，只有資料會移轉，因此使用者必須在新用戶端中設定優先設定。 </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">安裝適用於 iFolder 3.7 的 iFolder 用戶端，然後設定您的 iFolder 3.7 Enterprise Server 帳戶。</p>
+<p class="para">安裝適用於 iFolder 3.7 或更新版本伺服器的 iFolder 用戶端，然後設定您的 iFolder 3.7 或更新版本的企業伺服器帳戶。</p>
 <p class="para">如需有關安裝用戶端和設定帳戶的詳細資訊，請參閱 <a href="accountsprefs.html">管理 iFolder 帳戶及優先設定</a>。</p></li>
 <li class="step" id="b88immw">
 <p class="para">在 iFolder 瀏覽器中，在您的本機電腦上建立一個或以上的 iFolder。</p>
@@ -95,17 +95,17 @@
 <p class="para">選取下列其中一個：</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">移轉 iFolder 並解除連接 2.x 網域</span>：</em>
-              選取此選項以便解除連接現有資料夾與 iFolder 2。<span class="replaceable">x</span> 領域。</p>
+              選取此選項以便在移轉至 3.7 或更新版本之後解除現有資料夾與 iFolder 2.<span class="replaceable">x</span> 網域的連接。</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
-                <span class="guimenu">建立 iFolder 的副本並移轉：</span>
+                <span class="guimenu">建立 iFolder 副本並移轉：</span>
               </em>
-              選取此選項以建立 iFolder 2 的副本。<span class="replaceable">x</span> 檔案的副本，並將檔案轉換成 iFolder 3.7。這並不會從 ifolder 2.<span class="replaceable">x</span> 領域移除檔案，即使您已經將檔案移轉到 iFolder 3.7。</p>
+              選取此選項以建立 iFolder 2.<span class="replaceable">x</span> 檔案的副本，並將檔案轉換成 iFolder 3.7 或更新版本。這並不會從 iFolder 2.<span class="replaceable">x</span> 網域移除檔案，即使您已經將檔案移轉到 iFolder 3.7 或更新版本也一樣。</p>
             </div>
 
-<p class="para">如果您選取此選項，您還可以選取<span class="guimenu">複製上層資料夾</span>，只要您不只是想要複製 2.<span class="replaceable">x</span> 資料夾的內容，還想複製上層資料夾。如果您保持不選取這個選項，則只會將選取資料夾的內容移轉到 3.7。 </p>
+<p class="para">如果您選取此選項，您還可以選取<span class="guimenu">複製上層資料夾</span>，只要您不只是想要複製 2.<span class="replaceable">x</span> 資料夾的內容，還想複製上層資料夾。如果您保持不選取這個選項，則只會將選取資料夾的內容移轉到 3.7 或更新版本。 </p>
 <p class="para">按一下<span class="guimenu">「瀏覽」</span>以尋找位置儲存移轉的資料夾。</p>
 <p class="para">例如，<span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> 是個 2.<span class="replaceable">x</span> iFolder 且 <span class="filename">dir1</span> 和 <span class="filename">dir2</span> 是 <span class="filename">ifolder2dir</span> 之下的目錄。當您選取選項<span class="guimenu">「複製上層目錄」</span>時，它會在新位置及 <span class="filename">dir1</span> 和 <span class="filename">dir2</span> 之複製目的地目錄中建立 <span class="filename">ifolder2dir </span>。如果保持不選取這個選項，只有 <span class="filename">dir1</span> 和 <span class="filename">dir2</span> 目錄會移動到指定的位置。</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">如果在登入時沒有設定通關密語，iFolder 會提示您輸入通關密碼。您可以略過此選項，稍候再設定通關密語。</p>
 <p class="listitem">如果您目前未連接至 iFolder 領域，系統會提示您連接至領域。</p></li>
 <li class="listitem">
-<p class="listitem">選取<span class="guimenu">「共用」</span>與 iFolder 3.7 領域中的其他成員共用 iFolder。</p>
+<p class="listitem">選取<span class="guimenu">「共用」</span>與 iFolder 網域中的其他成員共用 iFolder。</p>
 <p class="listitem">您可以將加密的 2.<span class="guimenu">x</span> iFolder 移轉到共用資料夾。當您嘗試移轉加密的 2.<span class="replaceable">x</span> iFolder 到共用資料夾，會提示您確認動作。</p>
 <p class="listitem">按一下<span class="guimenu">「確定」</span>，確認您的動作。</p></li></ul></div>
 </li></ol>

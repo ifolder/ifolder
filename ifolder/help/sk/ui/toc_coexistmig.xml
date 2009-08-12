@@ -3,7 +3,7 @@
 
 <tocsection parent="bookinfo" level="2" id="coexistmig">
  <title>Prenos a inovácia aplikácie Novell iFolder</title>
- <entry leaf="true" id="migration">Prechod z verzie klienta iFolder 2.x na verziu klienta iFolder 3.7</entry>
+ <entry leaf="true" id="migration">Prechod z aplikácie iFolder verzie 2.x na aplikáciu iFolder 3.7 alebo novšiu.</entry>
  <entry leaf="true" id="bctryt7">Inovácia aplikácie iFolder 3.x Klienti</entry>
  <entry leaf="true" id="bctrxs4">Koexistencia klientov Novell iFolder 2.x a klientov iFolder</entry>
 </tocsection>

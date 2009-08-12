@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 30, 2009 13:14" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:02" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Автоматическое обновление на версию iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Автоматическое обновление до версии iFolder 3.7 или более поздней</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Обновление на версию iFolder 3.7 вручную</a>
+            <a href="bctryt7.html#bbjs0lm">Обновление до iFolder 3.7 или более поздней версии вручную</a>
           </p></li></ul></div>
 
 <div class="important">
@@ -63,9 +63,9 @@
 
 <div class="sect2" id="bctryt8">
 
-<h2 class="title"> Автоматическое обновление на версию iFolder 3.7</h2>
+<h2 class="title"> Автоматическое обновление до версии iFolder 3.7 или более поздней</h2>
 
-<p class="para">Автоматическое обновление возможно только при наличии прав доступа "root", так как для обновления необходимо выполнить установку пакетов RPM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет удален, Вы не можете установить соединение с доменом iFolder 3.7 с использованием клиента iFolder 3.<span class="replaceable">x</span>.</p>
+<p class="para">Автоматическое обновление возможно только при наличии прав доступа "root", так как для обновления необходимо выполнить установку пакетов RPM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет обновлен, установить соединение с доменом iFolder 3.7 или более поздней версии с помощью клиента iFolder 3.<span class="replaceable">x</span> будет невозможно.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
@@ -74,15 +74,12 @@
 <p class="para">Щелкните <span class="guimenu">Да</span> для автоматического обновления клиента iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
-<p class="para">При использовании iFolder 3.4.1 выбор варианта <span class="guimenu">Нет</span> и попытка подключения клиента iFolder 3.4.1 к серверу iFolder 3.7 приводит к отображению сообщения об ошибке. Щелкните <span class="guimenu">ОК</span>, чтобы закрыть сообщение.</p>
-<div class="note">
-<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Клиент iFolder 3.<span class="replaceable">x</span> (версии, отличной от iFolder 3.4.1) устанавливает соединение с сервером iFolder 3.7 даже в том случае, если выбран отказ от обновления. Хотя соединение клиента 3.<span class="replaceable">x</span> с сервером 3.7 установлено, выполнение каких-либо операций iFolder с помощью этого клиента невозможно. При попытке преобразования существующей папки в папку iFolder сервер не учитывает эти изменения и отображается сообщение об ошибке с информацией о том, что сервер недоступен. Единственной операцией, которую может выполнить пользователь, является загрузка пакетов RPM с сервера для установки iFolder 3.7.</p></div>
-
+<p class="para">Если в iFolder 3.4.1 выбрать вариант <span class="guimenu">Нет</span> и попытаться подключить клиент iFolder 3.4.1 к серверу iFolder 3.7 или более поздней версии, будет отображено сообщение об ошибке. Щелкните <span class="guimenu">ОК</span>, чтобы закрыть сообщение.</p>
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Обновление на версию iFolder 3.7 вручную</h2>
+<h2 class="title"> Обновление до iFolder 3.7 или более поздней версии вручную</h2>
 
 <div class="procedure">
 <ol class="steps">

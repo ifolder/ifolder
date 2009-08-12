@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:28" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>从 iFolder 2.x 迁移到 iFolder 3.7</title>
+<title>从 iFolder 2.x 迁移到 iFolder 3.7 或更高版本</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> 从 iFolder 2.<span class="replaceable">x</span> 迁移到 iFolder 3.7</h1>
+<h1 class="title"> 从 iFolder 2.<span class="replaceable">x</span> 迁移到 iFolder 3.7 或更高版本</h1>
 
 <p class="para">本节讨论以下内容：</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> 了解迁移过程</h2>
 
-<p class="para">Novell iFolder 提供了一种简单的迁移方法，可轻松快速地迁移 iFolder 2.<span class="replaceable">x</span> 到 Novell iFolder 3.7 的 iFolder 客户程序的简单易行、无后顾之忧的迁移。iFolder 客户程序中提供的“迁移助理”可帮助您快速轻松地迁移现有 iFolder 2.<span class="replaceable">x</span> 数据。</p>
+<p class="para">Novell iFolder 提供了一种简单的迁移方法，可将 iFolder 2.<span class="replaceable">x</span> 客户程序迁移到 iFolder 3.7 或更高版本客户程序。iFolder 客户程序中提供的“迁移助理”功能可以帮助您轻松快捷地迁移现有的 iFolder 2.<span class="replaceable">x</span> 数据。</p>
 <p class="para">启动期间，“迁移助理”检测 2.<span class="replaceable">x</span> 安装并提示您迁移数据。数据迁移期间，系统再次提示您转换现有文件夹或者制作 2.<span class="replaceable">x</span> iFolder 的拷贝。有关此内容的更多信息，请参见<a href="migration.html#b8anh5z">步骤 6</a>。</p>
-<p class="para">iFolder 提示您将文件重新同步到 3.7 服务器，并询问您是否需要保留 2.<span class="replaceable">x</span> 客户程序到 3.7 完成同步为止。在此过程中，只有数据得到迁移，因此用户必须在新的客户程序中设置首选设置。 </p>
+<p class="para">iFolder 提示您将文件重新同步到 3.7 或更高版本服务器，并询问您是否需要保留 2.<span class="replaceable">x</span> 客户程序，直到同步完成。在此过程中，只有数据得到迁移，因此用户必须在新的客户程序中设置首选设置。 </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">安装 iFolder 3.7 的 iFolder 客户程序，然后为 iFolder 3.7 企业服务器配置您的帐户。</p>
+<p class="para">安装 iFolder 3.7 或更高版本服务器的 iFolder 客户程序，然后为 iFolder 3.7 或更高版本 Enterprise Server 配置您的帐户。</p>
 <p class="para">有关安装客户程序及设置帐户的信息，请参见<a href="accountsprefs.html">管理 iFolder 帐户和首选设置</a>。</p></li>
 <li class="step" id="b88immw">
 <p class="para">在 iFolder 浏览器中，在本地计算机上创建一个或多个 iFolder。</p>
@@ -94,18 +94,18 @@
 <li class="step" id="b8anh5z">
 <p class="para">请选中以下选项之一：</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">迁移 iFolder 并中断其与 2.x 域的连接</span>：</em>
-              选中此选项可在将现有文件夹迁移到 3.7 后断开其与 iFolder 2.<span class="replaceable">x</span> 域的连接。</p>
+              <p class="title"><em class="title"><span class="guimenu">迁移 iFolder 并断开它与 2.x 域的连接</span>：</em>
+              选中此选项可在将现有文件夹迁移到 3.7 或更高版本后断开它与 iFolder 2.<span class="replaceable">x</span> 域的连接。</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">创建 iFolder 的拷贝并迁移：</span>
               </em>
-              选中此选项可创建 iFolder 2.<span class="replaceable">x</span> 文件的拷贝并将它们转换为 iFolder 3.7。这不会从 iFolder 2.<span class="replaceable">x</span> 域去除这些文件，即使将这些文件迁移到 iFolder 3.7 后。</p>
+              选中此选项可创建 iFolder 2.<span class="replaceable">x</span> 文件的副本并将其转换为 iFolder 3.7 或更高版本。此操作不会从 iFolder 2.<span class="replaceable">x</span> 域去除这些文件，即使将这些文件迁移到 iFolder 3.7 或更高版本后。</p>
             </div>
 
-<p class="para">选中此选项后，您还可以选中<span class="guimenu">“复制父文件夹”</span>，前提是您不仅要复制 2.<span class="replaceable">x</span> 文件夹的内容，而且还要复制父文件夹的内容。如果未选中此选项，则只将选定文件夹的内容迁移到 3.7。 </p>
+<p class="para">选中此选项后，您还可以选中<span class="guimenu">“复制父文件夹”</span>，前提是您不仅要复制 2.<span class="replaceable">x</span> 文件夹的内容，而且还要复制父文件夹的内容。如果未选中此选项，则只将选定文件夹的内容迁移到 3.7 或更高版本。 </p>
 <p class="para">单击<span class="guimenu">“浏览”</span>查找保存迁移的文件夹的位置。</p>
 <p class="para">例如，<span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> 是一个 2.<span class="replaceable">x</span> iFolder，<span class="filename">dir1</span> 和 <span class="filename">dir2</span> 是 <span class="filename">ifolder2dir</span> 下的目录。选中选项<span class="guimenu">“复制父目录”</span>后，系统将在新位置创建 <span class="filename">ifolder2dir</span> 并将目录 <span class="filename">dir1</span> 和 <span class="filename">dir2</span> 复制到其中。如果未选中此选项，则只将目录<span class="filename">“dir1”</span>和<span class="filename">“dir2”</span>移动到指定位置。</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">如果登录过程中未设置通行口令，则 iFolder 会提示您输入通行口令。可以跳过此选项，以后再设置通行口令。</p>
 <p class="listitem">如果当前未连接到 iFolder 域，系统会提示您连接到该域。</p></li>
 <li class="listitem">
-<p class="listitem">选中<span class="guimenu">“共享”</span>可与 iFolder 3.7 域中的其他成员共享该 iFolder。</p>
+<p class="listitem">选中<span class="guimenu">“共享”</span>可与 iFolder 域中的其他成员共享该 iFolder。</p>
 <p class="listitem">您可将加密的 2.<span class="guimenu">x</span> iFolder 迁移到共享文件夹。当您尝试将加密的 2.<span class="replaceable">x</span> iFolder 迁移到一个共享文件夹时，系统将提示您检验该操作。</p>
 <p class="listitem">单击<span class="guimenu">“确定”</span>确认操作。</p></li></ul></div>
 </li></ol>
