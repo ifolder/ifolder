@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="it" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:52" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migrazione da iFolder 2.x a iFolder 3.7</title>
+<title>Migrazione da iFolder 2.x a iFolder 3.7 o versione successiva</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> Migrazione da iFolder 2.<span class="replaceable">x</span> a iFolder 3.7</h1>
+<h1 class="title"> Migrazione da iFolder 2.<span class="replaceable">x</span> a iFolder 3.7 o versione successiva</h1>
 
 <p class="para">In questa sezione verranno illustrati i seguenti argomenti:</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> Informazioni sul processo di migrazione</h2>
 
-<p class="para">Novell iFolder consente di eseguire la migrazione dei dati da iFolder 2.<span class="replaceable">x</span> al client iFolder 3.7. La Migrazione guidata disponibile nel client iFolder semplifica la procedura di migrazione dei dati da iFolder 2.<span class="replaceable">x</span> in modo semplice e rapido.</p>
+<p class="para">Novell iFolder consente di eseguire la migrazione dei dati da iFolder 2.<span class="replaceable">x</span> al client iFolder 3.7 o versione successiva. La Migrazione guidata fornita nel client iFolder consente di eseguire la migrazione dei dati esistenti di iFolder 2.<span class="replaceable">x</span> in modo semplice e rapido.</p>
 <p class="para">All'avvio, la Migrazione guidata rileva l'installazione iFolder 2.<span class="replaceable">x</span> e chiede di eseguire la migrazione dei dati. Durante la migrazione dei dati, viene chiesto nuovamente di convertire le cartelle esistenti o di eseguire una copia della cartella iFolder 2.<span class="replaceable">x</span>. Per ulteriori informazioni a tale proposito, vedere <a href="migration.html#b8anh5z">Passaggio 6</a>.</p>
-<p class="para">Viene visualizzato un messaggio relativo alla nuova sincronizzazione dei file nel server iFolder 3.7 e viene chiesto se è necessario mantenere il client 2.<span class="replaceable">x</span> finché la versione 3.7 non completa la sincronizzazione. Poiché durante il processo viene eseguita solo la migrazione dei dati, l'utente deve impostare le preferenze nel nuovo client. </p>
+<p class="para">Viene visualizzato un messaggio relativo alla nuova sincronizzazione dei file nel server iFolder 3.7 o versione successiva e viene chiesto se è necessario mantenere il client 2.<span class="replaceable">x</span> fino al termine della sincronizzazione. Poiché durante il processo viene eseguita solo la migrazione dei dati, l'utente deve impostare le preferenze nel nuovo client. </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Installare il client iFolder 3.7, quindi configurare il proprio conto per il server aziendale iFolder 3.7.</p>
+<p class="para">Installare il client iFolder per il server iFolder 3.7 o versione successiva, quindi configurare il conto per il server aziendale iFolder 3.7 o versione successiva.</p>
 <p class="para">Per informazioni sull'installazione del client e la configurazione del conto, vedere <a href="accountsprefs.html">Gestione dei conti e delle preferenze di iFolder</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">Nel browser delle cartelle iFolder, creare una o più cartelle iFolder nel computer locale.</p>
@@ -95,17 +95,17 @@
 <p class="para">Selezionare una delle opzioni seguenti:</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">Esegui la migrazione della cartella iFolder e disconnettila dal dominio 2.x</span>:</em>
-               selezionare questa opzione per disconnettere la cartella esistente dal dominio iFolder 2.<span class="replaceable">x</span> al termine della migrazione alla versione 3.7.</p>
+               selezionare questa opzione per disconnettere la cartella esistente dal dominio iFolder 2.<span class="replaceable">x</span> al termine della migrazione alla versione 3.7 o successiva.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Creare una copia della cartella iFolder ed eseguire la migrazione:</span>
               </em>
-               selezionare questa opzione per creare una copia dei file della cartella iFolder 2.<span class="replaceable">x</span> e convertirli per iFolder 3.7. Ciò non determina la rimozione dei file dal dominio della cartella iFolder 2.<span class="replaceable">x</span> anche al termine della migrazione dei file a iFolder 3.7.</p>
+               selezionare questa opzione per creare una copia dei file della cartella iFolder 2.<span class="replaceable">x</span> e convertirli in iFolder 3.7 o versione successiva. Questa operazione non rimuove i file dal dominio di iFolder 2.<span class="replaceable">x</span> anche al termine della migrazione dei file a iFolder 3.7 o versione successiva.</p>
             </div>
 
-<p class="para">Se si seleziona questa opzione, è anche possibile selezionare <span class="guimenu">Copia la cartella superiore</span> se si desidera copiare non solo il contenuto della cartella iFolder 2.<span class="replaceable">x</span>, ma anche quello della cartella superiore. Se l'opzione rimane deselezionata, verrà eseguita la migrazione solo dei contenuti della cartella selezionata. </p>
+<p class="para">Se si seleziona questa opzione, è anche possibile selezionare <span class="guimenu">Copia la cartella superiore</span> se si desidera copiare non solo il contenuto della cartella iFolder 2.<span class="replaceable">x</span>, ma anche quello della cartella superiore. Se non si seleziona questa opzione, verrà eseguita la migrazione alla versione 3.7 o successiva solo dei contenuti della cartella selezionata. </p>
 <p class="para">Fare clic su <span class="guimenu">Sfoglia</span> per scegliere l'ubicazione di salvataggio della cartella di cui si è eseguita la migrazione.</p>
 <p class="para">Ad esempio, <span class="filename">C:/Documents and Settings/&lt;nome utente&gt;/dirifolder2</span> è una cartella iFolder 2.<span class="replaceable">x</span> e <span class="filename">dir1</span> e <span class="filename">dir2</span> sono le sottodirectory di <span class="filename">dirifolder2</span>. Se si seleziona l'opzione <span class="guimenu">Copia la cartella superiore</span>, viene creata la cartella <span class="filename">dirifolder2</span> nella nuova ubicazione e le directory <span class="filename">dir1</span> e <span class="filename">dir2</span> vengono copiate all'interno della nuova cartella. Se l'opzione rimane deselezionata, verranno spostate nell'ubicazione specificata solo <span class="filename">dir1</span> e <span class="filename">dir2</span>.</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">Se non si è impostata la stringa di cifratura durante il login, viene chiesto di immetterla. È possibile ignorare l'immissione e impostare la stringa di cifratura in un secondo momento.</p>
 <p class="listitem">Se non si è attualmente connessi al dominio iFolder, viene chiesto di eseguire la connessione.</p></li>
 <li class="listitem">
-<p class="listitem">Selezionare <span class="guimenu">Condivisa</span> per condividere la cartella iFolder con altri membri del dominio iFolder 3.7.</p>
+<p class="listitem">Selezionare <span class="guimenu">Condivisa</span> per condividere la cartella iFolder con altri membri del dominio iFolder </p>
 <p class="listitem">È possibile eseguire la migrazione di una cartella iFolder 2.<span class="guimenu">x</span> in una cartella condivisa. Se si prova a eseguire la migrazione da una cartella iFolder 2.<span class="replaceable">x</span> in una cartella condivisa, verrà richiesto di confermare l'operazione.</p>
 <p class="listitem">Fare clic su <span class="guimenu">OK</span> per confermare l'azione.</p></li></ul></div>
 </li></ol>

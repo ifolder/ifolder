@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:57" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:28" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">自动升级到 iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">自动升级到 iFolder 3.7 或更高版本</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">手工升级到 iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">手动升级到 iFolder 3.7 或更高版本</a>
           </p></li></ul></div>
 
 <div class="important">
@@ -63,9 +63,9 @@
 
 <div class="sect2" id="bctryt8">
 
-<h2 class="title"> 自动升级到 iFolder 3.7</h2>
+<h2 class="title"> 自动升级到 iFolder 3.7 或更高版本</h2>
 
-<p class="para">仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户程序前，将不能使用 iFolder 3.<span class="replaceable">x</span> 客户程序连接到 iFolder 3.7 域。</p>
+<p class="para">仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户程序前，将不能使用 iFolder 3.<span class="replaceable">x</span> 客户程序连接到 iFolder 3.7 或更高版本的域。</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
@@ -74,15 +74,12 @@
 <p class="para">单击<span class="guimenu">“是”</span>以自动升级 iFolder 3.<span class="guimenu">x</span> 客户程序。</p></li></ol>
 </div>
 
-<p class="para">对于 iFolder 3.4.1，如果您单击<span class="guimenu">“否”</span>并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 服务器，则将显示一条错误讯息。单击<span class="guimenu">“确定”</span>关闭此讯息。</p>
-<div class="note">
-<p class="para"><em class="title">注：</em>iFolder 3.<span class="replaceable">x</span> 客户程序（非 iFolder 3.4.1 客户程序）将连接到 iFolder 3.7 服务器，即使您选择不升级。尽管 3.<span class="replaceable">x</span> 客户程序仍连接到 3.7 服务器，但您不能使用该客户程序执行任何 iFolder 操作。当您试图将现有文件夹转换为 iFolder 时，服务器并不会考虑这些更改，并显示错误讯息指出服务器不可用。您可执行的唯一操作是从服务器下载新的 RPM 以安装 iFolder 3.7。</p></div>
-
+<p class="para">对于 iFolder 3.4.1，如果您单击<span class="guimenu">“否”</span>并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 或更高版本服务器，则将显示一条错误讯息。单击<span class="guimenu">“确定”</span>关闭此讯息。</p>
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> 手工升级到 iFolder 3.7</h2>
+<h2 class="title"> 手动升级到 iFolder 3.7 或更高版本</h2>
 
 <div class="procedure">
 <ol class="steps">

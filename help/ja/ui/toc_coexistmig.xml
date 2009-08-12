@@ -3,7 +3,7 @@
 
 <tocsection parent="bookinfo" level="2" id="coexistmig">
  <title>Novell iFolderの移行とアップグレード</title>
- <entry leaf="true" id="migration">iFolder 2.xからiFolder 3.7への移行</entry>
+ <entry leaf="true" id="migration">iFolder 2.xからiFolder 3.7以降への移行</entry>
  <entry leaf="true" id="bctryt7">iFolder 3.xクライアントのアップグレード</entry>
  <entry leaf="true" id="bctrxs4">Novell iFolder 2.xおよびiFolderクライアントの共存</entry>
 </tocsection>

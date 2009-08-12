@@ -3,7 +3,7 @@
 
 <tocsection parent="bookinfo" level="2" id="coexistmig">
  <title>Migracja i uaktualnienie programu Novell iFolder</title>
- <entry leaf="true" id="migration">Migracja z programu iFolder 2. do programu iFolder 3.7</entry>
+ <entry leaf="true" id="migration">Migrowanie z programu iFolder 2.x do programu iFolder w wersji 3.7 lub nowszej</entry>
  <entry leaf="true" id="bctryt7">Uaktualnienie klienta programu iFolder 3.x klienci</entry>
  <entry leaf="true" id="bctrxs4">Współistnienie klientów programów Novell Folder 2.x i iFolder</entry>
 </tocsection>

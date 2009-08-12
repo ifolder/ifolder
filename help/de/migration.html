@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 22, 2009 13:34" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:51" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migration von iFolder 2.x nach iFolder 3.7</title>
+<title>Migration von iFolder 2.x auf iFolder 3.7 oder höher</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> Migration von iFolder 2.<span class="replaceable">x</span> nach iFolder 3.7</h1>
+<h1 class="title"> Migration von iFolder 2.<span class="replaceable">x</span> auf iFolder 3.7 oder höher</h1>
 
 <p class="para">Dieser Abschnitt enthält Folgendes:</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> Verstehen des Migrationsvorgangs</h2>
 
-<p class="para">Novell iFolder ermöglicht eine einfache Migration von iFolder 2.<span class="replaceable">x</span> zum iFolder-Client für Novell iFolder 3.7. Der mit dem IFolder -Client bereitgestellte Migrationsassistent unterstützt Sie beim schnellen und einfachen Migrieren der vorhandenen iFolder 2.<span class="replaceable">x</span>-Daten.</p>
+<p class="para">Novell iFolder ermöglicht eine einfache Migration des iFolder 2.<span class="replaceable">x</span>-Clients auf den iFolder 3.7- oder einen höheren Client. Der auf dem iFolder-Client bereitgestellte Migrationsassistent hilft bei der Migration der bestehenden iFolder 2.<span class="replaceable">x</span>-Daten.</p>
 <p class="para">Während des Starts erkennt der Migrationsassistent die 2.<span class="replaceable">x</span>-Installation und fordert Sie zum Migrieren Ihrer Daten auf. Während der Datenmigration werden Sie dazu aufgefordert, die vorhandenen Ordner umzuwandeln oder eine Kopie der 2.<span class="replaceable">x</span>-iFolder-Ordner zu erstellen. Weitere Informationen finden Sie unter <a href="migration.html#b8anh5z">Schritt 6</a>.</p>
-<p class="para">iFolder fordert Sie zur Neusynchronisierung der Dateien mit dem 3.7-Server auf und fragt Sie, ob Sie den 2.<span class="replaceable">x</span>-Client bis zum Abschluss der 3.7-Synchronisierung behalten müssen. Während dieses Vorgangs werden nur die Daten migriert, daher muss der Benutzer die Einstellungen im neuen Client vornehmen. </p>
+<p class="para">iFolder fordert Sie zur Neusynchronisierung der Dateien mit dem Server der Version 3.7 oder höher auf und fragt Sie, ob Sie den 2.<span class="replaceable">x</span>-Client bis zum Abschluss der Synchronisierung behalten möchten. Während dieses Vorgangs werden nur die Daten migriert; die Einstellungen muss der Benutzer im neuen Client vornehmen. </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Installieren Sie den iFolder-Client für iFolder 3.7 und konfigurieren Sie dann Ihr Konto für den iFolder 3.7-Enterprise-Server.</p>
+<p class="para">Installieren Sie den iFolder-Client für den iFolder-Server der Version 3.7 oder höher und konfigurieren Sie dann Ihr Konto für den iFolder Enterprise-Server der Version 3.7 oder höher.</p>
 <p class="para">Informationen zum Installieren des Client und zum Einrichten des Kontos finden Sie unter <a href="accountsprefs.html">Verwalten von iFolder-Konten und Benutzerkonten und -einstellungen</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">Erstellen Sie im iFolder-Browser mindestens einen iFolder-Ordner auf Ihrem lokalen Computer.</p>
@@ -95,17 +95,17 @@
 <p class="para">Wählen Sie eine der folgenden Optionen aus:</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">iFolder-Ordner migrieren und von 2.x-Domäne trennen</span>:</em>
-               Wählen Sie diese Option aus, um die Verbindung des vorhandenen Ordners mit der iFolder 2.<span class="replaceable">x</span>-Domäne nach dem Migrieren auf 3.7 zu trennen.</p>
+               Wählen Sie diese Option aus, um die Verbindung des vorhandenen Ordners mit der iFolder 2.<span class="replaceable">x</span>-Domäne nach der Migration auf 3.7 oder höher zu trennen.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Kopie des iFolder-Ordners erstellen und migrieren:</span>
               </em>
-               Wählen Sie diese Option aus, um eine Kopie der iFolder 2.<span class="replaceable">x</span>-Dateien zu erstellen und nach iFolder 3.7 zu migrieren. Dadurch werden diese Dateien nicht aus der iFolder 2.<span class="replaceable">x</span>-Domäne entfernt, auch wenn Sie die Dateien zu iFolder 3.7 migrieren.</p>
+               Wählen Sie diese Option aus, um eine Kopie der iFolder 2.<span class="replaceable">x</span>-Dateien zu erstellen und sie für iFolder 3.7 oder höher zu konvertieren. Dadurch werden die Dateien nicht aus der iFolder 2.<span class="replaceable">x</span>-Domäne entfernt, auch wenn Sie die Dateien auf die iFolder-Domäne der Version 3.7 oder höher migrieren.</p>
             </div>
 
-<p class="para">Wenn Sie diese Option auswählen, können Sie auch <span class="guimenu">Übergeordneten Ordner kopieren</span> auswählen, wenn Sie nicht nur den Inhalt des 2.<span class="replaceable">x</span>-Ordners kopieren möchten, sondern auch den übergeordneten Ordner. Wenn Sie diese Option nicht auswählen, wird nur der Inhalt des ausgewählten Ordners zu iFolder 3.7 migriert. </p>
+<p class="para">Wenn Sie diese Option auswählen, können Sie auch <span class="guimenu">Übergeordneten Ordner kopieren</span> auswählen, wenn Sie nicht nur den Inhalt des 2.<span class="replaceable">x</span>-Ordners kopieren möchten, sondern auch den übergeordneten Ordner. Wenn Sie diese Option deaktiviert lassen, wird nur der Inhalt des ausgewählten Ordners auf iFolder 3.7 oder höher migriert. </p>
 <p class="para">Klicken Sie auf <span class="guimenu">Durchsuchen</span>, um den Speicherort für den migrierten Ordner zu suchen.</p>
 <p class="para"><span class="filename">c:/Dokumente und Einstellungen/&lt;Benutzername&gt;/ifolder2dir</span> entspricht beispielsweise einem 2.<span class="replaceable">x</span>-iFolder-Ordner und <span class="filename">dir1</span> und <span class="filename">dir</span> sind die Verzeichnisse unter <span class="filename">ifolder2dir</span>. Wenn Sie die Option <span class="guimenu">Übergeordnetes Verzeichnis kopieren</span> auswählen, wird der Ordner <span class="filename">ifolder2dir</span> am neuen Speicherort erstellt und die Verzeichnisse <span class="filename">dir1</span> und <span class="filename">dir2</span> werden dorthin kopiert. Wenn Sie die Option nicht auswählen, werden nur die Verzeichnisse <span class="filename">dir1</span> und <span class="filename">dir2</span> an den angegebenen Speicherort verschoben.</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">Wenn Sie Ihren Passwortsatz nicht während der Anmeldung festgelegt haben, fordert Sie iFolder zur Eingabe des Passwortsatzes auf. Sie können diese Option überspringen und den Passwortsatz später festlegen.</p>
 <p class="listitem">Wenn Sie momentan nicht mit der iFolder-Domäne verbunden sind, werden Sie zur Herstellung der Verbindung zur Domäne aufgefordert.</p></li>
 <li class="listitem">
-<p class="listitem">Wählen Sie <span class="guimenu">Freigegeben</span> aus, um den iFolder-Ordner mit anderen Mitgliedern in der iFolder 3.7-Domäne gemeinsam zu nutzen.</p>
+<p class="listitem">Wählen Sie <span class="guimenu">Freigegeben</span> aus, um den iFolder-Ordner mit anderen Mitgliedern in der iFolder -Domäne gemeinsam zu nutzen.</p>
 <p class="listitem">Sie können einen verschlüsselten iFolder 2.<span class="guimenu">x</span>-Ordner zu einem freigegebenen Ordner migrieren. Wenn Sie versuchen, einen verschlüsselten iFolder 2.<span class="replaceable">x</span>-Ordner zu einem freigegebenen Ordner zu migrieren, werden Sie zur Überprüfung der Aktion aufgefordert.</p>
 <p class="listitem">Klicken Sie auf <span class="guimenu">OK</span>, um Ihre Aktion zu bestätigen.</p></li></ul></div>
 </li></ol>

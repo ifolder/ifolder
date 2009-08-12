@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:53" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Fazendo upgrade automático para o iFolder 3.7</a>
+            <a href="bctryt7.html#bctryt8">Fazendo upgrade automático para o iFolder 3.7 ou versões mais recentes</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Upgrade manual para iFolder 3.7</a>
+            <a href="bctryt7.html#bbjs0lm">Fazendo upgrade manual para o iFolder 3.7 ou versões posteriores</a>
           </p></li></ul></div>
 
 <div class="important">
@@ -63,26 +63,23 @@
 
 <div class="sect2" id="bctryt8">
 
-<h2 class="title"> Fazendo upgrade automático para o iFolder 3.7</h2>
+<h2 class="title"> Fazendo upgrade automático para o iFolder 3.7 ou versões mais recentes</h2>
 
-<p class="para">O upgrade automático só será possível se você tiver direitos de acesso raiz, já que esse processo precisa instalar os pacotes RPM.  A senha raiz é solicitada durante o upgrade. Se você não tiver direitos de acesso à raiz, o pacote não será instalado automaticamente.  No entanto, os pacotes clientes serão descarregados em um local temporário. O cliente Linux é descarregado em <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>  Isso permite que você faça upgrade posteriormente, pois a localização contém dois scripts de instalação que você pode executar manualmente. Somente após fazer upgrade do cliente, você poderá conectar o domínio do iFolder 3.7 com um cliente do iFolder 3.<span class="replaceable">x</span>.  </p>
+<p class="para">O upgrade automático só será possível se você tiver direitos de acesso raiz, já que esse processo precisa instalar os pacotes RPM.  A senha raiz é solicitada durante o upgrade. Se você não tiver direitos de acesso à raiz, o pacote não será instalado automaticamente.  No entanto, os pacotes clientes serão descarregados em um local temporário. O cliente Linux é descarregado em <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>  Isso permite que você faça upgrade posteriormente, pois a localização contém dois scripts de instalação que você pode executar manualmente. Somente após fazer o upgrade do cliente, você poderá conectar-se ao domínio do iFolder 3.7 ou posterior com um cliente do iFolder 3.<span class="replaceable">x</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
 <p class="para">De um cliente do iFolder 3.<span class="replaceable">x</span> cliente anterior ao iFolder 3.7, tente se conectar ao servidor iFolder. Você será perguntado se deseja fazer upgrade.</p></li>
 <li class="step" id="bctryta">
-<p class="para">Clique em <span class="guimenu">Sim</span> para fazer upgrade automático do cliente do iFolder 3.<span class="guimenu">x</span>.  </p></li></ol>
+<p class="para">Clique em <span class="guimenu">Sim</span> para fazer upgrade automático do cliente do iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
-<p class="para">No caso do iFolder 3.4.1, se você clicar em <span class="guimenu">Não</span> e tentar conectar o cliente do iFolder 3.4.1 ao servidor iFolder 3.7, ele exibirá uma mensagem de erro. Clique em <span class="guimenu">OK</span> para descartar a mensagem.</p>
-<div class="note">
-<p class="para"><em class="title">NOTA:</em>Um cliente do iFolder 3.<span class="replaceable">X</span> (que não sejam clientes do iFolder 3.4.) se conecta ao servidor do iFolder 3.7 mesmo que você opte por não fazer upgrade. Apesar de o cliente 3.<span class="replaceable">X</span> permanecer conectado ao servidor do 3.7, você não pode executar operações do iFolder com esse cliente. Quando você tenta converter uma pasta existente em uma pasta do iFolder, o servidor não considera essas mudanças e exibe uma mensagem de erro informando que o servidor não está disponível. A única operação que você pode fazer é o download de novos RPMs do servidor para instalar o iFolder 3.7.</p></div>
-
+<p class="para">No iFolder 3.4.1, se você clicar em <span class="guimenu">Não</span> e tentar conectar o cliente do iFolder 3.4.1 ao servidor do iFolder 3.7 ou posterior, ele exibirá uma mensagem de erro. Clique em <span class="guimenu">OK</span> para descartar a mensagem.</p>
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
-<h2 class="title"> Upgrade manual para iFolder 3.7</h2>
+<h2 class="title"> Fazendo upgrade manual para o iFolder 3.7 ou versões posteriores</h2>
 
 <div class="procedure">
 <ol class="steps">

@@ -7,15 +7,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, July 21, 2009 19:56" />
-<meta name="Content-Date" content="Mon, 10 Jun 2009 12:00:00 GMT" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:53" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2009" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Migrando do iFolder 2.x para o iFolder 3.7</title>
+<title>Migrando do iFolder 2.x para o iFolder 3.7 ou posterior</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "migration";
@@ -44,7 +44,7 @@
 
 <div class="sect1" id="migration">
 
-<h1 class="title"> Migrando do iFolder 2.<span class="replaceable">x</span> para o iFolder 3.7</h1>
+<h1 class="title"> Migrando do iFolder 2.<span class="replaceable">x</span> para o iFolder 3.7 ou posterior</h1>
 
 <p class="para">Esta seção aborda o seguinte:</p>
 <div class="itemizedlist">
@@ -62,9 +62,9 @@
 
 <h2 class="title"> Entendendo o processo de migração</h2>
 
-<p class="para">O Novell iFolder fornece uma migração simples do iFolder 2.<span class="replaceable">x</span> para o cliente do iFolder para Novell iFolder 3.7. O Assistente de Migração fornecido nesse cliente o ajuda a migrar os dados existentes do iFolder 2.<span class="replaceable">X</span> de forma rápida e fácil.</p>
+<p class="para">O Novell iFolder fornece uma migração simples do cliente do iFolder 2.<span class="replaceable">x</span> para o cliente do iFolder 3.7 ou posterior. O Assistente de Migração fornecido no cliente do iFolder ajuda você a migrar os dados existentes do iFolder 2.<span class="replaceable">X</span> de forma rápida e fácil.</p>
 <p class="para">Durante a inicialização, o Assistente de Migração detecta a instalação da versão 2.<span class="replaceable">x</span> e solicita que você migre os dados. Durante a migração dos dados, ele solicita novamente que você converta as pastas existentes ou faça uma cópia da pasta do iFolder 2. <span class="replaceable">x</span>. Para obter mais informações sobre isso, consulte a <a href="migration.html#b8anh5z">Etapa 6</a>.</p>
-<p class="para">O iFolder solicita a ressincronização dos arquivos com o servidor 3.7 e pergunta se é necessário reter o cliente 2.<span class="replaceable">x</span> até que o 3.7 conclua a sincronização. Durante esse processo, somente os dados são migrados; portanto, o usuário precisa definir a preferência no novo cliente. </p>
+<p class="para">O iFolder questiona você sobre a ressincronização dos arquivos com o servidor 3.7 ou posterior e pergunta se é necessário reter o cliente 2.<span class="replaceable">x</span> até o término da sincronização. Durante esse processo, somente os dados são migrados; portanto, o usuário precisa definir a preferência no novo cliente. </p>
 </div>
 
 <div class="sect2" id="bax6esx">
@@ -74,7 +74,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b88immv">
-<p class="para">Instale o cliente do iFolder para iFolder 3.7, em seguida, configure sua conta para o servidor empresarial do iFolder 3.7.</p>
+<p class="para">Instale o cliente do iFolder para o servidor do iFolder 3.7 ou posterior e, em seguida, configure sua conta para o servidor empresarial do iFolder 3.7 ou posterior.</p>
 <p class="para">Para obter informações sobre a instalação do cliente e a configuração da conta, consulte <a href="accountsprefs.html">Gerenciando as contas e preferências do iFolder</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">No browser do iFolder, crie uma ou mais pastas do iFolder no seu computador local.</p>
@@ -95,17 +95,17 @@
 <p class="para">Selecione um dos seguintes itens:</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">Migrar o iFolder e desconectá-lo do domínio 2.x</span>:</em>
-               selecione esta opção para desconectar a pasta existente do domínio iFolder 2.<span class="replaceable">x</span> depois de migrá-lo para o 3.7.</p>
+               selecione esta opção para desconectar a pasta existente do domínio iFolder 2.<span class="replaceable">x</span> depois de migrá-la para o 3.7 ou posterior.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Criar uma cópia do iFolder e migrar:</span>
               </em>
-               selecione esta opção para criar uma cópia dos arquivos do iFolder 2.<span class="replaceable">x</span> e convertê-los no iFolder 3.7. Isso não remove os arquivos do domínio do ifolder 2.<span class="replaceable">x</span> mesmo depois que os arquivos são migrados para o domínio do iFolder 3.7.</p>
+               selecione esta opção para criar uma cópia dos arquivos do iFolder 2.<span class="replaceable">x</span> e convertê-los em arquivos do iFolder 3.7 ou posterior. Isso não fará com que os arquivos do domínio iFolder 2.<span class="replaceable">x</span> sejam removidos, mesmo depois que você migrá-los para o iFolder 3.7 ou posterior.</p>
             </div>
 
-<p class="para">Se você selecionar essa opção, também poderá selecionar<span class="guimenu"> Copiar a pasta pai</span> se quiser copiar não apenas o conteúdo da pasta do 2.<span class="replaceable">x</span>, mas também da pasta pai. Se você deixar essa opção desmarcada, somente o conteúdo da pasta selecionada será migrado para o 3.7. </p>
+<p class="para">Se você selecionar essa opção, também poderá selecionar<span class="guimenu"> Copiar a pasta pai</span> se quiser copiar não apenas o conteúdo da pasta do 2.<span class="replaceable">x</span>, mas também da pasta pai. Se você deixar essa opção desmarcada, somente o conteúdo da pasta selecionada será migrado para o 3.7 ou posterior. </p>
 <p class="para">Clique em <span class="guimenu">Procurar</span> para encontrar a localização para gravar a pasta migrada.</p>
 <p class="para">Por exemplo, <span class="filename">c:/Documents and Settings/&lt;nome_do_usuário&gt;/ifolder2dir</span> é um iFolder 2.<span class="replaceable">x</span> iFolder e <span class="filename">dir1</span> e <span class="filename">dir2</span> são diretórios sob <span class="filename">ifolder2dir</span>. Quando você seleciona a opção <span class="guimenu">Copiar o diretório pai</span>, ela cria o <span class="filename">ifolder2dir </span>na nova localização e os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> são copiados para ela. Se a opção permanecer desmarcada, somente os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> serão movidos para o local especificado.</p></li>
 <li class="step" id="b8ann46">
@@ -123,7 +123,7 @@
 <p class="listitem">Se você não tiver definido uma frase secreta durante o login, o iFolder solicitará que você a digite. Você pode ignorar essa opção e definir a frase secreta posteriormente.</p>
 <p class="listitem">Se você não estiver conectado ao domínio iFolder, terá de se conectar ao domínio.</p></li>
 <li class="listitem">
-<p class="listitem">Selecione <span class="guimenu">Compartilhado </span>para compartilhar a pasta do iFolder com outros membros do domínio do iFolder 3.7.</p>
+<p class="listitem">Selecione <span class="guimenu">Compartilhado </span>para compartilhar a pasta do iFolder com outros membros do domínio do iFolder </p>
 <p class="listitem">Você pode migrar um iFolder 2.<span class="guimenu">X</span> para a pasta compartilhada. Quando você tentar migrar uma pasta criptografada do iFolder 2.<span class="replaceable">x</span> para uma pasta compartilhada, será solicitado que você confirme a ação.</p>
 <p class="listitem">Clique em <span class="guimenu">OK</span> para confirmar sua ação.</p></li></ul></div>
 </li></ol>
