@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>Sincronizzazione file in corso: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Cartella con lo stesso nome già esistente</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>I valori relativi a nuova password e password di conferma non corrispondono.</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Disponibile</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Selezionare OK per eseguire la fusione o Annulla per selezionare un'ubicazione diversa</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;Nuova stringa di cifratura:</value>

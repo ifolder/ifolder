@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>Sincronizando arquivo: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Já existe uma pasta com o mesmo nome</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>Os valores dos campos Nova frase secreta e Confirmar frase secreta são diferentes.</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Disponível</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Selecione OK para fazer uma fusão ou Cancelar para selecionar um local diferente</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;Nova frase secreta:</value>

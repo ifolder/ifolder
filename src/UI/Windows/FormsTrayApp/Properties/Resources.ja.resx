@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>ファイルを同期しています: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>同じ名前のフォルダがすでに存在します</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>新しいパスフレーズとパスフレーズの再入力のフィールドの値が一致していません。</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>使用可能</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>マージするには［OK］を、別の場所を選択するには［キャンセル］をクリックしてください</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>新しいパスフレーズ(&amp;N):</value>

@@ -501,6 +501,9 @@
   <data name="syncingFile" xml:space="preserve">
     <value>Synchronizace souboru: {0}</value>
   </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Složka s tímto názvem již existuje.</value>
+  </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
     <value>Hodnoty v polích pro nové heslo a pro potvrzení hesla se neshodují.</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Dostupné</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Klepněte na tlačítko OK, chcete-li provést sloučení, nebo klepněte na tlačítko Storno a vyberte jiné umístění.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
     <value>&amp;Nové heslo:</value>
