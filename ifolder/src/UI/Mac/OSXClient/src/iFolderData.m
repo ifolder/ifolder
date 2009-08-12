@@ -720,7 +720,12 @@ static iFolderData *sharedInstance = nil;
 			}
 		
 			// This is a real iFolder so revert it and get the invitaion ifolder
-			revertediFolder = [ifolderService RevertiFolder:ifolderID];
+			//revertediFolder = [ifolderService RevertiFolder:ifolderID];
+			if(![ifolder IsSubscription])		//if on the local box, only then revert
+					revertediFolder	=   [ifolderService RevertiFolder:ifolderID];
+			
+			[ifolderService DeclineiFolderInvitation: ifolderID fromDomain:[ifolder DomainID]];
+			
 			[self _deliFolder:ifolderID];
 		}
 		else
