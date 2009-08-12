@@ -559,7 +559,7 @@ namespace Simias.IdentitySynchronization
 						member.Properties.ModifyProperty( ldapHome );
 					}
 				}
-				catch(Exception ex)
+				catch(Exception)
 				{
 					Property ldapHome = new Property( "LdapHomeAttribute", iFolderHomeServer);
 					ldapHome.ServerOnlyProperty = true;
@@ -774,7 +774,6 @@ namespace Simias.IdentitySynchronization
 			// may return repeated DNs, but very less in number and no extra iteration effect in other calling functions.
 	
 			ArrayList AllAdministeredGroupDNs = new ArrayList();
-			int index = 0;
 			Member SecondaryAdmin = null;
 			string [] MonitoredGroups = null;
 			
@@ -1100,6 +1099,34 @@ namespace Simias.IdentitySynchronization
 		static public bool SyncDisabled
 		{
 			set { syncDisabled = value; }
+		}
+
+		/// <summary>
+		/// Gets/sets the last LDAP Sync time.
+		/// </summary>
+		static public DateTime LastLdapSyncTime
+		{
+			get 
+			{ 
+                            Store store = Store.GetStore ();
+			    DateTime ret;
+                            Domain domain = store.GetDomain ( store.DefaultDomain );
+                            if( domain.Properties.GetSingleProperty( "LastLdapSyncTime" ) != null)
+			    	ret = (DateTime) domain.Properties.GetSingleProperty( "LastLdapSyncTime" ).Value;
+			    else
+			    	ret = DateTime.Now; 
+			    return ret;
+			}
+			set 
+			{
+			    //Save this value in Domain.
+			    Store store = Store.GetStore ();
+			    Domain domain = store.GetDomain ( store.DefaultDomain );
+			    Property LastLdapSyncTimeProp = new Property( "LastLdapSyncTime" , value);
+			    LastLdapSyncTimeProp.LocalProperty = true;
+			    domain.Properties.ModifyProperty( LastLdapSyncTimeProp );
+			    domain.Commit( domain );
+			}
 		}
 
 		/// <summary>
@@ -1697,13 +1724,30 @@ namespace Simias.IdentitySynchronization
  		        Store store = Store.GetStore ();
  			Domain domain = store.GetDomain ( store.DefaultDomain );
 
- 			if( domain.Properties.GetSingleProperty( "IDSyncInterval" ) == null)
-			       SyncInterval = 60 * 60 * 24; //24 Hrs Default Value. Save it in Domain.
- 			else
- 			       syncInterval = (int) domain.Properties.GetSingleProperty( "IDSyncInterval" ).Value;
-
 			while ( quit == false )
 			{
+ 				if( domain.Properties.GetSingleProperty( "IDSyncInterval" ) == null)
+			       		SyncInterval = 60 * 60 * 24; //24 Hrs Default Value. Save it in Domain.
+ 				else
+				{
+					Simias.Configuration config = Store.Config;
+					string cfgValue = config.Get( "Identity", "LdapSyncOnRestart" );
+					if ( cfgValue != null && cfgValue != String.Empty && String.Compare(cfgValue.ToLower(),"no") == 0)
+					{
+						syncOnStart = false;	
+						DateTime CurrentTime = DateTime.Now;
+						DateTime LastSyncTime =  LastLdapSyncTime;
+						if(LastSyncTime.AddSeconds( SyncInterval) > CurrentTime)
+						{
+							TimeSpan tspan = LastSyncTime.AddSeconds( SyncInterval) - CurrentTime;
+							syncInterval = (int)tspan.TotalSeconds;
+						}
+						else
+							syncOnStart = true;
+					}
+					else
+ 			       			syncInterval = SyncInterval;
+				}
 				running = true;
 				
 				if ( registeredProviders.Count == 0 )
@@ -1720,6 +1764,7 @@ namespace Simias.IdentitySynchronization
 				else
 				if ( syncOnStart == false )
 				{
+					log.Debug( "Ldap Sync will wait for {0} seconds", syncInterval.ToString());
 					Simias.IdentitySynchronization.Service.status = "waiting";
 					syncEvent.WaitOne( syncInterval * 1000, false );
 				}
@@ -1744,6 +1789,7 @@ namespace Simias.IdentitySynchronization
 					foreach( IIdentitySyncProvider prov in registeredProviders.Values )
 					{
 						current = prov;
+						LastLdapSyncTime = DateTime.Now;
 						current.Start( state );
 						current = null;
 					}
