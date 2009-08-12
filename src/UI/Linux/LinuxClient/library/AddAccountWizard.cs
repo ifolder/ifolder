@@ -563,7 +563,7 @@ namespace Novell.iFolder
 			this.AlreadyPrepared = false;
 
 			// Row 1
-			Label l = new Label(Util.GS("Enter the Passphrase"));
+			Label l = new Label(Util.GS("Enter the passphrase"));
 			table.Attach(l, 0,3, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			l.LineWrap = true;
@@ -584,7 +584,7 @@ namespace Novell.iFolder
 			l.MnemonicWidget = PassPhraseEntry;
 
 			// Row 3
-			RetypePassPhraseLabel = new Label(Util.GS("R_etype the passphrase:"));
+			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
 			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			l.Xalign = 0.0F;
@@ -674,7 +674,7 @@ namespace Novell.iFolder
 			table.BorderWidth = 12;
 
 			// Row 1
-			//Label l = new Label(Util.GS("Enter the Passphrase"));
+			//Label l = new Label(Util.GS("Enter the passphrase"));
 			CreateDefault = new CheckButton(Util.GS("Create default iFolder."));
 			table.Attach(CreateDefault, 0,5, 0,1,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);

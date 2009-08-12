@@ -328,7 +328,7 @@ namespace Novell.iFolder
 
 			if( ifws.GetSecurityPolicy(this.selectedDomain) == 0)
 			{
-				 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Account Not Encrypted"), Util.GS("Encryption is not enabled for this account. Contact your system administrator to enable encryption."), Util.GS(""));
+				 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Account Not Encrypted"), Util.GS("Encryption is not enabled for this account. Contact your system administrator to enable encryption."), null);
                                  dialog.Run();
                                 dialog.Hide();
                                 dialog.Destroy();
