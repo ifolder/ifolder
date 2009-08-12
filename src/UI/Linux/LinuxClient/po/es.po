@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:33\n"
+"PO-Revision-Date: 2009-08-12 11:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,7 +2702,7 @@ msgstr "Bienvenido al Asistente de recuperación de contraseña codificada"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Seleccione la cuenta cuya contraseña codificada debe restablecerse."
 
-msgid "Click Next to proceed."
+msgid "Click Forward to proceed."
 msgstr "Haga clic en Siguiente para continuar."
 
 msgid "_New passphrase"
@@ -2839,4 +2839,25 @@ msgstr "_Cuenta de iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Vía de la bandeja de conflicto"
+
+msgid "Account Not Encrypted"
+msgstr "Cuenta no cifrada"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "No se ha habilitado el cifrado para esta cuenta. Póngase en contacto con el administrador del sistema para habilitarlo."
+
+msgid "Passphrase Not Set"
+msgstr "Contraseña codificada no definida"
+
+msgid "Passphrase is not set for this account."
+msgstr "No se ha definido la contraseña codificada para esta cuenta."
+
+msgid "Available for download"
+msgstr "Disponible para la descarga"
+
+msgid "Available: {0}"
+msgstr "Disponible: {0}"
+
+msgid "Used: {0}"
+msgstr "Usado: {0}"
 

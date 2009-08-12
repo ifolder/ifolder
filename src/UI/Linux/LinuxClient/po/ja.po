@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "パスフレーズ回復ウィザードへようこそ"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "パスフレーズをリセットする必要があるアカウントを選択してください。"
 
-msgid "Click Next to proceed."
-msgstr "続行するには、［次へ］をクリックします。"
+msgid "Click Forward to proceed."
+msgstr "続行するには[転送]をクリックしてください。"
 
 msgid "_New passphrase"
 msgstr "新しいパスフレーズ(_N)"
@@ -2839,4 +2839,25 @@ msgstr "_iFolderアカウント(_I)"
 
 msgid "Conflict Bin Path"
 msgstr "競合ファイルのパス"
+
+msgid "Account Not Encrypted"
+msgstr "アカウントが暗号化されていません"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "このアカウントでは暗号化が有効になっていません。システム管理者に連絡して暗号化を有効にしてください。"
+
+msgid "Passphrase Not Set"
+msgstr "パスフレーズが設定されていません"
+
+msgid "Passphrase is not set for this account."
+msgstr "このアカウントではパスフレーズが設定されていません。"
+
+msgid "Available for download"
+msgstr "ダウンロード可能"
+
+msgid "Available: {0}"
+msgstr "使用可能: {0}"
+
+msgid "Used: {0}"
+msgstr "使用済み: {0}"
 

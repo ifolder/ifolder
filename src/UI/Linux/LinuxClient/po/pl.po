@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,7 +2702,7 @@ msgstr "Witamy w kreatorze odzyskiwania zwrotów hasłowych"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Wybierz konto, dla którego należy zresetować zwrot hasłowy."
 
-msgid "Click Next to proceed."
+msgid "Click Forward to proceed."
 msgstr "Kliknij przycisk Dalej, aby kontynuować."
 
 msgid "_New passphrase"
@@ -2839,4 +2839,25 @@ msgstr "_Konto programu iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Ścieżka pojemnika na pliki konfliktowe"
+
+msgid "Account Not Encrypted"
+msgstr "Account Not Encrypted"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Szyfrowanie nie jest włączone dla tego konta. W sprawie jego włączenia skontaktuj się z administratorem systemu."
+
+msgid "Passphrase Not Set"
+msgstr "Nie ustawiono zwrotu hasłowego"
+
+msgid "Passphrase is not set for this account."
+msgstr "Nie ustawiono zwrotu hasłowego dla tego konta."
+
+msgid "Available for download"
+msgstr "Dostępne do pobrania"
+
+msgid "Available: {0}"
+msgstr "Dostępne: {0}"
+
+msgid "Used: {0}"
+msgstr "Używane: {0}"
 

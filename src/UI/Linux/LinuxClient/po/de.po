@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:33\n"
+"PO-Revision-Date: 2009-08-12 11:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "Willkommen beim Agenten für die Passwortsatzwiederherstellung"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Wählen Sie das Konto aus, für das der Passwortsatz zurückgesetzt werden soll."
 
-msgid "Click Next to proceed."
-msgstr "Klicken Sie zum Fortfahren auf 'Weiter'."
+msgid "Click Forward to proceed."
+msgstr "Klicken Sie auf \"Weiter\", um fortzufahren."
 
 msgid "_New passphrase"
 msgstr "_Neuer Passwortsatz"
@@ -2839,4 +2839,25 @@ msgstr "_iFolder-Konto"
 
 msgid "Conflict Bin Path"
 msgstr "Pfad zur Konfliktübersicht"
+
+msgid "Account Not Encrypted"
+msgstr "Konto nicht verschlüsselt"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Für dieses Konto ist keine Verschlüsselung aktiviert. Wenden Sie sich an den Systemadministrator, um die Verschlüsselung zu aktivieren."
+
+msgid "Passphrase Not Set"
+msgstr "Passwortsatz nicht festgelegt"
+
+msgid "Passphrase is not set for this account."
+msgstr "Für dieses Konto wurde kein Passwortsatz festgelegt."
+
+msgid "Available for download"
+msgstr "Verfügbar zum Herunterladen"
+
+msgid "Available: {0}"
+msgstr "Verfügbar: {0}"
+
+msgid "Used: {0}"
+msgstr "Belegt: {0}"
 

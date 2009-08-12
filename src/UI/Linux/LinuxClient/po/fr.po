@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,7 +2702,7 @@ msgstr "Bienvenue dans l'assistant de récupération de la phrase secrète"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Sélectionnez le compte pour lequel la phrase secrète doit être réinitialisée."
 
-msgid "Click Next to proceed."
+msgid "Click Forward to proceed."
 msgstr "Cliquez sur Suivant pour continuer."
 
 msgid "_New passphrase"
@@ -2839,4 +2839,25 @@ msgstr "_Compte iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Chemin d'accès de la liste des conflits"
+
+msgid "Account Not Encrypted"
+msgstr "Compte non codé"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "Le codage n'est pas activé pour ce compte. Pour activer le codage, contactez votre administrateur système."
+
+msgid "Passphrase Not Set"
+msgstr "Phrase secrète non définie"
+
+msgid "Passphrase is not set for this account."
+msgstr "Aucune phrase secrète n'est définie pour ce compte."
+
+msgid "Available for download"
+msgstr "Disponible pour téléchargement"
+
+msgid "Available: {0}"
+msgstr "Disponible: {0}"
+
+msgid "Used: {0}"
+msgstr "Utilisé : {0}"
 

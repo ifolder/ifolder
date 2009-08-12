@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2009-08-12 11:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -2702,8 +2702,8 @@ msgstr "Üdvözli a Hozzáférési kód helyreállítása varázsló!"
 msgid "Select the account for which the passphrase must to be reset."
 msgstr "Jelölje ki azt a fiókot, amelynek hozzáférési kódját át kell állítani."
 
-msgid "Click Next to proceed."
-msgstr "A folytatáshoz kattintson a Tovább gombra."
+msgid "Click Forward to proceed."
+msgstr "A folytatáshoz kattintson az Előre gombra."
 
 msgid "_New passphrase"
 msgstr "Új _hozzáférési kód"
@@ -2839,4 +2839,25 @@ msgstr "_iFolder fiók"
 
 msgid "Conflict Bin Path"
 msgstr "Ütközési lomtár elérési útja"
+
+msgid "Account Not Encrypted"
+msgstr "Nem titkosított fiók"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "A titkosítás nincs engedélyezve a fiókhoz. Kérje meg a rendszergazdát, hogy engedélyezze a titkosítást."
+
+msgid "Passphrase Not Set"
+msgstr "Nincs hozzáférési kód beállítva"
+
+msgid "Passphrase is not set for this account."
+msgstr "A fiókhoz nincs hozzáférési kód beállítva."
+
+msgid "Available for download"
+msgstr "Letölthető"
+
+msgid "Available: {0}"
+msgstr "Használható: {0}"
+
+msgid "Used: {0}"
+msgstr "Használt: {0}"
 
