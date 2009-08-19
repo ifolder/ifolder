@@ -1016,27 +1016,6 @@ namespace Novell.iFolder
                 }
 	
 
-	
-		
-
-                public string OneTimePP
-                {
-                        get
-                        {
-                                 if( this.oneTimePassphrase.Text != null)        
-					return this.oneTimePassphrase.Text;
-                                else
-                                        return null;
-                        }
-                }
-                public string PassPhrase
-                {
-                        get
-                        {
-                                return this.importPageNewPassphrase.Text;
-                        }
-                }
-
 		private Gnome.DruidPage CreateImportKeyPage()
 		{
                		ImportKeyPage =
@@ -1162,7 +1141,12 @@ namespace Novell.iFolder
 			if(isEncrypted.Active == true)
 				oneTimePassphrase.Sensitive = true;
 			else
+			{
+				oneTimePassphrase.Text = String.Empty;
 				oneTimePassphrase.Sensitive= false;
+				
+			}
+			ImportUpdateSensitivity();
 		
 		}
 		
@@ -1201,14 +1185,26 @@ namespace Novell.iFolder
 
 		private void ImportUpdateSensitivity()
 		{
-			  if (this.importPageNewPassphrase.Text.Length > 0 && this.importPageConfirmPassphrase.Text.Length >0 && this.importLocation.Text.Length > 0)
-                          if(this.isEncrypted.Active == true && this.oneTimePassphrase.Text.Length > 0) 
-                        {
-                                 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
-                        }
-                        else
-                                 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
-	
+			  if (this.importPageNewPassphrase.Text.Length > 0 && 
+					this.importPageConfirmPassphrase.Text.Length >0 && 
+							this.importLocation.Text.Length > 0)
+                         {
+				 if(this.isEncrypted.Active == true && this.oneTimePassphrase.Text.Length > 0) 
+                       		 {
+                        	       	 KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+                        	}
+                        	else if(this.isEncrypted.Active ==  false )
+				{
+					KeyRecoveryDruid.SetButtonsSensitive(true, true, true, true);
+				} 
+				else
+                                	 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
+			}
+
+			else
+			 KeyRecoveryDruid.SetButtonsSensitive(true, false, true, true);
+			
+
 		}	
 		private bool OnImportKeyPageValidated (object o, EventArgs args)
 		{	
@@ -1240,7 +1236,10 @@ namespace Novell.iFolder
 
 			try{
 			 bool rememberOption = this.simws.GetRememberOption(this.selectedDomain);
-			this.simws.ImportiFoldersCryptoKeys( this.selectedDomain, importPageNewPassphrase.Text, this.OneTimePP, importLocation.Text);
+				
+			this.simws.ImportiFoldersCryptoKeys( this.selectedDomain, importPageNewPassphrase.Text,
+						((this.isEncrypted.Active == true)?this.oneTimePassphrase.Text : null) ,
+											 importLocation.Text);
 			 //clear the values
                                      this.simws.StorePassPhrase(this.selectedDomain, "", CredentialType.None, false);
 							
