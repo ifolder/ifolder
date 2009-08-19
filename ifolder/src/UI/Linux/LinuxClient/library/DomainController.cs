@@ -724,7 +724,7 @@ namespace Novell.iFolder.Controller
 				if (dom != null)
 				{
 					dom.Authenticated = false;
-					ClearDomainPassPhrase(domainID);		
+
 					if (keyedDomains.Contains(dom.ID))
 						keyedDomains[dom.ID] = dom;
 					else
@@ -750,22 +750,6 @@ namespace Novell.iFolder.Controller
 				DomainLoggedOut(this, new DomainEventArgs(domainID));
 		}
 		
-        	/// <summary>
-        	/// Clear Domain PassPhrase, for domain having passphrase set but not remembered.
-        	/// </summary>
-        	/// <param name="domainID">Domain ID</param>
-		public void ClearDomainPassPhrase(string domainID)
-		{
-			bool passphraseStatus = simws.IsPassPhraseSet(domainID);
-			if(passphraseStatus == true)
-			{
-				bool rememberOption = simws.GetRememberOption(domainID);
-				if( rememberOption == false)
-				{
-					simws.StorePassPhrase(domainID, "", CredentialType.None, false);
-				}
-			}		
-		}	
 		/// <summary>
 		/// Call this to prevent the auto login feature from being called again
 		/// </summary>
