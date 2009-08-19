@@ -1950,7 +1950,7 @@ namespace Novell.FormsTrayApp
 
 					if ( ifolderWeb.HasConflicts )
 					{
-						this.menuActionResolve.Enabled = true;
+						this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = this.toolStripBtnResolve.Visible = true;
 					}
 					else
 					{
