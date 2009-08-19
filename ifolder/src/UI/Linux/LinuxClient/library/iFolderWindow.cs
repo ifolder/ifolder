@@ -3323,7 +3323,7 @@ namespace Novell.iFolder
 //			}
 		}
 		
-		private void DownloadSelectedFolder()
+		public void DownloadSelectedFolder()
 		{
 			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			DownloadiFolder(holder, false);
@@ -4120,7 +4120,7 @@ namespace Novell.iFolder
 			MainStatusBar.Push (ctx, message);
 		}
 
-		private void OpenSelectedFolder()
+		public void OpenSelectedFolder()
 		{
 			iFolderHolder holder = iFolderIconView.SelectedFolder;
 			if (holder != null)
@@ -5432,6 +5432,16 @@ namespace Novell.iFolder
 				this.ifwin.tv.Selection.UnselectAll();
 			}
 			iFolderIconView.SelectedFolder = holder;
+
+			if (evnt.Type == Gdk.EventType.TwoButtonPress)
+			{
+				if (holder == null || holder.iFolder == null) return false;
+		
+				if (holder.iFolder.IsSubscription)
+					ifwin.DownloadSelectedFolder();
+				else
+					ifwin.OpenSelectedFolder();
+			} 
 			switch(evnt.Button)
 			{
 				case 3:	// right-click 
