@@ -4001,17 +4001,15 @@ namespace Novell.iFolder
 //					if (networkDetect.Connected)
 //					   SyncNowMenuItem.Sensitive = true;
 
-					if ( (holder.iFolder.Role.Equals("Master"))
-					  || ( ( holder.iFolder.State == "WaitSync" )
-							&& (holder.State == iFolderState.Synchronizing)	))
+					if( ( ( (holder.iFolder.State == "WaitSync") || (holder.iFolder.State == "Local") )   
+				 	    && (holder.State == iFolderState.Synchronizing) )
+					    || (holder.iFolder.Role.Equals("Master"))	)
 					{
 						RevertMenuItem.Sensitive = false;
-
 					}
 					else 
 					{
 						RevertMenuItem.Sensitive = true;
-
 					}
 					PropMenuItem.Sensitive = true;
 					DeleteMenuItem.Sensitive = false;
