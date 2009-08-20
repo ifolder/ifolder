@@ -1959,7 +1959,7 @@ namespace Novell.FormsTrayApp
 					}
 					if( ifolderObject.iFolderState == iFolderState.Initial )
 					{
-                        this.toolStripBtnShare.Visible = this.toolStripBtnShare.Enabled = false;
+                                                this.toolStripBtnShare.Enabled = false;
 						this.CtxMenuOpen.Enabled = this.menuShare.Enabled = false; 
 						this.MenuRevert.Enabled = this.menuProperties.Enabled = false;
 
@@ -1972,6 +1972,16 @@ namespace Novell.FormsTrayApp
 					// Show right-click menu
 					this.CtxMenuOpen.Enabled = this.menuShare.Enabled = true; 
 					this.MenuRevert.Enabled = this.menuProperties.Enabled = true; 
+					//Conditon to enable/disable revert option based on current status of ifolder.
+					//code should get executed at the end of this function
+					if ((ifolderWeb.State == "Local") && ((ifolderObject.iFolderState == iFolderState.SynchronizingLocal) || (ifolderObject.iFolderState == iFolderState.Synchronizing)))
+					{
+						this.toolStripBtnRevert.Enabled = this.menuActionRevert.Enabled = this.MenuRevert.Enabled = false;
+					}
+					else
+					{
+						this.toolStripBtnRevert.Enabled = this.menuActionRevert.Enabled = this.MenuRevert.Enabled = true;
+					}
 				}
 			}
 		}
