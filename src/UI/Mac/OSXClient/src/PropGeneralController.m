@@ -72,7 +72,7 @@
 		@try
 		{
 			diskSpace = [ifolderService GetiFolderDiskSpace:[curiFolder ID]];
-
+			
 			valueString = [NSString stringWithFormat:@"%qi", 
 									[diskSpace UsedSpace]/(1024 * 1024)];
 			if(valueString != nil)
@@ -112,14 +112,13 @@
 		else
 			[lastSync setStringValue:NSLocalizedString(@"Not available", nil)];
 
-		[syncInterval setStringValue:[NSString stringWithFormat:@"%d", 
-								[curiFolder SyncInterval] ]];
+		//[syncInterval setStringValue:[NSString stringWithFormat:@"%d", [curiFolder SyncInterval] ]];
 
 		if([[curiFolder Role] compare:@"Master"] == 0)
 		{
 			[syncNow setEnabled:NO];
 			[syncInterval setHidden:YES];
-			[syncIntervalLabel setStringValue:@"Add controls here to set the allowed sync interval"];
+			[syncIntervalLabel setStringValue:@""];
 		}
 		else
 		{
@@ -129,7 +128,7 @@
 				[syncInterval setHidden:YES];
 				[syncIntervalLabel setStringValue:NSLocalizedString(@"This iFolder does not automatically sync", nil)];
 			}
-			else if([curiFolder EffectiveSyncInterval] < 0)
+			else if([curiFolder EffectiveSyncInterval] > 0)
 			{
 				[syncInterval setStringValue:[NSString stringWithFormat:@"%d %@", 
 								[TimeSpan getTimeSpanValue:[curiFolder EffectiveSyncInterval]],
@@ -167,7 +166,7 @@
 //===========================================================================
 -(void)dealloc
 {
-	[self updateLimitValue:self];
+	//[self updateLimitValue:self];
 	[ifolderService release];	
 	[super dealloc];
 }

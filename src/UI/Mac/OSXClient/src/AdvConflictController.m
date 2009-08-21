@@ -65,6 +65,11 @@
 //=======================================================================
 - (IBAction)closePanel:(id)sender
 {
+	if([[NSFileManager defaultManager] fileExistsAtPath:tempPath])
+	{
+		[[NSFileManager defaultManager] removeFileAtPath:tempPath handler:nil];	
+		tempPath = nil;
+	}
 	[[iFolderData sharedInstance] synciFolderNow:[ifolder ID]];
 	[setupSheet orderOut:nil];
 	[NSApp endSheet:setupSheet];
@@ -152,31 +157,71 @@
 	{
 		return;
 	}
-	
-	NSString* openPath = [NSString stringWithString:@"open "];
+
 	if(local) //show local file
 	{
-		openPath = [openPath stringByAppendingString:[hidenLocalFilePath stringValue]];
+		if(![[NSWorkspace sharedWorkspace] openFile:[hidenLocalFilePath stringValue]])
+		{
+			[self showFile:[hidenLocalFilePath stringValue]];
+		}
 	}
 	else //show server file
 	{
-		openPath = [openPath stringByAppendingString:[hidenServerFilePath stringValue]];
+		//openPath = [openPath stringByAppendingString:[hidenServerFilePath stringValue]];
+		if(![[NSWorkspace sharedWorkspace] openFile:[hidenServerFilePath stringValue]])
+		{
+			if([[NSFileManager defaultManager] fileExistsAtPath:tempPath])
+			{
+				[[NSFileManager defaultManager] removeFileAtPath:tempPath handler:nil];	
+			}
+
+			if([[NSFileManager defaultManager] copyPath:[hidenServerFilePath stringValue] toPath:tempPath handler:nil])
+			{
+				if(![[NSWorkspace sharedWorkspace] openFile:tempPath])
+				{
+					[self showFile:[hidenServerFilePath stringValue]];
+				}	
+			}
+			else
+			{
+				[self showFile:[hidenServerFilePath stringValue]];
+			}
+		}
 	}
-	system([openPath UTF8String]);
 }
 
+- (void)showFile:(NSString*)pathOfFile
+{
+	int result;
+	NSOpenPanel *oPanel = [NSOpenPanel openPanel];
+	
+	[oPanel setAllowsMultipleSelection:NO];
+	[oPanel setCanChooseDirectories:NO];
+	[oPanel setCanChooseFiles:YES];
+	[oPanel setTitle:NSLocalizedString(@"Choose application to open with: ",@"ApplicationSelectionTitle")];
+	
+	NSString *lastPath = @"/Applications";
+	result = [oPanel runModalForDirectory:lastPath file:nil types:nil];
+	
+	if (result == NSOKButton)
+	{
+		[[NSWorkspace sharedWorkspace] openFile:pathOfFile withApplication:[oPanel filename]];
+	}
+}
 //=======================================================================
 // prepareToShow
 // Method to prepare the dialog before showing
 //=======================================================================
 - (void)prepareToShow
 {
+	/*
 	[localFileName setStringValue:@""];
 	[localFileDate setStringValue:@""];
 	[localFileSize setStringValue:@""];
 	[serverFileDate setStringValue:@""];
 	[serverFileName setStringValue:@""];
 	[serverFileSize setStringValue:@""];
+	*/
 	[[conflictController content] removeAllObjects];
 	
 	[ifolderMatrix setState:1 atRow:0 column:0];
@@ -274,6 +319,7 @@
 - (IBAction)showWindow:(id)sender
 {
 	[self prepareToShow];
+	tempPath = @"/tmp/if_conflict_file";
 	
 	ifolder = [[iFolderWindowController sharedInstance] selectediFolder];
 	
