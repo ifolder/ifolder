@@ -747,7 +747,9 @@ namespace Simias.LdapProvider
 
 				if ( proxyConnection != null )
 				{
-					proxyConnection.Disconnect();
+					try{
+						proxyConnection.Disconnect();
+					}catch{}
 				}
 			}
 

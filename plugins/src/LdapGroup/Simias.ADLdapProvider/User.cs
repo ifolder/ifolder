@@ -800,7 +800,9 @@ namespace Simias.ADLdapProvider
 				
 				if ( proxyConnection != null )
 				{
-					proxyConnection.Disconnect();
+					try{
+						proxyConnection.Disconnect();
+					}catch{}
 				}
 			}
 
