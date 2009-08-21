@@ -59,6 +59,7 @@
 	
 	iFolder				*ifolder;
 	BOOL localOnly;
+	NSString* tempPath;
 }
 - (IBAction)browsePath:(id)sender;
 - (IBAction)closePanel:(id)sender;
@@ -71,4 +72,5 @@
 - (IBAction)saveFile:(id)sender;
 - (IBAction)serverFileOpen:(id)sender;
 - (IBAction)showWindow:(id)sender;
+- (void)showFile:(NSString*)pathOfFile;
 @end

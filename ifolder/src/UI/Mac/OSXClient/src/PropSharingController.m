@@ -58,7 +58,6 @@
 	searchAttribute = @"FN";
 	
 	NSLog(@"Reading all iFolder Users");
-
 	@try
 	{
 		int userCount;
@@ -67,6 +66,7 @@
 		{
 			NSString *iFolderID = [curiFolder ID];
 			NSArray *newUsers = [ifolderService GetiFolderUsers:iFolderID];
+			
 			if(newUsers != nil)
 			{
 				for(userCount = 0; userCount < [newUsers count]; userCount++)
@@ -86,7 +86,7 @@
 			}
 			isOwner = ([[curiFolder OwnerUserID] compare:[curiFolder CurrentUserID]] == 0);
 			hasAdminRights = ([[curiFolder CurrentUserRights] compare:@"Admin"] == 0); 
-			
+	
 			//Disable sharing if encrypted
 			if ([curiFolder EncryptionAlgorithm] == nil || [[curiFolder EncryptionAlgorithm] compare:@""] == NSOrderedSame)
 			{
@@ -134,7 +134,7 @@
 	{
 		[usersController addObject:newUser];
 		[keyedUsers setObject:newUser forKey:[newUser UserID] ];
-		[[iFolderData sharedInstance] refresh:NO];
+		//[[iFolderData sharedInstance] refresh:NO];
 	}
 }
 
