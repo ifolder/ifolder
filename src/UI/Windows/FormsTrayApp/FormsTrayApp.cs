@@ -409,6 +409,22 @@ namespace Novell.FormsTrayApp
 			{
 				update = (UpdateResult)instance.ifWebService.CheckForUpdate(domainID, out serverVersion);
                 newClientVersion = serverVersion;
+				//Verifying at client side, Is client upgrade needed
+				string clientVersion = Application.ProductVersion;
+				Version versionClient = new Version(clientVersion);
+				Version versionServer = new Version(serverVersion);
+				if (update == UpdateResult.UpgradeAvailable)
+				{
+					if (((versionClient.Build == versionServer.Build) && (versionClient.Revision < versionServer.Revision)) || (versionClient.Build < versionServer.Build))
+					{
+						update = UpdateResult.UpgradeAvailable;
+					}
+					else
+					{
+						update = UpdateResult.Latest;
+					}
+	
+				}
 			}
 			catch(Exception ex)
 			{
