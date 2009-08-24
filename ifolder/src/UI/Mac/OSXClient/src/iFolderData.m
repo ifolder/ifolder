@@ -1073,7 +1073,6 @@ static iFolderData *sharedInstance = nil;
 
 -(BOOL)usersAdded:(NSString *)ifolderID
 {
-	ifconlog2(@"Checking user added for %@", ifolderID);
 	BOOL useradded = NO;
 	[instanceLock lock];
 	//useradded = ([ifolderUserChanges objectForKey:ifolderID] != nil);
@@ -1086,7 +1085,6 @@ static iFolderData *sharedInstance = nil;
 
 -(void)clearUsersAdded:(NSString *)ifolderID
 {
-	ifconlog2(@"Clearing user added for %@", ifolderID);
 	[instanceLock lock];
 	[ifolderUserChanges removeObjectForKey:ifolderID];
 	[instanceLock unlock];	
@@ -1519,6 +1517,7 @@ static iFolderData *sharedInstance = nil;
 	
 	//Satya: Variables needed to handle upgrade client
 	NSString* dirName;
+	int loopCount;
 	int result;
 	BOOL updateStatus;
 	
@@ -1531,6 +1530,25 @@ static iFolderData *sharedInstance = nil;
 	@try
 	{
 		cliUpdate = [ifolderService CheckForMacUpdate:domID forCurrentVersion:currentVersion];
+		if([cliUpdate Status] == UpgradeAvailable)
+		{
+			NSArray* localVersionArray = [currentVersion componentsSeparatedByString:@"."];
+			NSArray* serverVersionArray = [[cliUpdate ServerVersion] componentsSeparatedByString:@"."];
+			BOOL upgradeNeeded = NO;
+			for(loopCount = 0; loopCount < [localVersionArray count]; loopCount++)
+			{
+				if([[localVersionArray objectAtIndex:loopCount] intValue] < [[serverVersionArray objectAtIndex:loopCount] intValue])
+				{
+					upgradeNeeded = YES;
+					break;
+				}
+				if(!upgradeNeeded)
+				{
+					[cliUpdate setStatus:Latest];
+				}
+			}
+		}
+
 	}
 	@catch(NSException* ex)
 	{
