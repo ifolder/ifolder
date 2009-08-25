@@ -20,8 +20,10 @@
         }, 
         {
             ACTIONS = {
+                changePassword = id; 
                 deleteiFolder = id; 
                 exportKeys = id; 
+                forgotPassphrase = id; 
                 importKeys = id; 
                 mergeiFolder = id; 
                 myAction = id; 
@@ -101,6 +103,46 @@
             LANGUAGE = ObjC; 
             OUTLETS = {logController = NSArrayController; }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                changePassword = id; 
+                customizeToolbar = id; 
+                deleteiFolder = id; 
+                doubleClickedTable = id; 
+                exportKeys = id; 
+                importKeys = id; 
+                mergeiFolder = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                resetPassPhrase = id; 
+                resolveConflicts = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
+                showProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = iFolderWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                advConflictSheetController = AdvConflictController; 
+                createSheetController = CreateiFolderSheetController; 
+                exportKeysSheetController = ExportKeysSheetController; 
+                iFolderTable = NSTableView; 
+                iconColumn = NSTableColumn; 
+                importKeysSheetController = ImportKeysSheetController; 
+                locationColumn = NSTableColumn; 
+                nameColumn = NSTableColumn; 
+                resetPPKeySheetController = ResetPPKeySheetController; 
+                revertiFolderController = RevertiFolderController; 
+                setupSheetController = SetupiFolderSheetController; 
+                statusColumn = NSTableColumn; 
+                statusProgress = NSProgressIndicator; 
+                statusText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
         }
     ); 
     IBVersion = 1; 
