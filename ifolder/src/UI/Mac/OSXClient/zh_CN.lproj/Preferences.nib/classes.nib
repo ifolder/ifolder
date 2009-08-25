@@ -75,6 +75,7 @@
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {
