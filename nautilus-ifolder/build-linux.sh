@@ -81,7 +81,7 @@ then
 	# too
 	if [ "$HOST_ARCH" = "x86_64" ]
 	then
-		export BUILD_DIST="$OES2-i586"
+		export BUILD_DIST="$OES2-i386"
 		linux32 build $PACKAGE.spec --prefer-rpms=../$RPM_DIR/i586 $ABUILD_OPTS
 		cp `find $BUILD_ROOT/usr/src/packages/RPMS/ -name *.rpm` ../$RPM_DIR/i586
 		rm -rf $BUILD_ROOT
