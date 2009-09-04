@@ -17,7 +17,11 @@ INCLUDES =						\
 	$(SIMIAS_CLIENT_C_CFLAGS)	\
 	$(IFOLDER_C_CFLAGS)
 
-EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png AssemblyInfo.cs.in
+
+AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile 
+	sed -e 's,@_VERSION_@,@VERSION@,g' $<  > $@
+	chmod +x $@
 
 # Make sure the following files are not included in the dist
 dist-hook:
@@ -39,8 +43,8 @@ libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS)
 
 libnautilus_ifolder_la_DEPENDENCIES = nautilus-ifolder.exe
 
-nautilus-ifolder.exe: nautilus-ifolder.cs
-	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs
+nautilus-ifolder.exe: nautilus-ifolder.cs AssemblyInfo.cs
+	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs AssemblyInfo.cs
 
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)
