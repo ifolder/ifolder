@@ -67,6 +67,8 @@ make DESTDIR=$RPM_BUILD_ROOT install
 #=============================================================================
 
 %post
+[ -f %{prefix}/bin/ifolder_mono_setup ] && \
+%{prefix}/bin/ifolder_mono_setup
 #=============================================================================
 %files
 %defattr(755,root,root)
