@@ -413,18 +413,33 @@ namespace Novell.FormsTrayApp
 				string clientVersion = Application.ProductVersion;
 				Version versionClient = new Version(clientVersion);
 				Version versionServer = new Version(serverVersion);
-				if (update == UpdateResult.UpgradeAvailable)
-				{
-					if (((versionClient.Build == versionServer.Build) && (versionClient.Revision < versionServer.Revision)) || (versionClient.Build < versionServer.Build))
-					{
-						update = UpdateResult.UpgradeAvailable;
-					}
-					else
-					{
-						update = UpdateResult.Latest;
-					}
-	
-				}
+
+                if (update == UpdateResult.UpgradeAvailable)
+                {
+                    //Verifying between Major and Minor build         
+                    if (((versionClient.Major == versionServer.Major) && (versionClient.Minor < versionServer.Minor)) || (versionClient.Major < versionServer.Major))
+                    {
+                        update = UpdateResult.UpgradeAvailable;
+                    }
+                    else
+                    {
+                        update = UpdateResult.Latest;
+                    }
+
+                    //Verifing between Build and Revision
+                    if ((versionClient.Major == versionServer.Major) && (versionClient.Minor == versionServer.Minor))
+                    {
+                        if (((versionClient.Build == versionServer.Build) && (versionClient.Revision < versionServer.Revision)) || (versionClient.Build < versionServer.Build))
+                        {
+                            update = UpdateResult.UpgradeAvailable;
+                        }
+                        else
+                        {
+                            update = UpdateResult.Latest;
+                        }
+
+                    }
+                }
 			}
 			catch(Exception ex)
 			{
