@@ -478,6 +478,12 @@ namespace Novell.iFolder
 			}
 		}
 		
+		public static string Version ()
+		{
+			string ver =  "@_VERSION_@";
+			return ver;
+		}	
+
         /// <summary>
         /// Gets the preferences WIndow
         /// </summary>
