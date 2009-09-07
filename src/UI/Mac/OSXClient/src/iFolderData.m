@@ -1353,9 +1353,7 @@ static iFolderData *sharedInstance = nil;
 
 -(void) exportRecoverImport:(NSString*)domainID forUser:(NSString*)userID withPassphrase:(NSString*)newPP
 {
-	NSLog(@"Before calling export recover");
 	[simiasService ExportRecoverImport:domainID forUser:userID withPassphrase:newPP];
-	NSLog(@"After calling export recover");
 }
 
 -(BOOL)createDirectoriesRecurssively:(NSString*)path
@@ -1532,23 +1530,36 @@ static iFolderData *sharedInstance = nil;
 		cliUpdate = [ifolderService CheckForMacUpdate:domID forCurrentVersion:currentVersion];
 		if([cliUpdate Status] == UpgradeAvailable)
 		{
+			NSLog(@"Client Upgrade is Available");
 			NSArray* localVersionArray = [currentVersion componentsSeparatedByString:@"."];
 			NSArray* serverVersionArray = [[cliUpdate ServerVersion] componentsSeparatedByString:@"."];
 			BOOL upgradeNeeded = NO;
-			for(loopCount = 0; loopCount < [localVersionArray count]; loopCount++)
+
+			 //Check for Major version
+			if ((  ([[localVersionArray objectAtIndex:0] intValue] == [[serverVersionArray objectAtIndex:0] intValue]) && ([[localVersionArray objectAtIndex:1] intValue] < [[serverVersionArray objectAtIndex:1] intValue])) 
+						 || ([[localVersionArray objectAtIndex:0] intValue]  < [[serverVersionArray objectAtIndex:0] intValue]))
 			{
-				if([[localVersionArray objectAtIndex:loopCount] intValue] < [[serverVersionArray objectAtIndex:loopCount] intValue])
-				{
-					upgradeNeeded = YES;
-					break;
-				}
-				if(!upgradeNeeded)
-				{
-					[cliUpdate setStatus:Latest];
-				}
+				[cliUpdate setStatus:UpgradeAvailable];
+			}      
+			else
+			{
+				[cliUpdate setStatus:Latest];
+			}
+
+			if(([[localVersionArray objectAtIndex:0] intValue] == [[serverVersionArray objectAtIndex:0] intValue] ) && ([[localVersionArray objectAtIndex:1] intValue] == [[serverVersionArray objectAtIndex:1] intValue]))
+			{
+					if ((([[localVersionArray objectAtIndex:2] intValue] == [[serverVersionArray objectAtIndex:2] intValue]) && ([[localVersionArray objectAtIndex:3] intValue]  < [[serverVersionArray objectAtIndex:3] intValue]))
+						|| ([[localVersionArray objectAtIndex:2] intValue] < [[serverVersionArray objectAtIndex:2] intValue]))
+					{
+							[cliUpdate setStatus:UpgradeAvailable];
+					}
+					else
+					{
+							[cliUpdate setStatus:Latest];
+					}
+
 			}
 		}
-
 	}
 	@catch(NSException* ex)
 	{
@@ -1558,14 +1569,15 @@ static iFolderData *sharedInstance = nil;
 						NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 		return;
 	}
-	
 	switch([cliUpdate Status])
 	{
 		case  Latest:
+			NSLog(@"Client status is latest");
 			//Client is latest and not necessary to handle
 			break;
 			
 		case UpgradeNeeded:
+		
 			 //Client upgrade is mandatory. So just logout the domain
 			//Satya: Alert can be handled this way also
 			/*NSBeginAlertSheet(NSLocalizedString(@"Client upgrade available.",@"UpgradeAvailableTitle"),
@@ -1680,7 +1692,6 @@ static iFolderData *sharedInstance = nil;
 									 NSLocalizedString(@"OK",@"OK Button"),
 									 nil,nil);
 			*/
-			
 			answer = NSRunAlertPanel(NSLocalizedString(@"Client Upgrade Available",@"UpgradeAvailableTitle"),
 									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to %@. If you click Yes, the client will be closed automatically",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
 									 NSLocalizedString(@"Yes",@"Yes"),
