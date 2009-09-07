@@ -208,7 +208,32 @@ namespace Simias.UserMovement
 
 	                        	smConn.Authenticate ();
         	                	smConn.InitializeWebClient(svc, "Simias.asmx");
- 		                       	result = svc.DisableUser(domain.ID, ifUserMove.member.UserID, ifUserMove.NewHomeServer.UserID);
+					for(int retrycount = 0; retrycount < 3 ; retrycount++)
+					{
+						// In successful condition , this loop must be executed only once.
+						try
+						{
+ 			                       		result = svc.DisableUser(domain.ID, ifUserMove.member.UserID, ifUserMove.NewHomeServer.UserID);
+						}catch(Exception ex)
+						{
+							if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+							{
+								if( retrycount < 3)
+								{
+									Thread.Sleep(1000);
+									smConn.ClearConnection();
+									WebState.ResetWebState(domain.ID);
+									smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
+									svc = new SimiasWebService();
+									svc.Url = ifUserMove.MasterHomeServer.PublicUrl;
+									smConn.Authenticate ();
+									smConn.InitializeWebClient(svc, "Simias.asmx");
+									continue;
+								}
+							}
+						}
+						break;
+					}
 					smConn.ClearConnection();
 					if( !result )
 					{
