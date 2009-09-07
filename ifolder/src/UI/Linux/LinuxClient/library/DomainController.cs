@@ -1153,6 +1153,34 @@ namespace Novell.iFolder.Controller
 			try
 			{
 				status = (UpgradeResult)this.ifws.CheckForUpdate(domainID, out serverVersion);
+
+				string clientVersion = Util.Version();
+				Version versionClient = new Version(clientVersion);
+				Version versionServer = new Version(serverVersion);
+				if(status == UpgradeResult.UpgradeAvailable)
+				{
+					if (((versionClient.Major == versionServer.Major) && (versionClient.Minor < versionServer.Minor)) || (versionClient.Major < versionServer.Major))
+					{
+						status  = UpgradeResult.UpgradeAvailable;		
+					}		
+					else
+					{
+						status = UpgradeResult.Latest;
+					}
+
+					if((versionClient.Major == versionServer.Major ) && (versionClient.Minor == versionServer.Minor))
+					{
+						if (((versionClient.Build == versionServer.Build) && (versionClient.Revision < versionServer.Revision)) || (versionClient.Build < versionServer.Build))
+						{
+							status  = UpgradeResult.UpgradeAvailable;		
+						}			
+						else
+						{
+							status = UpgradeResult.Latest;
+						}
+
+					}
+				}
 			}
 			catch(Exception ex)
 			{
