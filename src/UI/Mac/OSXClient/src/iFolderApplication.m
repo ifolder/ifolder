@@ -1922,4 +1922,15 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 {
 	refreshTimer = [NSTimer scheduledTimerWithTimeInterval:300 target:self selector:@selector(refreshTimerCall:) userInfo:nil repeats:NO]; //5 minutes by default	
 }
+
+- (BOOL)validateUserInterfaceItem:(id)anItem
+{
+	SEL action = [anItem action];
+
+	if(action == @selector(showPrefs:))
+	{
+		return [self simiasIsRunning];
+	}
+	return YES;
+}
 @end
