@@ -638,12 +638,20 @@ namespace Novell.EnhancedConflictResolution
         /// <param name="args"></param>
         private void LocalOpenHandler(object o, EventArgs args)
         {
+	    string LocalPath = null;
             ConflictHolder ch = GetCurrentConflictHolder();
             if( ch != null )
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(ch.FileConflict.LocalFullPath);
+		    LocalPath = ch.FileConflict.LocalFullPath; 
+                   int i=LocalPath.IndexOf(' ');
+                  if(i!=-1)
+                  {
+                       string[] words = LocalPath.Split(' ');
+                        LocalPath = string.Join("\\ ",words);
+ 		  }
+                     System.Diagnostics.Process.Start(LocalPath);
                 }
                 catch(Exception oe)
                 {
@@ -664,7 +672,14 @@ namespace Novell.EnhancedConflictResolution
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(ch.FileConflict.ServerFullPath);
+		    string ServerFullPath = ch.FileConflict.ServerFullPath;
+		    int i = ServerFullPath.IndexOf(' ');
+	          if(i!=-1)
+		  {
+		      string[] words = ServerFullPath.Split(' ');
+		       ServerFullPath = string.Join("\\ ",words);
+		  }	
+                    System.Diagnostics.Process.Start(ServerFullPath);
                 }
                 catch(Exception oe)
                 {
