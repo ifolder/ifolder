@@ -713,6 +713,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 					//Check for encryption & passphrase
 					iFolderService *ifService = [[iFolderService alloc] init];
 					
+					[[iFolderData sharedInstance] clientUpdates:[dom ID]]; //Check for new client available or not
 					int secPolicy = 0;
 					
 					secPolicy = [ifService GetSecurityPolicy:[smne message]];
