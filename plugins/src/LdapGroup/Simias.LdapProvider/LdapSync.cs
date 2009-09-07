@@ -283,7 +283,9 @@ namespace Simias.LdapProvider
 			{
 				foreach( string s in objectClasses )
 				{
+					// new check for 'group' is added for dsfw ldap server, because it is processed using e-dir processing code
 					if ( s.ToLower() == "groupofnames" ||
+						s.ToLower() == "group" ||
 						s.ToLower() == "dynamicgroup" ||
 						s.ToLower() == "dynamicgroupaux" )
 					{
