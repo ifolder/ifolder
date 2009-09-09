@@ -423,6 +423,7 @@ namespace Novell.iFolder.Controller
                                 dialog.Hide();
                                 dialog.Destroy();
                                 dialog = null;
+				Debug.PrintLine(String.Format("Exception in reset passphrase of domain controller : {0}",ex.Message));
 				return false;
 			}
 		}
