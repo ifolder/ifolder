@@ -162,7 +162,7 @@ namespace EnhancedMenuItems
             try
             {
                 //Menu Action menu items are enhanced to Icon Menu Items       
-                if (iFolderMenuItem.Name.CompareTo("MenuAction") == 0)
+                if (iFolderMenuItem.Name.CompareTo("menuAction") == 0)
                 {
                     MenuItem tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuActionCreate", true)[0];
                     Image menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\ifolder-upload16.png"));
@@ -298,7 +298,7 @@ namespace EnhancedMenuItems
                    
                     return true; // if reached here then return success
                 }
-                else if (iFolderMenuItem.Name.CompareTo("MenuHelp") == 0)
+                else if (iFolderMenuItem.Name.CompareTo("menuHelp") == 0)
                 {
                     MenuItem tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuHelpHelp", true)[0];
                     Image menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\help16.png"));
@@ -326,7 +326,7 @@ namespace EnhancedMenuItems
 
                     return true;
                 }
-                else if (iFolderMenuItem.Name.Equals("MenuEdit"))
+                else if (iFolderMenuItem.Name.Equals("menuEdit"))
                 {
                     MenuItem tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuViewAccounts", true)[0];
                     Image menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\accountSettings16.png"));
@@ -355,7 +355,7 @@ namespace EnhancedMenuItems
                     return true;
                                     
                 }
-                else if (iFolderMenuItem.Name.Equals("MenuView"))
+                else if (iFolderMenuItem.Name.Equals("menuView"))
                 {
                     MenuItem tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuViewRefresh", true)[0];
                     Image menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\refresh16.png"));
@@ -384,7 +384,7 @@ namespace EnhancedMenuItems
                     return true;
                     
                 }
-                else if (iFolderMenuItem.Name.Equals("MenuSecurity"))
+                else if (iFolderMenuItem.Name.Equals("menuSecurity"))
                 {
                     MenuItem tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuRecoverKeys", true)[0];
                     Image menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\keyRecovery16.png"));
