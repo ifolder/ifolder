@@ -109,6 +109,7 @@
 -(iFolderDomain *)getDefaultDomain;
 -(int)getDomainCount;
 -(void)selectDefaultDomain;
+-(void)selectDefaultLoggedDomain;
 
 -(NSString*)createiFolder:(NSString *)path inDomain:(NSString *)domainID withSSL:(BOOL)ssl usingAlgorithm:(NSString *)encrAlgthm usingPassPhrase:(NSString *)passPhrase;
 -(void)acceptiFolderInvitation:(NSString *)iFolderID InDomain:(NSString *)domainID toPath:(NSString *)localPath canMerge:(BOOL)merge;
