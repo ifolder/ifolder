@@ -505,16 +505,19 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (IBAction)exportKeys:(id)sender
 {
+	[[iFolderData sharedInstance] selectDefaultLoggedDomain];
 	[exportKeysSheetController showWindow:self];
 }
 
 - (IBAction)importKeys:(id)sender
 {
+	[[iFolderData sharedInstance] selectDefaultLoggedDomain];
 	[importKeysSheetController showWindow:self];
 }
 
 - (IBAction)resetPassPhrase:(id)sender
 {
+	[[iFolderData sharedInstance] selectDefaultLoggedDomain];
 	[resetPPKeySheetController showWindow:self];
 }
 
@@ -525,11 +528,13 @@ static iFolderWindowController *sharedInstance = nil;
 
 - (IBAction)changePassword:(id)sender
 {
+	[[iFolderData sharedInstance] selectDefaultLoggedDomain];
 	[changePasswordSheetController showWindow:self];
 }
 
 - (IBAction)forgotPassphrase:(id)sender
 {
+	[[iFolderData sharedInstance] selectDefaultLoggedDomain];
 	[forgotPPSheetController showWindow:self];
 }
 

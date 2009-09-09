@@ -1060,6 +1060,28 @@ static iFolderData *sharedInstance = nil;
 	[instanceLock unlock];	
 }
 
+//===================================================================
+// selectDefaultDomain
+// This will select the default domain if there is one and select
+// the first one if not
+//===================================================================
+-(void)selectDefaultLoggedDomain
+{
+	[instanceLock lock];
+	
+	if(defaultDomain != nil)
+	{
+		int index = [[loggedDomainsController arrangedObjects] indexOfObject:defaultDomain];
+		if(index != NSNotFound)
+			[loggedDomainsController setSelectionIndex:index];
+		else
+			[loggedDomainsController setSelectionIndex:0];
+	}
+	else
+		[loggedDomainsController setSelectionIndex:0];
+	
+	[instanceLock unlock];	
+}
 
 
 -(void)setUsersAdded:(NSString *)ifolderID
