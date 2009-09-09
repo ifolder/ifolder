@@ -47,6 +47,7 @@ namespace Novell.iFolder
 		private DomainInformation[] domains;
 		private CheckButton savePassword;
 		private iFolderWebService ifws;
+		private SimiasWebService simws;
 	
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
@@ -134,6 +135,7 @@ namespace Novell.iFolder
 		public ResetPasswordDialog(SimiasWebService simiasws, iFolderWebService ifws)
 		{
 			this.ifws = ifws;
+			this.simws = simiasws;
 			SetupDialog();
 		}
 		
