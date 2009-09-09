@@ -83,6 +83,7 @@ namespace Novell.Wizard
             {
                 DomainInformation[] domains;
                 domains = this.simiasWebService.GetDomains(true);
+                string defaultDomainID = this.simiasWebService.GetDefaultDomainID();
                 this.domainComboBox.Items.Clear();
                 foreach (DomainInformation di in domains)
                 {
@@ -92,9 +93,15 @@ namespace Novell.Wizard
                        
                         DomainItem domainItem = new DomainItem(di.Name, di.ID,di.Host);
                         this.domainComboBox.Items.Add(domainItem);
-                        this.domainComboBox.SelectedIndex = 0;
+                        if (defaultDomainID != null && defaultDomainID == di.ID)
+                            this.domainComboBox.SelectedItem = domainItem;
+                        
                     }
+
+                    
                 }
+                if (this.domainComboBox.SelectedItem == null)
+                            this.domainComboBox.SelectedIndex = 0;
             }
             catch
             {

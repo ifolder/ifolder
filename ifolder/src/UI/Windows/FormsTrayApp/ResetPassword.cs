@@ -64,6 +64,7 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.Button btnReset;
 		private SimiasWebService simws;
         private iFolderWebService ifws;
+        private DomainItem selectedDomain = null;
 		private string domainID;
 		private bool success;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
@@ -572,7 +573,13 @@ namespace Novell.FormsTrayApp
 			{
 				if( this.DomainComboBox.Items.Count > 0)
 				{
-                    this.DomainComboBox.SelectedIndex = 0;
+                    if (selectedDomain != null)
+                    {
+                        this.DomainComboBox.SelectedItem = selectedDomain;
+                    }
+                    else
+                        this.DomainComboBox.SelectedIndex = 0;
+                   
                     this.oldpassword.Enabled = this.newPassword.Enabled = this.confirmPassword.Enabled = rememberPassword.Enabled = true;
                 }
 			}
@@ -731,12 +738,15 @@ namespace Novell.FormsTrayApp
 			{
 				DomainInformation[] domains;
 				domains = this.simiasWebservice.GetDomains(true);
+                string defaultDomainID = this.simiasWebservice.GetDefaultDomainID();
 				foreach (DomainInformation di in domains)
 				{
 					if( di.Authenticated)
 					{
 						DomainItem domainItem = new DomainItem(di.Name, di.ID, di.Host);
 						this.DomainComboBox.Items.Add(domainItem);
+                        if (defaultDomainID != null && defaultDomainID == di.ID)
+                            selectedDomain = domainItem;
 					}
 				}
 			}

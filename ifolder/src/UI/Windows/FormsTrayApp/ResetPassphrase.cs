@@ -67,7 +67,7 @@ namespace Novell.FormsTrayApp
 		private SimiasWebService simws;
         private iFolderWebService ifws;
 		private string domainID;
-		private DomainItem selectedDomain;
+		private DomainItem selectedDomain = null;
 		private bool success;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private System.Windows.Forms.PictureBox pictureBox;
@@ -554,10 +554,13 @@ namespace Novell.FormsTrayApp
 			{
                 this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
                 string[] rAgents= this.simws.GetRAListOnClient(this.DomainID);
-				foreach( string rAgent in rAgents)
-				{
-					this.recoveryAgentCombo.Items.Add( rAgent ); 
-				}
+                if (rAgents != null)
+                {
+                    foreach (string rAgent in rAgents)
+                    {
+                        this.recoveryAgentCombo.Items.Add(rAgent);
+                    }
+                }
                 this.recoveryAgentCombo.SelectedIndex = 0;
 			}
 			catch(Exception)
@@ -575,12 +578,16 @@ namespace Novell.FormsTrayApp
 			{
 				DomainInformation[] domains;
 				domains = this.simiasWebservice.GetDomains(true);
+                string defaultDomainID = this.simiasWebservice.GetDefaultDomainID();
 				foreach (DomainInformation di in domains)
 				{
 					if( di.Authenticated)
 					{
 						DomainItem domainItem = new DomainItem(di.Name, di.ID,di.Host);
 						this.DomainComboBox.Items.Add(domainItem);
+                        if (defaultDomainID != null && defaultDomainID == di.ID)
+                                selectedDomain = domainItem;
+
 					}
 				}
 			}
