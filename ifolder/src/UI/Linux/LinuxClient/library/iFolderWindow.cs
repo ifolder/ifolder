@@ -5443,6 +5443,7 @@ namespace Novell.iFolder
 			switch(evnt.Button)
 			{
 				case 3:	// right-click 
+					this.ifwin.UpdateSensitivity();
 					Menu menu = new Menu();
 
 					if ( path != null &&  holder.iFolder.IsSubscription)
@@ -5511,8 +5512,7 @@ namespace Novell.iFolder
 							MenuItem item_revert = new MenuItem (
 									Util.GS("Revert to a Normal Folder"));
 							   menu.Append (item_revert);
-							//if (false == this.RemoveiFolderButton.Sensitive)
-							if (false == this.ifwin.RevertMenuItem.Sensitive)
+							if (false == this.ifwin.RemoveiFolderButton.Sensitive)
 							{
 							    item_revert.Sensitive = false;		
 							}
@@ -5577,7 +5577,7 @@ namespace Novell.iFolder
 					menu.Popup(null, null, null, 
 						IntPtr.Zero, 3, 
 						Gtk.Global.CurrentEventTime); 
-					this.ifwin.UpdateSensitivity();
+				//	this.ifwin.UpdateSensitivity();
 					retValue = true; 
 					break;
 				
