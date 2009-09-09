@@ -325,7 +325,8 @@ namespace Novell.iFolder
 
 			DomainController domainController = DomainController.GetDomainController();
 
-            Status passphraseStatus = simws.ValidatePassPhrase(this.Domain, this.OldPassphrase);
+           try{
+		 Status passphraseStatus = simws.ValidatePassPhrase(this.Domain, this.OldPassphrase);
             if( passphraseStatus != null)
             {
                 if( passphraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
@@ -440,7 +441,12 @@ namespace Novell.iFolder
 				dialog.Hide();
 				dialog.Destroy();
 				dialog = null;
-			}
+			}}
+			catch(Exception e)
+                        {
+                                Debug.PrintLine(String.Format("Exception in reset passphrase : {0}",e.Message));
+                        }
+
 		}
 
         /// <summary>
@@ -509,6 +515,7 @@ namespace Novell.iFolder
         /// </summary>
 		private void DisplayRAList()
 		{
+			try{
 			string domainID = this.Domain;
 			if( RAList != null)
 				for( int i=RAList.Length; i>=0; i--)
@@ -529,6 +536,21 @@ namespace Novell.iFolder
 				Debug.PrintLine("No recovery agent present");
 			}
 			recoveryAgentCombo.Active = 0;
+			}
+			catch(Exception e)
+                        {
+                                 Debug.PrintLine(String.Format("Server went down : {0},{1}",e.Message,e.StackTrace));
+                        iFolderMsgDialog dialog =new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,
+                                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                                Util.GS("Change Passphrase"),
+                                                                                Util.GS("Unable to change the Passphrase"),
+                                                                                Util.GS("Please try again"));
+                                dialog.Run();
+                                dialog.Hide();
+                                dialog.Destroy();
+                                dialog = null;
+                        }
+
 		}
 
         /// <summary>
