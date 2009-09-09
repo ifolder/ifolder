@@ -290,12 +290,17 @@ namespace Novell.iFolder
                         domainComboBox = ComboBox.NewText();
 			DomainController domainController = DomainController.GetDomainController();
                         domains= domainController.GetLoggedInDomains();
-                        for (int x = 0; x < domains.Length; x++)
+                        string defaultDomainID = simws.GetDefaultDomainID();
+			 int defaultDomain = 0 ;
+			 for (int x = 0; x < domains.Length; x++)
                         {
                                 domainComboBox.AppendText(domains[x].Name+"-"+domains[x].Host);
+				 if(defaultDomainID != null && defaultDomainID == domains[x].ID)
+	                                       defaultDomain = x;
+
                         }
                         if( domains.Length > 0)
-                                domainComboBox.Active = 0;
+                                domainComboBox.Active = defaultDomain;
                         // read domains from domain controller...
                         table.Attach(domainComboBox, 1,2,5,6, AttachOptions.Fill, 0,0,0);
 			l2.MnemonicWidget = domainComboBox;
@@ -856,7 +861,7 @@ namespace Novell.iFolder
                                 recoveryAgent.Text = raName;
 				this.emailID.Text = emailAddress;
 			}}
-			catch(Exception e)
+			catch(Exception)
 			{
 				
 			}

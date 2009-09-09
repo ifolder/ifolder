@@ -463,12 +463,16 @@ namespace Novell.iFolder
 					this.Respond( ResponseType.DeleteEvent);
 					return;	
 			}
+			 string defaultDomainID = simws.GetDefaultDomainID();
+			 int defaultDomain = 0 ;
 			for (int x = 0; x < domains.Length; x++)
 			{
 				domainComboBox.AppendText(domains[x].Name+"-"+domains[x].Host);
+				if(defaultDomainID != null && defaultDomainID == domains[x].ID)
+	                                       defaultDomain = x;
 			}
 			if( domains.Length > 0)
-				domainComboBox.Active = 0;
+				domainComboBox.Active = defaultDomain;
 			DisplayRAList();
 			UpdateUI();
 		}

@@ -47,7 +47,7 @@ namespace Novell.iFolder
 		private DomainInformation[] domains;
 		private CheckButton savePassword;
 		private iFolderWebService ifws;
-	
+		private SimiasWebService simws;	
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
@@ -134,6 +134,7 @@ namespace Novell.iFolder
 		public ResetPasswordDialog(SimiasWebService simiasws, iFolderWebService ifws)
 		{
 			this.ifws = ifws;
+			this.simws = simiasws;
 			SetupDialog();
 		}
 		
@@ -363,12 +364,17 @@ namespace Novell.iFolder
 					this.Respond( ResponseType.DeleteEvent);
 					return;	
 			}
+			 string defaultDomainID = simws.GetDefaultDomainID();
+			 int defaultDomain = 0 ;
 			for (int x = 0; x < domains.Length; x++)
 			{
 				domainComboBox.AppendText(domains[x].Name+"-"+domains[x].Host);
+				 if(defaultDomainID != null && defaultDomainID == domains[x].ID)
+	                                       defaultDomain = x;
+
 			}
 			if( domains.Length > 0)
-				domainComboBox.Active = 0;
+				domainComboBox.Active = defaultDomain;
 			oldPassword.Sensitive = newPassword.Sensitive = confirmPassword.Sensitive = savePassword.Sensitive = true;
 		}
 
