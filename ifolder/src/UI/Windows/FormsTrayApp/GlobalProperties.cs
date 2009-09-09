@@ -1952,13 +1952,11 @@ namespace Novell.FormsTrayApp
 
 					if ( ifolderWeb.HasConflicts )
 					{
-						this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled =
-                            this.toolStripBtnResolve.Visible = true;
+                        this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = true;
 					}
 					else
 					{
-						this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = 
-                            this.toolStripBtnResolve.Visible = false;
+                        this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = false;
 					}
 					if( ifolderObject.iFolderState == iFolderState.Initial )
 					{
@@ -1978,9 +1976,7 @@ namespace Novell.FormsTrayApp
                     
                     //Conditon to enable/disable revert option based on current status of ifolder.
                     //code should get executed at the end of this function
-                    if ((ifolderWeb.State == "Local")
-                         && ((ifolderObject.iFolderState == iFolderState.SynchronizingLocal)
-                         || (ifolderObject.iFolderState == iFolderState.Synchronizing)))
+                    if ((ifolderWeb.State == "Local" || ifolderWeb.State == "WaitSync") && ((ifolderObject.iFolderState == iFolderState.SynchronizingLocal) || (ifolderObject.iFolderState == iFolderState.Synchronizing)))
                     {
                         this.toolStripBtnRevert.Enabled = this.menuActionRevert.Enabled = this.MenuRevert.Enabled = false;
                     }
