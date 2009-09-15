@@ -1830,7 +1830,34 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 	g_object_set_data(G_OBJECT(item), "encryption_button", encrypt);
 	g_object_set_data(G_OBJECT(item), "sharable_button", sharable);
 
-	if( security_status % 2 == 0)
+	gtk_widget_set_sensitive(sharable, FALSE);
+        gtk_widget_set_sensitive(encrypt, FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), FALSE);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (encrypt), FALSE);
+
+	if(security_status !=0)
+        {
+	        if( (security_status & 1  ) == 1 )
+                {
+        	        if( (security_status & 2 ) == 2  )
+                	        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (encrypt), TRUE);
+                        else
+                        {
+				gtk_widget_set_sensitive(sharable, TRUE);
+		                gtk_widget_set_sensitive(encrypt, TRUE);
+                        }
+                }
+                else
+                {
+                        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), TRUE);
+                }
+	}
+        else
+        {
+                gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), TRUE);
+        }
+
+/*	if( security_status % 2 == 0)
 	{
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sharable), TRUE);
 		gtk_widget_set_sensitive(sharable, FALSE);
@@ -1841,7 +1868,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (encrypt), TRUE);
 		gtk_widget_set_sensitive(sharable, TRUE);
 		gtk_widget_set_sensitive(encrypt, TRUE);
-	}
+	} */
 	/* Select the first in the list or the default */
 	gtk_combo_box_set_active(GTK_COMBO_BOX(domain_menu), default_domain_idx);
 	g_signal_connect (domain_menu, "changed",
