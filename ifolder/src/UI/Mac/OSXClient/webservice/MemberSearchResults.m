@@ -164,14 +164,18 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		if(results != NULL)
 		{
 			int counter;
+			int objCounter = 0;
 			for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
 			{
 				struct ns1__MemberInfo *curMember;
 				curMember = findResponse.memberList->MemberInfo[counter];
 
-				User *newUser = [ [User alloc] init];
-				[newUser setProperties:getUserProperties(curMember)];
-				results[counter] = [newUser retain];
+				if(curMember->IsHost == FALSE )
+				{
+					User *newUser = [ [User alloc] init];
+					[newUser setProperties:getUserProperties(curMember)];
+					results[objCounter++] = [newUser retain];
+				}
 			}
 		}
 	}
@@ -210,6 +214,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 	handle_simias_soap_error(soapData, @"MemberSearchResults.getAllMembers");
 
 	totalCount = findResponse.totalMembers;
+	
 	if(totalCount > 0)
 	{
 		searchContext = [[NSString stringWithUTF8String:findResponse.searchContext] retain];
@@ -219,14 +224,17 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 		if(results != NULL)
 		{
 			int counter;
+			int objCounter = 0;
 			for(counter=0;counter<findResponse.memberList->__sizeMemberInfo;counter++)
 			{
 				struct ns1__MemberInfo *curMember;
 				curMember = findResponse.memberList->MemberInfo[counter];
-
-				User *newUser = [ [User alloc] init];
-				[newUser setProperties:getUserProperties(curMember)];
-				results[counter] = [newUser retain];
+				if(curMember->IsHost == FALSE )
+				{
+					User *newUser = [ [User alloc] init];
+					[newUser setProperties:getUserProperties(curMember)];
+					results[objCounter++] = [newUser retain];
+				}
 			}
 		}
 	}
@@ -338,19 +346,22 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member);
 						struct ns1__MemberInfo *curMember;
 						curMember = findResponse.memberList->MemberInfo[counter];
 
-						User *newUser = [ [User alloc] init];
-						[newUser setProperties:getUserProperties(curMember)];
+						if(curMember->IsHost == FALSE )
+						{
+							User *newUser = [ [User alloc] init];
+							[newUser setProperties:getUserProperties(curMember)];
 						// If this happens a lot, we need to adjust our search to not
 						// fetch results we already have!
-						if(results[actualIndex] != nil)
-						{
-//							NSLog(@"Search results already contained this result!");
-							[results[actualIndex] release];
-							results[actualIndex] = nil;
-						}
+							if(results[actualIndex] != nil)
+							{
+//								NSLog(@"Search results already contained this result!");
+								[results[actualIndex] release];
+								results[actualIndex] = nil;
+							}
 
-						results[actualIndex] = [newUser retain];
-						actualIndex++;
+							results[actualIndex] = [newUser retain];
+							actualIndex++;
+						}
 					}
 				}
 			}
@@ -387,6 +398,7 @@ NSDictionary *getUserProperties(struct ns1__MemberInfo *member)
 		[newProperties setObject:[NSString stringWithUTF8String:member->Name] forKey:@"FN"];
 
 	[newProperties setObject:[NSNumber numberWithBool:member->IsOwner] forKey:@"IsOwner"];
+	[newProperties setObject:[NSNumber numberWithBool:member->IsHost] forKey:@"IsHost"];
 	
 	return newProperties;
 }
