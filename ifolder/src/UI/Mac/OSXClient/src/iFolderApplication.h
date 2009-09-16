@@ -147,4 +147,5 @@
 - (void) refreshTimerCall:(NSTimer*)refTimer;
 - (void) stopRefreshTimer;
 - (void) startRefreshTimer;
+-(void)killSimias;
 @end

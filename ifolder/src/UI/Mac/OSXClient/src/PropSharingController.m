@@ -388,12 +388,13 @@
 			}				
 		}
 
+		/*
 		if(searchResults != nil)
 		{
 			[[searchedColumn headerCell] 
 				setStringValue:[NSString stringWithFormat:NSLocalizedString(@"User count: %d", nil),[searchResults count] ]];
 		}
-
+		*/
 		[searchedUsers reloadData];
 	}
 }
