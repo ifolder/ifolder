@@ -631,6 +631,9 @@ namespace Novell.FormsTrayApp
                 catch (Exception ex) // Ignore
                 {
                     FormsTrayApp.log.Info("Error in webservice {0}", ex.ToString());
+                    if (ex.Message.IndexOf("timed out") != -1)
+                        if (FormsTrayApp.UpgradeProgress())
+                            FormsTrayApp.ShutdownForms();
                 }
             }
 			/*
@@ -647,7 +650,14 @@ namespace Novell.FormsTrayApp
 				int policy =0;
 				if( this.ifWebService != null )
 				{
-					policy = this.ifWebService.GetSecurityPolicy(this.domainInfo.ID);
+                    try
+                    {
+                        policy = this.ifWebService.GetSecurityPolicy(this.domainInfo.ID);
+                    }
+                    catch (Exception ex)
+                    {
+                        FormsTrayApp.log.Debug(ex.Message, ex.StackTrace);
+                    }
 				}
 				if( policy %2==0 || this.ifWebService == null)
 				{
