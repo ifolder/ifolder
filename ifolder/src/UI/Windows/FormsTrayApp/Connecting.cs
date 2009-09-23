@@ -123,11 +123,29 @@ namespace Novell.FormsTrayApp
 		public Connecting( iFolderWebService ifws, SimiasWebService simiasWebService, Manager simiasManager, string server, string user, string password, bool defaultServer, bool rememberPassword ) :
 			this( ifws, simiasWebService, simiasManager, password )
 		{
-            UriBuilder UriSchemeForServer = new UriBuilder(server);
-            this.server = UriSchemeForServer.Uri.Authority;
-            this.user = user;
-			this.defaultServer = defaultServer;
-			this.rememberPassword = rememberPassword;
+            server = server.Trim();
+            if(!server.StartsWith("http"))
+            {
+                server = string.Format("https://{0}",server);
+            }
+            
+             UriBuilder UriSchemeForServer = new UriBuilder(server);
+             string serverName = UriSchemeForServer.Uri.Authority;
+
+
+            if (UriSchemeForServer.Scheme != Uri.UriSchemeHttps)
+            {
+                UriSchemeForServer.Scheme = Uri.UriSchemeHttps;
+            }
+            if (UriSchemeForServer.Port == 80)
+            {
+                UriSchemeForServer.Port = 443;
+            }
+
+            this.server = UriSchemeForServer.ToString(); //serverName;
+             this.user = user;
+            this.defaultServer = defaultServer;
+            this.rememberPassword = rememberPassword;
             this.autoAccountEnabled = false;
 		}
 
@@ -746,7 +764,7 @@ namespace Novell.FormsTrayApp
                 {
                     case StatusCodes.InvalidCertificate:
                         string serverName = domainInfo.HostUrl != null ? domainInfo.HostUrl : server;
-                        byte[] byteArray = simiasWebService.GetCertificate(serverName);
+                        byte[] byteArray = simiasWebService.GetCertificate(server);
                         System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
                         if (!autoAccountEnabled || (autoAccountEnabled && promptForInvalidCert))
                             certPrompt = true;
@@ -768,13 +786,13 @@ namespace Novell.FormsTrayApp
                             if (messageDialogResult == DialogResult.Yes)
                             {
                                 /// set the proper Scheme before setting the certificate
-                                if (!(serverName.ToLower()).StartsWith(Uri.UriSchemeHttp))
+                                if (!(server.ToLower()).StartsWith(Uri.UriSchemeHttp))
                                 {
-                                    server = (new Uri(Uri.UriSchemeHttps + Uri.SchemeDelimiter + serverName.TrimEnd(new char[] { '/' }))).ToString();
+                                    server = (new Uri(Uri.UriSchemeHttps + Uri.SchemeDelimiter + server.TrimEnd(new char[] { '/' }))).ToString();
                                 }
                                 else
                                 {
-                                    UriBuilder ub = new UriBuilder(serverName);
+                                    UriBuilder ub = new UriBuilder(server);
                                     ub.Scheme = Uri.UriSchemeHttps;
                                     server = ub.ToString();
                                 }
@@ -787,20 +805,20 @@ namespace Novell.FormsTrayApp
                             else
                             {
                                 //CertAcceptedCond1 = false;
-                                simiasWebService.RemoveCertFromTable(serverName);
+                                simiasWebService.RemoveCertFromTable(server);
                             }
                         }
                         else
                         {
 
                             /// set the proper Scheme before setting the certificate
-                            if (!(serverName.ToLower()).StartsWith(Uri.UriSchemeHttp))
+                            if (!(server.ToLower()).StartsWith(Uri.UriSchemeHttp))
                             {
-                                server = (new Uri(Uri.UriSchemeHttps + Uri.SchemeDelimiter + serverName.TrimEnd(new char[] { '/' }))).ToString();
+                                server = (new Uri(Uri.UriSchemeHttps + Uri.SchemeDelimiter + server.TrimEnd(new char[] { '/' }))).ToString();
                             }
                             else
                             {
-                                UriBuilder ub = new UriBuilder(serverName);
+                                UriBuilder ub = new UriBuilder(server);
                                 ub.Scheme = Uri.UriSchemeHttps;
                                 server = ub.ToString();
                             }
@@ -1240,16 +1258,21 @@ namespace Novell.FormsTrayApp
 			// need to be setup for both http and https schemes because we don't
 			// know how it will ultimately be sent.
 			if ( unknownScheme )
-			{
-				// Set the proxy for http.
-				ubHost.Scheme = Uri.UriSchemeHttp;
-				ubHost.Port = 80;
-				SetProxyForDomain( ubHost.Uri.ToString(), false );
-
-				// Now set it for https.
-				ubHost.Scheme = Uri.UriSchemeHttps;
-				ubHost.Port = 443;
-				SetProxyForDomain( ubHost.Uri.ToString(), false );
+			{				
+				if (!(ubHost.ToString()).StartsWith(Uri.UriSchemeHttps))
+                {
+                    // Set the proxy for http.
+                    ubHost.Scheme = Uri.UriSchemeHttp;
+                    ubHost.Port = 80;
+                }
+                SetProxyForDomain(ubHost.Uri.ToString(), false);
+                // Now set it for https.
+                ubHost.Scheme = Uri.UriSchemeHttps;
+                if (ubHost.Port == -1)
+                {
+                    ubHost.Port = 443;
+                }
+                SetProxyForDomain(ubHost.Uri.ToString(), false);
 			}
 			else
 			{
