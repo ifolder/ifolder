@@ -753,7 +753,8 @@ namespace Novell.iFolder
 						{
 //							Debug.PrintLine("No key, New holder");
 							ConflictHolder ch = new ConflictHolder(con, ifolder.UnManagedPath);
-							ConflictTreeStore.AppendValues(ch);
+							if(con.LocalFullPath != null)
+								ConflictTreeStore.AppendValues(ch);
 							conflictTable.Add(key, ch);
 						}
 					}
@@ -1065,7 +1066,7 @@ namespace Novell.iFolder
 					
 					try
 					{
-						if (ifolder.CurrentUserRights == "ReadOnly")
+						if (snc != null && ifolder.CurrentUserRights == "ReadOnly")
 						{
 							ifws.RenameAndResolveConflict(snc.iFolderID,
 														  snc.ConflictID,
@@ -1092,11 +1093,29 @@ namespace Novell.iFolder
 									dg.Destroy();
 									return;
 								}
+							Conflict[] conflictList = ifws.GetiFolderConflicts(lnc.iFolderID);	
 								
-								ifws.ResolveNameConflict(lnc.iFolderID,
-													 lnc.ConflictID,
-													 newFileName);
-							}
+							ifws.ResolveNameConflict(lnc.iFolderID,lnc.ConflictID,newFileName);
+
+		                                        foreach(Conflict con in conflictList)
+                		                        {
+                                		                if(con.IsNameConflict && con.ServerName != null)
+								if(String.Compare(lnc.LocalFullPath,con.ServerFullPath,true)== 0)
+								{
+							                        		                                                                                                  if (ifolder.CurrentUserRights == "ReadOnly")
+                                                                   {
+								        ifws.RenameAndResolveConflict(con.iFolderID,con.ConflictID,con.ServerName);
+									break;
+								    }
+                                                                else
+								    {
+                                                                        ifws.ResolveNameConflict(con.iFolderID,con.ConflictID,con.ServerName);
+									break;
+								    }
+								}
+                                        		}
+							ifws.SynciFolderNow(lnc.iFolderID);
+						}
 							// If this is a name conflict because of case-sensitivity
 							// on Linux, there won't be a conflict on the server.
 							if (snc != null)
