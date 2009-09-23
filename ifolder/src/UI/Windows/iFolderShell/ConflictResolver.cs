@@ -1286,7 +1286,7 @@ namespace Novell.iFolderCom
 				{
 					string path = Path.Combine(ifolder.UnManagedPath, newName.Text);
 					FileInfo fi = new FileInfo(path);
-					if (fi.Exists)
+                    if (fi.Exists && conflicts.LocalConflict != null)
 					{
 						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fileExists"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
@@ -1295,15 +1295,15 @@ namespace Novell.iFolderCom
 					{
 						fileValid = true;
 					}
-					
-					if(newName.Text != conflicts.ServerConflict.ServerName)
-					{
+
+                     if(conflicts.ServerConflict != null && newName.Text != conflicts.ServerConflict.ServerName)
+					    {
 						//server file rename is not certified so we are not allowing the server file rename, rather rename to the same name 
 						// this is a work around later we will fix the sever rename as well
 						fileValid = false;
 						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("fileExists"), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
 						mmb.ShowDialog();
-					}
+					    }
 					
 				}
 				catch (Exception ex)
@@ -1322,6 +1322,7 @@ namespace Novell.iFolderCom
 							{
 								// The user has read-only access, they can only rename the local copy to get it out of the way.
 								ifWebService.RenameAndResolveConflict(ifolder.ID, conflicts.ServerConflict.ConflictID, newName.Text);
+
 							}
 							else
 							{
@@ -1350,7 +1351,36 @@ namespace Novell.iFolderCom
 					{                        
 						try
 						{
+                            Conflict[] conflictArray = ifWebService.GetiFolderConflicts(ifolder.ID);
+
 							ifWebService.ResolveNameConflict(ifolder.ID, conflicts.LocalConflict.ConflictID, newName.Text);
+
+                            foreach (Conflict conflict in conflictArray)
+                            {
+                                if (conflict.IsNameConflict && conflict.ServerName != null)
+                                {
+
+                                    if (String.Compare(conflicts.LocalConflict.LocalFullPath, conflict.ServerFullPath, true) == 0)
+                                    {
+
+                                        if (readOnly)
+                                        {
+                                            // The user has read-only access, they can only rename the local copy to get it out of the way.
+                                            ifWebService.RenameAndResolveConflict(ifolder.ID, conflict.ConflictID, conflict.ServerName);
+                                            break;
+                                        }
+                                        else
+                                        {
+
+                                            ifWebService.ResolveNameConflict(ifolder.ID, conflict.ConflictID, conflict.ServerName);
+                                            break;
+                                        }
+
+                                    }
+                                }
+                            }
+
+                            ifWebService.SynciFolderNow(ifolder.ID);
 							lvi.Remove();
 						}
 						catch (Exception ex)
@@ -1494,13 +1524,13 @@ namespace Novell.iFolderCom
 						}
 						else// if (conflict.ServerName != null) //should be a server conflict
 						{
-							string[] items = new string[3];
-							items[0] = conflict.ServerName;
-							items[1] = Path.GetDirectoryName(conflict.ServerFullPath).Substring(ifolder.UnManagedPath.Length);
-							items[2] = resourceManager.GetString("name");
+							//string[] items = new string[3];
+							//items[0] = conflict.ServerName;
+							//items[1] = Path.GetDirectoryName(conflict.ServerFullPath).Substring(ifolder.UnManagedPath.Length);
+							//items[2] = resourceManager.GetString("name");
 							conflicts.ServerConflict = conflict;
 
-							lvi = new ListViewItem(items);
+							//lvi = new ListViewItem(items);
 						}
 					}
 
@@ -1630,6 +1660,7 @@ namespace Novell.iFolderCom
 
 				foreach (ListViewItem lvi in conflictsView.SelectedItems)
 				{
+                    if (((Conflicts)lvi.Tag).ServerConflict != null)
 					if (!((Conflicts)lvi.Tag).ServerConflict.IsNameConflict)
 					{
 						serverPanel.Visible = localPanel.Visible = true;
