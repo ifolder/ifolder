@@ -401,7 +401,24 @@
 
 		@try
 		{
-			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 
+			
+			
+			NSString* HostName = [host stringValue];
+				
+			NSString* substring = nil;
+			if([HostName hasPrefix:@"http://"] == TRUE)
+				substring = [HostName substringFromIndex:7];
+			else if([HostName hasPrefix:@"https://"] == TRUE)
+				substring = [HostName substringFromIndex:8];
+			else
+				substring = HostName;
+			
+			NSLog(@"%@ is the substring",substring);
+			[host setStringValue:[@"https://" stringByAppendingString:substring]];
+			//NSString* newHost = [@"https://" stringByAppendingFormat:substring];
+			//NSLog(@"%@ is the newHost",newHost);
+			
+ 			iFolderDomain *newDomain = [simiasService ConnectToDomain:[userName stringValue] 
 				usingPassword:[password stringValue] andHost:[host stringValue]];
 
 			statusCode = [[newDomain statusCode] unsignedIntValue];
