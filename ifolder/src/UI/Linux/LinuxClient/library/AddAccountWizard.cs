@@ -1748,8 +1748,8 @@ namespace Novell.iFolder
 						WaitDialog.Destroy();
 						WaitDialog = null;
 					}
-
-					serverName = dom.HostUrl != null?dom.HostUrl:addDomainThread.ServerName;
+				//	serverName = dom.HostUrl != null?dom.HostUrl:addDomainThread.ServerName;
+					serverName = addDomainThread.ServerName;
 					CertificateProblem certprob;
 					byte[] byteArray = simws.GetCertificate2(serverName, out certprob);
 					System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate(byteArray);
