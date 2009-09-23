@@ -465,12 +465,29 @@ namespace Novell.iFolder.Controller
 		/// </summary>
 		public DomainInformation AddDomain(string host, string username, string password, bool bSavePassword, bool bSetAsDefault)
 		{
+
 			DomainInformation dom = null;
 			
 			SetHttpProxyForHost(host);
 
 			try
 			{
+				try{
+				host = host.Trim();
+				if(!host.StartsWith("http"))
+					host = string.Format("https://{0}",host);
+				host = host.Trim('/');
+				UriBuilder ub = new UriBuilder(host);
+			        if(ub.Scheme!=Uri.UriSchemeHttps)
+					ub.Scheme = Uri.UriSchemeHttps;
+			        if(ub.Port==80)
+					ub.Port = 443;
+				host = ub.ToString();
+				}
+				catch
+				{
+				}
+
 				dom = simws.ConnectToDomain(username, password, host);
 				if (dom != null &&
 					(dom.StatusCode == StatusCodes.Success ||
@@ -1213,7 +1230,7 @@ namespace Novell.iFolder.Controller
 						args =
 								new DomainClientUpgradeAvailableEventArgs(
 									domainID, serverVersion);
-					DomainClientUpgradeAvailable(this, args);
+				//	DomainClientUpgradeAvailable(this, args);
 						break;
 				case UpgradeResult.Unknown:
 						DomainController.upgradeStatus.statusCode = StatusCodes.Unknown;
