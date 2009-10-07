@@ -163,7 +163,7 @@ namespace Novell.iFolder.Install
 			catch
 			{
 				// Delete the directory.
-				Directory.Delete( downloadDir, true );
+				//Directory.Delete( downloadDir, true );
 				downloadDir = null;
 			}
 
@@ -493,9 +493,9 @@ namespace Novell.iFolder.Install
 			bool running = false;
 
 			// Make sure that the service is authenticated.
-			if ( service != null )
-			{
-				// Get the list of files needed for the update.
+            if (service != null)
+            {
+                // Get the list of files needed for the update.
                 string[] fileList;
 
                 //Mono2.0 onwards does not understand SoapRpcMethod, they support SoapDocumentMethod. If exception
@@ -511,66 +511,97 @@ namespace Novell.iFolder.Install
                     else
                         throw ex;
                 }
-                		if ( fileList != null )
-				{
-					// Download the files in the list to a temporary directory.
-					string downloadDir = DownloadFiles( fileList, path );
-					if ( downloadDir != null )
-					{
-						running = true;
+                if (fileList != null)
+                {
+                    // Download the files in the list to a temporary directory.
+                    string downloadDir = DownloadFiles(fileList, path);
+                    if (downloadDir != null)
+                    {
+                        running = true;
 
-						//Install the client
-						if ( MyEnvironment.Platform == MyPlatformID.Darwin)
-						{
-							/*FIX ME For Mac: Install the downloaded dmg file
-							// There should only be one file needed for the windows update.
-							Process installProcess = new Process();
-							installProcess.StartInfo.FileName = Path.Combine( downloadDir, Path.GetFileName( fileList[ 0 ] ) );
-							installProcess.StartInfo.UseShellExecute = true;
-							installProcess.StartInfo.CreateNoWindow = false;
-							running = installProcess.Start();
-							installProcess.WaitForExit();
-							//installProcess.Close();
-							//installProcess.Dispose();
-							*/
-						}
-						else if ( MyEnvironment.Platform == MyPlatformID.Windows )
-						{
-							// There should only be one file needed for the windows update.
-							Process installProcess = new Process();
-							installProcess.StartInfo.FileName = Path.Combine( downloadDir, Path.GetFileName( fileList[ 0 ] ) );
-							installProcess.StartInfo.UseShellExecute = true;
-							installProcess.StartInfo.CreateNoWindow = false;
-							running = installProcess.Start();
-						}
-						else if ( MyEnvironment.Platform == MyPlatformID.Unix )
-						{
-							// If the platform is Unix, this code will assume
-							// that a script file named, "install-ifolder.sh"
-							// exists.  It will be launched to run/control the
-							// installation.
-							string installScriptPath = Path.Combine( downloadDir, "install-ifolder.sh" );
-							if ( File.Exists( installScriptPath ) )
-							{
-								Process installProcess = new Process();
-								
-								installProcess.StartInfo.FileName = "sh";
-								installProcess.StartInfo.WorkingDirectory = downloadDir;
-								installProcess.StartInfo.Arguments = 
-									string.Format("{0} {1}", installScriptPath, downloadDir);
-								installProcess.StartInfo.UseShellExecute = true;
-								installProcess.StartInfo.CreateNoWindow = false;
-								try
-								{
-									running = installProcess.Start();
-								}
-								catch{}
-							}
-						}
-						
-					}
-				}
-			}
+                        //Install the client
+                        if (MyEnvironment.Platform == MyPlatformID.Darwin)
+                        {
+                            /*FIX ME For Mac: Install the downloaded dmg file
+                            // There should only be one file needed for the windows update.
+                            Process installProcess = new Process();
+                            installProcess.StartInfo.FileName = Path.Combine( downloadDir, Path.GetFileName( fileList[ 0 ] ) );
+                            installProcess.StartInfo.UseShellExecute = true;
+                            installProcess.StartInfo.CreateNoWindow = false;
+                            running = installProcess.Start();
+                            installProcess.WaitForExit();
+                            //installProcess.Close();
+                            //installProcess.Dispose();
+                            */
+                        }
+                        else if (MyEnvironment.Platform == MyPlatformID.Windows)
+                        {
+                            // Write a file to use it as flag that Download of files is complete.
+                            // This is because while windows client download , webservice times out and fails to return the status
+                            try
+                            {
+                                TextWriter tw = new StreamWriter(Path.Combine(downloadDir, "status.txt"));
+                                tw.WriteLine(running.ToString());
+                                tw.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Debug(ex.Message);
+                            }
+
+                            // There should only be one file needed for the windows update.
+                            Process installProcess = new Process();
+                            installProcess.StartInfo.FileName = Path.Combine(downloadDir, Path.GetFileName(fileList[0]));
+                            installProcess.StartInfo.UseShellExecute = true;
+                            installProcess.StartInfo.CreateNoWindow = false;
+                            running = installProcess.Start();
+                        }
+                        else if (MyEnvironment.Platform == MyPlatformID.Unix)
+                        {
+                            // If the platform is Unix, this code will assume
+                            // that a script file named, "install-ifolder.sh"
+                            // exists.  It will be launched to run/control the
+                            // installation.
+                            string installScriptPath = Path.Combine(downloadDir, "install-ifolder.sh");
+                            if (File.Exists(installScriptPath))
+                            {
+                                Process installProcess = new Process();
+
+                                installProcess.StartInfo.FileName = "sh";
+                                installProcess.StartInfo.WorkingDirectory = downloadDir;
+                                installProcess.StartInfo.Arguments =
+                                    string.Format("{0} {1}", installScriptPath, downloadDir);
+                                installProcess.StartInfo.UseShellExecute = true;
+                                installProcess.StartInfo.CreateNoWindow = false;
+                                try
+                                {
+                                    running = installProcess.Start();
+                                }
+                                catch { }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (MyEnvironment.Platform == MyPlatformID.Windows)
+                        {
+                            // Write a file to use it as flag that Download of files is complete.
+                            //This is because while windows client download , webservice times out and fails to return the status
+                            try
+                            {
+                                TextWriter tw = new StreamWriter(Path.Combine(Path.Combine(Path.GetTempPath(), iFolderUpdateDirectory).ToString(), "status.txt"));
+                                tw.WriteLine(running.ToString());
+                                tw.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Debug(ex.Message);
+                            }
+                        }
+                    }
+                }
+            }
 
 			return running;
 		}

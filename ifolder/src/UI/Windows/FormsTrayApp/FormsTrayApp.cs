@@ -442,9 +442,8 @@ namespace Novell.FormsTrayApp
             }
 			catch(Exception ex)
 			{
-				MessageBox.Show(resourceManager.GetString("ServerOld")/*"Server Is Old. Cannot connect to the server"*/,resourceManager.GetString("ServerOldTitle")/*"Server Old"*/,MessageBoxButtons.OK);
-				serverOld = true;
-				return false;
+				FormsTrayApp.log.Debug(ex.Message, ex.StackTrace);
+                return true;
 			}
 			switch( update )
 			{
@@ -506,10 +505,28 @@ namespace Novell.FormsTrayApp
 					break;
 				case UpdateResult.Unknown:
 					// Unknown status
-					return false;
+                    return true;
 			}
 			return true;
 		}
+
+        /// <summary>
+        /// Method used to check if on a windows client upgrade , whether download is complete or not
+        /// </summary>
+        /// <returns><b>True</b> if an download is complete and install been started; otherwise, <b>False</b>.</returns>
+        static public bool UpgradeProgress()
+        {
+            string iFolderUpdateDirectory = "ead51d60-cd98-4d35-8c7c-b43a2ca949c8";
+            while( ! File.Exists(Path.Combine(Path.Combine(Path.GetTempPath(), iFolderUpdateDirectory).ToString(), "status.txt")))
+                Thread.Sleep(5000);
+
+            TextReader tr = new StreamReader(Path.Combine(Path.Combine(Path.GetTempPath(), iFolderUpdateDirectory).ToString(), "status.txt"));
+            if (tr.ReadLine().Equals(true.ToString()))
+                return true;
+            else
+                return false;
+            return false;           
+        }
 
 		/// <summary>
 		/// Method used to check for a client update on the server.
