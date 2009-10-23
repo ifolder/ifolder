@@ -1044,13 +1044,19 @@ namespace Novell.iFolder
 			if (bPasswordChanged)
 				SavePassword();
 		}
-		
+	
 		private void OnRememberPasswordToggled(object o, EventArgs args)
-		{
-			if (RememberPasswordButton.HasFocus)
-				SavePassword();
-		}
-		
+                {
+                	if (RememberPasswordButton.HasFocus)
+                       	{
+                        	if(!RememberPasswordButton.Active)
+                               	{
+                                	PasswordEntry.Text = "";
+                               	}
+                                SavePassword();
+                       }
+                }
+	
 		void KeyPressHandler(object o, KeyPressEventArgs args)
 		{
 			args.RetVal = true;
