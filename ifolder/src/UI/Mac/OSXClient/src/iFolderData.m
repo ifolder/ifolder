@@ -1084,6 +1084,7 @@ static iFolderData *sharedInstance = nil;
 }
 
 
+
 -(void)setUsersAdded:(NSString *)ifolderID
 {
 	[instanceLock lock];
@@ -1621,7 +1622,7 @@ static iFolderData *sharedInstance = nil;
 			*/
 			//Satya: Actual message to display for upgrade available and handling it.
 			answer = NSRunAlertPanel(NSLocalizedString(@"Client Upgrade Available",@"UpgradeAvailableTitle"),
-									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to %@. If you click Yes, the client will be closed automatically",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
+									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
 									 NSLocalizedString(@"Yes",@"Yes"),
 									 NSLocalizedString(@"No",@"No"),nil);
 			
@@ -1715,7 +1716,7 @@ static iFolderData *sharedInstance = nil;
 									 nil,nil);
 			*/
 			answer = NSRunAlertPanel(NSLocalizedString(@"Client Upgrade Available",@"UpgradeAvailableTitle"),
-									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to %@. If you click Yes, the client will be closed automatically",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
+									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
 									 NSLocalizedString(@"Yes",@"Yes"),
 									 NSLocalizedString(@"No",@"No"),nil);
 			
