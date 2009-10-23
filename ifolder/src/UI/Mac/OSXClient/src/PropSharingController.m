@@ -134,7 +134,6 @@
 	{
 		[usersController addObject:newUser];
 		[keyedUsers setObject:newUser forKey:[newUser UserID] ];
-		//[[iFolderData sharedInstance] refresh:NO];
 	}
 }
 
@@ -170,6 +169,7 @@
 			else
 			{
 				[self addAllSelectedUsers];
+				[[iFolderData sharedInstance] refresh:NO];
 			}
 		}
 	}
@@ -192,6 +192,7 @@
 		case NSAlertDefaultReturn:
 		{
 			[self addAllSelectedUsers];
+			[[iFolderData sharedInstance] refresh:NO];
 			break;
 		}
 	}
@@ -340,6 +341,7 @@
 			break;
 		}
 	}
+	[[iFolderData sharedInstance] refresh:NO];
 }
 
 
