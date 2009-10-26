@@ -181,7 +181,6 @@ namespace Novell.iFolder
                         }
 
 			}
-		} 
 
 
 
