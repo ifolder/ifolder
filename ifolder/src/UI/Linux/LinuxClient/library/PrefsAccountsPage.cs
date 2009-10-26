@@ -180,7 +180,6 @@ namespace Novell.iFolder
 					new DomainClientUpgradeAvailableEventHandler(OnClientUpgradeAvailableEvent);
                         }
 
-			}
 		} 
 
 
