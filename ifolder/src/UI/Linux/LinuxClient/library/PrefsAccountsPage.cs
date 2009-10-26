@@ -86,6 +86,12 @@ namespace Novell.iFolder
 		
 		private iFolderLoginDialog	LoginDialog;
 
+		private iFolderWebService       ifws;
+		private iFolderMsgDialog        ClientUpgradeDialog;
+		private Status ClientUpgradeStatus;
+		private string NewClientVersion;
+		private string NewClientDomainID;
+
 
 		/// <summary>
 		/// Default constructor for iFolderAccountsPage
@@ -95,10 +101,20 @@ namespace Novell.iFolder
 		{
 			this.topLevelWindow = topWindow;
 			this.simiasManager = Util.GetSimiasManager();
+			string localServiceUrl = simiasManager.WebServiceUri.ToString();
+			ifws = new iFolderWebService();
+			ifws.Url = localServiceUrl + "/iFolder.asmx";
+			LocalService.Start(ifws, simiasManager.WebServiceUri, simiasManager.DataPath);
+
 			this.simws = new SimiasWebService();
 			simws.Url = simiasManager.WebServiceUri.ToString() +
 					"/Simias.asmx";
 			LocalService.Start(simws, simiasManager.WebServiceUri, simiasManager.DataPath);
+			ClientUpgradeDialog = null;
+
+			this.ClientUpgradeStatus = null;
+			this.NewClientVersion = null;
+			this.NewClientDomainID = null;
 
 			curDomains = new Hashtable();
 			
@@ -127,6 +143,8 @@ namespace Novell.iFolder
 					new DomainNewDefaultEventHandler(OnNewDefaultDomainEvent);
 				domainController.DomainInGraceLoginPeriod +=
 					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
+				domainController.DomainClientUpgradeAvailable +=
+					new DomainClientUpgradeAvailableEventHandler(OnClientUpgradeAvailableEvent);
 			}
 			
 			detailsDialogs = new Hashtable();
@@ -158,6 +176,10 @@ namespace Novell.iFolder
 					new DomainNewDefaultEventHandler(OnNewDefaultDomainEvent);
 				domainController.DomainInGraceLoginPeriod -=
 					new DomainInGraceLoginPeriodEventHandler(OnDomainInGraceLoginPeriodEvent);
+				domainController.DomainClientUpgradeAvailable -=
+					new DomainClientUpgradeAvailableEventHandler(OnClientUpgradeAvailableEvent);
+                        }
+
 			}
 		} 
 
@@ -627,6 +649,170 @@ namespace Novell.iFolder
 					break;
 			}
 		}
+	
+	
+		/// Now thw event handler does not show the upgrade dialog box directly, it will store the relevant informations
+		/// Just after this, there will be successful login event, so there ShowClientUpgradeMessageBox will be called
+		/// to show the upgrade dialog box with all the informations stored here
+		private void OnClientUpgradeAvailableEvent(object sender, DomainClientUpgradeAvailableEventArgs args) {
+
+                        this.ClientUpgradeStatus = DomainController.upgradeStatus;
+                        this.NewClientVersion = args.NewClientVersion;
+			this.NewClientDomainID = args.DomainID;
+		}
+
+		/// This method is called by Successful login handler, it is called before passphrase verify invocation
+		/// The variable used in this method should have been captured during the ClientUpgrade Event handler
+		/// This method should only be called during toggling of checkbox on prefs/account page (logout/login)
+		private void ShowClientUpgradeMessageBox()
+		{
+			if(this.NewClientVersion == null || this.ClientUpgradeStatus == null || this.NewClientDomainID == null)
+			{
+				return; // no handler was generated/caught for ClientUpgradeAvailable
+			}
+
+			if (ClientUpgradeDialog != null)
+				return;	// This dialog is already showing
+			if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld)
+			{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("iFolder Server Older"),
+				Util.GS("The server is running an older version."),
+				string.Format(Util.GS("The server needs to be upgraded to be connected from this client")));
+			
+			}
+			else if(DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded)
+			{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.AcceptDeny,
+				Util.GS("iFolder Client Upgrade"),
+				Util.GS("Would you like to download new iFolder Client?"),
+				string.Format(Util.GS("The client needs to be upgraded to be connected to the server")));
+			}
+			else  
+			{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.AcceptDeny,
+				Util.GS("iFolder Client Upgrade"),
+				Util.GS("Would you like to download new iFolder Client?"),
+				string.Format(Util.GS("A newer version \"{0}\" of the iFolder Client is available."), this.NewClientVersion));
+			}
+
+			int rc = ClientUpgradeDialog.Run();
+			ClientUpgradeDialog.Hide();
+			ClientUpgradeDialog.Destroy();
+			ClientUpgradeDialog = null;
+			
+			if (rc == -8)
+			{
+				bool bUpdateRunning = false;
+				Gtk.Window win = new Gtk.Window("");
+				string initialPath = (string)System.IO.Path.GetTempPath();
+				
+				Debug.PrintLine(String.Format("Initial Path: {0}", initialPath));
+				CopyLocation cp = new CopyLocation(win, (string)System.IO.Path.GetTempPath());
+				string selectedFolder = "";
+	                        int rc1 = 0;
+        	                do
+                	        {
+                        	        rc1 = cp.Run();
+                                	cp.Hide();
+	                                if(rc1 ==(int)ResponseType.Ok)
+        	                        {
+                	                        selectedFolder = cp.iFolderPath.Trim();
+                                		cp.Destroy();
+	                                        cp = null;
+        	                                break;
+                	                }
+                       		 }while( rc1 == (int)ResponseType.Ok);
+				if( cp != null)
+				{
+					cp.Destroy();
+					cp=null;
+				}
+				win.Hide();
+				win.Destroy();
+				win=null;
+				if( rc1 != (int) ResponseType.Ok)
+				{
+					Debug.PrintLine("OnClientUpgradeAvailableEvent return");
+					ClientUpgradeDialog = null;
+					return;
+				}
+				try
+				{
+					if(ifws !=null)
+					{
+						Debug.PrintLine("ifws.RunClientUpdate");
+						bUpdateRunning = ifws.RunClientUpdate(this.NewClientDomainID, selectedFolder);
+					}
+				}
+				catch(Exception e)
+				{
+					Debug.PrintLine(String.Format("ifws.RunClientUpdate exception :{0}", e.Message));
+					ClientUpgradeDialog = null;
+					return;
+				}
+				
+				if (bUpdateRunning)
+				{
+				ClientUpgradeDialog = new iFolderMsgDialog(
+				null,
+				iFolderMsgDialog.DialogType.Info,
+				iFolderMsgDialog.ButtonSet.Ok,
+				Util.GS("Download Complete..."),
+				Util.GS("Download Finished "),
+				string.Format(Util.GS("The new client rpm's have been downloaded.")));
+				ClientUpgradeDialog.Run();
+				ClientUpgradeDialog.Hide();
+				ClientUpgradeDialog.Destroy();
+				//	QuitiFolder();
+				}
+				else
+				{
+					iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Upgrade Failure"),
+						Util.GS("The iFolder client upgrade failed."),
+						Util.GS("Please contact your system administrator."));
+					dialog.Run();
+					dialog.Hide();
+					dialog.Destroy();
+					dialog = null;
+				}
+				
+				if( DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
+				{
+					// Deny login
+					if( domainController.GetDomain(this.NewClientDomainID) != null)
+						domainController.RemoveDomain(this.NewClientDomainID, false);
+				}
+
+			}
+			else //if(rc == -9)
+			{
+				if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld || DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
+				{
+					// Deny login
+					if( domainController.GetDomain(this.NewClientDomainID) != null)
+						domainController.RemoveDomain(this.NewClientDomainID, false);
+				}
+			}
+			ClientUpgradeDialog = null;
+			this.ClientUpgradeStatus = null;
+			this.NewClientVersion = null;
+			this.NewClientDomainID = null;			
+		}
+
 		
         /// <summary>
         /// Event handler for Domain Login COmpleted
@@ -660,6 +846,7 @@ namespace Novell.iFolder
 							// No recovery agent present;
 					//		return;
 						// }
+						ShowClientUpgradeMessageBox();
 						iFolderWebService ifws = DomainController.GetiFolderService();
 						int policy = ifws.GetSecurityPolicy(args.DomainID);
 						if( policy % 2 == 0)

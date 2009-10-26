@@ -118,6 +118,9 @@ namespace Novell.iFolder
 
                 private iFolderMsgDialog  quitDlg;
                 private bool quit_iFolder;
+                private Status ClientUpgradeStatus;
+		private string NewClientVersion;
+		private string NewClientDomainID;
 		
 		///
 		/// D-Bus variables
@@ -167,6 +170,9 @@ namespace Novell.iFolder
 			tIcon = new Egg.TrayIcon("iFolder");
 
 			currentIconAnimationDirection = 0;
+			this.ClientUpgradeStatus = null;
+			this.NewClientVersion = null;
+			this.NewClientDomainID = null;
 
 			eBox = new EventBox();
 			eBox.ButtonPressEvent +=
@@ -363,8 +369,26 @@ namespace Novell.iFolder
 			ReLogin(args.DomainID);
 		}
 		
-		private void OnClientUpgradeAvailableEvent(object sender, DomainClientUpgradeAvailableEventArgs args)
+		/// Now thw event handler does not show the upgrade dialog box directly, it will store the relevant informations
+		/// Just after this, there will be successful login event, so there ShowClientUpgradeMessageBox will be called
+		/// to show the upgrade dialog box with all the informations stored here
+		private void OnClientUpgradeAvailableEvent(object sender, DomainClientUpgradeAvailableEventArgs args) {
+
+			this.ClientUpgradeStatus = DomainController.upgradeStatus;
+			this.NewClientVersion = args.NewClientVersion;
+			this.NewClientDomainID = args.DomainID;
+		}
+
+		/// This method is called by Successful login handler, it is called before passphrase verify invocation
+		/// The variable used in this method should have been captured during the ClientUpgrade Event handler
+		/// This method should only be called during first time login (or after exit/login)
+		private void ShowClientUpgradeMessageBox()
 		{
+			if(this.NewClientVersion == null || this.ClientUpgradeStatus == null || this.NewClientDomainID == null)
+			{
+				return;
+			}
+
 			if (ClientUpgradeDialog != null)
 				return;	// This dialog is already showing
 			if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld)
@@ -396,7 +420,7 @@ namespace Novell.iFolder
 				iFolderMsgDialog.ButtonSet.AcceptDeny,
 				Util.GS("iFolder Client Upgrade"),
 				Util.GS("Would you like to download new iFolder Client?"),
-				string.Format(Util.GS("A newer version \"{0}\" of the iFolder Client is available."), args.NewClientVersion));
+				string.Format(Util.GS("A newer version \"{0}\" of the iFolder Client is available."), this.NewClientVersion));
 			}
 			int rc = ClientUpgradeDialog.Run();
 			ClientUpgradeDialog.Hide();
@@ -423,9 +447,13 @@ namespace Novell.iFolder
                 	                }
                        		 }while( rc1 == (int)ResponseType.Ok);
 				if( cp != null)
+				{
 					cp.Destroy();
+					cp=null;
+				}
 				win.Hide();
 				win.Destroy();
+				win=null;
 				if( rc1 != (int) ResponseType.Ok)
 				{
 					Debug.PrintLine("OnClientUpgradeAvailableEvent return");
@@ -437,7 +465,7 @@ namespace Novell.iFolder
 					if(ifws !=null)
 					{
 						Debug.PrintLine("ifws.RunClientUpdate");
-						bUpdateRunning = ifws.RunClientUpdate(args.DomainID, selectedFolder);
+						bUpdateRunning = ifws.RunClientUpdate(this.NewClientDomainID, selectedFolder);
 					}
 				}
 				catch(Exception e)
@@ -479,8 +507,8 @@ namespace Novell.iFolder
 				if( DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
 				{
 					// Deny login
-					if( domainController.GetDomain(args.DomainID) != null)
-						domainController.RemoveDomain(args.DomainID, false);
+					if( domainController.GetDomain(this.NewClientDomainID) != null)
+						domainController.RemoveDomain(this.NewClientDomainID, false);
 				}
 
 			}
@@ -489,12 +517,15 @@ namespace Novell.iFolder
 				if(DomainController.upgradeStatus.statusCode == StatusCodes.ServerOld || DomainController.upgradeStatus.statusCode == StatusCodes.UpgradeNeeded )
 				{
 					// Deny login
-					if( domainController.GetDomain(args.DomainID) != null)
-						domainController.RemoveDomain(args.DomainID, false);
+					if( domainController.GetDomain(this.NewClientDomainID) != null)
+						domainController.RemoveDomain(this.NewClientDomainID, false);
 				}
 			}
 
 			ClientUpgradeDialog = null;
+			this.ClientUpgradeStatus = null;
+			this.NewClientVersion = null;
+			this.NewClientDomainID = null;
 		}
 
 		private void ReLogin(string domainID)
@@ -588,6 +619,8 @@ namespace Novell.iFolder
                                                         // No recovery agent present;
                                                  //       return;
                                                 // }
+						ShowClientUpgradeMessageBox();
+                                                int result;
 						int policy = ifws.GetSecurityPolicy(DomainID);
 						if( policy % 2 == 0)
 							break;
