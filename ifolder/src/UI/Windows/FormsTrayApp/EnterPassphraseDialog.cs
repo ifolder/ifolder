@@ -569,7 +569,17 @@ namespace Novell.FormsTrayApp
                     
                     DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.DomainID);
                     string memberUID = domainInfo.MemberUserID;
-                    publicKey = this.ifws.GetDefaultServerPublicKey(this.DomainID,memberUID);
+                    try
+                    {
+                        publicKey = this.ifws.GetDefaultServerPublicKey(this.DomainID, memberUID);
+                    }
+                    catch(Exception ex)
+                    {
+                        Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("PassStoreErr")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                        mmb.ShowDialog();
+                        mmb.Dispose();
+                        return;
+                    }
                     
                 }
 				Status passPhraseStatus = null;
@@ -606,7 +616,7 @@ namespace Novell.FormsTrayApp
 				{
 					// Unable to set the passphrase
 					status = false;
-					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("IsPassphraseSetException")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("PassStoreErr")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 					mmb.ShowDialog();
 					mmb.Dispose();
 				}

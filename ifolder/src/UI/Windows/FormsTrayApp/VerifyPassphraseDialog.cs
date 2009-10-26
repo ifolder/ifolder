@@ -379,7 +379,7 @@ namespace Novell.FormsTrayApp
 			}
 			catch(Exception ex)
 			{
-				MessageBox.Show(this.resManager.GetString("ValidatePPError")/*"Unable to validate the Passphrase. {0}"*/, ex.Message);
+                MessageBox.Show(this.resManager.GetString("ValidatePPError")/*"Unable to validate the Passphrase. {0}"*/, ex.Message);
 			}
 			if( passPhraseStatus != null)
 			{
@@ -404,6 +404,12 @@ namespace Novell.FormsTrayApp
 						status = false;
 					}
 				}
+                else if (passPhraseStatus.statusCode == StatusCodes.ServerUnAvailable)
+                {
+                    Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("ValidatePPError")/*"Unable to validate the passphrase"*/, Resource.GetString("VerifyPP")/*"Passphrase Invalid"*/, "" /*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                    mmb.ShowDialog();
+                    mmb.Dispose();	
+                }
 			}
 		}
 

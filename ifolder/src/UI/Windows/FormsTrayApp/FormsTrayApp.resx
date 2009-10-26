@@ -1136,4 +1136,7 @@ Are you sure you want to exit the Application ?</value>
   <data name="Exiterror">
     <value>An error has occurred while connecting to the iFolder server. Exit the client and restart.</value>
   </data>
+  <data name="ValidatePPError">
+    <value>Unable to validate the passphrase</value>
+  </data>
 </root>
