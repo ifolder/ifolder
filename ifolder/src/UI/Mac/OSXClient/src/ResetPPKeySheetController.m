@@ -73,6 +73,7 @@
 	
 	NSArray* recAgents = nil;
 	recAgents = [[iFolderData sharedInstance] getRAListOnClient:[domainID stringValue]];
+	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
 	
 	if(recAgents != nil)
 	{
@@ -84,7 +85,6 @@
 		[recoveryAgent setNumberOfVisibleItems:1];
 	}
 	
-	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
 	[recoveryAgent selectItemAtIndex:0];
 	
 	if([[iFolderData sharedInstance] getSecurityPolicy:[domainID stringValue]] == 0 || 

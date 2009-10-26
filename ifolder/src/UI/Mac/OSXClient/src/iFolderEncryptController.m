@@ -278,14 +278,13 @@ static id encryptInstance = nil;
 	
 	NSArray* recoveryAgents = nil;
 	[recoveryAgent removeAllItems];
+	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
 	
 	if( (recoveryAgents = [simiasServiceHolder GetRAListOnClient:domainIDHolder]) != nil )
 	{	
 		[recoveryAgent addItemsWithObjectValues:recoveryAgents];
 	}
-	
-	[recoveryAgent addItemWithObjectValue:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA") ];
-	
+
 	[recoveryAgent selectItemAtIndex:0];
 	
 	[okButton setEnabled:NO];
