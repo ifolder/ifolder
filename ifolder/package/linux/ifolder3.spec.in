@@ -20,15 +20,7 @@
 
 Name:           ifolder3
 
-%if %suse_version <= 1100
-BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2  
-%else
-%ifarch     x86_64
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2 
-%else
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2 
-%endif
-%endif
+BuildRequires: aspell-en bison cairo cairo-devel flex gcc-c++ gconf-sharp2 gdk-pixbuf glitz-devel gnome-sharp2 gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp  
 
 %define buildnum @@BUILDNUM@@
 
@@ -69,6 +61,15 @@ export BUILDNUM=%{buildnum}
 export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 export CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 ./autogen.sh --prefix=%{prefix} --sysconfdir=%{sysconfdir}
+pushd dependencies/external/tools/gsoap/linux-2.7  
+        cd src  
+                make -f MakefileMacOSX COFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" LIBS=""  
+                cp soapcpp2 ..  
+        cd ..  
+        cd wsdl  
+                make -f MakefileSolaris COFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" LIBS="-lnsl"  
+        cd ..  
+popd
 make
 #make dist
 #=============================================================================
@@ -100,20 +101,9 @@ fi
 %pre -f %{name}.schemas_pre
 
 %post 
-#%find_gconf_schemas 
-#export GCONF_CONFIG_SOURCE=`usr/bin/gconftool-2 --get-default-source`
-#/usr/bin/gconftool-2 --makefile-uninstall-rule \
-#    /etc/gconf/schemas/outdated/ifolder3.schemas >/dev/null
-#/usr/bin/gconftool-2 --makefile-install-rule \
-#    /etc/gconf/schemas/ifolder3.schemas > /dev/null
 echo "Restart the system before you start using iFolder"
 
 %preun -f %{name}.schemas_preun
-#export GCONF_CONFIG_SOURCE=`usr/bin/gconftool-2 --get-default-source`
-#/usr/bin/gconftool-2 --makefile-uninstall-rule \
-#    /etc/gconf/schemas/ifolder3.schemas > /dev/null
-#
-#        echo "/usr/$%_lib/" >> /etc/ld.so.conf
 /sbin/ldconfig
 
 %posttrans -f %{name}.schemas_posttrans
@@ -126,7 +116,6 @@ ldconfig
 %defattr(755,root,root)
 %{prefix}/bin/*
 %{sysconfdir}/UI.log4net
-%{sysconfdir}/gconf/schemas/ifolder3.schemas
 %attr(755,root,root) %{prefix}/include/ifolder3
 %attr(755,root,root) %{prefix}/include/ifolder3/*
 %attr(755,root,root) %{prefix}/share/ifolder3
