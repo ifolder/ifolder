@@ -58,6 +58,7 @@ char errbuf[1024];	/* to hold error messages */
 /*
 yyerror - called by parser from an error production with nonterminal `error'
 */
+void
 yyerror(char *s)
 {	fprintf(stderr, "%s(%d): %s\n", filename, yylineno, s);
 }
@@ -65,6 +66,7 @@ yyerror(char *s)
 /*
 lexerror - called by lexical analyzer upon failure to recognize a token
 */
+void
 lexerror(const char *s)
 {	fprintf(stderr, "%s(%d): %s: %s\n", filename, yylineno, s, yytext);
 	if (lexerrno++ >= MAXERR)
@@ -74,6 +76,7 @@ lexerror(const char *s)
 /*
 synerror - called by a semantic action in the yacc grammar
 */
+void
 synerror(const char *s)
 {	fprintf(stderr, "%s(%d): Syntax error: %s\n", filename, yylineno-1, s);
 	if (synerrno++ >= MAXERR)
@@ -83,6 +86,7 @@ synerror(const char *s)
 /*
 semerror - report semantic error from static checking
 */
+void
 semerror(const char *s)
 {	fprintf(stderr, "\n%s(%d): **ERROR**: %s\n\n", filename, yylineno, s);
 	if (semerrno++ >= MAXERR)
@@ -92,6 +96,7 @@ semerror(const char *s)
 /*
 semwarn - report semantic warning from static checking
 */
+void
 semwarn(const char *s)
 {	fprintf(stderr, "\n**WARNING**: %s (detected at line %d in %s)\n\n", s, yylineno, filename);
 	semwarno++;
@@ -100,6 +105,7 @@ semwarn(const char *s)
 /*
 compliancewarn - report compliance warning
 */
+void
 compliancewarn(const char *s)
 {	fprintf(stderr, "Compliance warning: %s\n", s);
 }
@@ -107,6 +113,7 @@ compliancewarn(const char *s)
 /*
 typerror - report type error (a semantic error)
 */
+void
 typerror(const char *s)
 {	fprintf(stderr, "%s(%d): Type error: %s\n", filename, yylineno, s);
 	if (semerrno++ >= MAXERR)
@@ -116,6 +123,7 @@ typerror(const char *s)
 /*
 execerror - print error message and terminate execution
 */
+void
 execerror(const char *s)
 {	fprintf(stderr, "Critical error: %s\n", s);
 	exit(1);
@@ -124,6 +132,7 @@ execerror(const char *s)
 /*
 progerror - called when check(expr) failed, i.e. upon programming error
 */
+void
 progerror(const char *s, const char *f, int l)
 {	fprintf(stderr, "Program failure: %s in file %s line %d\n", s, f, l);
 	exit(1);

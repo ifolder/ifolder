@@ -44,17 +44,17 @@ engelen@genivia.com / engelen@acm.org
 extern char errbuf[];
 
 #ifdef WIN32
-extern soapcpp2error(char*);
+extern void soapcpp2error(char*);
 #else
-extern yyerror(char*);
+extern void yyerror(char*);
 #endif
 
-extern lexerror(const char*);
-extern synerror(const char *);
-extern semerror(const char *);
-extern semwarn(const char *);
-extern compliancewarn(const char *);
-extern typerror(const char*);
-extern execerror(const char*);
-extern progerror(const char*, const char*, int);
-extern errstat();
+extern void lexerror(const char*);
+extern void synerror(const char *);
+extern void semerror(const char *);
+extern void semwarn(const char *);
+extern void compliancewarn(const char *);
+extern void typerror(const char*);
+extern void execerror(const char*);
+extern void progerror(const char*, const char*, int);
+extern int errstat();
