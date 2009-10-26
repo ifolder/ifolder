@@ -912,7 +912,6 @@ namespace Simias.OpenLdapProvider
 						fullName = firstName + " " + lastName;
 					else
 						fullName = lastName + " " + firstName;	
-					fullName = firstName + " " + lastName;
 				}
 				else
                                         fullName = commonName;
