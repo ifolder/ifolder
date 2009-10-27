@@ -721,6 +721,7 @@ namespace Novell.AutoAccount
 		    if( invalidcredentials)
 		    {
 			userAccount.Password = "";
+			acceptPassword = true;
                         iFolderMsgDialog  dg = new iFolderMsgDialog(
                                         null,
                                         iFolderMsgDialog.DialogType.Error,
