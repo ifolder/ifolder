@@ -68,10 +68,10 @@ namespace Novell.iFolder
 		private ProgressBar		SyncBar;
 
 		private ImageMenuItem		NewMenuItem;
-		private Gtk.MenuItem		ShareMenuItem;
+		private ImageMenuItem		ShareMenuItem;
 		private ImageMenuItem		OpenMenuItem;
-		private Gtk.MenuItem		ConflictMenuItem;
-		private Gtk.MenuItem		SyncNowMenuItem;
+		private ImageMenuItem		ConflictMenuItem;
+		private ImageMenuItem		SyncNowMenuItem;
 		public ImageMenuItem		RevertMenuItem;
 		private ImageMenuItem		DeleteMenuItem;
 		private ImageMenuItem		RemoveMenuItem;
@@ -82,16 +82,22 @@ namespace Novell.iFolder
 		private ImageMenuItem		QuitMenuItem;
 		private ImageMenuItem		RefreshMenuItem;
 		private ImageMenuItem		HelpMenuItem;
-		private MenuItem                RecoveryMenuItem;
+//		private MenuItem                RecoveryMenuItem;
+		private ImageMenuItem		RecoveryMenuItem;
 //		private MenuItem		ExportMenuSubItem;
 		//private MenuItem 		ImportMenuSubItem;
-	        private MenuItem                ResetPassMenuItem;
-		private MenuItem		ResetPasswordMenuItem;
+//	        private MenuItem                ResetPassMenuItem;
+		private ImageMenuItem 		ResetPassMenuItem;
+		private ImageMenuItem 		ResetPasswordMenuItem;
+//		private MenuItem		ResetPasswordMenuItem;
 		private ImageMenuItem		AboutMenuItem;
 		
 		private ImageMenuItem		PreferencesMenuItem;
-		private Gtk.MenuItem		AccountsMenuItem;
-		private Gtk.MenuItem		SyncLogMenuItem;
+
+		private ImageMenuItem		AccountsMenuItem;
+//		private Gtk.MenuItem		AccountsMenuItem;
+		private ImageMenuItem 		SyncLogMenuItem;
+//		private Gtk.MenuItem		SyncLogMenuItem;
 		private CheckMenuItem		ViewServeriFoldersMenuItem;
 
 		private Gtk.MenuItem		MigrateMenuItem;
@@ -476,7 +482,7 @@ namespace Novell.iFolder
 
 			DeleteMenuItem =
 				new ImageMenuItem (Util.GS("Dele_te From Server"));
-			DeleteMenuItem.Image = new Image(Stock.Delete, Gtk.IconSize.Menu);
+			DeleteMenuItem.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("ifolder_dis2_16.png")));
 			iFolderMenu.Append(DeleteMenuItem);
 			DeleteMenuItem.Activated += new EventHandler(DeleteFromServerHandler);
 
@@ -491,22 +497,26 @@ namespace Novell.iFolder
 			iFolderMenu.Append(OpenMenuItem);
 			OpenMenuItem.Activated += new EventHandler(OnOpenSynchronizedFolder);
 
-			ShareMenuItem = new MenuItem (Util.GS("Share _with..."));
+			ShareMenuItem = new ImageMenuItem (Util.GS("Share _with..."));
+			ShareMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("shareWith16.png")));
 			iFolderMenu.Append(ShareMenuItem);
 			ShareMenuItem.Activated += new EventHandler(OnShareSynchronizedFolder);
 
-			ConflictMenuItem = new MenuItem (Util.GS("Resolve conflic_ts"));
+			ConflictMenuItem = new ImageMenuItem (Util.GS("Resolve conflic_ts"));
+			ConflictMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("resolve_conflict.png")));
+
 			iFolderMenu.Append(ConflictMenuItem);
 			ConflictMenuItem.Activated +=
 					new EventHandler(OnResolveConflicts);
 
-			SyncNowMenuItem = new MenuItem(Util.GS("S_ynchronize now"));
+			SyncNowMenuItem = new ImageMenuItem(Util.GS("S_ynchronize now"));
+			SyncNowMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("ifolder-sync16.png")));
 			iFolderMenu.Append(SyncNowMenuItem);
 			SyncNowMenuItem.Activated += new EventHandler(OnSynchronizeNow);
 
 			RevertMenuItem = 
 				new ImageMenuItem (Util.GS("_Revert to a Normal Folder"));
-			RevertMenuItem.Image = new Image(Stock.Undo, Gtk.IconSize.Menu);
+			RevertMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("revertToFolder.png")));
 			iFolderMenu.Append(RevertMenuItem);
 			RevertMenuItem.Activated += new EventHandler(RemoveiFolderHandler);
 
@@ -543,12 +553,13 @@ namespace Novell.iFolder
 			Menu EditMenu = new Menu();
 
 			AccountsMenuItem =
-				new MenuItem (Util.GS("_Account Settings..."));
+				new ImageMenuItem (Util.GS("_Account Settings..."));
+			AccountsMenuItem.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("accountSettings16.png")));
 			EditMenu.Append(AccountsMenuItem);
 			AccountsMenuItem.Activated += new EventHandler(AccountsMenuItemHandler);
 
 			PreferencesMenuItem = new ImageMenuItem(Util.GS("_Preferences"));
-			PreferencesMenuItem.Image = new Image(Stock.Preferences, Gtk.IconSize.Menu);
+			PreferencesMenuItem.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("preferences16.png")));
 			EditMenu.Append(PreferencesMenuItem);
 			PreferencesMenuItem.Activated += new EventHandler(ShowPreferencesHandler);
 			
@@ -570,7 +581,8 @@ namespace Novell.iFolder
 			ViewMenu.Append(new SeparatorMenuItem());
 			
 			SyncLogMenuItem =
-				new MenuItem (Util.GS("Synchronization _Log"));
+				new ImageMenuItem (Util.GS("Synchronization _Log"));
+			SyncLogMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("sync_log2.png")));
 			ViewMenu.Append(SyncLogMenuItem);
 			SyncLogMenuItem.Activated += new EventHandler(SyncLogMenuItemHandler);
 
@@ -612,7 +624,8 @@ namespace Novell.iFolder
 			//----------------------------
 			Menu SecurityMenu = new Menu();
 
-			RecoveryMenuItem = new MenuItem(Util.GS("_Forgot Passphrase"));
+			RecoveryMenuItem = new ImageMenuItem(Util.GS("_Forgot Passphrase"));
+			RecoveryMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("keyRecovery16.png")));
 			RecoveryMenuItem.Activated += new EventHandler(OnRecoveryMenuItem);
 			SecurityMenu.Append(RecoveryMenuItem);
 		/*	ImportMenuSubItem = new MenuItem(Util.GS("Import Decrypted Keys"));
@@ -626,11 +639,13 @@ namespace Novell.iFolder
 
 			RecoveryMenuItem.Submenu = recoverMenu;;*/
 
-			ResetPassMenuItem = new MenuItem(Util.GS("Change _Passphrase"));
+			ResetPassMenuItem = new ImageMenuItem(Util.GS("Change _Passphrase"));
+			ResetPassMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("resetPassphrase16.png")));
 			ResetPassMenuItem.Activated += new EventHandler(OnResetPassMenuItem);
 			SecurityMenu.Append(ResetPassMenuItem);
 
-			ResetPasswordMenuItem = new MenuItem(Util.GS("_Change Password"));
+			ResetPasswordMenuItem = new ImageMenuItem(Util.GS("_Change Password"));
+			ResetPasswordMenuItem.Image = new Image( new Gdk.Pixbuf(Util.ImagesPath("resetPassphrase16.png")));
 			ResetPasswordMenuItem.Activated += new EventHandler(OnResetPasswordMenuItem);
 			SecurityMenu.Append(ResetPasswordMenuItem);
 

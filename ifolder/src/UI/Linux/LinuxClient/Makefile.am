@@ -63,7 +63,17 @@ IMAGE_FILES =								\
 	$(IMAGE_DIR)/ifolder-waiting32.png         \
 	$(IMAGE_DIR)/ifolder-warning32.png         \
 	$(IMAGE_DIR)/ifolder-application-x-x509-ca-cert_48.png   \
-	$(IMAGE_DIR)/ifolder_user_32.png		
+	$(IMAGE_DIR)/ifolder_user_32.png   \
+	$(IMAGE_DIR)/sync_log2.png    \
+	$(IMAGE_DIR)/accountSettings16.png   \
+	$(IMAGE_DIR)/keyRecovery16.png    \
+	$(IMAGE_DIR)/resetPassphrase16.png  \
+	$(IMAGE_DIR)/shareWith16.png  \
+ 	$(IMAGE_DIR)/revertToFolder.png  \
+	$(IMAGE_DIR)/resolve_conflict.png \
+	$(IMAGE_DIR)/preferences16.png
+		
+	
 
 
 
