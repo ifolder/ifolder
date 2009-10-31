@@ -31,10 +31,12 @@
   *
   *******************************************************************************/
 
+using Gtk;
+using Gdk;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 using Simias.Client;
-using Gtk;
 
 using Novell.iFolder.Controller;
 using System.ComponentModel;
@@ -53,7 +55,7 @@ using Novell.iFolder;
 namespace Novell.iFolder
 {
 
-        public class KeyRecoveryWizard : Window
+        public class KeyRecoveryWizard : Gtk.Window
         {
 
 		private Gnome.Druid                    	KeyRecoveryDruid;
@@ -145,13 +147,16 @@ namespace Novell.iFolder
             private Entry exportedPath;
             private Entry emailID;
 
+	    iFolderWaitDialog WaitDialog;
 
 
 
 
-	public KeyRecoveryWizard(SimiasWebService simws,iFolderWebService ifws):base(WindowType.Toplevel)
+
+	public KeyRecoveryWizard(SimiasWebService simws,iFolderWebService ifws):base(Gtk.WindowType.Toplevel)
 	{
 			  		this.Title = Util.GS("Passphrase Recovery Wizard");
+					WaitDialog = null;
 	                this.Resizable = false;
                     this.Modal = true;
                     this.WindowPosition = Gtk.WindowPosition.Center;
@@ -460,92 +465,114 @@ namespace Novell.iFolder
 
 
             private bool OnEnterPassphrasePageValidated(object obj, EventArgs args)
-            {
-	
-		bool result = false;
-		Status status = null;
-		 DomainController domainController = DomainController.GetDomainController();
+	    {
+		    bool result = false;
+		    Status status = null;
 
-                       if(this.newPassphrase.Text != this.confirmPassphrase.Text)
-                      {
-                                 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("The values in the new and confirm passphrase fields do not match"), Util.GS(""));
-                                  dialog.Run();
-                                  dialog.Hide();
-                                  dialog.Destroy();
-                                  dialog = null;
-                                        return false;
+		    if (this.GdkWindow != null) 
+			    this.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+		    DomainController domainController = DomainController.GetDomainController();
 
-                        }
-		
-		 DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.selectedDomain);
-		try{
-		 status = this.simws.LogoutFromRemoteDomain(domainInfo.ID);
-                if (status.statusCode == StatusCodes.Success)
+		    if(this.newPassphrase.Text != this.confirmPassphrase.Text)
+		    {
+			    iFolderMsgDialog dialog = new iFolderMsgDialog(null, 
+					    iFolderMsgDialog.DialogType.Error,
+					    iFolderMsgDialog.ButtonSet.None,
+					    Util.GS("Passphrase reset failed"), 
+					    Util.GS("The values in the new and confirm passphrase fields do not match"), 
+					    Util.GS(""));
+			    dialog.Run();
+			    dialog.Hide();
+			    dialog.Destroy();
+			    dialog = null;
+			    return false;
 
-		{
-			status = this.simws.LoginToRemoteDomain(domainInfo.ID, this.password.Text);
-			if(status.statusCode != StatusCodes.Success)
-			{
-                               iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), Util.GS(""));
-				 int rc = dialog.Run();
-                                dialog.Hide();
-                                dialog.Destroy();
-				dialog = null;
-	
-			 domainController.LogoutDomain(domainInfo.ID);		
-			if ((ResponseType)rc == ResponseType.Ok)
-                                {
-                                	CloseDialog();
-					ShowNextWizard();
-                                }
+		    }
+		    DomainInformation domainInfo = (DomainInformation)this.simws.GetDomainInformation(this.selectedDomain);
+		    try{
+			    status = this.simws.LogoutFromRemoteDomain(domainInfo.ID);
+			    if (status.statusCode == StatusCodes.Success)
 
-			       	 return false;
+			    {
+				    status = this.simws.LoginToRemoteDomain(domainInfo.ID, this.password.Text);
+				    if(status.statusCode != StatusCodes.Success)
+				    {
+					    iFolderMsgDialog dialog = new iFolderMsgDialog(null,
+							    iFolderMsgDialog.DialogType.Error,
+							    iFolderMsgDialog.ButtonSet.None,
+							    Util.GS("Passphrase reset failed"), 
+							    Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), 
+							    Util.GS(""));
+					    int rc = dialog.Run();
+					    dialog.Hide();
+					    dialog.Destroy();
+					    dialog = null;
 
-			}
-		result = true;
-		}
-                }
-		catch(Exception)
-		{
-			 iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), Util.GS(""));
-                                  dialog.Run();
-                                  dialog.Hide();
-                                  dialog.Destroy();
-                                  dialog = null;
-				 domainController.LogoutDomain(domainInfo.ID);
-				  return false;
-		}
-		if(result)
-		{
-		 string memberUID = domainInfo.MemberUserID;
-	        // string publicKey = null;
+					    domainController.LogoutDomain(domainInfo.ID);		
+					    if ((ResponseType)rc == ResponseType.Ok)
+					    {
+						    CloseDialog();
+						    ShowNextWizard();
+					    }
 
-		try{	
-                    this.simws.ExportRecoverImport(domainInfo.ID, memberUID, this.newPassphrase.Text);
-		   //set the values
-                         this.simws.StorePassPhrase(domainInfo.ID, this.newPassphrase.Text, CredentialType.Basic,this.simws.GetRememberOption(domainInfo.ID));
-			
+					    return false;
 
-		KeyRecoveryDruid.Page = FinishPage;
-			}
-			catch(Exception)
-			{
-                              iFolderMsgDialog dialog = new iFolderMsgDialog(null,iFolderMsgDialog.DialogType.Error,iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), Util.GS("You have been logged out of the account.Please login and try again."), Util.GS(""));
-                                  dialog.Run();
-                                  dialog.Hide();
-                                  dialog.Destroy();
-                                  dialog = null;
-                       		//CloseDialog(); 
-				return false;
-		
-			}
-		//	KeyRecoveryDruid.Page = FinishPage;
-		//	result = true;
-		}
-
-			
-		return result;
-            }
+				    }
+				    result = true;
+			    }
+		    }
+		    catch(Exception)
+		    {
+			    iFolderMsgDialog dialog = new iFolderMsgDialog(null,
+					    iFolderMsgDialog.DialogType.Error,
+					    iFolderMsgDialog.ButtonSet.None,
+					    Util.GS("Passphrase reset failed"), 
+					    Util.GS("Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"), 
+					    Util.GS(""));
+			    dialog.Run();
+			    dialog.Hide();
+			    dialog.Destroy();
+			    dialog = null;
+			    domainController.LogoutDomain(domainInfo.ID);
+			    return false;
+		    }
+		    if(result)
+		    {
+			    string memberUID = domainInfo.MemberUserID;
+			    try
+			    {	
+				    this.simws.ExportRecoverImport(domainInfo.ID, memberUID, this.newPassphrase.Text);
+				    this.simws.StorePassPhrase(domainInfo.ID, 
+						    this.newPassphrase.Text, 
+						    CredentialType.Basic,
+						    this.simws.GetRememberOption(domainInfo.ID));
+				    KeyRecoveryDruid.Page = FinishPage;
+			    }
+			    catch(Exception)
+			    {
+				    iFolderMsgDialog dialog = new iFolderMsgDialog(null,
+							    iFolderMsgDialog.DialogType.Error,
+							    iFolderMsgDialog.ButtonSet.None,Util.GS("Passphrase reset failed"), 
+							    Util.GS("You have been logged out of the account.Please login and try again."), 
+							    Util.GS(""));
+				    dialog.Run();
+				    dialog.Hide();
+				    dialog.Destroy();
+				    dialog = null;
+				    return false;
+			    }
+			    if (WaitDialog != null)
+			    {
+				   Console.WriteLine("Hiding wait dialog");
+				    WaitDialog.Hide();
+				    WaitDialog.Destroy();
+				    WaitDialog = null;
+			    }
+		    }
+		    if(this.GdkWindow != null) 
+			    this.GdkWindow.Cursor = null;
+		    return result;
+	    }
 
 
 	 private void OnEnterPassphraseFieldsChanged(object obj, EventArgs args)

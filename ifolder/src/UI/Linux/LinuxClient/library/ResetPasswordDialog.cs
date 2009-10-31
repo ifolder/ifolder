@@ -317,36 +317,39 @@ namespace Novell.iFolder
 			if( newPassword.Text == oldPassword.Text )
 			{
 				string Message = Util.GS("Old password and new password should not be same.");
-				///set false status and show message.
-                                        iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                                                                                null,
-                                                                                                                iFolderMsgDialog.DialogType.Error,
-                                                                                                                iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Error changing password"),
-                                                                                                                Message, null);
-                                        dialog.Run();
-                                        dialog.Hide();
-                                        dialog.Destroy();
-                                        dialog = null;
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Error changing password"),
+						Message, null);
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
 				return;
 			}
 			else if(newPassword.Text != confirmPassword.Text)
 			{
-					string Message = Util.GS("New password and confirm password do not match.");
-                                        iFolderMsgDialog dialog = new iFolderMsgDialog(
-                                                                                                                null,
-                                                                                                                iFolderMsgDialog.DialogType.Error,
-                                                                                                                iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("Error changing password"),
-                                                                                                                Message, null);
-                                        dialog.Run();
-                                        dialog.Hide();
-                                        dialog.Destroy();
-                                        dialog = null;
+				string Message = Util.GS("New password and confirm password do not match.");
+				iFolderMsgDialog dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.None,
+						Util.GS("Error changing password"),
+						Message, null);
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
 
 				return;
 			}
+			if (this.GdkWindow != null) 
+				this.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 			ResetPassword( this.Domain, this.OldPassword, this.NewPassword);
+			if (this.GdkWindow != null) 
+				this.GdkWindow.Cursor = null;
 		}
 
 		protected bool OnDeleteEvent(object o, EventArgs args)
