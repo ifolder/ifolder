@@ -393,6 +393,7 @@ namespace Novell.FormsTrayApp
 		{
 			try
 			{
+                Cursor.Current = Cursors.WaitCursor;
 				DomainItem domainItem = (DomainItem)this.DomainComboBox.SelectedItem;
 				this.domainID = domainItem.ID;
 				System.Resources.ResourceManager resManager = new System.Resources.ResourceManager(typeof(Connecting));
@@ -412,6 +413,7 @@ namespace Novell.FormsTrayApp
                 }
                 if (status.statusCode == StatusCodes.PassPhraseInvalid)
                 {
+                    Cursor.Current = Cursors.Default;
                     MessageBox.Show(Resource.GetString("InvalidCurrentPPText")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
                     this.success = false;
                     return;
@@ -479,6 +481,7 @@ namespace Novell.FormsTrayApp
 				MessageBox.Show(Resource.GetString("ResetError")/*"Error resetting passphrase"*/ , Resource.GetString(ex.Message)/*"reset error"*/ );
 				this.success = false;
 			}
+            Cursor.Current = Cursors.Default;
 		}
 	
         /// <summary>

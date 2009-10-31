@@ -124,99 +124,73 @@ namespace Novell.Wizard
         /// <param name="currentIndex">current index</param>
         internal override int ValidatePage(int currentIndex)
         {
-
+            Cursor.Current = Cursors.WaitCursor;
             DomainInformation[] domains;
             DomainInformation selectedDomainInfo = null;
             domains = this.simiasWebService.GetDomains(true);
-            
             //check for equality
             if (this.newPassphrase.Text != this.confirmPassphrase.Text)
             {
                 MessageBox.Show(TrayApp.Properties.Resources.passphraseNotEqualError, TrayApp.Properties.Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                 return currentIndex;
             }
-
             //obtain domain information
             foreach (DomainInformation di in domains)
             {
-
                 if (di.Authenticated && di.ID == wizard.DomainSelectionPage.SelectedDomain.ID)
                 {
                     selectedDomainInfo = (DomainInformation)di;
-
                 }
             }
-
             bool result = false;
             Domain domain = new Domain(selectedDomainInfo);
-
             try
             {
                 Status status = this.simiasWebService.LogoutFromRemoteDomain(domain.ID);
-
                 if (status.statusCode == StatusCodes.Success)
                 {
                     status = this.simiasWebService.LoginToRemoteDomain(domain.ID, this.password.Text);
-
                     if (status.statusCode != StatusCodes.Success)
                     {
                         MessageBox.Show(Resources.loginError,TrayApp.Properties.Resources.authenticateError,MessageBoxButtons.OK,MessageBoxIcon.Error);
                        (Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll();          
                         return -999;
-                      
                     }
-
                     result = true;
-
                 }
             }
             catch (Exception)
-
             {
+                Cursor.Current = Cursors.Default; 
                 MessageBox.Show(Resources.loginError, TrayApp.Properties.Resources.authenticateError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 (Novell.FormsTrayApp.FormsTrayApp.globalProp()).refreshAll();    
                  return -999;
-               
-            
             }
-        
-
             if (result)
             {
-
                 string memberUID = selectedDomainInfo.MemberUserID;
-                
                 try
                 {
-                   
                     this.simiasWebService.ExportRecoverImport(selectedDomainInfo.ID, memberUID, this.newPassphrase.Text);
                     //set the values
                     this.simiasWebService.StorePassPhrase(selectedDomainInfo.ID,
-                                                              this.newPassphrase.Text,
-                                                              CredentialType.Basic,
-                                                             this.simiasWebService.GetRememberOption(selectedDomainInfo.ID)); 
-                    
+                        this.newPassphrase.Text,
+                        CredentialType.Basic,this.simiasWebService.GetRememberOption(selectedDomainInfo.ID)); 
                 }
                 catch (Exception )
                 {
-
-                   MessageBox.Show(Resources.recoveryError,
-                     Resources.resetPassphraseError,MessageBoxButtons.OK,MessageBoxIcon.Error);
-                   
+                    Cursor.Current = Cursors.Default;
+                    MessageBox.Show(Resources.recoveryError,
+                                    Resources.resetPassphraseError,
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
                      return -999;
-                  
                 }
-
-
             }
-
-          
-                currentIndex = wizard.MaxPages - 4;
-                return base.ValidatePage(currentIndex);
-
-                        
+            Cursor.Current = Cursors.Default;
+            currentIndex = wizard.MaxPages - 4;
+            return base.ValidatePage(currentIndex);
         }
-
         private void userName_TextChanged(object sender, EventArgs e)
         {
             UpdateSensitivity();

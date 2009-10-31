@@ -590,6 +590,7 @@ namespace Novell.FormsTrayApp
 
         private void PerformResetPassword(string domainid, string oldpassword, string newpassword)
         {
+            Cursor.Current = Cursors.WaitCursor;
             string title = null;
             string message = null;
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ResetPassword));
@@ -606,9 +607,12 @@ namespace Novell.FormsTrayApp
                     {
                         this.simiasWebservice.SetDomainCredentials(domainid, null, CredentialType.None);
                     }
-		    this.simiasWebservice.LogoutFromRemoteDomain(domainid);
+		            this.simiasWebservice.LogoutFromRemoteDomain(domainid);
                 }
-                catch { }
+                catch 
+                {
+                    Cursor.Current = Cursors.Default;
+                }
                 title = resources.GetString("ResetPasswordTitle");
                 message = resources.GetString("Resetpasswordsuccess");
                 MyMessageBox mb = new MyMessageBox(message, title, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
@@ -654,6 +658,7 @@ namespace Novell.FormsTrayApp
             MyMessageBox mb1 = new MyMessageBox(message, title, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
             mb1.ShowDialog();
             mb1.Dispose();
+            Cursor.Current = Cursors.Default;
             this.success = false;
         }
 
