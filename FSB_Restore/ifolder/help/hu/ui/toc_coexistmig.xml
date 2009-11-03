@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- saved from url=(0014)about:internet -->
-
-<tocsection parent="bookinfo" level="2" id="coexistmig">
- <title>A Novell iFolder áttelepítése és frissítése</title>
- <entry leaf="true" id="migration">Áthelyezés az iFolder 2.x verziójából az iFolder 3.7-es vagy újabb verziójába</entry>
- <entry leaf="true" id="bctryt7">iFolder 3.x ügyfelek frissítése</entry>
- <entry leaf="true" id="bctrxs4">A Novell iFolder 2.x és az iFolder ügyfelek párhuzamos jelenléte</entry>
-</tocsection>

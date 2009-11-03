@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- saved from url=(0014)about:internet -->
-
-<tocsection parent="bookinfo" level="2" id="coexistmig">
- <title>Migrace a inovace aplikace Novell iFolder</title>
- <entry leaf="true" id="migration">Migrace z klienta iFolder 2.x na verzi iFolder 3.7 nebo novější.</entry>
- <entry leaf="true" id="bctryt7">Inovace verze iFolder 3.x Klienti</entry>
- <entry leaf="true" id="bctrxs4">Současné použití klientů Novell iFolder 2.x a iFolder</entry>
-</tocsection>

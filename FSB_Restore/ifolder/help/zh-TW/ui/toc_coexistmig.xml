@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- saved from url=(0014)about:internet -->
-
-<tocsection parent="bookinfo" level="2" id="coexistmig">
- <title>Novell iFolder 移轉和升級</title>
- <entry leaf="true" id="migration">從 iFolder 2.x 升級到 iFolder 3.7 或更新版本</entry>
- <entry leaf="true" id="bctryt7">升級 iFolder 3.x 用戶端</entry>
- <entry leaf="true" id="bctrxs4">Novell iFolder 2.x 和 iFolder 用戶端的共存</entry>
-</tocsection>
