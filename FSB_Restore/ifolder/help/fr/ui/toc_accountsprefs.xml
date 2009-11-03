@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="accountsprefs">
+ <title>Gestion des comptes et des préférences iFolder</title>
+ <entry leaf="true" id="startclient">Démarrage du client iFolder</entry>
+ <entry leaf="true" id="accounts">Configuration d'un compte iFolder</entry>
+ <entry leaf="true" id="login">Connexion à un compte iFolder</entry>
+ <entry leaf="true" id="accountdetails">Affichage et modification des paramètres du compte iFolder</entry>
+ <entry leaf="true" id="preferences">Configuration des préférences iFolder du Client</entry>
+ <entry leaf="true" id="firewall">Configuration des paramètres du pare-feu local pour le trafic iFolder</entry>
+ <entry leaf="true" id="virusscan">Configuration des paramètres du scanner de virus local pour le trafic iFolder</entry>
+ <entry leaf="true" id="delacct">Suppression d'un compte iFolder</entry>
+ <entry leaf="true" id="logout">Déconnexion d'un compte iFolder</entry>
+ <entry leaf="true" id="stopclient">Fermeture du client iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">Étapes suivantes</entry>
+</tocsection>

@@ -1,0 +1,675 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="server" xml:space="preserve">
+    <value>Serveur</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>Fusionner "{0}" avec ...</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>Cette opération va supprimer le dossier iFolder et tous ses fichiers du serveur. Voulez-vous vraiment supprimer "{0}" du serveur ?</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>Une erreur s'est produite lors du rétablissement du dossier iFolder.</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>enterPassphrasePage</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>Afficher les dossiers iFolder disponibles</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Synchronisation lancée : {0}</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>En attente de connexion</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>La phrase secrète est réinitialisée à l'aide du fichier secret et de son mot de passe.</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>Impossible de partager un dossier iFolder codé. Seuls les dossiers iFolder normaux peuvent être partagés.</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Non configuré</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>InfoPage</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Suppression du répertoire : {0}</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Impossible d'obtenir l'ancien fichier de données. Veuillez réessayer.</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Synchronisation lancée : {0}</value>
+  </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>&amp;Confirmer la phrase secrète :</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Espace disque utilisé</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Sélectionner un compte</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>ExportPage</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>Une erreur a été détectée lors de la lecture des dossiers iFolder.</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>Nom d'utilisateur :</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>La recherche de nouveaux dossiers iFolder est terminée.</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Détails</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Obtenir l'ancien fichier de données</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>L'emplacement sélectionné se trouve sur un réseau ou sur une unité non physique. Les dossiers iFolder doivent résider sur une unité physique. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Permet de récupérer le fichier de clé codée sur le serveur et de le stocker localement.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Changement détecté dans le répertoire : {0}</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>Suppri&amp;amp:mer</value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Supprimer votre adhésion à {0}</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>Agent de &amp;récupération :</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la suppression du dossier iFolder.</value>
+  </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>Mot de &amp;passe :</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>Fichiers/dossiers à synchroniser</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>M&amp;ot de passe à usage unique : </value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Synchronisation incomplète</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>Mot de passe du fichier &amp;secret :</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>Adresse électronique :</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Les entrées du journal ont été effacées.</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Assistant de récupération de la phrase secrète</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>passphraseRecoveryWizard</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Bienvenue dans l'assistant de récupération de la phrase secrète</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>L'emplacement sélectionné se trouve dans un  dossier de données iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Suppression du fichier :{0}</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>Pour récupérer une phrase secrète perdue, vous devez vous procurer le fichier secret (clé privée du certificat) et son mot de passe ou le fichier de données auprès de l'administrateur.</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Changements détectés dans le fichier : {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Recherche de changements : {0}</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Quota de disque</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>Je dispose du fichier &amp;secret et de son mot de passe.</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>Erreur d'ouverture du dossier iFolder</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>Vous ne pouvez fusionner un dossier iFolder qu'avec un dossier portant le même nom. Sélectionnez un dossier portant le même nom que le dossier iFolder, puis réessayez.</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Impossible de lire les dossiers iFolder</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> contient un dossier portant le même nom que le dossier iFolder.</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Suppression sur le serveur : {0}</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Impossible de réinitialiser la phrase secrète. Veuillez réessayer.</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Terminer</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Heure de la dernière synchronisation</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Masquer les dossiers iFolder disponibles</value>
+  </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Disponible pour téléchargement</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Impossible d'ouvrir le dossier iFolder {0}.</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Aide</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>En attente de synchronisation</value>
+  </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Compte non codé</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Impossible d'envoyer l'ancien fichier de données.</value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>Cette opération supprime l'adhésion au dossier iFolder et le supprime de la liste. </value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>Le fichier ci-dessus est-il co&amp;dé ?</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Synchronisation du répertoire : {0}</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Sélectionnez une option pour récupérer votre phrase secrète.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Phrase secrète non fournie</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>Si vous quittez l'application Novell iFolder, le suivi des modifications de votre dossier iFolder ne sera plus effectué. Lors de votre prochain login, Novell iFolder harmonisera les différences entre votre dossier iFolder et le serveur.</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Codé</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Définir la nouvelle phrase secrète</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} élément(s) à synchroniser</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>Erreur de rétablissement du dossier iFolder</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>L'authentification a échoué.</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>L'emplacement du fichier secret n'est pas valide.</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>Télécharger "{0}" vers ...</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>Compte &amp;iFolder :</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Synchronisation automatique</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Vérifier</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Recherche de nouveaux dossiers iFolder...</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Répertoire de téléchargement : {0}</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>Erreur de synchronisation du dossier iFolder</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Emplacement non valide</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Sélectionnez le compte dont la phrase secrète doit être réinitialisée.</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Parcourir</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>Octets</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Est conflictuel</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="na" xml:space="preserve">
+    <value>N/A</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>Ko</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>Le dossier Windows se trouve à l'emplacement sélectionné et ne peut pas contenir de dossier iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>&amp;Emplacement du fichier secret : </value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Sélectionner l'étape de récupération de la phrase secrète</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>Je dispose du nouveau &amp;fichier de données envoyé par l'administrateur.</value>
+  </data>
+  <data name="acceptError" xml:space="preserve">
+    <value>Une exception s'est produite pendant la tentative de téléchargement du dossier iFolder.</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Utilisé</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>&amp;Suivant</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>L'ancien fichier de données a été envoyé. </value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Se connecter</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Propriétaire</value>
+  </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Aucune phrase secrète n'est définie pour ce compte.</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>Le fichier de clé codée a été exporté.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>EmailPage</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>La phrase secrète a été réinitialisée.</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>Supprimer le dossier iFolder</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>Félicitations ! Votre phrase secrète a été réinitialisée. Vous pouvez désormais utiliser la nouvelle phrase secrète pour accéder à vos données.</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Précédent</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>Le dossier n'existe pas.</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>finalPage</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Répertoire de téléchargement : {0}</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>Nombre de dossiers iFolder</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>{0} élément(s) non synchronisés</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Supprimer mon adhésion</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Espace disque disponible</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Serveur indisponible</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>Vous ne disposez pas de droits d'accès suffisants pour l'emplacement sélectionné. Un dossier iFolder ne peut être créé que dans un dossier pour lequel vous avez accès aux fichiers en lecture et en écriture. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Impossible de partager le dossier iFolder</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Téléchargement du fichier : {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Le codage n'est pas activé pour ce compte. Pour activer le codage, contactez votre administrateur système.</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Miniatures</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Synchronisation du fichier : {0}</value>
+  </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Un dossier du même nom existe déjà.</value>
+  </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>Les valeurs des champs de la nouvelle phrase secrète et de la phrase secrète de confirmation ne correspondent pas.</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>Erreur de dossier iFolder</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de la synchronisation du dossier iFolder.</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Supprimer du serveur</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>L'emplacement sélectionné se trouve dans un autre dossier iFolder. Les dossiers iFolder ne peuvent pas contenir d'autres dossiers iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Supprimer aussi mon adhésion</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>La phrase secrète n'a pas pu être réinitialisée.</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Envoyez ce fichier de clé à l'administrateur chargé de le décoder et de vous le renvoyer. Vous pourrez alors utiliser le fichier de clé décodée pour réinitialiser votre phrase secrète grâce à la deuxième option proposée par l'assistant.</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Entrez l'emplacement d'un fichier XML.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>L'emplacement que vous avez sélectionné contient déjà un dossier qui porte le même nom que celui de ce dossier iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>Emp&amp;lacement du nouveau fichier de données</value>
+  </data>
+  <data name="access" xml:space="preserve">
+    <value>Accès</value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>Emp&amp;lacement d'enregistrement de l'ancien fichier de données :</value>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>SuccessPage</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>Vous pouvez quitter l'assistant à tout moment et effectuer les autres étapes par la suite en utilisant cette page.         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>&amp;Je ne dispose d'aucun fichier secret ni de données.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>SelectionPage</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Illimité</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Impossible de vous authentifier auprès du domaine. Vous avez été délogué du compte. Loguez-vous et réessayez.</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>annuler</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>L'emplacement sélectionné comporte le dossier Program Files, or le dossier Program Files ne peut pas contenir de dossier iFolder. Sélectionnez un autre emplacement et réessayez.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Phrase secrète non définie</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportPage</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>Impossible de réinitialiser la phrase secrète. Vous avez été délogué du compte. Loguez-vous et réessayez.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>L'emplacement du nouveau fichier de données n'est pas valide.</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Quitter l'application</value>
+  </data>
+  <data name="logEntriesCleared1" xml:space="preserve">
+    <value>Les entrées du journal ont été effacées.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>Si vous ne disposez pas de ces paramètres, cet assistant vous permet toutefois d'exporter l'ancien fichier de données. Il vous suffit ensuite d'envoyer ce fichier à votre administrateur qui le décodera et vous le renverra. Vous pourrez alors utiliser ce nouveau fichier de données pour réinitialiser votre phrase secrète.</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Recherche de changements</value>
+  </data>
+  <data name="domainSelectionPageSecond" xml:space="preserve">
+    <value>Cliquez sur Suivant pour continuer.</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>La phrase secrète est réinitialisée à l'aide du fichier de clé décodée.</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Synchronisation</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Impossible de lire les dossiers iFolder</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>domainSelectionPage</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>Server_Default</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>Vous possédez un compte unique. Cliquez sur Suivant pour continuer.</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>Les noms du dossier et du dossier iFolder doivent être identiques.</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Non applicable</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Disponible</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Cliquez sur OK pour fusionner ou sur Annuler pour sélectionner un autre emplacement.</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>&amp;Nouvelle phrase secrète :</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>précédent</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>aide</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>suivant</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>utilisé</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Utilisateur</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Téléchargement du fichier : {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>Erreur de synchronisation du dossier iFolder</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Synchronisé : {0}</value>
+  </data>
+</root>

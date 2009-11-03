@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="cs" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Konfigurování účtu iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "accounts";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+
+<div class="sect1" id="accounts">
+
+<h1 class="title"> Konfigurování účtu iFolder</h1>
+
+<p class="para">Pomocí aplikace <span class="guimenu">Průvodce vytvořením účtu iFolder</span> můžete přidat a nakonfigurovat nový účet. Než budete moci vytvářet nové složky iFolder nebo je sdílet ve svém systému, musíte vytvořit a nakonfigurovat alespoň jeden účet. V jeden okamžik se můžete k serveru iFolder přihlásit pouze pomocí jednoho účtu. Pro připojení k více než jednomu serveru iFolder však můžete nakonfigurovat více účtů. Můžete se přihlásit samostatně ke každému účtu a být přihlášeni současně k několika z nich.</p>
+<p class="para">Více uživatelů s odlišnými identitami místního přihlášení bude mít složky iFolder na stejném počítači. Při prvním spuštění iFolder pod svou vlastní místní identitou vás iFolder vyzve k nastavení účtu iFolder.</p>
+<div class="important">
+<p class="para"><em class="title">DŮLEŽITÉ:</em>Aplikace iFolder 3.7 a novější verze zavádí novou funkci, automatické vytvoření účtu, která správci aplikace iFolder pomáhá vytvořit a nakonfigurovat váš účet. Pokud správce iFolder zapnul automatické vytváření účtu, není nutné, abyste účet sami konfigurovali. Když spustíte iFolder poprvé, budete vyzvání k zadání svého hesla. Zadejte heslo a dokončete konfigurování účtu.</p></div>
+
+<p class="para">Chcete-li nakonfigurovat nový účet:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bviaku6">
+<p class="para">Přejděte do aplikace <span class="guimenu">Průvodce vytvořením účtu iFolder</span> některým z následujících způsobů:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Při prvním spuštění iFolder pod svou vlastní místní identitou vás iFolder vyzve k nastavení účtu iFolder. Klepnutím na tlačítko <span class="guimenu">Přejít</span> přejdete přímo k aplikaci <span class="guimenu">Průvodce vytvořením účtu iFolder</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Klepněte pravým tlačítkem na ikonu služby iFolder <img src="images/ifolder22.png" alt="Ikona aplikace iFolder " title="Ikona aplikace iFolder " class="inline" /> v oznamovací oblasti, výběrem možnosti <span class="guimenu">Účty</span> otevřete dialogové okno předvoleb iFolder na kartě <span class="guimenu">Účty</span>. Poté klepnutím na tlačítko <span class="guimenu">Přidat</span> otevřete aplikaci <span class="guimenu">Průvodce vytvořením účtu iFolder</span>.
+      </p></li></ul></div>
+</li>
+<li class="step" id="bviamdh">
+<p class="para">Postupujte podle pokynů na obrazovce a zadejte následující hodnoty:</p>
+<div class="informaltable">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvibwik"></a>
+<p class="para">Parametr</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Popis</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwil"></a>
+<p class="para">adresa serveru</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Název DNS nebo adresa IP podnikového serveru iFolder, kde máte vytvořený účet. Tuto informaci získáte od správce iFolder.</p>
+<p class="para">Například: <span class="literal">svr21.example.com</span> nebo <span class="literal">192.168.1.1</span></p>
+<p class="para">V uživatelském rozhraní iFolder je vždy zobrazen název serveru a adresa IP. Příklad: iFolder - 192.168.1.1</p>
+<div class="important">
+<p class="para"><em class="title">DŮLEŽITÉ:</em>Pomocí klienta iFolder 3.7 nebo novějšího se nelze připojit k serveru iFolder 3.2.</p></div>
+</td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwiq"></a>
+<p class="para">Nastavit tento server jako můj výchozí</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Pokud je k vašemu účtu připojeno více serverů, můžete jeden z nich vybrat jako svůj výchozí server pro vytváření nebo vysílání složky iFolder tak, že vyberete požadovaný server z rozbalovacího seznamu serverů a zaškrtnete políčko <span class="guimenu">Nastavit tento server jako můj výchozí</span>.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwim"></a>
+<p class="para">Uživatelské jméno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Zadejte svou uživatelskou identitu pro tento účet. Správce iFolder rozhoduje, zda formát, který byste měli používat, musí být váš ID síťového uživatele (obecný název LDAP) nebo vaše e-mailová adresa.</p>
+<p class="para">Pokud se například jmenujete Jan Novák a máte ID uživatele jnovak a e-mailovou adresu jan.novak@priklad.cz<span class="literal"></span>, váš správce nakonfiguruje nastavení serveru, které určuje, který ze dvou formátů bude v rámci ověřování přijímán v poli <span class="guimenu">Uživatelské jméno</span>.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwin"></a>
+<p class="para">Heslo</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Zadejte heslo pro své uživatelské jméno. </p>
+<p class="para">Ověřování využívá zabezpečený kanál (SSL). Budete požádáni o ověření a schválení certifikátu serveru.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwio"></a>
+<p class="para">Zapamatovat heslo<span class="guimenu"></span></p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Pokud se chcete vždy při přihlášení k počítači automaticky přihlásit k tomuto účtu iFolder, zaškrtněte políčko <span class="guimenu">Zapamatovat si heslo v tomto počítači</span>. </p>
+<p class="para">Pokud se změní vaše heslo pro síť, automatické ověření se při dalším pokusu iFolder o přihlášení k účtu iFolder nezdaří. iFolder vás vyzve k přihlášení pomocí nového hesla a umožní vám nové heslo zadat a uložit.</p></td>
+</tr></table>
+</div>
+</li>
+<li class="step" id="bk93jdq">
+<p class="para">Ověřte informace, které jste zadali. Chcete-li provést změny, klepněte na tlačítko <span class="guimenu">Zpět </span> a zrevidujte předchozí stránky. Chcete-li pokračovat a ověřit vaše připojení k serveru, klepněte na tlačítko <span class="guimenu">Připojit</span>.</p></li>
+<li class="step" id="b2m63qj">
+<p class="para">Pokud jste vyzváni zprávou <span class="guimenu">Přijmout certifikát tohoto serveru</span>, klepněte na tlačítko <span class="guimenu">Podrobnosti</span> a prohlédněte si informace o certifikátu, pak klepněte na tlačítko <span class="guimenu">OK</span> a přijměte jej. </p>
+<div class="note">
+<p class="para"><em class="title">POZNÁMKA:</em>Při vytváření účtu probíhá přihlášení přes protokol SSL. Až budete požádáni o schválení certifikátu serveru, musíte certifikát ověřit a schválit, aby bylo připojení úspěšné.</p></div>
+</li>
+<li class="step" id="b8yvcnt">
+<p class="para">Pokud správce zapnul zásady šifrování<span class="emphasis"></span>, vyzve vás aplikace iFolder k zadání hesla. </p>
+<p class="para">Zadejte své heslo do pole <span class="guimenu">Heslo</span>.</p>
+<p class="para">Zadejte znovu své heslo do pole <span class="guimenu">Potvrzení hesla</span>.</p>
+<p class="para">Chcete-li během aktuální relace automaticky zpřístupnit zašifrovaná data iFolder, zaškrtněte políčko <span class="guimenu">Zapamatovat Heslo</span>. Pokud zvolíte tuto možnost, zapamatuje si aplikace iFolder během příštího přihlášení vaše heslo. Tato výměna hesla se provádí automaticky.</p></li>
+<li class="step" id="bkcapke">
+<p class="para">Vyberte požadovaného agenta Obnovení ze seznamu a klepněte na tlačítko <span class="guimenu">OK</span>.</p></li>
+<li class="step" id="bbba119">
+<p class="para">Stanovte umístění, kde chcete vytvořit výchozí složku iFolder. </p>
+<p class="para">Standardně je výchozí složka iFolder uložena v umístění <span class="filename">&lt;výchozí adresář uživatele&gt;/ifolder/nazev_serveru/uzivatelske_jmeno</span>.   </p></li>
+<li class="step" id="bctnqjm">
+<p class="para">Vyberte typ výchozí složky iFolder, který chcete vytvořit. Pokud zvolíte možnost <span class="guimenu">Šifrování</span>, budete vyzvání k zadání hesla. </p>
+<div class="important">
+<p class="para"><em class="title">DŮLEŽITÉ:</em>Sdílet můžete pouze normální složky iFolder. Šifrované složky iFolder nelze sdílet.</p></div>
+
+<p class="para">Pokud správce aplikace iFolder nezapnul pro aktuální účet šifrování, můžete vytvářet pouze normální složky iFolder a pokud je šifrování zapnuto, je ve výchozím nastavení vybrána možnost <span class="guimenu">Normální.</span>. </p></li>
+<li class="step" id="bft4h62">
+<p class="para">Pro zapnutí bezpečné synchronizace souborů ve vytvářené složce iFolder zvolte možnost <span class="guimenu">Bezpečná synchronizace</span>.</p>
+<p class="para">Bezpečný kanál můžete zapnout pro normální i šifrované složky iFolder. V tomto případě aplikace iFolder umožňuje použít k synchronizaci mezi složkou iFolder na serveru a na místním počítači bezpečný kanál.</p>
+<p class="para">Pokud výchozí složku iFolder na serveru odstraníte, při následující konfiguraci účtu z některého silného klienta vás aplikace iFolder vyzve k vytvoření výchozí složky iFolder. </p>
+<p class="para">Pokud však odeberete výchozí složku iFolder z místního počítače, vyzve vás při příští konfiguraci účtu aplikace iFolder ke stažení výchozí složky iFolder.</p></li>
+<li class="step" id="bctnqjn">
+<p class="para">Pokud již máte nastavenou výchozí složku iFolder, můžete si ji nahrát na místní počítač.</p>
+<p class="para">Stáhněte si výchozí složku iFolder a pokračujte klepnutím na tlačítko <span class="guimenu">Další</span>.</p></li>
+<li class="step" id="bk84xbh">
+<p class="para">Pokud ve vašem systému již existuje složka se stejným názvem jako výchozí složka iFolder, budete vyzvání buď ke sloučení obou složek nebo ke stažení výchozí složky iFolder do jiného umístění.</p>
+<p class="para">Klepnutím na tlačítko <span class="guimenu">OK</span> obě složky slučte, nebo klepněte na tlačítko <span class="guimenu">Storno</span> a stáhněte výchozí složku iFolder do jiného umístění.</p></li>
+<li class="step" id="b407oqi">
+<p class="para">Klepnutím na tlačítko <span class="guimenu">Dokončit</span> zavřete Průvodce vytvořením účtu iFolder.</p>
+<p class="para">iFolder synchronizuje seznam uživatelů pro zadaný účet a identifikuje složky iFolder, které je možné stáhnout. Toto úvodní stáhnutí může trvat několik sekund až několik minut, v závislosti na seznamu uživatelů pro daný účet. </p></li>
+<li class="step" id="b2m64i3">
+<p class="para">Ověřte si, že vámi nastavený účet se zobrazuje na seznamu účtů.</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b41ned9">
+<p class="para">Klepněte pravým tlačítkem na ikonu <span class="guimenu">Služby iFolder</span> <img src="images/ifolder22.png" alt="Ikona aplikace iFolder" title="Ikona aplikace iFolder" class="inline" /> v oznamovací oblasti možností <span class="guimenu">Předvolby</span> otevřete dialogové okno <span class="guimenu">Předvolby iFolder</span> na kartě <span class="guimenu">Účty</span>. 
+      </p>
+<p class="para">Jakmile jste připojeni k serveru iFolder, bude zaškrtávací políčko <span class="guimenu">Online</span> zaškrtnuto.</p></li>
+<li class="step" id="bvib1d8">
+<p class="para">Zavřete dialogové okno Předvolby iFolder.</p></li></ol>
+</div>
+</li>
+<li class="step" id="bvwsa5n">
+<p class="para">Nastavte složky iFolder pro daný účet některým z následujících způsobů:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Klepněte pravým tlačítkem na ikonu <span class="guimenu">Služby iFolder</span> v oznamovací oblasti, pak vyberte složky <span class="guimenu">iFolder</span> a otevřete prohlížeč iFolder.  Pokračujte částí <a href="createifolder.html">Vytvoření a vyslání složek iFolder</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Pokud jsou složky iFolder pro tento účet k dispozici pro stažení ze serveru, jsou uvedeny na seznamu v okně iFolder v části složky iFolder na <span class="replaceable">&lt;název_serveru_iFolder&gt;.</span>  Ikona stažení <img src="images/if3_download.png" alt="Ikona aplikace iFolder" title="Ikona aplikace iFolder" class="inline" /> označuje, že je složka iFolder k dispozici pro stažení. Pokračujte částí <a href="setupifolder.html">Stažení dostupných složek iFolder</a>.
+      </p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+</body>
+</html>

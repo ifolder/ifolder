@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="sk" lang="sk">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="sk" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "firewall";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
+
+<div class="sect1" id="firewall">
+
+<h1 class="title"> Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</h1>
+
+<p class="para">Ak používate lokálnu bránu firewall, musíte ju nastaviť tak, aby ste povolili aplikácii iFolder vybrať lokálny dynamický port alebo nakonfigurovať lokálny statický port tak, aby mohol klient aplikácie iFolder komunikovať lokálne (na rovnakom počítači) so serverom Mono® XSP. Aplikácia iFolder používa služby servera Mono XSP Web na komunikáciu prostredníctvom protokolu HTTP s podnikovými servermi Novell iFolder, na ktorých máte kontá aplikácie iFolder. Správca aplikácie iFolder nakonfiguruje služby aplikácie iFolder, ktoré rozhodujú, či má komunikácia vo vašom prostredí prebiehať pomocou protokolu HTTP. </p>
+<p class="para">Brána firewall neblokuje komunikáciu medzi serverom Mono XSP a podnikovým serverom Novell iFolder, pretože server Mono XSP používa na prevádzku štandardné porty protokolov HTTP. Ak však zablokujete prevádzku medzi klientom a serverom Mono XSP, klient nebude schopný komunikovať so serverom. Nebudete schopní prihlásiť sa na konto aplikácie iFolder a synchronizovať údaje aplikácie iFolder.</p>
+<p class="para">Na začiatku konfigurácia aplikácie iFolder nešpecifikuje konkrétny port, ktorý sa použije na komunikáciu klienta a servera Mono XSP. Keď sa aplikácia iFolder prvýkrát spustí, otvorí dostupný miestny port na načúvanie žiadostiam servera Mono XSP a na odosielanie údajov na server prostredníctvom servera Mono XSP. Číslo portu sa zapíše do konfiguračného súboru. Tento port sa potom používa, až kým sa stane nedostupným kedykoľvek pri spustení aplikácie iFolder. Ak je port používaný inou aplikáciou, aplikácia iFolder vyberie iný dostupný port, opätovne ho nakonfiguruje v konfiguračnom súbore a potom používa tento nový port. Ak napríklad nie je aplikácia iFolder spustená a iná aplikácia medzitým zaberie port, keď aplikáciu iFolder znova spustíte, musí si vybrať a nakonfigurovať iný port, ktorý použije.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="firewall.html#bctnqjo">Použitie lokálneho dynamického portu</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="firewall.html#bctnqjp">Použitie lokálneho statického portu</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bctnqjo">
+
+<h2 class="title"> Použitie lokálneho dynamického portu</h2>
+
+<p class="para">Ak na počítači používate lokálnu bránu firewall, mala by táto brána zistiť lokálnu prevádzku medzi aplikáciou iFolder a serverom Mono XSP vždy, keď aplikácia iFolder kontaktuje server, aby synchronizovala svoj zoznam používateľov a údaje aplikácie iFolder. Výberom možnosti <span class="guimenu">Povoliť</span> umožníte prevádzku aplikácie iFolder pre túto reláciu. Ak natrvalo povolíte prevádzku, brána firewall by vás nemala viac upozorňovať a mali by ste tým zabrániť zobrazovaniu kontextových okien s upozorneniami pri každom spustení aplikácie iFolder.</p>
+<p class="para">Ak zablokujete prevádzku medzi aplikáciou iFolder a serverom Mono XSP, brána firewall zabráni pripojeniu na server iFolder a nebudete môcť synchronizovať svoje súbory. Aplikácia iFolder nerozpozná, že prevádzka je blokovaná bránou firewall. Oznámi iba, že sa nemôže pripojiť na vaše konto na serveri iFolder.</p>
+</div>
+
+<div class="sect2" id="bctnqjp">
+
+<h2 class="title"> Použitie lokálneho statického portu</h2>
+
+<p class="para">Môžete tiež pridať parameter Rozsah portov webovej služby v časti Správca služieb súboru <span class="filename">Simias.config</span> a tým povoliť serveru Mono XSP používať statický port alebo rozsah portov pre túto lokálnu prevádzku. Tento port alebo rozsah portov bude možné v bráne firewall otvoriť a umožniť tak komunikáciu so serverom Mono XSP. </p>
+<p class="para">Súbor <span class="filename">Simias.config</span> môžete nájsť v nasledovných umiestneniach:</p>
+<div class="informaltable">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<p class="para">Operačný systém</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Umiestnenie súboru Simias.config</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<p class="para">Systém Linux</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">
+                    <span class="filename">/home/<span class="replaceable">username</span>/.local/share/simias/Simias.config</span>
+                  </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<p class="para">Systém Windows</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">
+                    <span class="filename">C:\Documents and Settings\<span class="replaceable">username</span>\Local Settings\Application Data\simias\Simias.config</span>
+                  </p></td>
+</tr></table>
+</div>
+
+<p class="para">Konfigurácia systému na použitie určitého portu alebo rozsahu portov.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bw4v93e">
+<p class="para">Nakonfigurujte bránu firewall, aby sa povolila prevádzka portu alebo rozsahu portov, ktoré sa majú používať na prevádzku aplikácie iFolder.</p>
+<p class="para">Viac informácií o otváraní portov v bráne firewall nájdete v dokumentácii brány firewall.</p></li>
+<li class="step" id="bw4v6ou">
+<p class="para">Klienta aplikácie iFolder ukončite kliknutím pravým tlačidlom na ikonu aplikácie iFolder a vybratím položky <span class="guimenu">Skončiť</span>.</p></li>
+<li class="step" id="bw4v6r7">
+<p class="para">Zmeňte súbor <span class="filename">Simias.config</span> pridaním parametra Rozsah portov webovej služby do časti <span class="guimenu">Správca služieb</span>.</p><pre class="screen">
+&lt;configuration&gt;
+</pre><pre class="screen">
+  &lt;section name="ServiceManager"&gt;
+</pre><pre class="screen">
+    &lt;setting name="WebServicePortRange" value="<span class="replaceable">monoxsp_port</span>" /&gt;   
+</pre><pre class="screen">
+  &lt;/section&gt;
+</pre><pre class="screen">
+&lt;/configuration&gt;
+</pre>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="bctnuhr">
+<p class="para">Nahraďte parameter <span class="replaceable">monoxsp_port</span> číslom portu alebo rozsahom portov:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Ak sa má použiť jediný statický port, zadajte hodnotu jediného štvorciferného čísla portu (napr. 1234). Napríklad:</p><pre class="screen">
+&lt;setting name="WebServicePortRange" value="<span class="replaceable">1234</span>" /&gt;
+</pre></li>
+<li class="listitem">
+<p class="listitem">Ak chcete použiť ľubovoľný dostupný port zo zadaného rozsahu, zadajte rozsah portov (napr. „1234-1236“). Napríklad:</p><pre class="screen">
+&lt;setting name="WebServicePortRange" value="<span class="replaceable">1234-1236</span>" /&gt;
+</pre></li></ul></div>
+</li></ol>
+</div>
+</li>
+<li class="step" id="bw4vbz4">
+<p class="para">Spustite klienta aplikácie iFolder.</p>
+<p class="para">Ďalšie informácie nájdete v časti <a href="startclient.html">Spustenie klienta aplikácie iFolder</a>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="virusscan.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
+</body>
+</html>

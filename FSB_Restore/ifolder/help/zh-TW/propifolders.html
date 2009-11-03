@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-tw" lang="zh-tw">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-tw" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>檢視和設定 iFolder 的內容</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "propifolders";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+
+<div class="sect1" id="propifolders">
+
+<h1 class="title"> 檢視和設定 iFolder 的內容</h1>
+
+<p class="para">使用「iFolder 內容」頁以檢視和設定選定 iFolder 的下列資訊。</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc8ue">瞭解 iFolder 內容</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9mz">從檔案管理員存取 iFolder 內容</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9vn">從 iFolder 瀏覽器存取 iFolder 內容</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="b4tc8ue">
+
+<h2 class="title"> 瞭解 iFolder 內容</h2>
+
+<p class="para">下列參數將報告伺服器上已使用的磁碟空間：</p>
+<div class="table" id="b403606">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038dc"></a>
+<p class="para">參數</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">描述</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dd"></a>
+<p class="para">
+                    <span class="guimenu">Available</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">對選定 iFolder 中檔案或目錄目前可用的伺服器磁碟空間總數：該值等於容量減去已用空間。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038de"></a>
+<p class="para">
+                    <span class="guimenu">已使用</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">目前被選定 iFolder 中所有檔案及目錄佔用的伺服器磁碟空間總數：</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038df"></a>
+<p class="para">
+                    <span class="guimenu">容量</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">此值將報告由 iFolder 擁有者配置給選定 iFolder 的伺服器磁碟空間總數。如果未設定容量，該值就為空或 <span class="literal">N/A</span> (不適用)。</p></td>
+</tr></table>
+</div>
+
+<p class="para">下列參數將報告 iFolder 之本地副本的同步化狀態：</p>
+<div class="table" id="b40374t">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038di"></a>
+<p class="para">參數</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">描述</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dj"></a>
+<p class="para">
+                    <span class="guimenu">上次成功同步化</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">最近一次成功同步化 iFolder 本地副本與 iFolder 伺服器的完成時間。</p><pre class="screen">
+mm/dd/yyyy hh:mm:ss
+</pre></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dk"></a>
+<p class="para">
+                    <span class="guimenu">待同步的檔案/資料夾</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">iFolder 中需要同步化之儲存項目 (檔案和資料夾) 的總數。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dl"></a>
+<p class="para">
+                    <span class="guimenu">自動同步化間隔</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">iFolder 的同步化間隔。指定以分鐘、小時或日為時間單位的值。 </p>
+<p class="para">當 iFolder 用戶端搭配使用 Novell iFolder 3.<span class="replaceable">6 </span> 企業伺服器時，此間隔無法置換由 iFolder 管理員為伺服器或伺服器上之帳戶指定的最小間隔，但它可置換用戶端的同步化間隔。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bjcscye"></a>
+<p class="para">
+                    <span class="guimenu">安全同步</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">讓您安全地同步您正在建立之 iFolder 中的檔案。您可以為一般和加密的 iFolder 啟用安全通道。選取這個選項後，iFolder 可讓您使用安全通道進行伺服器和本地機器上 iFolder 間的同步。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dm"></a>
+<p class="para">
+                    <span class="guimenu">立即同步化</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">按一下按鈕，視需要啟動同步化。</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9mz">
+
+<h2 class="title"> 從檔案管理員存取 iFolder 內容</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h29s">
+<p class="para">在檔案管理員中，導覽至「iFolder」，然後選取它。</p></li>
+<li class="step" id="bv2h2hg">
+<p class="para">以滑鼠右鍵按一下該 iFolder，然後按一下<span class="menuchoice"><span class="guimenu">「iFolder」</span> > <span class="guimenu">「內容」</span></span>。</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9vn">
+
+<h2 class="title"> 從 iFolder 瀏覽器存取 iFolder 內容</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h017">
+<p class="para">在通知區域中，以滑鼠右鍵按一下「iFolder 服務」圖示，然後按一下<span class="guimenu">「iFolder」</span>開啟 iFolder 瀏覽器。</p></li>
+<li class="step" id="bv2h0o4">
+<p class="para">在 iFolder 清單中，選取「iFolder」，然後按一下<span class="guimenu">「內容」</span>。</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+</body>
+</html>

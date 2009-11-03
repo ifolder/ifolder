@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="fr" lang="fr">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="fr" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Configuration d'un compte iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "accounts";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+
+<div class="sect1" id="accounts">
+
+<h1 class="title"> Configuration d'un compte iFolder</h1>
+
+<p class="para">Utilisez <span class="guimenu">l'assistant de création d'un compte iFolder</span> pour ajouter et configurer un nouveau compte. Vous devez configurer au moins un compte iFolder pour pouvoir créer ou partager des dossiers iFolders sur votre système. Vous ne pouvez vous connecter au serveur iFolder qu'avec un seul compte à la fois. En revanche, pour vous connecter à plusieurs serveurs iFolder, vous pouvez configurer plusieurs comptes. Vous pouvez vous loguer séparément à chaque compte et être logué simultanément à plusieurs comptes.</p>
+<p class="para">Plusieurs utilisateurs ayant des identités de login local différentes peuvent posséder des dossiers iFolder sur le même ordinateur. Au premier démarrage de iFolder sous votre identité de login local actuelle, iFolder vous invite à configurer un compte iFolder.</p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>iFolder 3.7 et ses versions ultérieures introduisent une nouveauté, la création automatique de comptes, qui permet à l'administrateur iFolder de vous créer un compte et de le configurer. Si votre administrateur iFolder administrator a activé la création automatique de compte, vous ne devez pas vous créer de compte.  Au premier démarrage d'iFolder, vous êtes invité à introduire votre mot de passe. Entrez votre mot de passe, puis configurez le compte.</p></div>
+
+<p class="para">Pour configurer un nouveau compte :</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bviaku6">
+<p class="para">Accédez à l'<span class="guimenu">assistant de création d'un compte iFolder</span>, à l'aide d'une des méthodes suivantes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Au premier démarrage de iFolder sous votre identité de login local actuelle, iFolder vous invite à configurer un compte iFolder. Cliquez sur <span class="guimenu">Suivant</span> pour accéder directement à l'<span class="guimenu">assistant de création d'un compte iFolder</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Cliquez avec le bouton droit sur l'icône Services iFolder <img src="images/ifolder22.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> dans la zone Notification, sélectionnez <span class="guimenu">Comptes</span> pour ouvrir la boîte de dialogue Préférences iFolder sous l'onglet <span class="guimenu">Comptes</span>, puis cliquez sur <span class="guimenu">Ajouter</span> pour ouvrir l'<span class="guimenu">assistant de création d'un compte iFolder</span>.
+      </p></li></ul></div>
+</li>
+<li class="step" id="bviamdh">
+<p class="para">Suivez les instructions qui s'affichent à l'écran pour spécifier les valeurs suivantes :</p>
+<div class="informaltable">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvibwik"></a>
+<p class="para">Paramètre</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Description</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwil"></a>
+<p class="para">Adresse du serveur</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nom DNS ou adresse IP du serveur d'entreprise iFolder sur lequel se trouve votre compte. Demandez ces informations à votre administrateur iFolder.</p>
+<p class="para">Par exemple : <span class="literal">svr21.exemple.com</span> ou <span class="literal">192.168.1.1</span></p>
+<p class="para">Le nom de serveur s'affiche toujours avec son adresse IP dans l'interface utilisateur iFolder. Par exemple : iFolder - 192.168.1.1</p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Les clients iFolder 3.7 et versions ultérieures ne peuvent pas être utilisés pour se connecter à un serveur iFolder 3.2.</p></div>
+</td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwiq"></a>
+<p class="para">Définir ce serveur comme celui par défaut</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Si plusieurs serveurs sont connectés à votre compte, cochez la case <span class="guimenu">Définir ce serveur comme celui par défaut</span> pour définir le serveur sélectionné dans la liste déroulante en tant que serveur par défaut lorsque vous créez ou téléchargez un dossier iFolder.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwim"></a>
+<p class="para">Nom d'utilisateur</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Spécifiez votre identité utilisateur pour ce compte. Votre administrateur iFolder décide si le format que vous devez utiliser correspond à votre adresse de messagerie ou à votre ID d'utilisateur réseau (nom commun LDAP).</p>
+<p class="para">Par exemple, si votre nom est Jean Deschamp, votre ID d'utilisateur jdeschamp et votre adresse de messagerie jean.deschamp@exemple.com<span class="literal"></span>, votre administrateur configure un paramètre pour le serveur qui détermine lequel des deux formats accepter dans le champ <span class="guimenu">Nom d'utilisateur</span> à des fins d'authentification.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwin"></a>
+<p class="para">Mot de passe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Spécifiez le mot de passe pour votre nom d'utilisateur. </p>
+<p class="para">L'authentification s'effectue via un canal sécurisé (SSL). Vous êtes invité à valider et à accepter le certificat de serveur.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwio"></a>
+<p class="para">Mémoriser le mot de passe<span class="guimenu"></span></p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez la case <span class="guimenu">Mémoriser le mot de passe sur cet ordinateur</span> pour vous loguer automatiquement à ce compte iFolder lorsque vous vous loguez à votre ordinateur. </p>
+<p class="para">Si votre mot de passe de réseau change, l'authentification automatique échoue la prochaine fois qu'iFolder essaie de vous loguer au compte iFolder. iFolder vous invite à vous loguer avec votre nouveau mot de passe et vous permet de le spécifier et de l'enregistrer.</p></td>
+</tr></table>
+</div>
+</li>
+<li class="step" id="bk93jdq">
+<p class="para">Vérifiez les informations saisies. Pour les modifier, cliquez sur le bouton <span class="guimenu">Précédent</span> et revenez aux pages précédentes. Cliquez sur <span class="guimenu">Se connecter</span> pour continuer et valider votre connexion au serveur.</p></li>
+<li class="step" id="b2m63qj">
+<p class="para">Si vous êtes invité à <span class="guimenu">accepter le certificat de ce serveur</span>, cliquez sur <span class="guimenu">Détails</span> pour afficher les informations sur le certificat, puis sur <span class="guimenu">OK</span> pour les accepter. </p>
+<div class="note">
+<p class="para"><em class="title">REMARQUE :</em>Lors de la création du compte, le login s'effectue via SSL. Lorsque vous êtes invité à accepter le certificat de serveur, vous devez le valider et l'accepter pour pouvoir établir une connexion.</p></div>
+</li>
+<li class="step" id="b8yvcnt">
+<p class="para">Si l'administrateur a activé la stratégie de codage<span class="emphasis"></span>, iFolder vous invite à entrer votre phrase secrète. </p>
+<p class="para">Entrez votre phrase secrète dans le champ <span class="guimenu">Phrase secrète</span>.</p>
+<p class="para">Entrez de nouveau la phrase secrète dans le champ <span class="guimenu">Retaper la phrase secrète</span>.</p>
+<p class="para">Cochez la case <span class="guimenu">Mémoriser la phrase secrète</span> pour accéder automatiquement aux données iFolder codées pendant la session actuelle. Si vous cochez cette case, iFolder peut mémoriser votre phrase secrète lors du prochain processus de login. Cet échange de phrase secrète est effectué automatiquement.</p></li>
+<li class="step" id="bkcapke">
+<p class="para">Sélectionnez l'agent de récupération désiré dans la liste et cliquez sur <span class="guimenu">OK</span>.</p></li>
+<li class="step" id="bbba119">
+<p class="para">Spécifiez l'emplacement de destination du dossier iFolder par défaut. </p>
+<p class="para">Par défaut, le dossier iFolder est créé à l'emplacement suivant :<span class="filename">&lt;répertoire privé utilisateur&gt;/ifolder/nom_serveur/nom_utilisateur</span>.  </p></li>
+<li class="step" id="bctnqjm">
+<p class="para">Sélectionnez le type de dossier iFolder par défaut à créer. Si vous choisissez <span class="guimenu">Codage</span>, vous serez invité à spécifier la phrase secrète. </p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Vous ne pouvez partager que les dossiers iFolder ordinaires. Les dossiers iFolder codés ne peuvent pas être partagés.</p></div>
+
+<p class="para">Si votre administrateur iFolder n'a pas activé le codage pour votre compte actuel, vous ne pouvez créer que des dossiers iFolder ordinaires et, si le codage est activé, l'option <span class="guimenu">Normal</span> est sélectionnée par défaut. </p></li>
+<li class="step" id="bft4h62">
+<p class="para">Sélectionnez <span class="guimenu">Synchronisation sécurisée</span> pour activer la synchronisation sécurisée des fichiers dans le dossier iFolder que vous créez.</p>
+<p class="para">Vous pouvez activer un canal sécurisé pour les dossiers iFolder ordinaires et codés. Lorsque cette option est sélectionnée, iFolder vous permet d'utiliser un canal sécurisé pour effectuer la synchronisation entre iFolder sur le serveur et sur la machine locale.</p>
+<p class="para">Si vous supprimez un dossier iFolder par défaut sur le serveur, lors de la prochaine configuration du compte à partir de n'importe quel client lourd, iFolder vous invite à créer un nouveau dossier iFolder par défaut. </p>
+<p class="para">Toutefois, si vous supprimez le dossier iFolder par défaut de la machine locale, la prochaine fois que vous configurerez le compte, iFolder vous invitera à télécharger le dossier iFolder par défaut.</p></li>
+<li class="step" id="bctnqjn">
+<p class="para">Si vous avez déjà configuré un dossier iFolder par défaut, vous pouvez le télécharger sur votre machine locale.</p>
+<p class="para">Téléchargez le dossier iFolder par défaut et cliquez sur <span class="guimenu">Suivant</span> pour continuer.</p></li>
+<li class="step" id="bk84xbh">
+<p class="para">Si un dossier du même nom que le dossier iFolder par défaut existe déjà sur votre système, vous êtes invité à fusionner les deux dossiers ou à télécharger le dossier iFolder par défaut vers un autre emplacement.</p>
+<p class="para">Cliquez sur <span class="guimenu">OK</span> pour fusionner les deux dossiers ou cliquez sur <span class="guimenu">Annuler</span> pour télécharger le dossier iFolder par défaut vers un autre emplacement.</p></li>
+<li class="step" id="b407oqi">
+<p class="para">Cliquez sur <span class="guimenu">Terminer</span> pour fermer l'assistant de création d'un compte iFolder.</p>
+<p class="para">iFolder synchronise la liste d'utilisateurs pour le compte spécifié et identifie les dossiers iFolder disponibles pour le téléchargement. Ce téléchargement initial peut prendre de quelques secondes à quelques minutes, en fonction de la taille de la liste d'utilisateurs pour le compte. </p></li>
+<li class="step" id="b2m64i3">
+<p class="para">Vérifiez que le compte que vous avez configuré figure dans la liste des comptes.</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b41ned9">
+<p class="para">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder </span><img src="images/ifolder22.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> dans la zone Notification, puis sélectionnez <span class="guimenu">Préférences</span> dans le menu pour ouvrir la boîte de dialogue <span class="guimenu">Préférences iFolder</span> dans l'onglet <span class="guimenu">Comptes</span>. 
+      </p>
+<p class="para">Lorsque vous êtes connecté au serveur iFolder, la case <span class="guimenu">En ligne</span> est cochée.</p></li>
+<li class="step" id="bvib1d8">
+<p class="para">Fermez la boîte de dialogue Préférences iFolder.</p></li></ol>
+</div>
+</li>
+<li class="step" id="bvwsa5n">
+<p class="para">Configurez des dossiers iFolders pour ce compte en faisant appel à l'une de ces méthodes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder</span> dans la zone Notification, puis sélectionnez <span class="guimenu">Dossiers iFolder</span> pour ouvrir le navigateur de dossiers iFolder.  Passez à la section <a href="createifolder.html">Création et téléchargement d'un dossier iFolder</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Si des dossiers iFolder pour ce compte sont téléchargeables à partir du serveur, ils sont listés dans la fenêtre iFolder sous Dossiers iFolder sur &lt;<span class="replaceable">nom serveur iFolder</span>&gt;.  L'icône de téléchargement <img src="images/if3_download.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> indique que le dossier iFolder peut être téléchargé. Passez à la section <a href="setupifolder.html">Téléchargement d'un dossier iFolder disponible</a>.
+      </p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+</body>
+</html>

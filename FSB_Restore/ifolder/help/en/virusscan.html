@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Configuring Local Virus Scanner Settings for iFolder Traffic</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "virusscan";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table of Contents' title='Table of Contents' />Table of Contents</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+
+<div class="sect1" id="virusscan">
+
+<h1 class="title"> Configuring Local Virus Scanner Settings for iFolder Traffic</h1>
+
+<p class="para">If you use virus scanning software on your computer, exclude the <span class="filename">..\simias\WorkArea\</span> directory from the virus scan. For example, the location of the <span class="filename">..\simias\WorkArea\</span> directory on Windows is <span class="filename">c:\documents and settings\<span class="replaceable">username</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
+<p class="para">The <span class="filename">..\simias\WorkArea\</span> directory is where iFolder stages files for download from the server. If an iFolder file has a virus attached and your virus scanning software scans that virus while the file is in the <span class="filename">..\simias\WorkArea</span> directory, the virus scanner pops up with a message indicating that a virus has been found, moves the file to quarantine, then iFolder again tries to synchronize the file. </p>
+<p class="para">Not scanning the WorkArea allows the synchronization to finish. The infected file is successfully downloaded and moved to the local iFolder. The virus scanner then detects the infected file in the iFolder and moves it from that folder to quarantine, protecting the computer from infection. iFolder detects the deletion of the file and when the next synchronization begins, iFolder removes the file from the server and member computers. </p>
+<p class="para">However, if the iFolder where the file is downloaded is Read-Only, the local deletion is not enforced to the server and other member computers. The virus must be detected elsewhere where permissions allow changes to be synchronized. The user’s virus scanner probably alerts the user of the virus, so the user should alert other iFolder members about the virus.</p>
+</div>
+
+<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+</body>
+</html>

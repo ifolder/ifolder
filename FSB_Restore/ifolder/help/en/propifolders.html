@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Viewing and Configuring Properties of an iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "propifolders";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table of Contents' title='Table of Contents' />Table of Contents</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+
+<div class="sect1" id="propifolders">
+
+<h1 class="title"> Viewing and Configuring Properties of an iFolder</h1>
+
+<p class="para">Use the iFolders Properties page to view and configure the following information about a selected iFolder.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc8ue">Understanding iFolder Properties</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9mz">Accessing iFolder Properties from a File Manager</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9vn">Accessing iFolder Properties from the iFolder Browser</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="b4tc8ue">
+
+<h2 class="title"> Understanding iFolder Properties</h2>
+
+<p class="para">The following parameters report the disk space used on the server:</p>
+<div class="table" id="b403606">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038dc"></a>
+<p class="para">Parameter</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Description</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dd"></a>
+<p class="para">
+                    <span class="guimenu">Available</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The total amount of server disk space currently available for files or directories in the selected iFolder. The value is equal to the quota minus the used space.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038de"></a>
+<p class="para">
+                    <span class="guimenu">Used</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The total amount of server disk space currently consumed by all files and directories in the selected iFolder.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038df"></a>
+<p class="para">
+                    <span class="guimenu">Quota</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The value reports the total amount of server disk space allocated to the selected iFolder by the iFolder owner. If no quota is set, the value is empty or <span class="literal">N/A</span> (Not Applicable).</p></td>
+</tr></table>
+</div>
+
+<p class="para">The following parameters report the synchronization status for the local copy of the iFolder:</p>
+<div class="table" id="b40374t">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038di"></a>
+<p class="para">Parameter</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Description</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dj"></a>
+<p class="para">
+                    <span class="guimenu">Last Successful Synchronization</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The completion time of the most recent successful synchronization of your local copy of the iFolder with the iFolder server.</p><pre class="screen">
+mm/dd/yyyy hh:mm:ss
+</pre></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dk"></a>
+<p class="para">
+                    <span class="guimenu">Files/Folders to Synchronize</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The total number of storage items (files and folders) in the iFolder that need to be synchronized.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dl"></a>
+<p class="para">
+                    <span class="guimenu">Automatically Synchronizes Every</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">The synchronization interval for the iFolder. Specify the value in minutes, hours, or days. </p>
+<p class="para">When the iFolder client is used with a Novell iFolder 3.<span class="replaceable">6 </span>enterprise server, the interval cannot override the minimum interval specified by the iFolder administrator for the server or your account on the server, but it can override the client-wide synchronization interval.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bjcscye"></a>
+<p class="para">
+                    <span class="guimenu">Secure Sync</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Enables secure synchronization of files in the iFolder you are creating. You can enable secure channel for both regular and encrypted iFolders. If this option is selected, iFolder enables you to use a secure channel to synchronize between iFolders on the server and on the local machine.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dm"></a>
+<p class="para">
+                    <span class="guimenu">Synchronize Now</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Click the button to initiate a synchronization on demand.</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9mz">
+
+<h2 class="title"> Accessing iFolder Properties from a File Manager</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h29s">
+<p class="para">In the file manager, navigate to the iFolder, then select it.</p></li>
+<li class="step" id="bv2h2hg">
+<p class="para">Right-click the iFolder, then click <span class="menuchoice"><span class="guimenu">iFolder</span> > <span class="guimenu">Properties</span></span>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9vn">
+
+<h2 class="title"> Accessing iFolder Properties from the iFolder Browser</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h017">
+<p class="para">In the notification area, right-click the iFolder Services icon, then click <span class="guimenu">iFolders</span> to open the iFolder browser.</p></li>
+<li class="step" id="bv2h0o4">
+<p class="para">In the list of iFolders, select the iFolder, then click <span class="guimenu">Properties</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+</body>
+</html>

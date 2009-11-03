@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="ja" lang="ja">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="ja" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:54" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>iFolderのマージ</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目次' title='目次' />目次</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
+</div>
+
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> iFolderのマージ</h1>
+
+<p class="para">マージによりiFolderのデータが統合されるため、iFolderサーバおよびクライアント間のデータ転送を最小化できます。サーバ上のiFolderのコンテンツと既存のローカルマシンにあるフォルダのコンテンツをマージできます。</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0ign">iFolder-Folder間のマージ</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0kks">既存のiFolderを別の場所に移動する</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0l8i">移行済みの2.xのiFolderと3.7以降のiFolderのマージ</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bcq0ign">
+
+<h2 class="title"> iFolder-Folder間のマージ</h2>
+
+<p class="para">iFolderと標準フォルダを同一名でマージできます。たとえば、<span class="filename">corporate</span>という名前のiFolderのコンテンツと<span class="filename">corporate</span>という名前の標準フォルダのコンテンツをマージできます。 </p>
+<p class="para"><span class="filename">corporate</span> iFolderに、<span class="filename">hr</span>、<span class="filename">finance</span>、<span class="filename">marketing</span>の3つのサブフォルダがあるとします。<span class="filename">corporate</span> iFolderのコンテンツを、<span class="filename">hr</span>フォルダと<span class="filename">finance</span>フォルダしかない<span class="filename">corporate</span>という名前のフォルダにダウンロードしようとしています。この場合、<span class="filename">corporate</span>フォルダに3つのフォルダをすべてダウンロードし、転送率を上げる必要はありません。代わりに、<span class="filename">corporate</span>iFolderと<span class="filename">corporate</span>フォルダをマージすることで、［<span class="guimenu">Merge to folder (フォルダにマージ)</span>］機能によりインテリジェントに<span class="filename">hr</span>と<span class="filename">finance</span>のサブフォルダをダウンロードせず、<span class="filename">marketing</span>サブフォルダのみがダウンロードされます。<span class="filename">corporate</span>iFolderのデータが<span class="filename"></span>フォルダと異なる場合は、バージョンの競合が表示されます。手動で競合を解決できます。同様に、ファイル名の競合が表示された場合も手動で解決できます。</p>
+<p class="para">サーバ上のiFolderをローカルマシン上のフォルダコンテンツにマージするには、次の手順に従います。</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr3w0i">
+<p class="para">iFolderブラウザで、選択したサーバのiFolderのリストで必要なiFolderを右クリックし、［<span class="guimenu">Merge to folder (フォルダにマージ)</span>］を選択します。</p></li>
+<li class="step" id="bcr4m9d">
+<p class="para">フォルダを参照して選択し、［<span class="guimenu">OK</span>］をクリックします。</p></li></ol>
+</div>
+
+<p class="para">続いて、これらの2つのフォルダのコンテンツが比較され、フォルダに存在しないファイルがiFolderからダウンロードされます。iFolderに存在しないファイルで、フォルダに存在するものはアップロードされます。</p>
+</div>
+
+<div class="sect2" id="bcq0kks">
+
+<h2 class="title"> 既存のiFolderを別の場所に移動する</h2>
+
+<p class="para"><span class="filename">corporate</span>という名前の既存のiFolderをクライアントマシンの別の場所に移動するには、次の手順に従います。 </p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr4vli">
+<p class="para"><span class="filename">corporate</span>iFolderを標準フォルダに変換します。</p>
+<div class="important">
+<p class="para"><em class="title">重要:</em>サーバ側のiFolderは削除しないでください。</p></div>
+
+<p class="para">詳細については、<a href="reverting.html">iFolderを標準フォルダに戻す</a>を参照してください。</p></li>
+<li class="step" id="bcr4vww">
+<p class="para"><span class="filename">corporate</span>フォルダを別の場所に移動します。 </p>
+<div class="important">
+<p class="para"><em class="title">重要:</em>フォルダの移動中にはそのフォルダ名を変更しないでください。</p></div>
+</li>
+<li class="step" id="bcr4w5o">
+<p class="para">iFolderブラウザウィンドウで、サーバ上の<span class="filename">corporate</span>iFolderを選択し、［<span class="guimenu">Merge to folder (フォルダにマージ)</span>］をクリックします。</p></li>
+<li class="step" id="bcr4y94">
+<p class="para">ローカルマシン上で<span class="filename">corporate</span>フォルダを選択し、［<span class="guimenu">OK</span>］をクリックして、コンテンツをマージします。</p>
+<div class="note">
+<p class="para"><em class="title">メモ:</em>［フォルダにマージ<span class="guimenu"></span>］の代わりに［いますぐ同期化<span class="guimenu"></span>］を使用した場合は、「<a href="movelocation.html">iFolderの移動</a>」でも説明されているように、サーバ上のiFolderに含まれるすべてのデータがチェックされ、すべてのデータが同期されます。そのため、データ転送にかかる時間が長くなります。一方、［<span class="guimenu">Merge to folder (フォルダにマージ)</span>］はiFolderと標準フォルダのコンテンツのみをマージするため、データ転送を最小に抑えることができます。</p></div>
+
+<p class="para">マージの詳細については、「<a href="merge.html#bcq0ign">iFolder-Folder間のマージ</a>」を参照してください。</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bcq0l8i">
+
+<h2 class="title"> 移行済みの2.<span class="replaceable">x</span>のiFolderと3.7以降のiFolderのマージ </h2>
+
+<p class="para">移行済みの2.xのiFolderを、iFolder 3.7以降のサーバで作成されたiFolderにマージすることができます。移行の詳細については、「<a href="coexistmig.html">Novell iFolderの移行とアップグレード</a>」を参照してください。 </p>
+<p class="para">移行後、2.<span class="replaceable">x</span>のiFolderはiFolder 3.7以降のサーバに移動されます。3.7以降のサーバ上にある移行済みのiFolderをクライアントマシンにダウンロードするかどうかを選択できます。ただし、iFolderがすでにクライアントマシン上に存在している可能性があります。この場合、マージ機能を使用して不要なデータがサーバからクライアントに転送されないようにします。 </p>
+<p class="para">移行済みの2.<span class="replaceable">x</span>のiFolderを3.7以降のiFolderにマージするには、次の手順に従います。</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr6eex">
+<p class="para">2.<span class="replaceable">x</span>のiFolderをiFolder 3.7以降のドメインに移行します。</p></li>
+<li class="step" id="bcr6f1n">
+<p class="para">ローカルマシン上の2.<span class="replaceable">x</span>のiFolderを標準フォルダに変換します。</p></li>
+<li class="step" id="bcr6f5l">
+<p class="para">各iFolderのサーバコピーを選択し、［<span class="replaceable">Merge to folder (フォルダにマージ)</span>］を選択します。</p></li>
+<li class="step" id="bcr6is8">
+<p class="para">コンテンツをマージするには、標準フォルダを選択し、［<span class="guimenu">OK</span>］をクリックします。</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> 詳細については、「 <a href="legal.html">保証と著作権</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
+</div>
+
+</body>
+</html>

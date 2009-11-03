@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="de" lang="de">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="de" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:51" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Konfigurieren von lokalen Virenscanner-Einstellungen für den iFolder-Verkehr</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "virusscan";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+
+<div class="sect1" id="virusscan">
+
+<h1 class="title"> Konfigurieren von lokalen Virenscanner-Einstellungen für den iFolder-Verkehr</h1>
+
+<p class="para">Wenn Sie die Antivirensoftware auf Ihrem Computer verwenden, schließen Sie das Verzeichnis <span class="filename">..\simias\WorkArea\</span> von der Virenüberprüfung aus.  Beispielsweise lautet der Speicherort des Verzeichnisses <span class="filename">..\simias\WorkArea\</span> unter Windows <span class="filename">c:\Dokumente und Einstellungen\<span class="replaceable">Benutzername</span>\Lokale Einstellungen\Anwendungsdaten\simias\WorkArea\.simias.wf.<span class="replaceable">Guid</span></span>. </p>
+<p class="para">Im Verzeichnis <span class="filename">..\simias\WorkArea\\</span> werden von iFolder Dateien zum Herunterladen vom Server aufgeführt. Wenn an einer iFolder-Datei ein Virus hängt und Ihr Virenprüfprogramm den Virus scannt, während sich die Datei im Verzeichnis <span class="filename">..\simias\WorkArea</span> befindet, zeigt der Virenscanner eine Meldung an, die besagt, dass ein Virus gefunden wurde, und verschiebt die Datei in die Quarantäne. Danach versucht iFolder erneut, die Datei zu synchronisieren. </p>
+<p class="para">Wenn "WorkArea" nicht gescannt wird, kann die Synchronisierung abgeschlossen werden. Die infizierte Datei wird erfolgreich heruntergeladen und in den lokalen iFolder-Ordner verschoben. Das Virenprüfprogramm erkennt daraufhin die infizierte Datei im iFolder-Ordner, verschiebt sie aus diesem Ordner und sperrt sie. Dadurch wird der Computer vor einer Infektion geschützt. Der Löschvorgang der Datei wird von iFolder erfasst und wenn die nächste Synchronisierung beginnt, wird die Datei durch iFolder vom Server sowie von den Mitgliedercomputern entfernt. </p>
+<p class="para">Wenn jedoch der iFolder-Ordner, in den die Datei heruntergeladen wird, ein Nur-Lesen-Ordner ist, wird der lokale Löschvorgang nicht für den Server und andere Mitgliedercomputer umgesetzt. Der Virus muss an anderer Stelle erkannt werden, an der Änderungen mithilfe von Berechtigungen synchronisiert werden können. Das Virenprüfprogramm des Benutzers warnt den Benutzer wahrscheinlich vor dem Virus, demnach sollte der Benutzer weitere iFolder-Mitglieder über den Virus benachrichtigen.</p>
+</div>
+
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+</body>
+</html>

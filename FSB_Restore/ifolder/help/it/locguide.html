@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="it" lang="it">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="it" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:52" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Indicazioni per l'ubicazione e l'uso di cartelle iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Sommario' title='Sommario' />Sommario</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
+
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> Indicazioni per l'ubicazione e l'uso di cartelle iFolder</h1>
+
+<p class="para">In genere, quando si crea una cartella iFolder o se ne configura una condivisa da altri utenti è possibile collocarla in qualsiasi ubicazione del disco rigido locale. Tuttavia esistono alcune limitazioni pratiche e specifiche. Tenere presenti le seguenti indicazioni relative all'ubicazione e all'uso di cartelle iFolder nel computer:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Il nome di una cartella iFolder deve essere univoco nella directory in cui viene collocata la cartella.</p></li>
+<li class="listitem">
+<p class="listitem">Il nome di una cartella iFolder non può contenere i seguenti caratteri non validi:</p><pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">Per altre convenzioni di denominazione, vedere <a href="nameconv.html">Convenzioni di denominazione per le cartelle iFolder e i relativi file e cartelle</a>.</p></li>
+<li class="listitem">
+<p class="listitem">La cartella iFolder deve risiedere su un disco rigido locale; l’ubicazione non può trovarsi su un’unità di rete o non fisica.</p></li>
+<li class="listitem">
+<p class="listitem">Una cartella iFolder non può trovarsi alla radice dell’unità disco rigido. </p></li>
+<li class="listitem">
+<p class="listitem">Una cartella iFolder può essere creata solo da una cartella per la quale si dispone dei diritti di accesso in lettura e scrittura dei file. Quando si configura una cartella iFolder condivisa in un computer, è necessario disporre dei diritti di accesso di file system per la cartella in cui si colloca la cartella iFolder.</p></li>
+<li class="listitem">
+<p class="listitem">Una cartella iFolder non può contenere o trovarsi in una cartella di applicazioni, ad esempio la cartella Programmi.</p></li>
+<li class="listitem">
+<p class="listitem">La cartella iFolder non può contenere o trovarsi nella cartella dei metadati iFolder. L'ubicazione di default della cartella di metadati è la seguente:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bx09dxu">
+                <p class="title"><em class="title">Linux:</em>
+                nella cartella home nella sottodirectory <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span></p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bx09ffv">
+                <p class="title"><em class="title">Windows:</em>
+                nella directory <span class="filename">C:\Documents and Settings\<span class="replaceable">nomeutente_accesso_Windows</span>\Impostazioni locali\Dati applicazione\simias</span></p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bcto9jx">
+                <p class="title"><em class="title">Macintosh:</em>
+                in <span class="filename">$HOME/.local/share/simias</span></p>
+              </div>
+</li></ul></div>
+</li>
+<li class="listitem">
+<p class="listitem">Una cartella iFolder non può contenere altre cartelle iFolder o trovarsi in esse, compresa la cartella iFolder di Novell iFolder 2.<span class="replaceable">x</span>.</p>
+<p class="listitem">Non sono supportate cartelle iFolder di rete. Ad esempio, non è possibile creare cartelle iFolder associate alle directory di rete /home degli utenti mappate alle relative workstation. Non è inoltre supportato l'accesso WebDAV dal desktop di un utente alla raccolta di cartelle iFolder sul volume di dati utente del server iFolder.</p></li>
+<li class="listitem">
+<p class="listitem">Sebbene sia possibile eseguire il login a più conti iFolder contemporaneamente, una cartella iFolder può essere associata a un solo conto. Non è possibile sincronizzare una cartella iFolder con più conti. Quando si crea una cartella iFolder, essa può essere condivisa solo con altri utenti e gruppi LDAP di cui è stato eseguito il provisioning nello stesso server o dominio di iFolder.</p></li>
+<li class="listitem">
+<p class="listitem">Se condivisa con un gruppo LDAP, la cartella iFolder è disponibile per tutti i membri del gruppo.</p></li>
+<li class="listitem">
+<p class="listitem">Se più utenti condividono un computer, la riservatezza delle copie locali delle cartelle iFolder memorizzate nello spazio su disco allocato a un utente è garantita solo se il file system supporta le funzioni di riservatezza dei dati e tali funzioni sono configurate per l'uso.</p>
+<p class="listitem">In Windows, il file system NTFS include funzioni per la sicurezza quali le autorizzazioni per file e cartelle e il sistema EFS (Encrypting File System), utilizzato per memorizzare file cifrati in volumi NTFS. Queste funzioni non sono supportate nei file system FAT32. Accertarsi che le identità di login locale degli utenti non dispongano dei diritti di amministratore o di diritti equivalenti, a eccezione ovviamente dell'identità dell'amministratore. L'amministratore può accedere a tutti i file e a tutte le directory del computer. Nel caso di computer condivisi, dove la sicurezza e la riservatezza dei dati rivestono un'importanza particolare per gli utenti, questi ultimi possono cifrare la copia locale dei dati iFolder personali tramite EFS o tecnologie per la cifratura del file system di terze parti.</p>
+<p class="listitem">I file system Linux e Macintosh sono progettati per l'uso in ambienti multiutente. Le autorizzazioni per i file consentono di controllare l'accesso di utenti, gruppi o altre identità. Le autorizzazioni per i file di proprietà di un utente sono tipicamente impostate per consentire l'accesso completo al proprietario e non consentire alcun accesso ai gruppi o ad altre identità. </p>
+<p class="listitem">La memorizzazione di cartelle iFolder in un volume FAT32 locale in Linux richiede particolare attenzione poiché i file system FAT32 non sono conformi allo standard POSIX*. Per ulteriori informazioni, vedere il <a href="createifolder.html#fat32mtpt">Creazione di cartelle iFolder in un punto di montaggio FAT32 (Linux)</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Se gli utenti dello stesso computer condividono cartelle iFolder, nel dispositivo possono coesistere più copie delle cartelle e ciascun utente dispone di una copia scaricata dal server. Identità di login locale diverse non possono condividere la stessa ubicazione per le cartelle iFolder condivise.</p></li></ul></div>
+
+</div>
+
+<p class="trademark"> Per ulteriori informazioni, vedere <a href="legal.html">Note legali</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="precedente" title="precedente" />precedente</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="cs" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Zobrazení a konfigurování vlastností složek iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "propifolders";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+
+<div class="sect1" id="propifolders">
+
+<h1 class="title"> Zobrazení a konfigurování vlastností složek iFolder</h1>
+
+<p class="para">Použijte stránku Vlastnosti složek iFolder a zobrazte a nakonfigurujte následující informace o vybrané složce iFolder.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc8ue">Porozumění vlastnostem iFolder</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9mz">Přístup k vlastnostem iFolder ze správce souborů</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="propifolders.html#b4tc9vn">Přístup k vlastnostem iFolder z prohlížeče iFolder</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="b4tc8ue">
+
+<h2 class="title"> Porozumění vlastnostem iFolder</h2>
+
+<p class="para">Následující parametry informují o diskovém prostoru využitém na serveru:</p>
+<div class="table" id="b403606">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038dc"></a>
+<p class="para">Parametr</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Popis</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dd"></a>
+<p class="para">
+                    <span class="guimenu">Dostupné</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Celkový objem diskového prostoru aktuálně dostupný pro soubory nebo adresáře ve vybrané složce iFolder. Hodnota se rovná dané kvótě, mínus využitý prostor.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038de"></a>
+<p class="para">
+                    <span class="guimenu">Využito</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Celkový objem diskového prostoru aktuálně spotřebovaný všemi soubory nebo adresáři ve vybrané složce iFolder. </p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038df"></a>
+<p class="para">
+                    <span class="guimenu">Kvóta</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Hodnota uvádí celkový objem diskového prostoru serveru přiděleného vybrané složce iFolder vlastníkem složky iFolder. Pokud není nastavena kvóta, je pole prázdné nebo obsahuje hodnotu <span class="literal">N/A</span> (Nelze použít).</p></td>
+</tr></table>
+</div>
+
+<p class="para">Následující parametry hlásí stav synchronizace pro místní kopii složky iFolder:</p>
+<div class="table" id="b40374t">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4038di"></a>
+<p class="para">Parametr</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Popis</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dj"></a>
+<p class="para">
+                    <span class="guimenu">Poslední úspěšná synchronizace</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Čas dokončení poslední úspěšné synchronizace místní kopie složky iFolder se serverem iFolder.</p><pre class="screen">
+mm/dd/yyyy hh:mm:ss
+</pre></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dk"></a>
+<p class="para">
+                    <span class="guimenu">Soubory/složky určené k synchronizaci</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Celkový počet položek pro uložení (soubory a složky) ve složce iFolder, které je nutné synchronizovat.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dl"></a>
+<p class="para">
+                    <span class="guimenu">Automaticky synchronizovat každých</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Interval synchronizace pro složku iFolder. Zadejte hodnotu v minutách, hodinách nebo dnech. </p>
+<p class="para">Když je klient iFolder použit s podnikovým serverem Novell iFolder 3.<span class="replaceable">6 </span>, interval nemůže potlačit minimální interval zadaný správcem iFolder pro server nebo váš účet na serveru, ale může potlačit interval synchronizace pro celého klienta.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bjcscye"></a>
+<p class="para">
+                    <span class="guimenu">Bezpečná synchronizace</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Umožňuje zabezpečenou synchronizaci souborů ve vytvářené složce iFolder. Bezpečný kanál můžete zapnout pro normální i šifrované složky iFolder. Je-li tato volba zapnuta, aplikace iFolder umožňuje použít k synchronizaci mezi složkami iFolder na serveru a v místním počítači zabezpečený kanál.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4038dm"></a>
+<p class="para">
+                    <span class="guimenu">Synchronizovat nyní</span>
+                  </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Klepněte na tlačítko a aktivujte synchronizaci podle potřeby.</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9mz">
+
+<h2 class="title"> Přístup k vlastnostem iFolder ze správce souborů</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h29s">
+<p class="para">Ve správci souborů přejděte do složky iFolder, pak ji vyberte.</p></li>
+<li class="step" id="bv2h2hg">
+<p class="para">Klepněte pravým tlačítkem na složku iFolder a klepněte na možnost <span class="menuchoice"><span class="guimenu">iFolder</span> > <span class="guimenu">Vlastnosti</span></span>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b4tc9vn">
+
+<h2 class="title"> Přístup k vlastnostem iFolder z prohlížeče iFolder</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2h017">
+<p class="para">V oznamovací oblasti klepněte pravým tlačítkem na ikonu služby iFolder, pak na <span class="guimenu">iFolder</span> a otevřete prohlížeč iFolder.</p></li>
+<li class="step" id="bv2h0o4">
+<p class="para">V seznamu složek iFolder vyberte iFolder, pak klepněte na položku <span class="guimenu">Vlastnosti</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="setupifolder.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="managingpassphrse.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+</body>
+</html>

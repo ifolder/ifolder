@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="fr" lang="fr">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="fr" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Conventions de dénomination des fichiers et des dossiers d'un compte iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "nameconv";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+
+<div class="sect1" id="nameconv">
+
+<h1 class="title"> Conventions de dénomination des fichiers et des dossiers d'un compte iFolder</h1>
+
+<p class="para">Le client iFolder impose des conventions de dénomination qui tiennent compte des restrictions collectives des systèmes de fichiers Linux et Windows. Un compte, un dossier et un fichier iFolder doivent avoir un nom valide, conforme aux conventions de dénomination, pour pouvoir être synchronisés.</p>
+<p class="para">Utilisez les conventions de dénomination suivantes pour vos dossiers iFolder et les fichiers et dossiers qu'ils contiennent :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">iFolder prend en charge le jeu de caractères <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> avec le codage UTF-8. </p></li>
+<li class="listitem">
+<p class="listitem">N'utilisez pas les caractères non valides suivants dans les noms de dossiers iFolder et ceux des fichiers et dossiers qu'ils contiennent :</p><pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">iFolder crée un conflit de nom si vous utilisez des caractères non valides dans un nom de dossier ou de fichier. Vous devez résoudre ce conflit pour pouvoir synchroniser le fichier ou le dossier.</p></li>
+<li class="listitem">
+<p class="listitem">La longueur maximale du nom pour le composant de chemin unique dépend du système de fichiers du client.  Cette longueur maximale pour les noms de fichier inclut le point (.) et l'extension. </p>
+<p class="listitem">Lorsque vous tentez de télécharger ou de synchroniser un dossier iFolder dont le nom dépasse la limite maximale de caractères prise en charge par le système de fichiers, iFolder affiche un message d'erreur.</p></li>
+<li class="listitem">
+<p class="listitem">La casse est sans importance pour les noms de dossiers iFolder et les fichiers et dossiers qu'ils contiennent. Toutefois, elle est préservée. Si des noms de fichier ne diffèrent que par leur casse, iFolder crée un conflit de nom. Vous devez résoudre ce conflit pour pouvoir synchroniser le fichier ou le dossier.</p></li>
+<li class="listitem">
+<p class="listitem">Si vous créez des dossiers iFolder dans un système de fichiers FAT32 sur Linux, évitez de mettre les noms des fichiers tout en majuscule. En effet, le système de gestion des fichiers VFAT ou FAT32 sous Linux change automatiquement les noms de fichier tout en majuscule, conformes au format de fichier MS-DOS 8.3, en les mettant tout en minuscule. Ceci crée des problèmes de synchronisation des fichiers si seulement des droits en Lecture seule ont été conférés au dossier iFolder.</p></li></ul></div>
+
+</div>
+
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="ru" lang="ru">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="ru" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:02" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Миграция с iFolder 2.x на iFolder 3.7 или более поздней версии</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "migration";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
+
+<div class="sect1" id="migration">
+
+<h1 class="title"> Миграция с iFolder 2.<span class="replaceable">x</span> на iFolder 3.7 или более поздней версии</h1>
+
+<p class="para">Темы раздела:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6kho">Общие сведения о процессе миграции</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6esx">Процедура миграции</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bax6kho">
+
+<h2 class="title"> Общие сведения о процессе миграции</h2>
+
+<p class="para">Приложение Novell iFolder предоставляет возможность простой и быстрой миграции с клиента iFolder 2.<span class="replaceable">x</span> на клиент iFolder 3.7 или более поздней версии. Помощник по миграции в клиенте iFolder позволяет быстро и легко выполнить миграцию имеющихся данных iFolder 2.<span class="replaceable">x</span>.</p>
+<p class="para">При запуске мастер миграции обнаруживает установку версии 2.<span class="replaceable">x</span> и выводит запрос на миграцию данных. Во время миграции появляется запрос на преобразование существующих папок или на сохранение копий папок приложения iFolder 2.<span class="replaceable">x</span>. Для получения дополнительной информации об этом см. <a href="migration.html#b8anh5z">Шаг 6</a>.</p>
+<p class="para">Приложение iFolder предлагает выполнить повторную синхронизацию файлов с сервером 3.7 или более поздней версии и спрашивает, необходимо ли сохранить клиент 2.<span class="replaceable">x</span> до завершения синхронизации. В ходе этого процесса выполняется только миграция данных, поэтому пользователь должен выполнить настройку нового клиента. </p>
+</div>
+
+<div class="sect2" id="bax6esx">
+
+<h2 class="title"> Процедура миграции</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b88immv">
+<p class="para">Установите клиент iFolder для сервера iFolder 3.7 или более поздней версии, а затем настройте учетную запись для сервера iFolder Enterprise Server 3.7 или более поздней версии.</p>
+<p class="para">Для получения информации об установке клиента и настройке учетной записи см. раздел <a href="accountsprefs.html">Управление учетными записями и настройками iFolder</a>.</p></li>
+<li class="step" id="b88immw">
+<p class="para">В навигаторе iFolder создайте одну или несколько папок iFolder на локальном компьютере.</p>
+<p class="para">Для папки iFolder можно использовать любое допустимое имя. Не создавайте папку iFolder в папке iFolder 2.<span class="replaceable">x</span>. См. дополнительные сведения: <a href="createifolder.html">Создание и отправка папки iFolder</a>.</p></li>
+<li class="step" id="bb0b2z9">
+<p class="para">В приложении iFolder отобразится сообщение о существовании предыдущей версии данных и запрос на миграцию. </p>
+<p class="para">Щелкните <span class="guimenu">ОК</span>, чтобы открыть список доступных папок iFolder 2.<span class="replaceable">x</span>.</p></li>
+<li class="step" id="b8annny">
+<p class="para">Выберите папки iFolder 2.<span class="replaceable">x</span>, которые необходимо мигрировать.</p>
+<p class="para">Щелкните <span class="guimenu">Миграция</span> для запуска помощника по миграции.</p>
+<div class="note">
+<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Помощника по миграции можно также запустить, выбрав <span class="guimenu">iFolder &gt; Миграция &gt; Миграция с версии iFolder 2.x</span>.</p></div>
+
+<p class="para">Помощник по миграции помогает последовательно осуществить процесс миграции для полного переноса данных.</p></li>
+<li class="step" id="b8andsn">
+<p class="para"> Щелкните <span class="guimenu">Далее</span> для отображения опций миграции.</p></li>
+<li class="step" id="b8anh5z">
+<p class="para">Выберите одно из следующих действий:</p>
+<div class="formalpara" id="b8ydakq">
+              <p class="title"><em class="title"><span class="guimenu">Выполнить миграцию папки iFolder и отключить ее от домена 2.x</span>:</em>
+               выберите эту опцию для отключения существующей папки от домена iFolder 2.<span class="replaceable">x</span> после миграции на версию 3.7 или более позднюю.</p>
+            </div>
+
+<div class="formalpara" id="b8ydbqu">
+              <p class="title"><em class="title">
+                <span class="guimenu">Создать копию папки iFolder и мигрировать:</span>
+              </em>
+               выберите эту опцию для создания копии файлов iFolder 2.<span class="replaceable">x</span> и преобразования их в формат iFolder 3.7 или более поздней версии. При этом файлы, находящиеся в домене iFolder 2.<span class="replaceable">x</span>, не удаляются даже после миграции в домен iFolder 3.7 или более поздней версии.</p>
+            </div>
+
+<p class="para">При выборе этой опции необходимо также выбрать функцию <span class="guimenu">Копировать родительскую папку</span>, если необходимо скопировать не только содержимое папки 2.<span class="replaceable">x</span>, но и родительскую папку. Если эта опция не выбрана, в версию 3.7 или более позднюю будет перенесено только содержимое выбранной папки. </p>
+<p class="para">Щелкните <span class="guimenu">Просмотр</span>, чтобы определить местоположение для хранения мигрированной папки.</p>
+<p class="para">Например каталог <span class="filename">c:/Documents and Settings/&lt;имя_пользователя&gt;/ifolder2dir</span> является папкой iFolder 2.<span class="replaceable">x</span>, а <span class="filename">dir1</span> и <span class="filename">dir2</span> - каталоги в папке <span class="filename">ifolder2dir</span>. При выборе опции <span class="guimenu">Копировать родительскую папку</span> в новом местоположении создается каталог <span class="filename">ifolder2dir </span> и каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span> копируются в него. Если эта опция не выбрана, в указанное местоположение перемещаются только каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span>.</p></li>
+<li class="step" id="b8ann46">
+<p class="para">Щелкните <span class="guimenu">Далее</span>, чтобы выбрать домен и опции защиты, как указано ниже:</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b8ao41w">
+<p class="para">Выберите домен в раскрывающемся списке.</p></li>
+<li class="step" id="b8ao481">
+<p class="para">Выберите необходимые опции защиты:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Выберите <span class="guimenu">Шифрование</span> для шифрования выбранной папки iFolder.</p>
+<p class="listitem">Если контрольная фраза не была указана при входе, iFolder выдаст запрос на ввод контрольной фразы. Можно пропустить это действие и настроить контрольную фразу позднее.</p>
+<p class="listitem">Если соединение с доменом iFolder еще не установлено, появится запрос на подключение к домену.</p></li>
+<li class="listitem">
+<p class="listitem">Выберите опцию <span class="guimenu">Совместное использование</span> для совместного использования папки iFolder с другими пользователями в домене iFolder </p>
+<p class="listitem">Можно выполнить миграцию зашифрованной папки iFolder 2.<span class="guimenu">x</span> в совместно используемую папку. При попытке выполнить миграцию зашифрованной папки iFolder 2.<span class="replaceable">x</span> в совместно используемую папку появляется запрос на подтверждение выполнения действия.</p>
+<p class="listitem">Для подтверждения действия щелкните <span class="guimenu">ОК</span>.</p></li></ul></div>
+</li></ol>
+</div>
+</li>
+<li class="step" id="b8ao7ou">
+<p class="para">Щелкните <span class="guimenu">Далее</span> для миграции выбранной папки iFolder.</p></li>
+<li class="step" id="b8ao9s7">
+<p class="para">Проверьте правильность указанной информации, при необходимости щелкните <span class="guimenu">Назад </span>, чтобы вернуться на предыдущую страницу и внести изменения. </p>
+<p class="para">Если информация указана правильно, щелкните <span class="guimenu">Миграция </span>, чтобы начать миграцию.</p>
+<p class="para">Щелкните <span class="guimenu">Назад</span> для возврата и внесения необходимых изменений.</p></li>
+<li class="step" id="bb51sen">
+<p class="para">Щелкните <span class="guimenu">Готово</span>, чтобы выполнить миграцию.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
+</div>
+
+</body>
+</html>

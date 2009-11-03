@@ -1,0 +1,11 @@
+﻿var RES_PREV_STR="上一个";
+var RES_NEXT_STR="下一个";
+var RES_CONTENTS_STR = "内容";
+var RES_INDEX_STR = "索引";
+var RES_SEARCH_STR = "搜索";
+var RES_WORDSEPREGEX="";
+var RES_COMMONWORDS="";
+var RES_STEMMING="";
+var RES_SPELLING="";
+var RES_MSGNOTFOUND="未找到任何主题。";
+var RES_MSGRESULTS="结果";

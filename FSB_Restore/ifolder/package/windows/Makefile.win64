@@ -1,0 +1,412 @@
+#######################################################################
+#  $RCSfile$
+#
+#  Copyright (C) 2004 Novell, Inc.
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public
+#  License as published by the Free Software Foundation; either
+#  version 2 of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public
+#  License along with this program; if not, write to the Free
+#  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#  Author: Paul Thomas <pthomas@novell.com>
+#
+#######################################################################
+srcdir = .
+top_srcdir = ../..
+
+pkgdatadir = $(datadir)/ifolder3
+pkglibdir = $(libdir)/ifolder3
+pkgincludedir = $(includedir)/ifolder3
+top_builddir = ../..
+am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
+INSTALL = /usr/bin/install -c
+install_sh_DATA = $(install_sh) -c -m 644
+install_sh_PROGRAM = $(install_sh) -c
+install_sh_SCRIPT = $(install_sh) -c
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = $(program_transform_name)
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_triplet = i686-pc-cygwin
+host_triplet = i686-pc-cygwin
+target_triplet = i686-pc-cygwin
+LIBOBJDIR =
+subdir = package/windows
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
+	$(ACLOCAL_M4)
+mkinstalldirs = $(install_sh) -d
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+SOURCES =
+DIST_SOURCES =
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ACLOCAL = ${SHELL} /home/srinidhi/ifolder/missing --run aclocal-1.9
+AMDEP_FALSE = #
+AMDEP_TRUE = 
+AMTAR = ${SHELL} /home/srinidhi/ifolder/missing --run tar
+AR = ar
+ATK_CFLAGS = 
+ATK_LIBS = 
+ATK_MINIMUM_VERSION = 1.2.4
+AUTOCONF = ${SHELL} /home/srinidhi/ifolder/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/srinidhi/ifolder/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/srinidhi/ifolder/missing --run automake-1.9
+AWK = gawk
+CC = gcc
+BUILDNUM = $(shell expr `date +%G%j` - 2000000)
+CCDEPMODE = depmode=gcc3
+CDEF = -D
+CFLAGS = -MD -O2 -DNDEBUG -nologo -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=$(PACKAGE) -DVERSION=$(VERSION)
+CINC = -I
+COMMON_CLEAN_FILES = *.dbg *.exe *.dll *.pdb */*.pdb *.doc.xml */*.doc.xml *.test.xml */*.test.xml
+COMMON_DISTCLEAN_FILES = *.suo */*.suo *.csproj.user */*.csproj.user bin obj */bin */obj
+COMMON_MAINTAINER_CLEAN_FILES = Makefile.in
+COUT = -Fo
+CPP = gcc -E
+CPPFLAGS = 
+CSC = csc
+CSCFLAGS = /optimize+ /d:WINDOWS /d:DOTNET /warn:4 /d:TRACE /nologo
+CSC_EXEFLAG = /target:exe
+CSC_LIBFLAG = /target:library
+CSC_WINEXEFLAG = /target:winexe
+CXX = cl -c
+CXXCPP = cl -c -E
+CXXDEPMODE = depmode=none
+CXXFLAGS = -MD -O2 -DNDEBUG -nologo -GX -W3 -DWIN32 -D_WINDOWS -DWINDOWS -DPACKAGE=$(PACKAGE) -DVERSION=$(VERSION)
+CYGPATH_W = cygpath -w
+DARWIN_FALSE = 
+DARWIN_TRUE = #
+DBUS_SHARP_MINIMUM_VERSION = 0.35.0
+DEBUG_FALSE = 
+DEBUG_TRUE = #
+DEF = -def:
+DEFS = -DHAVE_CONFIG_H
+DEPDIR = .deps
+DEVENV_CONFIGURATION = Release
+DOCDIR = $(top_srcdir)/src/doc
+DOTNET_FALSE = #
+DOTNET_TRUE = 
+ECHO = echo
+ECHO_C = 
+ECHO_N = -n
+ECHO_T = 
+EGREP = /usr/bin/grep -E
+EMPTY = 
+EXEEXT = .exe
+F77 = 
+FFLAGS = 
+GCONFTOOL = 
+GCONF_SCHEMA_CONFIG_SOURCE = 
+GCONF_SCHEMA_FILE_DIR = 
+GCONF_SHARP2_MINIMUM_VERSION = 1.9.0
+GCONF_SHARP_CFLAGS = 
+GCONF_SHARP_LIBS = 
+GCONF_SHARP_PREFIX = 
+GMSGFMT = 
+GMSGFMT_015 = 
+GNOME_SHARP2_MINIMUM_VERSION = 1.9.5
+GNOME_SHARP_CFLAGS = 
+GNOME_SHARP_LIBS = 
+GNOME_SHARP_PREFIX = 
+GREP = /usr/bin/grep
+GSOAP_PATH = $(top_srcdir)/tools/gsoap/WIN32-2.7
+GTK20_CFLAGS = 
+GTK20_LIBS = 
+GTK20_MINIMUM_VERSION = 2.6.0
+GTK_SHARP2_MINIMUM_VERSION = 1.9.5
+GTK_SHARP_CFLAGS = 
+GTK_SHARP_LIBS = 
+GTK_SHARP_PREFIX = 
+ICON_EXT = .ico
+ICON_FLAG = /win32icon:
+IFOLDER_OS = windows
+INSTALL_DATA = ${INSTALL} -m 644
+INSTALL_EXE_OPTS = 
+INSTALL_PROGRAM = ${INSTALL}
+INSTALL_SCRIPT = ${INSTALL}
+INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
+INTLLIBS = 
+INTL_MACOSX_LIBS = 
+LD = link
+LDFLAGS = -nologo -machine:X86
+LDINC = -libpath:
+LDOUT = -out:
+LIBICONV = 
+LIBINTL = 
+LIBOBJS = 
+LIBS = kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib rpcrt4.lib ws2_32.lib imagehlp.lib
+LIBTOOL = $(SHELL) $(top_builddir)/libtool
+LINUX_FALSE = 
+LINUX_TRUE = #
+LN_S = ln -s
+LTLIBICONV = 
+LTLIBINTL = 
+LTLIBOBJS = 
+MAINT = 
+MAINTAINER_MODE_FALSE = #
+MAINTAINER_MODE_TRUE = 
+MAKEINFO = ${SHELL} /home/srinidhi/ifolder/missing --run makeinfo
+MAKE_DOC_FILE_FALSE = 
+MAKE_DOC_FILE_TRUE = #
+MONO = 
+MONO_FALSE = 
+MONO_PATH = 
+MONO_TRUE = #
+MSGFMT = 
+MSGFMT_015 = 
+MSGMERGE = 
+NDOC_CMD = 
+NDOC_FALSE = 
+NDOC_TRUE = #
+NUNIT = nunit-console.exe
+NUNIT_FLAGS =  /nologo
+NUNIT_LIBPATH = $(top_srcdir)/tools/NUnit/net/bin
+OBJEXT = o
+OBJ_EXT = .obj
+PACKAGE = ifolder3
+PACKAGE_BUGREPORT = 
+PACKAGE_NAME = 
+PACKAGE_STRING = 
+PACKAGE_TARNAME = 
+PACKAGE_VERSION = 
+PATH_SEPARATOR = :
+PKG_CONFIG = /usr/bin/pkg-config
+PKG_CONFIG_CONFLICTS = 
+PKG_CONFIG_LIBS = /r:Novell.iFolder.dll /r:TrayIcon.dll
+PKG_CONFIG_PATH = /opt/novell/ifolder3//./pkgconfig
+PKG_CONFIG_REQUIRES = simias >= 1.0
+POSUB = 
+RANLIB = ranlib
+RC = rc
+RCFLAGS = 
+REPORT_DIR = $(shell cygpath --windows $(DESTDIR)$(bindir) | sed s,\\\\,/,g)
+REPORT_EXE = $(top_srcdir)/tools/Report/Report.exe
+RESG = resgen
+RES_EXT = .res
+SED = /usr/bin/sed
+SEP = $(EMPTY)\\$(EMPTY)
+SET_MAKE = 
+SHARED_LIB_FLAG = -dll
+SHELL = /bin/sh
+SIMIASVER = 1.5.$(BUILDNUM).1
+SIMIAS_CFLAGS =  
+SIMIAS_CLIENT_CFLAGS =  
+SIMIAS_CLIENT_C_CFLAGS = -I/opt/novell/ifolder3//include/simias  
+SIMIAS_CLIENT_C_INCLUDES = 
+SIMIAS_CLIENT_C_LIBS = -Wl,-rpath,/opt/novell/ifolder3/ /opt/novell/ifolder3//libsimias-manager.a -L/opt/novell/ifolder3/ -lsimias -lsimias-event  
+SIMIAS_CLIENT_LIBS = /lib:C:/cygwin/opt/novell/ifolder3/web/bin /r:SimiasClient.dll
+SIMIAS_LIBS = /lib:C:/cygwin/opt/novell/ifolder3/web/bin /r:SimiasLib.dll
+SPACE = $(EMPTY) $(EMPTY)
+SRCDIR = $(top_srcdir)/src
+STRIP = strip
+SYSTEM_XML = System.XML.dll
+TLBX = tlbexp
+TOOLDIR = $(top_srcdir)/tools
+USE_NLS = 
+VERSION = 3.8.0.$(BUILDNUM)
+WINDOWS_FALSE = #
+WINDOWS_TRUE = 
+XGETTEXT = 
+XGETTEXT_015 = 
+ac_ct_CC = gcc
+ac_ct_CXX = 
+ac_ct_F77 = 
+am__fastdepCC_FALSE = #
+am__fastdepCC_TRUE = 
+am__fastdepCXX_FALSE = 
+am__fastdepCXX_TRUE = #
+am__include = include
+am__leading_dot = .
+am__quote = 
+am__tar = ${AMTAR} chof - "$$tardir"
+am__untar = ${AMTAR} xf -
+bindir = ${exec_prefix}
+build = i686-pc-cygwin
+build_alias = 
+build_cpu = i686
+build_os = cygwin
+build_vendor = pc
+casadir = /usr/lib
+datadir = ${datarootdir}
+datarootdir = ${prefix}/share
+docdir = ${datarootdir}/doc/${PACKAGE}
+dvidir = ${docdir}
+exec_prefix = /opt/novell/ifolder3/
+helpdir = ${prefix}/help
+host = i686-pc-cygwin
+host_alias = 
+host_cpu = i686
+host_os = cygwin
+host_vendor = pc
+htmldir = ${docdir}
+includedir = ${prefix}/include
+infodir = ${datarootdir}/info
+install_sh = /home/srinidhi/ifolder/install-sh
+libdir = ${exec_prefix}
+libexecdir = ${exec_prefix}
+localedir = ${datarootdir}/locale
+localstatedir = ${prefix}/var
+mandir = ${datarootdir}/man
+mkdir_p = mkdir -p --
+oldincludedir = /usr/include
+pdfdir = ${docdir}
+prefix = /opt/novell/ifolder3/
+program_transform_name = s,x,x,
+psdir = ${docdir}
+sbindir = ${exec_prefix}
+sharedstatedir = ${prefix}/com
+sysconfdir = ${prefix}/etc
+target = i686-pc-cygwin
+target_alias = 
+target_cpu = i686
+target_os = cygwin
+target_vendor = pc
+webbindir = ${webdir}/bin
+webdir = ${libexecdir}/web
+
+EXTRA_DIST = $(srcdir)/ifolder-msi.ism $(srcdir)/ifolder-msm.ism $(srcdir)/ifolder-sdk-msm.ism
+
+CUR_DIR := $(shell pwd)
+
+OUT_DIR := $(shell cygpath --windows $(CUR_DIR))
+MERGE_MODULES_WIN  := $(shell cygpath --windows "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules,C:\Program Files\Common Files\Merge Modules")
+MERGE_MODULES_UNIX := $(shell cygpath --unix "$(USERPROFILE)\My Documents\My InstallShield DevStudio Projects\MergeModules,C:\Program Files\Common Files\Merge Modules")
+PREREQUISITES_WIN  := $(shell cygpath --windows "$(PROGRAMFILES)\Macrovision\IS12\SetupPrerequisites")
+PREREQUISITES_UNIX := $(shell cygpath --unix "$(PROGRAMFILES)\Macrovision\IS12\SetupPrerequisites")
+ISSABLD_DIR := $(shell cygpath --windows `dirname "$(ISSABLD)"`)
+REGASM_DIR1 := $(shell cygpath --unix $$FRAMEWORKDIR/v2.0*)
+REGASM_DIR2 := $(shell ls -d $(REGASM_DIR1))
+REGASM_DIR := $(shell cygpath --windows $(REGASM_DIR2))
+
+RELEASE = 1
+
+#DEBUG_OPTION = --enable-debug
+#MSI_FILE     = $(PACKAGE)_debug-$(VERSION)-$(RELEASE)-setup.exe
+#MSM_FILE     = $(PACKAGE)_debug-$(VERSION)-$(RELEASE).msm
+#SDK_MSM_FILE = $(PACKAGE)_debug-sdk-$(VERSION)-$(RELEASE).msm
+MSI_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE)-x64-setup.exe
+MSM_FILE     = $(PACKAGE)-$(VERSION)-$(RELEASE).msm
+SDK_MSM_FILE = $(PACKAGE)-sdk-$(VERSION)-$(RELEASE).msm
+
+MSI = ifolder-msi-x64
+MSM = ifolder-msm
+SDK_MSM = ifolder-sdk-msm
+
+MSI_LOG_FILE     = issabld-$(MSI)-x64.log
+MSM_LOG_FILE     = issabld-$(MSM).log
+SDK_MSM_LOG_FILE = issabld-$(SDK_MSM)-msm.log
+BLD_VER_LOG_FILE = bldver.log
+
+ISSABLD_CONFIG  = web
+ISSABLD_RELEASE = release
+
+DISK1         = $(ISSABLD_CONFIG)/$(ISSABLD_RELEASE)/DiskImages/DISK1
+MSI_DISK1     = $(MSI)/$(DISK1)/setup.exe
+MSM_DISK1     = $(MSM)/$(DISK1)/$(subst -,_,ifolder).msm
+SDK_MSM_DISK1 = $(SDK_MSM)/$(DISK1)/$(subst -,_,ifolder)_sdk.msm
+
+all: $(MSI_FILE)
+
+$(MSI_FILE): issabld $(PACKAGE)-install $(MSI).ism
+	@rm -f $@ "$(MSI_DISK1)" "$(MSI_LOG_FILE)"
+	mkdir -p "$(PREREQUISITES_UNIX)";
+	mkdir -p "$(ISSABLD_DIR)\SetupPrerequisites";
+	cp -f SimiasSetupPrerequisite.prq "$(PREREQUISITES_UNIX)";
+	cp -f SimiasSetupPrerequisite.prq "$(ISSABLD_DIR)\SetupPrerequisites";
+
+	@CMD='"$(ISSABLD)" -t "$(REGASM_DIR)" -p "$(MSI).ism" -o "$(ISSABLD_DIR),$(MERGE_MODULES_WIN)"'; \
+		echo $$CMD; \
+		eval $$CMD > "$(MSI_LOG_FILE)" 2>&1; \
+		if test -f "$(MSI_DISK1)"; then \
+			ln "$(MSI_DISK1)" $@; \
+		else \
+			cat "$(MSI_LOG_FILE)"; \
+			echo FAILED; exit 1; \
+		fi
+	@test "x" = "x$(INSTALL_PKGS)" || \
+		CMD='cp -f $@ "$(INSTALL_PKGS)"'; \
+		echo $$CMD; \
+		eval $$CMD
+        
+
+
+$(MSM_FILE): issabld $(PACKAGE)-install $(MSM).ism
+	@rm -f $@ "$(MSM_DISK1)" "$(MSM_LOG_FILE)"
+	@CMD='"$(ISSABLD)" -p "$(MSM).ism"'; \
+		echo $$CMD; \
+		eval $$CMD > "$(MSM_LOG_FILE)" 2>&1; \
+		if test -f "$(MSM_DISK1)"; then \
+			ln "$(MSM_DISK1)" $@; \
+		else \
+			cat "$(MSM_LOG_FILE)"; \
+			echo FAILED; exit 1; \
+		fi
+	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
+		CMD='cp -f "$(MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
+		echo $$CMD; \
+		eval $$CMD
+
+$(SDK_MSM_FILE): issabld $(PACKAGE)-doc $(SDK_MSM).ism
+	@rm -f $@ "$(SDK_MSM_DISK1)" "$(SDK_MSM_LOG_FILE)"
+	@CMD='"$(ISSABLD)" -p "$(SDK_MSM).ism"'; \
+		echo $$CMD; \
+		eval $$CMD > "$(SDK_MSM_LOG_FILE)" 2>&1; \
+		if test -f "$(SDK_MSM_DISK1)"; then \
+			ln "$(SDK_MSM_DISK1)" $@; \
+		else \
+			cat "$(MSM_LOG_FILE)"; \
+			echo FAILED; \
+		fi
+	@mkdir -p "$(MERGE_MODULES_UNIX)"; \
+		CMD='cp -f "$(SDK_MSM_DISK1)" "$(MERGE_MODULES_UNIX)"'; \
+		echo $$CMD; \
+		eval $$CMD
+
+.PHONY: issabld $(PACKAGE)-install $(PACKAGE) $(PACKAGE)-configure $(PACKAGE)-dist $(PACKAGE)-doc
+
+issabld:
+	@if test -z "$(ISSABLD)"; then \
+		echo ""; \
+		echo "ERROR: environment variable ISSABLD is not set"; \
+		echo ""; \
+		echo "NOTE:  InstallShield is used to build MSI/MSM packages."; \
+		echo "       Set ISSABLD to location of IsSABld.exe."; \
+		echo ""; \
+		exit 1; \
+	fi
+	
+$(PACKAGE)-install: $(PACKAGE)
+	rm -rf MSI
+	mkdir MSI
+	mkdir -p MSI/INSTALL
+	cp -r /cygdrive/c/iFolder_Stage/* MSI/INSTALL
+	
+$(PACKAGE)-doc: $(PACKAGE)
+	$(MAKE) -C $(top_srcdir)/doc all
+	
+clean-local:
+	rm -rf $(COMMON_CLEAN_FILES)
+	rm -rf *-setup.exe *.msi *.msm *.log
+	rm -rf MSI $(MSI) $(MSM) $(SDK_MSM)
+
+distclean-local:
+	rm -rf $(COMMON_DISTCLEAN_FILES) ifolder.spec
+
+maintainer-clean-local:
+	rm -rf $(COMMON_MAINTAINER_CLEAN_FILES)

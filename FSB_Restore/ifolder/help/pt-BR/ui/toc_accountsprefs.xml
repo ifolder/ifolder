@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="accountsprefs">
+ <title>Gerenciando as contas e preferências do iFolder</title>
+ <entry leaf="true" id="startclient">Iniciando o cliente iFolder</entry>
+ <entry leaf="true" id="accounts">Configurando uma conta do iFolder</entry>
+ <entry leaf="true" id="login">Efetuando login em uma conta do iFolder</entry>
+ <entry leaf="true" id="accountdetails">Visualizando e modificando configurações da conta do iFolder</entry>
+ <entry leaf="true" id="preferences">Configurando as preferências do iFolder para o cliente</entry>
+ <entry leaf="true" id="firewall">Configurando as definições de firewall local para o tráfego do iFolder</entry>
+ <entry leaf="true" id="virusscan">Configurando as definições do programa de varredura de vírus local para o tráfego do iFolder</entry>
+ <entry leaf="true" id="delacct">Apagando uma conta do iFolder</entry>
+ <entry leaf="true" id="logout">Efetuando logout de uma conta do iFolder</entry>
+ <entry leaf="true" id="stopclient">Saindo do cliente iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">O que acontece em seguida</entry>
+</tocsection>

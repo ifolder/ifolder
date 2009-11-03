@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="accountsprefs">
+ <title>Správa účtů a předvoleb aplikace iFolder</title>
+ <entry leaf="true" id="startclient">Spuštění klienta iFolder</entry>
+ <entry leaf="true" id="accounts">Konfigurování účtu iFolder</entry>
+ <entry leaf="true" id="login">Přihlášení k účtu iFolder</entry>
+ <entry leaf="true" id="accountdetails">Zobrazení a modifikování nastavení účtu klienta iFolder</entry>
+ <entry leaf="true" id="preferences">Konfigurování předvoleb aplikace iFolder pro klienta</entry>
+ <entry leaf="true" id="firewall">Konfigurování nastavení místní brány firewall pro provoz aplikace iFolder</entry>
+ <entry leaf="true" id="virusscan">Konfigurování nastavení místního antivirového programu pro provoz aplikace iFolder</entry>
+ <entry leaf="true" id="delacct">Odstranění účtů aplikace iFolder</entry>
+ <entry leaf="true" id="logout">Odhlášení od účtu iFolder</entry>
+ <entry leaf="true" id="stopclient">Ukončení klienta iFolder</entry>
+ <entry leaf="true" id="b9lvmk9">Co dále</entry>
+</tocsection>

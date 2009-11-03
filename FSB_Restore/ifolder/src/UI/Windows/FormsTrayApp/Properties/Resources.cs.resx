@@ -1,0 +1,675 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="mergeDescription" xml:space="preserve">
+    <value>Sloučit "{0}" do ...</value>
+  </data>
+  <data name="deleteiFolder" xml:space="preserve">
+    <value>Tímto odstraníte složku iFolder a její soubory ze serveru. Opravdu chcete odebrat složku "{0}" ze serveru?</value>
+  </data>
+  <data name="iFolderRevertError" xml:space="preserve">
+    <value>Při vracení složky iFolder do původního stavu došlo k chybě.</value>
+  </data>
+  <data name="enterPassphrasePageName" xml:space="preserve">
+    <value>enterPassphrasePage</value>
+  </data>
+  <data name="viewAvailableiFolders" xml:space="preserve">
+    <value>Zobrazit dostupné složky iFolder</value>
+  </data>
+  <data name="syncComplete" xml:space="preserve">
+    <value>Spuštěná synchronizace: {0}</value>
+  </data>
+  <data name="WaitConnect" xml:space="preserve">
+    <value>Čekání na připojení</value>
+  </data>
+  <data name="singleWizPageFirst" xml:space="preserve">
+    <value>Heslo se obnovuje pomocí tajného souboru a jeho hesla.</value>
+  </data>
+  <data name="cannotShareMessage" xml:space="preserve">
+    <value>Zašifrovanou složku iFolder nelze sdílet. Sdílet lze pouze běžné složky.</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Nenastaveno</value>
+  </data>
+  <data name="freeSpaceUnits" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="infoPageName" xml:space="preserve">
+    <value>InfoPage</value>
+  </data>
+  <data name="deleteClientDir" xml:space="preserve">
+    <value>Odstraňování adresáře: {0}</value>
+  </data>
+  <data name="unableToExportMesg" xml:space="preserve">
+    <value>Nelze získat starý datový soubor. Opakujte akci.</value>
+  </data>
+  <data name="synciFolder" xml:space="preserve">
+    <value>Spuštěná synchronizace: {0}</value>
+  </data>
+  <data name="confirmPassphrase" xml:space="preserve">
+    <value>&amp;Potvrzení hesla:</value>
+  </data>
+  <data name="diskSpaceUsed" xml:space="preserve">
+    <value>Využité místo na disku</value>
+  </data>
+  <data name="domainSelectionPageTitle" xml:space="preserve">
+    <value>Vybrat účet</value>
+  </data>
+  <data name="exportPageName" xml:space="preserve">
+    <value>ExportPage</value>
+  </data>
+  <data name="notApplicable" xml:space="preserve">
+    <value>Není k dispozici</value>
+  </data>
+  <data name="iFolderError" xml:space="preserve">
+    <value>Při čtení složek iFolder došlo k chybě.</value>
+  </data>
+  <data name="userNameText" xml:space="preserve">
+    <value>Uživatelské jméno:</value>
+  </data>
+  <data name="doneCheckingForiFolders" xml:space="preserve">
+    <value>Dokončeno zjišťování nových složek iFolder</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Podrobnosti</value>
+  </data>
+  <data name="exportPageTitle" xml:space="preserve">
+    <value>Získat starý datový soubor</value>
+  </data>
+  <data name="networkPath" xml:space="preserve">
+    <value>Vybrané umístění se nachází v síti nebo na jiném než fyzickém disku. Složky iFolder musí být umístěny na fyzickém disku. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="exportPageFirst" xml:space="preserve">
+    <value>Získá zašifrovaný soubor klíče ze serveru a uloží jej místně.</value>
+  </data>
+  <data name="localDir" xml:space="preserve">
+    <value>Nalezena změna v adresáři: {0}</value>
+  </data>
+  <data name="deleteAction" xml:space="preserve">
+    <value>&amp;amp:Odstranit</value>
+  </data>
+  <data name="RemoveMembershipTitle" xml:space="preserve">
+    <value>Odebrat členství z {0}</value>
+  </data>
+  <data name="exportPageRA" xml:space="preserve">
+    <value>&amp;Agent pro obnovení :</value>
+  </data>
+  <data name="declineError" xml:space="preserve">
+    <value>Při odebírání složky iFolder došlo k chybě.</value>
+  </data>
+  <data name="passwordText" xml:space="preserve">
+    <value>&amp;Heslo:</value>
+  </data>
+  <data name="statusUnknown" xml:space="preserve">
+    <value>Neznámý</value>
+  </data>
+  <data name="filesnFolders" xml:space="preserve">
+    <value>Soubory/složky k synchronizaci</value>
+  </data>
+  <data name="importPageOTP" xml:space="preserve">
+    <value>&amp;Jednorázové heslo : </value>
+  </data>
+  <data name="statusSyncFailure" xml:space="preserve">
+    <value>Nedokončená synchronizace</value>
+  </data>
+  <data name="singleWizPasswd" xml:space="preserve">
+    <value>&amp;Heslo tajného souboru:</value>
+  </data>
+  <data name="emailAddress" xml:space="preserve">
+    <value>E-mailová adresa:</value>
+  </data>
+  <data name="logEntriesCleared" xml:space="preserve">
+    <value>Položky protokolu byly vymazány.</value>
+  </data>
+  <data name="wizardText" xml:space="preserve">
+    <value>Průvodce obnovením hesla</value>
+  </data>
+  <data name="wizardName" xml:space="preserve">
+    <value>passphraseRecoveryWizard</value>
+  </data>
+  <data name="infoPageTitle" xml:space="preserve">
+    <value>Vítá vás průvodce obnovením hesla</value>
+  </data>
+  <data name="pathInStoreError" xml:space="preserve">
+    <value>Zvolené umístění je uvnitř datové složky iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="deleteClientFile" xml:space="preserve">
+    <value>Odstraňování souboru:{0}</value>
+  </data>
+  <data name="infoPageFirst" xml:space="preserve">
+    <value>Chcete-li obnovit ztracené heslo, potřebujete tajný soubor (soukromý klíč certifikátu) a heslo k němu, nebo datový soubor od správce.</value>
+  </data>
+  <data name="localFile" xml:space="preserve">
+    <value>Nalezené změny v souboru: {0}</value>
+  </data>
+  <data name="localSync" xml:space="preserve">
+    <value>Kontrola změn: {0}</value>
+  </data>
+  <data name="diskQuota" xml:space="preserve">
+    <value>Disková kvóta</value>
+  </data>
+  <data name="selectionPageSecond" xml:space="preserve">
+    <value>Mám &amp;tajný soubor a heslo k němu</value>
+  </data>
+  <data name="openErrorTitle" xml:space="preserve">
+    <value>Chyba otevření složky iFolder</value>
+  </data>
+  <data name="FolderDoesNotExistErrorDesc" xml:space="preserve">
+    <value>Složku iFolder lze sloučit pouze se složkou se stejným názvem. Vyberte složku se stejným názvem, jako má složka iFolder, a opakujte akci.</value>
+  </data>
+  <data name="iFolderErrorTitle" xml:space="preserve">
+    <value>Nelze přečíst složky iFolder</value>
+  </data>
+  <data name="PathDoesNotExist" xml:space="preserve">
+    <value> obsahují složku se stejným názvem jako složka iFolder.</value>
+  </data>
+  <data name="deleteUnknown" xml:space="preserve">
+    <value>Odstraňování na serveru: {0}</value>
+  </data>
+  <data name="importErrorMesg" xml:space="preserve">
+    <value>Heslo nelze obnovit. Opakujte akci.</value>
+  </data>
+  <data name="finishText" xml:space="preserve">
+    <value>Dokončit</value>
+  </data>
+  <data name="lastSyncTime" xml:space="preserve">
+    <value>Čas poslední synchronizace</value>
+  </data>
+  <data name="showiFolders" xml:space="preserve">
+    <value>Skrýt dostupné složky iFolder</value>
+  </data>
+  <data name="availablefordownload" xml:space="preserve">
+    <value>Dostupné pro stažení</value>
+  </data>
+  <data name="iFolderOpenError" xml:space="preserve">
+    <value>Nelze otevřít složku iFolder {0}.</value>
+  </data>
+  <data name="helpText" xml:space="preserve">
+    <value>Nápověda</value>
+  </data>
+  <data name="WaitSync" xml:space="preserve">
+    <value>Čekání na synchronizaci</value>
+  </data>
+  <data name="encryptionNotSetHeading" xml:space="preserve">
+    <value>Účet není zašifrovaný.</value>
+  </data>
+  <data name="oldDataFileNotSend" xml:space="preserve">
+    <value>Nelze odeslat starý datový soubor</value>
+  </data>
+  <data name="singleWizPageName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="availableQuota" xml:space="preserve">
+    <value>Dostupné</value>
+  </data>
+  <data name="RemoveMembershipMesg" xml:space="preserve">
+    <value>Tímto dojde k odebrání členství ze složky iFolder a odebrání složky iFolder ze seznamu. </value>
+  </data>
+  <data name="importPageEncryCheck" xml:space="preserve">
+    <value>Je výše uvedený soubor z&amp;ašifrován?</value>
+  </data>
+  <data name="syncingDir" xml:space="preserve">
+    <value>Synchronizace adresáře: {0}</value>
+  </data>
+  <data name="selectionPageOne" xml:space="preserve">
+    <value>Vyberte možnost pro obnovení vašeho hesla.</value>
+  </data>
+  <data name="noPassphrase" xml:space="preserve">
+    <value>Heslo není zadáno.</value>
+  </data>
+  <data name="exitMessage" xml:space="preserve">
+    <value>Pokud ukončíte aplikaci Novell iFolder, změny ve vaší složce iFolder nebudou nadále sledovány. Až se příště přihlásíte, aplikace Novell iFolder vyrovná případné rozdíly mezi vaší složkou iFolder a serverem.</value>
+  </data>
+  <data name="encrypted" xml:space="preserve">
+    <value>Zašifrováno</value>
+  </data>
+  <data name="setNewPassphraseTitle" xml:space="preserve">
+    <value>Nastavit nové heslo</value>
+  </data>
+  <data name="statusSyncingItems" xml:space="preserve">
+    <value>{0} položek k synchronizaci</value>
+  </data>
+  <data name="revertErrorTitle" xml:space="preserve">
+    <value>Chyba vrácení složky iFolder do původního stavu</value>
+  </data>
+  <data name="authenticateError" xml:space="preserve">
+    <value>Ověření se nezdařilo.</value>
+  </data>
+  <data name="secretPathInvalid" xml:space="preserve">
+    <value>Umístění tajného souboru je neplatné.</value>
+  </data>
+  <data name="acceptDescription" xml:space="preserve">
+    <value>Stáhnout "{0}" do ...</value>
+  </data>
+  <data name="iFolderAcc" xml:space="preserve">
+    <value>&amp;Účet iFolder :</value>
+  </data>
+  <data name="autoSync" xml:space="preserve">
+    <value>Automatická synchronizace</value>
+  </data>
+  <data name="verifyText" xml:space="preserve">
+    <value>Ověřit</value>
+  </data>
+  <data name="checkingForiFolders" xml:space="preserve">
+    <value>Zjišťování nových složek iFolder...</value>
+  </data>
+  <data name="downloadDir" xml:space="preserve">
+    <value>Stahování adresáře: {0}</value>
+  </data>
+  <data name="syncErrorTitle" xml:space="preserve">
+    <value>Chyba synchronizace složky iFolder</value>
+  </data>
+  <data name="pathInvalidErrorTitle" xml:space="preserve">
+    <value>Neplatné umístění</value>
+  </data>
+  <data name="domainSelectionFirst" xml:space="preserve">
+    <value>Vyberte účet, pro který je nutné obnovit heslo.</value>
+  </data>
+  <data name="browseText" xml:space="preserve">
+    <value>Procházet</value>
+  </data>
+  <data name="b" xml:space="preserve">
+    <value>Bajty</value>
+  </data>
+  <data name="cancelText" xml:space="preserve">
+    <value>Storno</value>
+  </data>
+  <data name="statusConflicts" xml:space="preserve">
+    <value>Má konflikty</value>
+  </data>
+  <data name="gb" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="mb" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="na" xml:space="preserve">
+    <value>Není k dispozici</value>
+  </data>
+  <data name="kb" xml:space="preserve">
+    <value>kB</value>
+  </data>
+  <data name="pathIncludesWinDirError" xml:space="preserve">
+    <value>Zvolené umístění zahrnuje složku Windows. Složka Windows nemůže obsahovat složku iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="singleWizP12File" xml:space="preserve">
+    <value>&amp;Umístění tajného souboru: </value>
+  </data>
+  <data name="selectionPageTitle" xml:space="preserve">
+    <value>Zvolte krok obnovení hesla</value>
+  </data>
+  <data name="selectionPageThird" xml:space="preserve">
+    <value>Mám nový &amp;datový soubor odeslaný správcem.</value>
+  </data>
+  <data name="acceptError" xml:space="preserve">
+    <value>Při pokusu o stažení složky iFolder došlo k výjimce.</value>
+  </data>
+  <data name="usedQuota" xml:space="preserve">
+    <value>Použité</value>
+  </data>
+  <data name="nextText" xml:space="preserve">
+    <value>&amp;Další</value>
+  </data>
+  <data name="emailPageTitle" xml:space="preserve">
+    <value>Starý datový soubor byl úspěšně odeslán. </value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Připojit</value>
+  </data>
+  <data name="owner" xml:space="preserve">
+    <value>Vlastník</value>
+  </data>
+  <data name="passphraseNotSet" xml:space="preserve">
+    <value>Pro tento účet není nastaveno heslo.</value>
+  </data>
+  <data name="emailPageFirst" xml:space="preserve">
+    <value>Zašifrovaný soubor klíče byl úspěšně exportován.</value>
+  </data>
+  <data name="emailPageName" xml:space="preserve">
+    <value>EmailPage</value>
+  </data>
+  <data name="finalPageTitle" xml:space="preserve">
+    <value>Heslo bylo úspěšně obnoveno.</value>
+  </data>
+  <data name="removeTitle" xml:space="preserve">
+    <value>Odstranit složku iFolder</value>
+  </data>
+  <data name="finalPageFirst" xml:space="preserve">
+    <value>Gratulujeme!! Úspěšně jste obnovili heslo. Nyní můžete pro přístup ke svým datům používat nové heslo.</value>
+  </data>
+  <data name="backText" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
+    <value>Složka neexistuje.</value>
+  </data>
+  <data name="finalPageName" xml:space="preserve">
+    <value>finalPage</value>
+  </data>
+  <data name="uploadDir" xml:space="preserve">
+    <value>Nahrávání adresáře: {0}</value>
+  </data>
+  <data name="noifolder" xml:space="preserve">
+    <value>Počet složek iFolder</value>
+  </data>
+  <data name="statusSyncItemsFailed" xml:space="preserve">
+    <value>Nesynchronizovaných položek: {0}</value>
+  </data>
+  <data name="RemoveMyMembership" xml:space="preserve">
+    <value>Odebrat moje členství</value>
+  </data>
+  <data name="diskSpaceAvailable" xml:space="preserve">
+    <value>Dostupné místo na disku</value>
+  </data>
+  <data name="disconnected" xml:space="preserve">
+    <value>Server nedostupný</value>
+  </data>
+  <data name="accessDenied" xml:space="preserve">
+    <value>Nemáte dostatečný přístup k vybranému umístění. Složku iFolder lze vytvořit pouze ve složce, u které máte oprávnění ke čtení i k zápisu souborů. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="cannotShareTitle" xml:space="preserve">
+    <value>Složku iFolder nelze sdílet</value>
+  </data>
+  <data name="uploadFile" xml:space="preserve">
+    <value>Nahrávání souboru: {0}</value>
+  </data>
+  <data name="encryptionNotSet" xml:space="preserve">
+    <value>Šifrování není pro tento účet zapnuto. Požádejte správce systému o zapnutí šifrování.</value>
+  </data>
+  <data name="thumbnails" xml:space="preserve">
+    <value>Miniatury</value>
+  </data>
+  <data name="syncingFile" xml:space="preserve">
+    <value>Synchronizace souboru: {0}</value>
+  </data>
+  <data name="Folderexists" xml:space="preserve">
+    <value>Složka s tímto názvem již existuje.</value>
+  </data>
+  <data name="passphraseNotEqualError" xml:space="preserve">
+    <value>Hodnoty v polích pro nové heslo a pro potvrzení hesla se neshodují.</value>
+  </data>
+  <data name="errorTitle" xml:space="preserve">
+    <value>Chyba složky iFolder</value>
+  </data>
+  <data name="syncError" xml:space="preserve">
+    <value>Během synchronizace složky iFolder došlo k chybě.</value>
+  </data>
+  <data name="menuActionRemove" xml:space="preserve">
+    <value>Odstranit ze serveru</value>
+  </data>
+  <data name="pathIniFolderError" xml:space="preserve">
+    <value>Vybrané umístění je uvnitř jiné složky iFolder. Složky iFolder nemohou existovat uvnitř ostatních složek iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="AlsoRemoveMembership" xml:space="preserve">
+    <value>Odebrat rovněž moje členství</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Odstranit</value>
+  </data>
+  <data name="resetPassphraseError" xml:space="preserve">
+    <value>Obnovení hesla se nezdařilo.</value>
+  </data>
+  <data name="emailPageSecond" xml:space="preserve">
+    <value>Odešlete tento soubor správci, který soubor klíče dešifruje a odešle vám jej zpět. Pomocí dešifrovaného souboru klíče potom můžete obnovit své heslo pomocí druhé možnosti v průvodci.</value>
+  </data>
+  <data name="oldDataFileError" xml:space="preserve">
+    <value>Zadejte umístění souboru XML.</value>
+  </data>
+  <data name="pathExistsError" xml:space="preserve">
+    <value>Vybrané umístění již obsahuje složku se stejným názvem jako tato složka iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="importPageFilePathOne" xml:space="preserve">
+    <value>&amp;Umístění nového datového souboru</value>
+  </data>
+  <data name="access" xml:space="preserve">
+    <value>Přístup</value>
+  </data>
+  <data name="exportPageFilePath" xml:space="preserve">
+    <value>&amp;Umístění pro uložení starého datového souboru:</value>
+  </data>
+  <data name="regular" xml:space="preserve">
+    <value>Běžný</value>
+  </data>
+  <data name="successPageName" xml:space="preserve">
+    <value>SuccessPage</value>
+  </data>
+  <data name="logoff" xml:space="preserve">
+    <value>Odpojit</value>
+  </data>
+  <data name="selectionPageFive" xml:space="preserve">
+    <value>Průvodce lze v libovolném kroku ukončit a později se na této stránce ke zbývajícím krokům vrátit.         </value>
+  </data>
+  <data name="selectionPageFour" xml:space="preserve">
+    <value>&amp;Nemám žádný tajný soubor ani datový soubor.</value>
+  </data>
+  <data name="selectionPageName" xml:space="preserve">
+    <value>SelectionPage</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Neomezeno</value>
+  </data>
+  <data name="loginError" xml:space="preserve">
+    <value>Nelze provést ověření pro doménu. Byli jste odhlášeni z účtu. Přihlaste se a opakujte akci.</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>storno</value>
+  </data>
+  <data name="PathIncludesProgFilesDirError" xml:space="preserve">
+    <value>Vybrané umístění zahrnuje složku Program Files. Složka Program Files nemůže obsahovat složku iFolder. Vyberte jiné umístění a opakujte akci.</value>
+  </data>
+  <data name="passphraseNotSetHeading" xml:space="preserve">
+    <value>Heslo není nastaveno.</value>
+  </data>
+  <data name="importPageName" xml:space="preserve">
+    <value>ImportPage</value>
+  </data>
+  <data name="recoveryError" xml:space="preserve">
+    <value>Heslo nelze obnovit. Byli jste odhlášeni z účtu. Přihlaste se a opakujte akci.</value>
+  </data>
+  <data name="newDataFileError" xml:space="preserve">
+    <value>Umístění nového datového souboru je neplatné.</value>
+  </data>
+  <data name="exitTitle" xml:space="preserve">
+    <value>Ukončit aplikaci</value>
+  </data>
+  <data name="logEntriesCleared1" xml:space="preserve">
+    <value>Položky protokolu byly vymazány.</value>
+  </data>
+  <data name="infoPageSecond" xml:space="preserve">
+    <value>Pokud tyto parametry nemáte, můžete pomocí tohoto průvodce exportovat starý datový soubor a poslat jej správci. Správce soubor dešifruje a odešle vám jej zpět. Pomocí tohoto nového datového souboru pak můžete obnovit své heslo.</value>
+  </data>
+  <data name="preSync" xml:space="preserve">
+    <value>Kontrola změn</value>
+  </data>
+  <data name="domainSelectionPageSecond" xml:space="preserve">
+    <value>Pokračujte klepnutím na tlačítko Další.</value>
+  </data>
+  <data name="importPageFirstLine" xml:space="preserve">
+    <value>Heslo se obnovuje pomocí dešifrovaného souboru klíče.</value>
+  </data>
+  <data name="statusSyncing" xml:space="preserve">
+    <value>Synchronizace</value>
+  </data>
+  <data name="iFolderErrorTittle" xml:space="preserve">
+    <value>Nelze přečíst složky iFolder</value>
+  </data>
+  <data name="domainSelectionPageName" xml:space="preserve">
+    <value>domainSelectionPage</value>
+  </data>
+  <data name="serverDefaultRA" xml:space="preserve">
+    <value>Server_Výchozí</value>
+  </data>
+  <data name="singleAccountText" xml:space="preserve">
+    <value>Máte jeden účet. Pokračujte klepnutím na tlačítko Další.</value>
+  </data>
+  <data name="FolderDoesNotExistError" xml:space="preserve">
+    <value>Název složky a složky iFolder musí být stejný.</value>
+  </data>
+  <data name="notApplicalbeText" xml:space="preserve">
+    <value>Nelze použít</value>
+  </data>
+  <data name="availableText" xml:space="preserve">
+    <value>Dostupné</value>
+  </data>
+  <data name="OkMergeCancel" xml:space="preserve">
+    <value>Klepněte na tlačítko OK, chcete-li provést sloučení, nebo klepněte na tlačítko Storno a vyberte jiné umístění.</value>
+  </data>
+  <data name="newPassphrase" xml:space="preserve">
+    <value>&amp;Nové heslo:</value>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>zpět</value>
+  </data>
+  <data name="help" xml:space="preserve">
+    <value>nápověda</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>další</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="used" xml:space="preserve">
+    <value>použité</value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>Uživatel</value>
+  </data>
+  <data name="downloadFile" xml:space="preserve">
+    <value>Stahování souboru: {0}</value>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Odebrat</value>
+  </data>
+  <data name="syncErrorTittle" xml:space="preserve">
+    <value>Chyba synchronizace složky iFolder</value>
+  </data>
+  <data name="singleWizName" xml:space="preserve">
+    <value>SingleWizPage</value>
+  </data>
+  <data name="statusSynced" xml:space="preserve">
+    <value>Synchronizováno: {0}</value>
+  </data>
+</root>

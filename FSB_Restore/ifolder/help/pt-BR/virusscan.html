@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="pt-br" lang="pt-br">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="pt-br" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:53" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Configurando as definições do programa de varredura de vírus local para o tráfego do iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "virusscan";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Índice' title='Índice' />Índice</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
+
+
+<div class="sect1" id="virusscan">
+
+<h1 class="title"> Configurando as definições do programa de varredura de vírus local para o tráfego do iFolder</h1>
+
+<p class="para">Se você usar o software de varredura de vírus no seu computador, exclua o diretório <span class="filename">..\simias\WorkArea\</span> da verredura. Por exemplo, a localização do diretório <span class="filename">..\simias\WorkArea\</span> no Windows é <span class="filename">c:\documents and settings\<span class="replaceable">nomedeusuario</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
+<p class="para">O diretório <span class="filename">..\simias\WorkArea\</span> é o local onde o iFolder disponibiliza os arquivos para download no servidor. Se um arquivo do iFolder tiver um vírus anexado e o software de varredura de vírus detectar esse vírus enquanto o arquivo estiver no diretório <span class="filename">..\simias\WorkArea</span>, esse software exibirá uma mensagem indicando que um vírus foi encontrado e moverá o arquivo para quarentena. Em seguida, o iFolder tentará sincronizar o arquivo novamente. </p>
+<p class="para">Se a área de trabalho não for explorada, a sincronização poderá ser concluída. O arquivo infectado será transferido por download e movido para a pasta local do iFolder. O programa de varredura de vírus detecta o arquivo infectado no iFolder e o move desta pasta para a quarentena, protegendo o computador da infecção. O iFolder detecta que o arquivo foi apagado e quando a próxima sincronização começar, o iFolder removerá o arquivo do servidor e dos computadores dos membros. </p>
+<p class="para">Porém, se o iFolder para onde é realizado o download de um arquivo for Apenas leitura, a exclusão local não será forçada para o servidor e para os computadores dos outros membros. O vírus deve ser detectado nas outras partes onde as permissões possibilitam que as mudanças sejam sincronizadas. O programa de varredura de vírus provavelmente alertará o usuário sobre o vírus para que ele possa alertar outros membros do iFolder sobre isso.</p>
+</div>
+
+<p class="trademark"> Para obter mais informações, consulte <a href="legal.html">Informações legais</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
+
+</body>
+</html>

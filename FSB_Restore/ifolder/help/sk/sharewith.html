@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="sk" lang="sk">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="sk" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Zdieľanie priečinka iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> Zdieľanie priečinka iFolder</h1>
+
+<p class="para">Priečinok iFolder môžete zdieľať s viacerými používateľmi. Táto sekcia poskytuje informácie o nasledujúcich úlohách.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bv2hnvt">Porozumenie prístupovým právam používateľov</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b41tbcf">Prístup na kartu Zdieľanie</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwm0">Pridanie používateľa k priečinku iFolder</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwma">Úprava prístupových práv používateľov</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwmr">Odstránenie používateľa z priečinka iFolder</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b47q8t9">Prenos vlastníctva na používateľa priečinka iFolder</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bv2hnvt">
+
+<h2 class="title"> Porozumenie prístupovým právam používateľov</h2>
+
+<p class="para">Nasledujúca tabuľka popisuje možnosti priradené ku každej úrovni prístupu pre používateľov alebo skupiny LDAP. </p>
+<div class="important">
+<p class="para"><em class="title">DÔLEŽITÉ:</em>Členovia skupiny LDAP získajú práva na prístup, ktoré boli nastavené pre danú skupinu.</p></div>
+
+<div class="table" id="b4031ex">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
+<p class="para">Možnosti</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Vlastník</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Člen s právom Úplné ovládanie</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Člen s právom Čítanie/Zapisovanie</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Člen s právom Iba na čítanie</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
+<p class="para">V rámci podnikového servera je miesto využité priečinkom iFolder na serveri započítané ku kvóte používateľa</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
+<p class="para">Preniesť vlastníctvo na iného člena so stavom Používateľ priečinka iFolder </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
+<p class="para">Nastavenie kvóty pre priečinok iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
+<p class="para">Sprístupnenie priečinka iFolder iným používateľom (zdieľanie)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
+<p class="para">Zrušenie sprístupnenia priečinka iFolder iným používateľom (zastavenie zdieľania)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno, okrem vlastníka</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
+<p class="para">Priradenie prístupových práv priečinka iFolder ďalším používateľom</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno, okrem vlastníka</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
+<p class="para">Čítanie adresárov a súborov v priečinku iFolder </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
+<p class="para">Pridanie, zmena alebo odstránenie adresárov a súborov v priečinku iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
+<p class="para">Premenovanie adresárov a súborov v priečinku iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
+<p class="para">Premenovanie priečinka iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
+<p class="para">Nastavenie priečinka iFolder na viacerých počítačoch</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
+<p class="para">Zmena priečinka iFolder na normálny priečinok (nie je možné zdieľať na lokálnom počítači)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
+<p class="para">Odstránenie dostupného priečinka iFolder a odmietnutie prístupu</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
+<p class="para">Odstránenie aplikácie iFolder a odstránenie priečinka iFolder a jeho súborov zo servera (zmena na normálny priečinok a zrušenie zdieľania)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Áno</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nie</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b41tbcf">
+
+<h2 class="title"> Prístup na kartu Zdieľanie</h2>
+
+<p class="para">Členstvo pre priečinok iFolder môžete spravovať prostredníctvom karty <span class="guimenu">Zdieľanie</span> v dialógovom okne Vlastnosti priečinka iFolder.</p>
+<div class="procedure">
+<div class="important">
+<p class="para"><em class="title">DÔLEŽITÉ:</em>Priečinok iFolder môžete zdieľať iba v prípade, že správca aplikácie iFolder povolil pre vaše konto politiku zdieľania.</p></div>
+
+<ol class="steps">
+<li class="step" id="b41tmw1">
+<p class="para">Ak priečinok iFolder nie je spustený, spustite ho.</p></li>
+<li class="step" id="b41tmw2">
+<p class="para">Ak chcete otvoriť dialógové okno Vlastnosti priečinka iFolder na karte <span class="guimenu">Zdieľanie</span>, vykonajte jednu z nasledujúcich operácií.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">V správcovi súborov kliknite pravým tlačidlom na priečinok iFolder, ktorý chcete zdieľať a vyberte možnosť <span class="guimenu">Zdieľať s</span>.</p></li>
+<li class="listitem">
+<p class="listitem">V prehľadávači priečinka iFolder vyberte priečinok iFolder a vyberte možnosť <span class="guimenu">Zdieľať s</span>.</p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwm0">
+
+<h2 class="title"> Pridanie používateľa k priečinku iFolder</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b41tjp8">
+<p class="para">Na karte <span class="guimenu">Zdieľanie</span> kliknite na tlačidlo <span class="guimenu">Pridať</span> a otvorte tak dialógové okno Vybrať používateľa.</p></li>
+<li class="step" id="bv2hqlb">
+<p class="para">V zozname používateľov vyberte jedného alebo viacerých používateľov alebo skupín LDAP ich pridaním do zoznamu <span class="guimenu">Používatelia na pridanie</span>. Potom kliknite na tlačidlo <span class="guimenu">OK</span>.</p>
+<p class="para">Používateľom môže trvať niekoľko sekúnd, kým sa zosynchronizujú so serverom. Onedlho po synchronizácii sa zobrazí v pravom dolnom rohu stránky upozornenie.</p></li>
+<li class="step" id="bv2hqlc">
+<p class="para">Na karte <span class="guimenu">Zdieľanie</span> vyberte jedného alebo viac používateľov, ktorým chcete priradiť rovnaké prístupové práva. </p></li>
+<li class="step" id="b41tpyv">
+<p class="para">Kliknite na tlačidlo <span class="guimenu">Prístup</span>, vyberte prístupové právo <span class="guimenu">Úplné ovládanie</span>, <span class="guimenu">Čítanie a zápis</span> alebo <span class="guimenu">Iba na čítanie</span> a kliknite na tlačidlo <span class="guimenu">OK</span>.</p></li>
+<li class="step" id="bx3vxly">
+<p class="para">Opakujte predchádzajúce kroky, kým nepozvete všetkých používateľov alebo všetky skupiny LDAP, s ktorými chcete zdieľať priečinok iFolder a kým pre ne nenastavíte prístupové práva.</p></li>
+<li class="step" id="bv2hqld">
+<p class="para">Kliknutím na tlačidlo <span class="guimenu">Zavrieť</span> zatvorte okno Vlastnosti priečinka iFolder.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwma">
+
+<h2 class="title"> Úprava prístupových práv používateľov</h2>
+
+<p class="para">Keďže sa pracovné vzťahy a stav členov priečinka iFolder menia, budete možno musieť zmeniť prístupové právo používateľa k priečinku iFolder.  Môžete napríklad chcieť poskytnúť dôveryhodnému používateľovi právo Úplné ovládanie pre priečinok iFolder.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hncw">
+<p class="para">Na karte <span class="guimenu">Zdieľanie</span> vyberte jedného alebo viacerých používateľov, ktorým chcete poskytnúť rovnaké prístupové právo.</p></li>
+<li class="step" id="bv2hoj5">
+<p class="para">Vyberte položku <span class="guimenu">Prístup</span> a zadajte právo <span class="guimenu">Úplné ovládanie</span>, <span class="guimenu">Čítanie a zápis</span> alebo <span class="guimenu">Iba na čítanie</span>.</p>
+<p class="para">Keď pozvete používateľa alebo skupinu LDAP na pristupovanie prvýkrát, bude možnosť <span class="guimenu">Zmeniť tohto používateľa na vlastníka priečinka iFolder</span> v dialógovom okne Prístup zakázaná (šedá). Ak chcete urobiť nového používateľa vlastníkom, musíte počkať, kým sa používateľov stav nezmení z <span class="guimenu">Pozvaný používateľ</span> na <span class="guimenu">Používateľ priečinka iFolder</span>. Potom môžete preniesť vlastníctvo. Ak prenesiete vlastníctvo na skupinu LDAP, všetci členovia tejto skupiny získajú vlastnícke práva.</p></li>
+<li class="step" id="bv2hpae">
+<p class="para">Kliknite na tlačidlo <span class="guimenu">OK</span>. Potom kliknutím na tlačidlo <span class="guimenu">OK</span> zatvorte okno Vlastnosti priečinka iFolder.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwmr">
+
+<h2 class="title"> Odstránenie používateľa z priečinka iFolder</h2>
+
+<p class="para">Ak chcete zrušiť zdieľanie priečinka iFolder, budete musieť odstrániť používateľa alebo skupinu LDAP spomedzi členov priečinka iFolder. Priečinok iFolder na pracovnej stanici príslušného používateľa alebo skupiny LDAP sa zmení na normálny priečinok. Kópia údajov zostane na pracovnej stanici bývalého člena, ale súbory už nebudú synchronizované so zdieľaným priečinkom iFolder.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hug0">
+<p class="para">Na karte <span class="guimenu">Zdieľanie</span> vyberte zo zoznamu jedného alebo viacerých používateľov.</p></li>
+<li class="step" id="bv2hug1">
+<p class="para">Kliknite na tlačidlo <span class="guimenu">Odstrániť</span> a potom na tlačidlo <span class="guimenu">Áno</span>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b47q8t9">
+
+<h2 class="title"> Prenos vlastníctva na používateľa priečinka iFolder </h2>
+
+<p class="para">Vlastník priečinka iFolder môže preniesť vlastníctvo priečinka iFolder na iného člena alebo skupinu LDAP so stavom používateľ priečinka iFolder. Po prenose sa pôvodný vlastník stane členom s právom Čítanie/zapisovanie a miesto, ktoré využíva priečinok iFolder, bude započítané novému používateľovi. Ak sa stane vlastníkom priečinka iFolder skupina LDAP, všetci členovia skupiny získajú vlastnícke práva.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b47q70j">
+<p class="para">V správcovi súborov alebo v prehľadávači iFolder kliknite pravým tlačidlom na priečinok iFolder, ktorý chcete preniesť, potom vybratím možnosti <span class="guimenu">Zdieľať s</span> otvorte dialógové okno Vlastnosti priečinka iFolder na karte <span class="guimenu">Zdieľanie</span>.</p></li>
+<li class="step" id="b47q8tb">
+<p class="para">Zo zoznamu používateľov vyberte používateľa priečinka iFolder, ktorý má byť novým vlastníkom, a kliknite na položku <span class="guimenu">Prístup</span>.</p></li>
+<li class="step" id="b47q70k">
+<p class="para">Vyberte možnosť <span class="guimenu">Zmeniť tohto používateľa na vlastníka priečinka iFolder</span>.</p>
+<p class="para">Možnosť <span class="guimenu">Zmeniť tohto používateľa na vlastníka priečinka iFolder</span> je v dialógovom okne Prístup zakázaná (šedá), ak má používateľ stav <span class="guimenu">Pozvaný používateľ</span>.  V tomto prípade ukončite dialógové okno, počkajte kým sa používateľov stav nezmení z <span class="guimenu">Pozvaný používateľ</span> na <span class="guimenu">Používateľ priečinka iFolder</span> a opakujte predchádzajúce kroky na prenos vlastníctva.</p></li>
+<li class="step" id="b47qbju">
+<p class="para">Kliknite na tlačidlo <span class="guimenu">OK</span>. Potom kliknutím na tlačidlo <span class="guimenu">OK</span> zatvorte okno Vlastnosti priečinka iFolder.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+</div>
+
+</body>
+</html>

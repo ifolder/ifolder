@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="es" lang="es">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:54" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Fusión de carpetas iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> Fusión de carpetas iFolder</h1>
+
+<p class="para">Esta opción permite consolidar los datos de iFolder y minimizar la transferencia de datos entre el Cliente y el servidor iFolder.. Puede fusionar el contenido de una carpeta iFolder del servidor con el contenido de una carpeta de un equipo local.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0ign">Fusión de una carpeta iFolder en otra carpeta</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0kks">Traslado de carpetas iFolder existentes a otras ubicaciones</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0l8i">Fusión de carpetas iFolder 2.x iFolders con versiones iFolders 3.7 o posteriores</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bcq0ign">
+
+<h2 class="title"> Fusión de una carpeta iFolder en otra carpeta</h2>
+
+<p class="para">Una carpeta iFolder se puede fusionar en una carpeta normal con el mismo nombre. Por ejemplo, se puede fusionar el contenido de una carpeta iFolder denominada <span class="filename">corporate</span> con el de una carpeta normal denominada <span class="filename">corporate</span>. </p>
+<p class="para">Supongamos que la carpeta <span class="filename">corporate</span> de iFolder incluye tres subcarpetas: <span class="filename">hr</span>, <span class="filename">finance</span> y <span class="filename">marketing</span>, y que desea descargar el contenido de la carpeta <span class="filename">corporate</span> de iFolder en la carpeta denominada <span class="filename">corporate</span>, que sólo incluye las carpetas <span class="filename">hr</span> y <span class="filename">finance</span>. En este caso, no es preciso que descargue las tres carpetas en la carpeta <span class="filename">corporate</span>, ni que aumente la velocidad de transferencia. Por el contrario, puede fusionar la carpeta <span class="filename">corporate</span> de iFolder en la carpeta <span class="filename">corporate</span> de forma que la función <span class="guimenu">Fusionar en carpeta</span> evite de manera inteligente la descarga de las subcarpetas <span class="filename">hr</span> y <span class="filename">finance</span>, y que sólo descargue la subcarpeta <span class="filename">marketing</span>. Si los datos de la carpeta <span class="filename">corporate</span> de iFolder y los de la carpeta <span class="filename">corporate</span> son diferentes, se mostrará un conflicto de versiones. Los conflictos pueden resolverse manualmente. Igualmente, si se muestra un conflicto de nombres de archivo, podrá resolverlo manualmente.</p>
+<p class="para">Para fusionar el contenido de una carpeta iFolder del servidor en el de una carpeta de un equipo local:</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr3w0i">
+<p class="para">En el navegador de iFolder, haga clic con el botón derecho en la carpeta iFolder que desee de la lista de carpetas iFolder del servidor seleccionado y, a continuación, seleccione <span class="guimenu">Fusionar en carpeta</span>.</p></li>
+<li class="step" id="bcr4m9d">
+<p class="para">Busque y seleccione la carpeta y haga clic en <span class="guimenu">Aceptar</span>.</p></li></ol>
+</div>
+
+<p class="para">El contenido de las dos carpetas se comparará y los archivos que no estén presentes en la carpeta se descargarán de la carpeta de iFolder. Asimismo, los archivos que no estén presentes en la carpeta de iFolder, pero que sí estén disponibles de la carpeta, se cargarán.</p>
+</div>
+
+<div class="sect2" id="bcq0kks">
+
+<h2 class="title"> Traslado de carpetas iFolder existentes a otras ubicaciones</h2>
+
+<p class="para">Para trasladar una carpeta iFolder denominada <span class="filename">corporate</span> a otra ubicación del equipo Cliente: </p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr4vli">
+<p class="para">Convierta la carpeta <span class="filename">corporate</span> de iFolder en una carpeta normal.</p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANTE:</em>No suprima la carpeta iFolder del servidor.</p></div>
+
+<p class="para">Para obtener más información, consulte la <a href="reverting.html">Conversión de una carpeta iFolder en una carpeta normal</a>.</p></li>
+<li class="step" id="bcr4vww">
+<p class="para">Traslade la carpeta <span class="filename">corporate</span> a otra ubicación. </p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANTE:</em>No cambie el nombre de la carpeta durante el proceso de traslado.</p></div>
+</li>
+<li class="step" id="bcr4w5o">
+<p class="para">En la ventana del navegador de iFolder, seleccione la carpeta <span class="filename">corporate</span> de iFolder del servidor y, a continuación, haga clic en <span class="guimenu">Fusionar en carpeta</span>.</p></li>
+<li class="step" id="bcr4y94">
+<p class="para">Seleccione la carpeta <span class="filename">corporate</span>del equipo local y, a continuación, haga clic en <span class="guimenu">Aceptar</span> para fusionar el contenido.</p>
+<div class="note">
+<p class="para"><em class="title">NOTA:</em>Si utiliza <span class="guimenu">Sincronizar ahora</span> (en lugar de <span class="guimenu">Fusionar en carpeta</span>), como se describe en <a href="movelocation.html">Movimiento de una carpeta iFolder</a>, se comprueban y se sincronizan todos los datos de la carpeta iFolder del servidor. Por consiguiente, aumenta la duración de la transferencia de los datos. Por otro lado, la opción <span class="guimenu">Fusionar en carpeta</span> minimiza la transferencia de datos ya que sólo fusiona el contenido de la carpeta iFolder y la carpeta normal.</p></div>
+
+<p class="para">Para obtener más información sobre la fusión, consulte <a href="merge.html#bcq0ign">Fusión de una carpeta iFolder en otra carpeta</a></p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bcq0l8i">
+
+<h2 class="title"> Fusión de carpetas iFolder 2.<span class="replaceable">x</span> iFolders con versiones iFolders 3.7 o posteriores </h2>
+
+<p class="para">Puede fusionar un cliente iFolder 2.x migrado con un cliente iFolder creado en un servidor iFolder 3.7 o posterior. Para obtener más información sobre la migración, consulte <a href="coexistmig.html">Migración y actualización de Novell iFolder</a> </p>
+<p class="para">Tras la migración, las carpetas 2.<span class="replaceable">x</span> de iFolder se trasladan al servidor iFolder 3.7 o posterior. Puede optar por descargar las carpetas iFolder migradas del servidor 3.7 o posterior al equipo cliente. Sin embargo, es posible que estas carpetas ya existan en el equipo cliente. En ese caso, utilice la funcionalidad de fusión para evitar la transferencia innecesaria de datos del servidor al cliente. </p>
+<p class="para">Para fusionar una carpeta iFolder 2.<span class="replaceable">x</span> iFolders con versiones iFolders 3.7 o posteriores,</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr6eex">
+<p class="para">Migre las carpetas iFolder 2.<span class="replaceable">x</span> iFolders al dominio iFolder 3.7 o posterior.</p></li>
+<li class="step" id="bcr6f1n">
+<p class="para">Convierta las carpetas iFolder 2.<span class="replaceable">x</span> del equipo local en carpetas normales.</p></li>
+<li class="step" id="bcr6f5l">
+<p class="para">Seleccione la copia del servidor de todas las carpetas iFolder y haga clic en <span class="replaceable">Fusionar en carpeta</span>.</p></li>
+<li class="step" id="bcr6is8">
+<p class="para">Para fusionar el contenido, seleccione la carpeta normal y haga clic en <span class="guimenu">Aceptar</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+</body>
+</html>

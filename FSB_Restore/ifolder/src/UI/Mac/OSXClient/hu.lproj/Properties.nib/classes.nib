@@ -1,0 +1,79 @@
+{
+    IBClasses = (
+        {CLASS = MCTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {
+            ACTIONS = {setiFolderSecureSync = id; syncNow = id; updateLimitValue = id; }; 
+            CLASS = PropGeneralController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                availableSpace = NSTextField; 
+                barView = VerticalBarView; 
+                currentSpace = NSTextField; 
+                filesToSync = NSTextField; 
+                hasConflicts = NSTextField; 
+                hasConflictsImage = NSImageView; 
+                ifolderName = NSTextField; 
+                lastSync = NSTextField; 
+                limitSpace = NSTextField; 
+                limitSpaceUnits = NSTextField; 
+                ownerName = NSTextField; 
+                propertiesWindow = NSWindow; 
+                secureSync = NSButton; 
+                syncInterval = NSTextField; 
+                syncIntervalLabel = NSTextField; 
+                syncNow = NSButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                addSelectedUsers = id; 
+                grantFullControl = id; 
+                grantReadOnly = id; 
+                grantReadWrite = id; 
+                makeOwner = id; 
+                refreshWindow = id; 
+                removeSelectedUsers = id; 
+                searchFirstName = id; 
+                searchFullName = id; 
+                searchLastName = id; 
+                searchUsers = id; 
+            }; 
+            CLASS = PropSharingController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addUsers = NSButton; 
+                currentUsers = NSTableView; 
+                defaultAccess = NSPopUpButton; 
+                firstItem = NSMenuItem; 
+                fullItem = NSMenuItem; 
+                lastItem = NSMenuItem; 
+                ownerName = NSTextField; 
+                propertiesWindow = NSWindow; 
+                removeUsers = NSButton; 
+                searchedColumn = NSTableColumn; 
+                searchedUsers = NSTableView; 
+                templateMenu = NSMenu; 
+                userSearch = NSSearchField; 
+                usersController = NSArrayController; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = PropertiesWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                generalController = PropGeneralController; 
+                generalItem = NSTabViewItem; 
+                searchDrawer = NSDrawer; 
+                sharingController = PropSharingController; 
+                sharingItem = NSTabViewItem; 
+                tabView = NSTabView; 
+                userMenu = NSMenu; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+    ); 
+    IBVersion = 1; 
+}

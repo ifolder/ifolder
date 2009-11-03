@@ -1,0 +1,131 @@
+# Copyright (C) 2006 SuSE Linux Products GmbH, Nuernberg
+# This file is distributed under the same license as the package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: en\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-10-21 14:23-0600\n"
+"PO-Revision-Date: 2009-08-04 19:34\n"
+"Last-Translator: Novell Language <language@novell.com>\n"
+"Language-Team: Novell Language <language@novell.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/nautilus-ifolder.c:1242
+msgid "iFolder Created"
+msgstr "Dossier iFolder créé"
+
+#: src/nautilus-ifolder.c:1269
+msgid "The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."
+msgstr "Le dossier que vous avez sélectionné est maintenant un dossier iFolder. Pour en savoir plus sur l'utilisation de iFolder et le partage de dossiers iFolder avec d'autres utilisateurs, consultez la rubrique \"Gestion des dossiers\" iFolder dans l'aide iFolder."
+
+#: src/nautilus-ifolder.c:1279
+msgid "Do not show this message again."
+msgstr "Ne plus afficher ce message"
+
+#: src/nautilus-ifolder.c:1324
+msgid "Error opening dialog."
+msgstr "Erreur lors de l'ouverture de la boîte de dialogue."
+
+#: src/nautilus-ifolder.c:1325
+msgid "Sorry, unable to open the window to perform the specified action."
+msgstr "Impossible d'ouvrir la fenêtre permettant d'effectuer l'opération spécifiée."
+
+#: src/nautilus-ifolder.c:1363
+msgid "The folder could not be converted."
+msgstr "Le dossier n'a pas pu être converti."
+
+#: src/nautilus-ifolder.c:1364
+msgid "Sorry, unable to convert the specified folder into an iFolder."
+msgstr "Impossible de convertir le dossier spécifié en un dossier iFolder."
+
+#: src/nautilus-ifolder.c:1438
+msgid "Create iFolder"
+msgstr "Créer un dossier iFolder"
+
+#: src/nautilus-ifolder.c:1439
+msgid "No iFolder Domains"
+msgstr "Aucun domaine de dossier iFolder"
+
+#: src/nautilus-ifolder.c:1440
+msgid "A new iFolder cannot be created because you have not attached to any iFolder domains."
+msgstr "Impossible de créer un nouveau dossier iFolder car vous ne l'avez associé à aucun domaine iFolder."
+
+#: src/nautilus-ifolder.c:1462 src/nautilus-ifolder.c:1839
+msgid "Convert to an iFolder"
+msgstr "Convertir en un dossier iFolder"
+
+#: src/nautilus-ifolder.c:1480
+msgid "<b>_Domain:</b>"
+msgstr "<b>_Domaine :</b>"
+
+#: src/nautilus-ifolder.c:1500
+msgid "<b>_Path:</b>"
+msgstr "<b>_Chemin :</b>"
+
+msgid "<b>_Account:</b>"
+msgstr "<b>_Compte :</b>"
+
+msgid "<b>_Location:</b>"
+msgstr "<b>_Emplacement :</b>"
+
+#: src/nautilus-ifolder.c:1583
+msgid "The iFolder could not be reverted."
+msgstr "Le dossier iFolder n' a pas pu être rétabli."
+
+#: src/nautilus-ifolder.c:1584
+msgid "Sorry, unable to revert the specified iFolder to a normal folder."
+msgstr "Impossible de rétablir le dossier iFolder spécifié à l'état de dossier normal."
+
+#: src/nautilus-ifolder.c:1602
+msgid "Revert this iFolder to a normal folder?"
+msgstr "Rétablir ce dossier iFolder à l'état de dossier normal ?"
+
+#: src/nautilus-ifolder.c:1603
+msgid "This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."
+msgstr "Cette opération rétablit le dossier iFolder à létat de dossier normal et laisse les fichiers intacts. Le dossier iFolder est ensuite disponible à partir du serveur et doit être configuré à un autre emplacement pour la synchronisation."
+
+#: src/nautilus-ifolder.c:1772
+msgid "Revert to a Normal Folder"
+msgstr "Revenir à un dossier normal"
+
+#: src/nautilus-ifolder.c:1773
+msgid "Revert the selected iFolder back to normal folder"
+msgstr "Rétablir le dossier iFolder sélectionné à l'état de dossier normal"
+
+#: src/nautilus-ifolder.c:1787
+msgid "Share iFolder with..."
+msgstr "Partager le dossier iFolder avec..."
+
+#: src/nautilus-ifolder.c:1788
+msgid "Share the selected iFolder with another user"
+msgstr "Partager le dossier iFolder sélectionné avec un autre utilisateur"
+
+#: src/nautilus-ifolder.c:1802
+msgid "iFolder Properties"
+msgstr "Propriétés iFolder"
+
+#: src/nautilus-ifolder.c:1803
+msgid "View the properties of the selected iFolder"
+msgstr "Afficher les propriétés du dossier iFolder sélectionné"
+
+#: src/nautilus-ifolder.c:1817
+msgid "iFolder Help..."
+msgstr "Aide de iFolder..."
+
+#: src/nautilus-ifolder.c:1818
+msgid "View the iFolder help"
+msgstr "Affiche l'aide de iFolder"
+
+#: src/nautilus-ifolder.c:1840
+msgid "Convert the selected folder to an iFolder"
+msgstr "Convertir le dossier sélectionné en un dossier iFolder"
+
+msgid "Encrypt the iFolder"
+msgstr "Coder le dossier iFolder "
+
+msgid "Sharable"
+msgstr "Partageable"
+

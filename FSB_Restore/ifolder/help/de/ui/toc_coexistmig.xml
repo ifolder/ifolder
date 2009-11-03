@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="coexistmig">
+ <title>Novell iFolder-Migration und -Upgrade</title>
+ <entry leaf="true" id="migration">Migration von iFolder 2.x auf iFolder 3.7 oder höher</entry>
+ <entry leaf="true" id="bctryt7">Upgraden vom iFolder 3.x-Clients</entry>
+ <entry leaf="true" id="bctrxs4">Koexistenz von Novell iFolder 2.x und iFolder-Clients</entry>
+</tocsection>

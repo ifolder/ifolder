@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s0="http://novell.com/simias-server/registration" name="User_x0020_Registration" targetNamespace="http://novell.com/simias-server/registration" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://novell.com/simias-server/registration" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="GetPublicKey">
+        <xs:complexType />
+      </xs:element>
+      <xs:element name="GetPublicKeyResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="GetPublicKeyResult" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CreateUser">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="Username" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Password" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="UserGuid" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="FullName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DistinguishedName" type="xs:string" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Email" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="RegistrationInfo">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Status" type="s0:RegistrationStatus" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Message" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UserGuid" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SuggestedNames" type="s0:ArrayOfString" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="RegistrationStatus">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="UserCreated" />
+          <xs:enumeration value="UserExists" />
+          <xs:enumeration value="InvalidParameters" />
+          <xs:enumeration value="InvalidDomain" />
+          <xs:enumeration value="UsernamePolicyException" />
+          <xs:enumeration value="PasswordPolicyException" />
+          <xs:enumeration value="InternalException" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="ArrayOfString">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="CreateUserResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="CreateUserResult" type="s0:RegistrationInfo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="string" type="xs:string" />
+      <xs:element name="RegistrationInfo" type="s0:RegistrationInfo" />
+    </xs:schema>
+  </types>
+  <message name="GetPublicKeySoapIn">
+    <part name="parameters" element="s0:GetPublicKey" />
+  </message>
+  <message name="GetPublicKeySoapOut">
+    <part name="parameters" element="s0:GetPublicKeyResponse" />
+  </message>
+  <message name="CreateUserSoapIn">
+    <part name="parameters" element="s0:CreateUser" />
+  </message>
+  <message name="CreateUserSoapOut">
+    <part name="parameters" element="s0:CreateUserResponse" />
+  </message>
+  <message name="GetPublicKeyHttpGetIn" />
+  <message name="GetPublicKeyHttpGetOut">
+    <part name="Body" element="s0:string" />
+  </message>
+  <message name="CreateUserHttpGetIn">
+    <part name="Username" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="UserGuid" type="s:string" />
+    <part name="FirstName" type="s:string" />
+    <part name="LastName" type="s:string" />
+    <part name="FullName" type="s:string" />
+    <part name="DistinguishedName" type="s:string" />
+    <part name="Email" type="s:string" />
+  </message>
+  <message name="CreateUserHttpGetOut">
+    <part name="Body" element="s0:RegistrationInfo" />
+  </message>
+  <message name="GetPublicKeyHttpPostIn" />
+  <message name="GetPublicKeyHttpPostOut">
+    <part name="Body" element="s0:string" />
+  </message>
+  <message name="CreateUserHttpPostIn">
+    <part name="Username" type="s:string" />
+    <part name="Password" type="s:string" />
+    <part name="UserGuid" type="s:string" />
+    <part name="FirstName" type="s:string" />
+    <part name="LastName" type="s:string" />
+    <part name="FullName" type="s:string" />
+    <part name="DistinguishedName" type="s:string" />
+    <part name="Email" type="s:string" />
+  </message>
+  <message name="CreateUserHttpPostOut">
+    <part name="Body" element="s0:RegistrationInfo" />
+  </message>
+  <portType name="User_x0020_RegistrationSoap">
+    <operation name="GetPublicKey">
+      <input message="s0:GetPublicKeySoapIn" />
+      <output message="s0:GetPublicKeySoapOut" />
+    </operation>
+    <operation name="CreateUser">
+      <input message="s0:CreateUserSoapIn" />
+      <output message="s0:CreateUserSoapOut" />
+    </operation>
+  </portType>
+  <portType name="User_x0020_RegistrationHttpGet">
+    <operation name="GetPublicKey">
+      <input message="s0:GetPublicKeyHttpGetIn" />
+      <output message="s0:GetPublicKeyHttpGetOut" />
+    </operation>
+    <operation name="CreateUser">
+      <input message="s0:CreateUserHttpGetIn" />
+      <output message="s0:CreateUserHttpGetOut" />
+    </operation>
+  </portType>
+  <portType name="User_x0020_RegistrationHttpPost">
+    <operation name="GetPublicKey">
+      <input message="s0:GetPublicKeyHttpPostIn" />
+      <output message="s0:GetPublicKeyHttpPostOut" />
+    </operation>
+    <operation name="CreateUser">
+      <input message="s0:CreateUserHttpPostIn" />
+      <output message="s0:CreateUserHttpPostOut" />
+    </operation>
+  </portType>
+  <binding name="User_x0020_RegistrationSoap" type="s0:User RegistrationSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="GetPublicKey">
+      <soap:operation soapAction="http://novell.com/simias-server/registration/GetPublicKey" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="CreateUser">
+      <soap:operation soapAction="http://novell.com/simias-server/registration/CreateUser" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="User_x0020_RegistrationHttpGet" type="s0:User RegistrationHttpGet">
+    <http:binding verb="GET" />
+    <operation name="GetPublicKey">
+      <http:operation location="/GetPublicKey" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="CreateUser">
+      <http:operation location="/CreateUser" />
+      <input>
+        <http:urlEncoded />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="User_x0020_RegistrationHttpPost" type="s0:User RegistrationHttpPost">
+    <http:binding verb="POST" />
+    <operation name="GetPublicKey">
+      <http:operation location="/GetPublicKey" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+    <operation name="CreateUser">
+      <http:operation location="/CreateUser" />
+      <input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </input>
+      <output>
+        <mime:mimeXml part="Body" />
+      </output>
+    </operation>
+  </binding>
+  <service name="User_x0020_Registration">
+    <port name="User_x0020_RegistrationSoap" binding="s0:User RegistrationSoap">
+      <soap:address location="http://localhost:8086/simias10/Registration.asmx" />
+    </port>
+    <port name="User_x0020_RegistrationHttpGet" binding="s0:User RegistrationHttpGet">
+      <http:address location="http://localhost:8086/simias10/Registration.asmx" />
+    </port>
+    <port name="User_x0020_RegistrationHttpPost" binding="s0:User RegistrationHttpPost">
+      <http:address location="http://localhost:8086/simias10/Registration.asmx" />
+    </port>
+    <documentation>Web Service providing self provisioning/registration for Simias users.</documentation>
+  </service>
+</definitions>

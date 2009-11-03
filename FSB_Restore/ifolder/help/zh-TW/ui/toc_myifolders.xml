@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>管理 iFolder</title>
+ <entry leaf="true" id="locguide">iiFolder 位置和使用指南</entry>
+ <entry leaf="true" id="typeguide">檔案類型和大小不同步的指示</entry>
+ <entry leaf="true" id="nameconv">iFolder 及其資料夾和檔案的命名慣例</entry>
+ <entry leaf="true" id="ificons">瞭解 iFolder 圖示</entry>
+ <entry leaf="true" id="bkjj1f9">iFolder 瀏覽器</entry>
+ <entry leaf="true" id="createifolder">建立和上傳 iFolder</entry>
+ <entry leaf="true" id="sharewith">共用 iFolder</entry>
+ <entry leaf="true" id="viewhide">檢視和隱藏可用的 iFolder</entry>
+ <entry leaf="true" id="merge">合併 iFolder</entry>
+ <entry leaf="true" id="setupifolder">下載可用的 iFolder</entry>
+ <entry leaf="true" id="propifolders">檢視和設定 iFolder 的內容</entry>
+ <entry leaf="true" id="managingpassphrse">管理已加密 iFolder 的密碼片語</entry>
+ <entry leaf="true" id="bkmgmdj">變更密碼</entry>
+ <entry leaf="true" id="ifquota">設定 iFolder 配額</entry>
+ <entry leaf="true" id="sync">同步化檔案</entry>
+ <entry leaf="true" id="conflicts">解決檔案衝突</entry>
+ <entry leaf="true" id="movelocation">移動 iFolder</entry>
+ <entry leaf="true" id="reverting">將 iFolder 恢復為一般資料夾</entry>
+ <entry leaf="true" id="bbb7rj2">從共用 iFolder 移除成員資格</entry>
+ <entry leaf="true" id="deleting">刪除 iFolder</entry>
+ <entry leaf="true" id="bbbcabq">還有什麼功能？</entry>
+</tocsection>

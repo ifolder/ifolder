@@ -1,0 +1,11 @@
+﻿var RES_PREV_STR="Назад";
+var RES_NEXT_STR="Далее";
+var RES_CONTENTS_STR = "Содержание";
+var RES_INDEX_STR = "Предметный&nbsp;указатель";
+var RES_SEARCH_STR = "Поиск";
+var RES_WORDSEPREGEX="";
+var RES_COMMONWORDS="";
+var RES_STEMMING="";
+var RES_SPELLING="";
+var RES_MSGNOTFOUND="Разделы не найдены.";
+var RES_MSGRESULTS="результаты";

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="en" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 04, 2009 13:42" />
+<meta name="Content-Date" content="Mon, 04 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Upgrading iFolder 3.x Clients</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table of Contents' title='Table of Contents' />Table of Contents</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> Upgrading iFolder 3.<span class="replaceable">x</span> Clients</h1>
+
+<p class="para">This section discusses the following:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bctryt8">Automatically Upgrading to iFolder 3.7 or later Versions</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bbjs0lm">Manually Upgrading to iFolder 3.7 or later Versions</a>
+          </p></li></ul></div>
+
+<div class="important">
+<p class="para"><em class="title">IMPORTANT:</em>Before upgrading your 3.4.1 client, you must back up your local Simias store. If you don’t do the backup, you lose all configuration information from the computer because it deletes the Simias store when the upgrade fails.</p></div>
+
+<div class="sect2" id="bctryt8">
+
+<h2 class="title"> Automatically Upgrading to iFolder 3.7 or later Versions</h2>
+
+<p class="para">The automatic upgrade is possible only if you have root access rights, because the process needs to install the RPM packages. The root password is requested during the upgrade. If you do not have root access rights, the package is not installed automatically. However, the client packages are downloaded to a temporary location. The Linux client is downloaded to <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. This enables you to upgrade it later because the location contains two install scripts that you can run manually. Until you upgrade the client, you cannot connect to the iFolder 3.7 or later domain with an iFolder 3.<span class="replaceable">x</span> client.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjrxu1">
+<p class="para">From an iFolder 3.<span class="replaceable">x</span> client earlier than iFolder 3.7, try to connect to the iFolder server. You are prompted about whether you want to upgrade.</p></li>
+<li class="step" id="bctryta">
+<p class="para">Click <span class="guimenu">Yes</span> to automatically upgrade your iFolder 3.<span class="guimenu">x</span> client.</p></li></ol>
+</div>
+
+<p class="para">For iFolder 3.4.1, if you click <span class="guimenu">No</span> and attempt to connect the iFolder 3.4.1 client to the iFolder 3.7 or later server, it displays an error message. Click <span class="guimenu">OK</span> to dismiss the message.</p>
+</div>
+
+<div class="sect2" id="bbjs0lm">
+
+<h2 class="title"> Manually Upgrading to iFolder 3.7 or later Versions</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjefu4">
+<p class="para">Open a terminal. At the command prompt, run <span class="command">install-ifolder.sh</span>.</p></li>
+<li class="step" id="bbjeh6h">
+<p class="para">Enter the root password when it is requested.</p>
+<p class="para">This closes the iFolder client if it is already running, then it updates the XSP Web server and iFolder client along with the Nautilus-ifolder3 plug-in.</p></li>
+<li class="step" id="bbjehh4">
+<p class="para">Start iFolder from the <span class="guimenu">Application</span> menu.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> For trademark and copyright information, see <a href="legal.html">Legal Notices</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+</div>
+
+</body>
+</html>

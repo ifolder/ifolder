@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>Gerenciando pastas do iFolder</title>
+ <entry leaf="true" id="locguide">Diretrizes para a localização e o uso de pastas do iFolder</entry>
+ <entry leaf="true" id="typeguide">Diretrizes para tipos e tamanhos de arquivos não sincronizados</entry>
+ <entry leaf="true" id="nameconv">Convenções de nomeação para um iFolder e suas pastas e arquivos</entry>
+ <entry leaf="true" id="ificons">Entendendo os ícones do iFolder</entry>
+ <entry leaf="true" id="bkjj1f9">Browser do iFolder</entry>
+ <entry leaf="true" id="createifolder">Criando e fazendo upload de uma pasta do iFolder</entry>
+ <entry leaf="true" id="sharewith">Compartilhando um iFolder</entry>
+ <entry leaf="true" id="viewhide">Vendo e ocultando pastas disponíveis do iFolder</entry>
+ <entry leaf="true" id="merge">Fundindo pastas do iFolder</entry>
+ <entry leaf="true" id="setupifolder">Fazendo download de uma pasta disponível do iFolder</entry>
+ <entry leaf="true" id="propifolders">Visualizando e configurando propriedades de um iFolder</entry>
+ <entry leaf="true" id="managingpassphrse">Gerenciando frases secretas de iFolders criptografados</entry>
+ <entry leaf="true" id="bkmgmdj">Mudando a senha</entry>
+ <entry leaf="true" id="ifquota">Definindo uma cota do iFolder</entry>
+ <entry leaf="true" id="sync">Sincronizando arquivos</entry>
+ <entry leaf="true" id="conflicts">Resolvendo conflitos de arquivos</entry>
+ <entry leaf="true" id="movelocation">Movendo uma pasta iFolder</entry>
+ <entry leaf="true" id="reverting">Revertendo um iFolder para uma pasta normal</entry>
+ <entry leaf="true" id="bbb7rj2">Removendo a participação em uma pasta compartilhada do iFolder</entry>
+ <entry leaf="true" id="deleting">Apagando um iFolder</entry>
+ <entry leaf="true" id="bbbcabq">O que acontece em seguida</entry>
+</tocsection>

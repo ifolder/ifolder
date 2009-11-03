@@ -1,0 +1,153 @@
+# spec file for package ifolder3 (Version 3.7.2.@@BUILDNUM@@.1)
+#
+# Copyright (c) 2009 SUSE LINUX Products GmbH, Nuernberg, Germany.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+#
+# Please submit bugfixes or comments via http://support.novell.com
+#
+
+# norootforbuild
+
+%if %suse_version < 1030
+BuildRequires: aspell-en compat-libstdc++ gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%else
+%ifarch         x86_64
+BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%else
+BuildRequires: aspell-en libstdc++33 libstdc++33-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+%endif
+%endif
+
+#suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
+#From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
+
+Name:         nautilus-ifolder3
+%define buildnum @@BUILDNUM@@
+URL:          http://forge.novell.com/modules/xfmod/project/?ifolder
+%define prefix /opt/novell/ifolder3
+%if %suse_version < 1030
+%define gnome_root /opt/gnome
+%else
+%define gnome_root /usr
+%endif
+
+%if %suse_version < 1100
+%define extension extensions-1.0
+%else
+%define extension extensions-2.0
+%endif
+
+License:      GNU General Public License (GPL) v2
+Group:        System/GUI/Other
+Autoreqprov:  on
+Version:      3.8.0.@@BUILDNUM@@.1
+Requires:     nautilus >= 2.10.0
+Requires:     simias >= 1.8.3
+Requires:     ifolder3 >= 3.8.0 
+#Obsoletes:    %{name} < %{version}
+Provides:     nautilus-ifolder
+Obsoletes:    nautilus-ifolder
+Release:      1
+Summary:      Nautilus plugin to add iFolder support
+Source:       nautilus-ifolder3.tar.gz
+BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+#=============================================================================
+
+%description
+Provides the iFolder plugin interface to the Nautilus File Manager
+
+
+
+%prep
+export BUILDNUM=%{buildnum}
+%setup -n %{name}
+#=============================================================================
+
+%build
+export BUILDNUM=%{buildnum}
+%if %suse_version < 1100
+./autogen.sh --prefix=%{prefix}
+%else
+./autogen.sh --prefix=%{prefix} --with-newnautilus
+%endif
+make
+#make dist
+#=============================================================================
+
+%install
+export BUILDNUM=%{buildnum}
+%{__rm} -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+#=============================================================================
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+#=============================================================================
+
+%post
+%if %suse_version <= 1030
+%{gnome_root}/bin/gtk-update-icon-cache
+%else
+%{gnome_root}/bin/gtk-update-icon-cache %{gnome_root}/share/icons/gnome
+%endif
+echo "Restart the system before you start using iFolder"
+#=============================================================================
+
+%files
+%defattr(-,root,root)
+%{prefix}/*
+%dir %{gnome_root}/share/nautilus-ifolder3
+%dir %{gnome_root}/share/nautilus-ifolder3/pixmaps
+%dir %{gnome_root}/share/icons/gnome/48x48
+%dir %{gnome_root}/share/icons/gnome/48x48/emblems
+%{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder*
+%{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
+%{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.png
+%{gnome_root}/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
+
+%changelog -n nautilus-ifolder3
+* Thu Mar 02 2006 - btimothy@novell.com
+- changed Obsoletes line so the package doesn't
+- obsolete itself [#143297]
+* Wed Jan 25 2006 - mls@suse.de
+- converted neededforbuild to BuildRequires
+* Wed Jan 18 2006 - cgaisford@suse.de
+- updated to sources from ifolder_3_4 branch
+- changed around the location of the pixmaps to match the
+  the developers current whim
+* Thu Dec 15 2005 - calvin@novell.com
+- updated to sources from iFolder_3_4 branch
+* Mon Nov 28 2005 - ro@suse.de
+- update to nautilus-ifolder3-3.1.5250.1
+* Thu Sep 29 2005 - dmueller@suse.de
+- add norootforbuild
+* Sun Sep 04 2005 - aj@suse.de
+- Add check-build.sh.
+* Thu Sep 01 2005 - ro@suse.de
+- complete rename: provide and obsolete old name nautilus-ifolder
+* Thu Sep 01 2005 - jbell@novell.com
+- completely re-worked the .spec file and updated the source to
+  include all nautilus-ifolder3.1 functionality
+* Sun Aug 21 2005 - ro@suse.de
+- added directory to filelist
+* Tue Aug 16 2005 - nadvornik@suse.cz
+- better fix for bug #104474
+* Tue Aug 16 2005 - nadvornik@suse.cz
+- changed ifolder3 prefix to /usr/lib/ifolder3 [#104474]
+- use RPM_OPT_FLAGS
+* Fri Aug 05 2005 - nadvornik@suse.cz
+- updated to 3.0.20050608
+* Tue May 03 2005 - ro@suse.de
+- added compat-libstdc++ to nfb
+* Thu Feb 17 2005 - ro@suse.de
+- fix file list
+* Wed Feb 16 2005 - nadvornik@suse.cz
+- new package

@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="de" lang="de">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="de" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:51" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Freigeben von iFolder-Ordnern</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> Freigeben von iFolder-Ordnern</h1>
+
+<p class="para">Sie können einen iFolder-Ordner gemeinsam mit mehreren Benutzern verwenden. In diesem Abschnitt werden die folgenden Aufgaben behandelt:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bv2hnvt">Benutzerzugriffsrechte</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b41tbcf">Zugriff auf die Registerkarte "Freigabe"</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwm0">Hinzufügen von Benutzern zu iFolder-Ordnern</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwma">Bearbeiten von Benutzerzugriffsrechten</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwmr">Entfernen von Benutzern aus iFolder-Ordnern</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b47q8t9">Übertragen der Eigentümerschaft auf einen iFolder-Benutzer</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bv2hnvt">
+
+<h2 class="title"> Benutzerzugriffsrechte</h2>
+
+<p class="para">In der folgenden Tabelle werden die mit den einzelnen Zugriffsrechten für Benutzer oder LDAP-Gruppen verbundenen Möglichkeiten beschrieben.  </p>
+<div class="important">
+<p class="para"><em class="title">WICHTIG:</em>Alle Mitglieder einer LDAP-Gruppe erben die für diese LDAP-Gruppe festgelegten Zugriffsrechte.</p></div>
+
+<div class="table" id="b4031ex">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
+<p class="para">Funktion</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Eigentümer</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Mitglied mit vollständiger Kontrolle</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Mitglied mit Lese-/Schreibberechtigung</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Mitglied mit Leseberechtigung</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
+<p class="para">Bei einem Enterprise-Server wird der von dem iFolder-Ordner auf dem Server eingenommene Speicherplatz gegen die Quote des Benutzers aufgerechnet.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
+<p class="para">Eigentümerschaft auf ein anderes Mitglied übertragen, das den Status eines iFolder-Benutzers innehat </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
+<p class="para">Festlegen der Quote für den iFolder-Ordner</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
+<p class="para">iFolder-Ordner anderen Benutzern zur Verfügung stellen (Freigabe)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
+<p class="para">iFolder-Ordner anderen Benutzern nicht mehr zur Verfügung stellen (Freigabe beenden)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja, mit Ausnahme des Eigentümers</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
+<p class="para">Zuweisen von iFolder-Zugriffsrechten für andere Benutzer</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja, mit Ausnahme des Eigentümers</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
+<p class="para">Lesen von Verzeichnissen und Dateien im iFolder-Ordner </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
+<p class="para">Hinzufügen, Ändern und Löschen von Verzeichnissen und Dateien im iFolder-Ordner</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
+<p class="para">Umbenennen von Verzeichnissen und Dateien in einem iFolder-Ordner</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
+<p class="para">Umbenennen des iFolder-Ordners</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
+<p class="para">Einrichten eines iFolder-Ordners auf mehreren Computern</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
+<p class="para">Zurücksetzen eines iFolder-Ordners (keine Teilnahme auf lokalem Computer)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
+<p class="para">Löschen eines verfügbaren iFolder-Ordners zum Zurückweisen der Teilnahme</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
+<p class="para">Löschen des iFolder-Ordners sowie Löschen des iFolder-Ordners und der entsprechenden Dateien vom Server (Umwandlung in einen normalen Ordner und in Zukunft keine Freigabe für andere Benutzer)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ja</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nein</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b41tbcf">
+
+<h2 class="title"> Zugriff auf die Registerkarte "Freigabe"</h2>
+
+<p class="para">Sie können die Mitgliedschaft des iFolder-Ordners auf der Registerkarte <span class="guimenu">Freigabe</span> im Dialogfeld "iFolder-Eigenschaften" verwalten.</p>
+<div class="procedure">
+<div class="important">
+<p class="para"><em class="title">WICHTIG:</em>Sie können iFolder-Ordner nur freigeben, wenn der iFolder-Administrator die Freigaberichtlinie für Ihr Konto aktiviert hat.</p></div>
+
+<ol class="steps">
+<li class="step" id="b41tmw1">
+<p class="para">Starten Sie ggf. iFolder.</p></li>
+<li class="step" id="b41tmw2">
+<p class="para">Führen Sie eine der folgenden Aktionen aus, um das Dialogfeld "iFolder-Eigenschaften" aufzurufen und die Registerkarte <span class="guimenu">Freigabe</span> zu öffnen.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Klicken Sie in einem Dateimanager mit der rechten Maustaste auf den freizugebenden iFolder-Ordner und wählen Sie dann <span class="guimenu">Gemeinsam verwenden mit</span> aus.</p></li>
+<li class="listitem">
+<p class="listitem">Wählen Sie im iFolder-Browser den iFolder-Ordner und wählen Sie dann <span class="guimenu">Gemeinsam verwenden mit</span> aus.</p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwm0">
+
+<h2 class="title"> Hinzufügen von Benutzern zu iFolder-Ordnern</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b41tjp8">
+<p class="para">Klicken Sie auf der Registerkarte <span class="guimenu">Freigabe</span> auf <span class="guimenu">Hinzufügen</span>, um das Dialogfeld "Benutzer auswählen" zu öffnen.</p></li>
+<li class="step" id="bv2hqlb">
+<p class="para">Wählen Sie aus der Liste der Benutzer einen oder mehrere Benutzer oder LDAP-Gruppen aus, indem Sie sie der Liste <span class="guimenu">Hinzuzufügende Benutzer</span> hinzufügen, und klicken Sie anschließend auf <span class="guimenu">OK</span>.</p>
+<p class="para">Es kann einige Sekunden dauern, bis die Benutzer auf dem Server synchronisiert werden.  Kurz nach der Synchronisierung wird rechts unten auf der Seite eine Benachrichtigung angezeigt.</p></li>
+<li class="step" id="bv2hqlc">
+<p class="para">Wählen Sie auf der Registerkarte <span class="guimenu">Freigabe</span> einen oder mehrere Benutzer aus, denen Sie dieselben Zugriffsrechte zuweisen möchten. </p></li>
+<li class="step" id="b41tpyv">
+<p class="para">Klicken Sie auf <span class="guimenu">Rechte</span>, wählen Sie aus den Zugriffsrechten <span class="guimenu">Vollständige Kontrolle</span>, <span class="guimenu">Lesen/Schreiben</span> oder <span class="guimenu">Nur Lesen</span> aus und klicken Sie dann auf <span class="guimenu">OK</span>.</p></li>
+<li class="step" id="bx3vxly">
+<p class="para">Wiederholen Sie die vorherigen Schritte, bis Sie alle gewünschten Benutzer und LDAP-Gruppen zur gemeinsamen Nutzung des iFolder-Ordners eingeladen und ihre Zugriffsrechte festgelegt haben.</p></li>
+<li class="step" id="bv2hqld">
+<p class="para">Klicken Sie auf <span class="guimenu">Schließen</span>, um das Fenster "iFolder-Eigenschaften" zu schließen.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwma">
+
+<h2 class="title"> Bearbeiten von Benutzerzugriffsrechten</h2>
+
+<p class="para">Da sich die Arbeitsbeziehungen und der Status der Mitglieder eines iFolder-Ordners ändern, müssen Sie möglicherweise das Zugriffsrecht eines Benutzers für den iFolder-Ordner ändern.  Beispielsweise können Sie einem vertrauenswürdigen Benutzer das Recht der vollständigen Kontrolle für den iFolder-Ordner gewähren.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hncw">
+<p class="para">Wählen Sie auf der Registerkarte <span class="guimenu">Freigabe</span> einen oder mehrere Benutzer aus, die dieselben Zugriffsrechte haben sollen.</p></li>
+<li class="step" id="bv2hoj5">
+<p class="para">Wählen Sie <span class="guimenu">Rechte</span> aus und geben Sie dann das Recht <span class="guimenu">Vollständige Kontrolle</span>, <span class="guimenu">Lesen/Schreiben</span> oder <span class="guimenu">Nur Lesen</span> an.</p>
+<p class="para">Wenn Sie zum ersten Mal einen Benutzer oder eine LDAP-Gruppe zur Teilnahme einladen, ist die Option <span class="guimenu">Diesen Benutzer zum iFolder-Eigentümer machen</span> im Dialogfeld "Zugriff" abgeblendet. Wenn Sie den neuen Benutzer zum Eigentümer machen möchten, müssen Sie warten, bis sich der Status des Benutzers von <span class="guimenu">Eingeladener Benutzer</span> in <span class="guimenu">iFolder-Benutzer</span> ändert. Dann können Sie die Eigentümerschaft übertragen. Wenn Sie die Eigentümerschaft auf eine LDAP-Gruppe übertragen, erhalten alle Mitglieder der LDAP-Gruppe Eigentümerrechte.</p></li>
+<li class="step" id="bv2hpae">
+<p class="para">Klicken Sie auf <span class="guimenu">OK</span> und klicken Sie danach auf <span class="guimenu">OK</span>, um das Fenster "iFolder-Eigenschaften" zu schließen.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwmr">
+
+<h2 class="title"> Entfernen von Benutzern aus iFolder-Ordnern</h2>
+
+<p class="para">Wenn Sie die Freigabe eines iFolder-Ordners aufheben möchten, müssen Sie einen Benutzer oder eine LDAP-Gruppe als Mitglied eines iFolder-Ordners entfernen.  Der iFolder-Ordner auf der Arbeitsstation des Benutzers oder der LDAP-Gruppe wird zum normalen Ordner.   Eine Kopie der Daten verbleibt auf der Arbeitsstation des ehemaligen Mitglieds, die Dateien werden jedoch nicht mehr mit dem freigegebenen iFolder-Ordner synchronisiert.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hug0">
+<p class="para">Wählen Sie auf der Registerkarte <span class="guimenu">Freigabe</span> mindestens einen Benutzer aus der Liste aus.</p></li>
+<li class="step" id="bv2hug1">
+<p class="para">Klicken Sie auf <span class="guimenu">Entfernen</span> und anschließend auf <span class="guimenu">Ja</span>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b47q8t9">
+
+<h2 class="title"> Übertragen der Eigentümerschaft auf einen iFolder-Benutzer </h2>
+
+<p class="para">Der Eigentümer eines iFolder-Ordners kann die Eigentümerschaft des iFolder-Ordners auf ein anderes Mitglied oder auf eine LDAP-Gruppe übertragen, das oder die den Status eines iFolder-Benutzers besitzt. Nach der Übertragung wird der ursprüngliche Eigentümer zum Mitglied mit Lese-/Schreibberechtigung und der vom iFolder-Ordner belegte Speicherplatz wird dem neuen Besitzer angerechnet. Wenn eine LDAP-Gruppe zum Eigentümer eines iFolder-Ordners wird, erhalten alle Mitglieder der Gruppe Eigentümerrechte.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b47q70j">
+<p class="para">Klicken Sie in einem Dateimanager oder im iFolder-Browser mit der rechten Maustaste auf den zu übertragenden iFolder-Ordner und wählen Sie dann <span class="guimenu">Gemeinsam verwenden mit</span> aus, um das Dialogfeld iFolder-Eigenschaften mit der Registerkarte <span class="guimenu">Freigabe</span> zu öffnen.</p></li>
+<li class="step" id="b47q8tb">
+<p class="para">Wählen Sie aus der Liste der Benutzer den iFolder-Benutzer aus, der der neue Eigentümer sein soll, und klicken Sie anschließend auf <span class="guimenu">Rechte</span>.</p></li>
+<li class="step" id="b47q70k">
+<p class="para">Wählen Sie <span class="guimenu">Diesen Benutzer zum iFolder-Eigentümer machen</span>.</p>
+<p class="para">Die Option <span class="guimenu">Diesen Benutzer zum iFolder-Eigentümer machen</span> wird im Dialogfeld "Zugriff" abgeblendet dargestellt, wenn der Benutzer den Status <span class="guimenu">Eingeladener Benutzer</span> innehat. Verlassen Sie in diesem Fall das Dialogfeld, warten Sie, bis sich der Benutzerstatus von <span class="guimenu">Eingeladener Benutzer</span> in <span class="guimenu">iFolder-Benutzer</span> geändert hat, und wiederholen Sie die vorherigen Schritte, um die Eigentümerschaft zu übertragen.</p></li>
+<li class="step" id="b47qbju">
+<p class="para">Klicken Sie auf <span class="guimenu">OK</span> und klicken Sie danach auf <span class="guimenu">OK</span>, um das Fenster "iFolder-Eigenschaften" zu schließen.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+</body>
+</html>

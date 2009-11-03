@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="es" lang="es">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:54" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Actualización del Cliente iFolder 3.x</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> Actualización del Cliente iFolder 3.<span class="replaceable">x</span></h1>
+
+<p class="para">En esta sección se analizan los elementos siguientes:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bctryt8">Actualización automática a iFolder 3.7 o versiones posteriores</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bbjs0lm">Actualización manual a versiones de iFolder 3.7 o posteriores</a>
+          </p></li></ul></div>
+
+<div class="important">
+<p class="para"><em class="title">IMPORTANTE:</em>Antes de actualizar el cliente 3.4.1, debe realizar una copia de seguridad del sistema de almacenamiento Simias local. Si no se lleva a cabo la copia de seguridad, se perderá toda la información de configuración del equipo, ya que éste suprime el sistema de almacenamiento Simias cuando se produce un error en la actualización.</p></div>
+
+<div class="sect2" id="bctryt8">
+
+<h2 class="title"> Actualización automática a iFolder 3.7 o versiones posteriores</h2>
+
+<p class="para">La actualización automática sólo es posible si cuenta con derechos de acceso raíz, ya que el proceso debe instalar los paquetes RPM. La contraseña raíz se solicita durante la actualización. Si no dispone de derechos de acceso raíz, el paquete no se instalará automáticamente. Sin embargo, los paquetes de cliente se descargarán en una ubicación temporal. El Cliente Linux se descargará en <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. De este modo podrá actualizarlo más adelante ya que la ubicación contiene dos guiones de instalación que puede ejecutar manualmente. Hasta que el cliente no se actualice, no podrá conectarse a iFolder 3.7 o posterior con un Cliente iFolder 3.<span class="replaceable">x</span> de Novell.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjrxu1">
+<p class="para">Desde una carpeta iFolder 3.En un cliente iFolder <span class="replaceable">x</span> anterior a iFolder 3.7, intente conectarse al servidor iFolder. El sistema le solicitará si desea llevar a cabo la actualización.</p></li>
+<li class="step" id="bctryta">
+<p class="para">Haga clic en <span class="guimenu">Sí</span> para actualizar automáticamente el cliente iFolder 3.<span class="guimenu">x</span> de Novell.</p></li></ol>
+</div>
+
+<p class="para">Para iFolder 3.4.1, si hace clic en <span class="guimenu">No</span> e intenta conectar el Cliente iFolder 3.4.1 al servidor iFolder 3.7 o posterior, aparecerá el siguiente mensaje de error. Haga clic en <span class="guimenu">Aceptar</span> para cerrar el mensaje.</p>
+</div>
+
+<div class="sect2" id="bbjs0lm">
+
+<h2 class="title"> Actualización manual a versiones de iFolder 3.7 o posteriores</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjefu4">
+<p class="para">Abra un terminal. En el indicador de comandos, ejecute <span class="command">install-ifolder.sh</span>.</p></li>
+<li class="step" id="bbjeh6h">
+<p class="para">Introduzca la contraseña raíz cuando se le solicite.</p>
+<p class="para">Si está en ejecución, el Cliente iFolder se cerrará. A continuación, el servidor Web XSP y el Cliente iFolder se actualizarán junto con el módulo auxiliar (plug-in) Nautilus-ifolder3.</p></li>
+<li class="step" id="bbjehh4">
+<p class="para">Inicie iFolder desde el menú <span class="guimenu">Aplicación</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+</body>
+</html>

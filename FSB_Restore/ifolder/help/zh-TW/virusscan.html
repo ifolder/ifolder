@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-tw" lang="zh-tw">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-tw" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>設定 iFolder 流量的本地病毒掃描器設定</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "virusscan";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+
+<div class="sect1" id="virusscan">
+
+<h1 class="title"> 設定 iFolder 流量的本地病毒掃描器設定</h1>
+
+<p class="para">如果您在電腦上使用病毒掃描軟體，請從病毒掃描中排除 <span class="filename">..\simias\WorkArea\</span> 目錄。例如，Windows 上的 <span class="filename">..\simias\WorkArea\</span> 目錄位置為 <span class="filename">c:\documents and settings\<span class="replaceable">username</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>。 </p>
+<p class="para"><span class="filename">..\simias\WorkArea\</span> 目錄是 iFolder 準備從伺服器所下載檔案的所在。如果 iFolder 檔案附有病毒，而您的病毒掃描軟體掃描該病毒時，檔案位在 <span class="filename">..\simias\WorkArea</span> 目錄中，病毒掃描器會出現訊息指出已找到病毒、會將感染的檔案移到隔離區，然後 iFolder 才再次嘗試同步化檔案。 </p>
+<p class="para">不掃描 WorkArea 便會允許完成檔案的同步化。受感染的檔案會成功下載，並移至本地 iFolder。隨後，病毒掃描器會在 iFolder 中偵測到受感染的檔案，並將其從資料夾移至隔離區，以保護電腦免受感染。iFolder 偵測到檔案被刪除後，便會在新的同步開始時，從伺服器及成員電腦中移除該檔案。 </p>
+<p class="para">但是，如果從中下載檔案的 iFolder 是「唯讀」的，則不會對伺服器及其他成員電腦強制執行本地刪除。如果許可權允許同步化變更，則必須在其他位置偵測病毒。使用者的病毒掃描器很可能會警告使用者發現病毒，因此該使用者應該警告其他 iFolder 成員關於此病毒的訊息。</p>
+</div>
+
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="hu" lang="hu">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="hu" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:45" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Áthelyezés az iFolder 2.x verziójából az iFolder 3.7-es vagy újabb verziójába</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "migration";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+
+<div class="sect1" id="migration">
+
+<h1 class="title"> Áthelyezés az iFolder 2.<span class="replaceable">x</span> verziójából az iFolder 3.7-es vagy újabb verziójába</h1>
+
+<p class="para">Ebben a részben az alábbi témák ismertetése található:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6kho">Az áttelepítési folyamat – áttekintés</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6esx">Az áttelepítési eljárás</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bax6kho">
+
+<h2 class="title"> Az áttelepítési folyamat – áttekintés</h2>
+
+<p class="para">A Novell iFolder egyszerű áttérést biztosít az iFolder 2.<span class="replaceable">x</span> verziójú ügyfeléről a 3.7-es vagy újabb iFolder ügyfélre. Az iFolder ügyfél részét képező áttelepítési segéd megkönnyíti a meglévő iFolder 2.<span class="replaceable">x</span> verziójú adatok gyors és egyszerű áttelepítését.</p>
+<p class="para">Indításkor az áttelepítési segéd észleli a 2.<span class="replaceable">x</span> verziójú telepítést, és felkínálja az adatok áttelepítését. Az adatok áttelepítése során a segéd rákérdez, hogy a meglévő mappákat konvertálja-e, vagy készítsen másolatot a 2.<span class="replaceable">x</span> verziójú iFolder mappákról. Ezzel kapcsolatos további információk: <a href="migration.html#b8anh5z">Lépés 6</a>.</p>
+<p class="para">Az iFolder kéri a fájlok újraszinkronizálását a 3.7-es vagy újabb verziójú kiszolgálóval, és rákérdez, hogy meg kell-e tartani a 2.<span class="replaceable">x</span> verziójú ügyfelet a szinkronizálás befejeztéig. E folyamat során csak az adatokat helyezi át a rendszer, a felhasználónak tehát meg kell adnia a beállításokat az új ügyfélben. </p>
+</div>
+
+<div class="sect2" id="bax6esx">
+
+<h2 class="title"> Az áttelepítési eljárás</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b88immv">
+<p class="para">Telepítse a 3.7-es vagy újabb verziójú iFolder kiszolgáló iFolder ügyfelét, majd konfigurálja a 3.7-es vagy újabb iFolder vállalati kiszolgálóhoz tartozó fiókját.</p>
+<p class="para">Az ügyfél telepítésével és a fiók beállításával kapcsolatos tudnivalók: <a href="accountsprefs.html">Az iFolder-fiókok és a beállítások kezelése</a>.</p></li>
+<li class="step" id="b88immw">
+<p class="para">Az iFolder böngészőben hozzon létre a helyi számítógépen egy vagy több iFolder mappát.</p>
+<p class="para">Az iFolder mappákhoz bármilyen érvényes nevet használhat. Ne hozzon létre iFolder mappát ugyanazon az elérési úton, mint az aktuális iFolder 2.<span class="replaceable">x</span> könyvtár. További információkért lásd: <a href="createifolder.html">iFolder mappa létrehozása és feltöltése</a>.</p></li>
+<li class="step" id="bb0b2z9">
+<p class="para">Az iFolder üzenetet jelenít meg a korábbi verzió adatainak meglétével kapcsolatban, és kéri az áttelepítést. </p>
+<p class="para">Kattintson az <span class="guimenu">OK</span> gombra a rendelkezésre álló 2.<span class="replaceable">x</span> verziójú iFolder mappák listájának megnyitásához.</p></li>
+<li class="step" id="b8annny">
+<p class="para">Válassza ki az áttelepíteni kívánt 2.<span class="replaceable">x</span> verziójú iFolder mappát.</p>
+<p class="para">Az áttelepítési segéd megjelenítéséhez kattintson az <span class="guimenu">Áttelepítés</span> gombra.</p>
+<div class="note">
+<p class="para"><em class="title">MEGJEGYZÉS:</em>Az áttelepítési segéd az <span class="guimenu">iFolder &gt; Áttelepítés &gt; Átállás a 2.x verzióról</span> paranccsal is elérhető.</p></div>
+
+<p class="para">Az áttelepítési segéd végigvezeti az adatok áttelepítésének folyamatán.</p></li>
+<li class="step" id="b8andsn">
+<p class="para"> Az Áttelepítési beállítások megjelenítéséhez kattintson a <span class="guimenu">Tovább</span> gombra.</p></li>
+<li class="step" id="b8anh5z">
+<p class="para">Válassza az egyiket a következők közül:</p>
+<div class="formalpara" id="b8ydakq">
+              <p class="title"><em class="title"><span class="guimenu">Az iFolder mappa áttelepítése és a 2.x tartományról való leválasztása</span>:</em>
+              Akkor válassza ezt a beállítást, ha a meglévő mappát le szeretné választani az iFolder 2.<span class="replaceable">x</span> verziójú tartományról, miután áthelyezte azt 3.7-es vagy újabb verziójúba.</p>
+            </div>
+
+<div class="formalpara" id="b8ydbqu">
+              <p class="title"><em class="title">
+                <span class="guimenu">Az iFolder mappa másolatának készítése és áthelyezése:</span>
+              </em>
+              Ezzel a beállítással másolatot készít az iFolder 2.<span class="replaceable">x</span> verziójú fájlokról, és konvertálja azokat iFolder 3.7-es vagy újabb formátumba. Ez a művelet nem távolítja el a fájlokat a 2.<span class="replaceable">x</span> verziójú iFolder-tartományból még az után sem, hogy a fájlokat áthelyezte az iFolder 3.7-es vagy újabb verziójába.</p>
+            </div>
+
+<p class="para">Ha ezt a beállítást választja, megadhatja <span class="guimenu">A szülőmappa másolása</span> beállítást is, így nem csupán a 2.<span class="replaceable">x</span> verziójú mappa tartalmát, hanem a szülőmappát is másolja. Ha nem adja meg ezt a beállítást, csupán a kijelölt mappa tartalmát helyezi át a segéd a 3.7-es vagy újabb verzióba. </p>
+<p class="para">Kattintson a <span class="guimenu">Tallózás</span> gombra az áttelepített mappa mentési helyének megkereséséhez.</p>
+<p class="para">Például a <span class="filename">c:/Documents and Settings/&lt;felhasználónév&gt;/ifolder2dir/</span> egy 2.<span class="replaceable">x</span> verziójú iFolder mappa, a <span class="filename">dir1</span> és a <span class="filename">dir2</span> pedig az <span class="filename">ifolder2dir</span> alatti könyvtárak. Ha megadja <span class="guimenu">A szülőmappa másolása</span> beállítást, az létrehozza az új helyen az<span class="filename">ifolder2dir</span> mappát, és belemásolja a <span class="filename">dir1</span> és <span class="filename">dir2</span> könyvtárakat. Ha nem adja meg a beállítást, csak a <span class="filename">dir1</span> és <span class="filename">dir2</span> mappákat telepíti át a rendszer a megadott helyre.</p></li>
+<li class="step" id="b8ann46">
+<p class="para">Kattintson a <span class="guimenu">Tovább</span> gombra a tartomány és a biztonsági beállítások megadásához.</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b8ao41w">
+<p class="para">Válassza ki a tartományt a legördülő listából.</p></li>
+<li class="step" id="b8ao481">
+<p class="para">Adja meg a megfelelő biztonsági beállításokat:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Válassza a <span class="guimenu">Titkosított</span> lehetőséget, ha a kijelölt iFolder mappát titkosítani kívánja.</p>
+<p class="listitem">Ha a bejelentkezési munkamenetben nem állította be a hozzáférési kódot, az iFolder kéri a hozzáférési kód beírását. Ezt a lépést kihagyhatja, és beállíthatja később is a hozzáférési kódot.</p>
+<p class="listitem">Ha éppen nem kapcsolódik az iFolder tartományhoz, a rendszer kéri, hogy csatlakozzon a tartományhoz.</p></li>
+<li class="listitem">
+<p class="listitem">Válassza a <span class="guimenu">Megosztott</span> beállítást, ha iFolder mappáját az iFolder tartomány más tagjaival is meg szeretné osztani.</p>
+<p class="listitem">Lehetőség van a titkosított 2.<span class="guimenu">x</span> verziójú iFolder mappa megosztott mappába való áttelepítésére. Amikor megpróbál egy titkosított 2.<span class="replaceable">x</span> verziójú iFolder mappát megosztott mappába áttelepítni, a rendszer a művelet megerősítését kéri.</p>
+<p class="listitem">A művelet megerősítéséhez kattintson az <span class="guimenu">OK</span> gombra.</p></li></ul></div>
+</li></ol>
+</div>
+</li>
+<li class="step" id="b8ao7ou">
+<p class="para">A kijelölt iFolder mappa áttelepítéséhez kattintson a <span class="guimenu">Tovább</span> gombra.</p></li>
+<li class="step" id="b8ao9s7">
+<p class="para">Ellenőrizze a megadott adatok helyességét, és ha szükséges, a <span class="guimenu">Vissza</span> gombra kattintva térjen vissza a korábbi lapokra a módosítások végrehajtásához. </p>
+<p class="para">Ha a megadott adatok helyesek, az áttelepítés megkezdéséhez kattintson az <span class="guimenu">Áttelepítés</span> gombra.</p>
+<p class="para">Az esetleg szükséges módosítások végrehajtásához kattintson a <span class="guimenu">Vissza</span> gombra.</p></li>
+<li class="step" id="bb51sen">
+<p class="para">Az áttelepítés befejezéséhez kattintson a <span class="guimenu">Befejezés</span> gombra.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="fr" lang="fr">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="fr" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Partage d'un iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "sharewith";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+
+<div class="sect1" id="sharewith">
+
+<h1 class="title"> Partage d'un iFolder</h1>
+
+<p class="para">Vous pouvez partager un dossier iFolder avec plusieurs utilisateurs. Cette section traite des tâches suivantes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bv2hnvt">Présentation des droits d'accès des utilisateurs</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b41tbcf">Accès à l'onglet Partage</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwm0">Ajout d'un utilisateur à un dossier iFolder</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwma">Modification des droits d'accès des utilisateurs</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#bq6lwmr">Suppression d'un utilisateur d'un dossier iFolder</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="sharewith.html#b47q8t9">Transfert de propriété à un utilisateur iFolder</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bv2hnvt">
+
+<h2 class="title"> Présentation des droits d'accès des utilisateurs</h2>
+
+<p class="para">Le tableau suivant décrit les actions possibles associées à chaque niveau d'accès pour les utilisateurs ou le groupe LDAP.  </p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Tous les membres d'un groupe LDAP héritent des droits d'accès définis pour ce groupe.</p></div>
+
+<div class="table" id="b4031ex">
+<table class="topbot-lines">
+              
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b4033q0"></a>
+<p class="para">Fonction</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Propriétaire</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Membre disposant du droit Contrôle total</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Membre disposant du droit Lecture-écriture</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Membre disposant du droit Lecture seule</p></th>
+</tr>
+            
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q1"></a>
+<p class="para">Avec un serveur d'entreprise, l'espace occupé par le dossier iFolder sur le serveur est défini par rapport au quota de l'utilisateur</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4033q2"></a>
+<p class="para">Transférer la propriété à un autre membre dont l'état est Utilisateur iFolder </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035im"></a>
+<p class="para">Définir un quota pour le dossier iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035in"></a>
+<p class="para">Rendre le dossier iFolder disponible pour les autres utilisateurs (partage)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035io"></a>
+<p class="para">Rendre le dossier iFolder indisponible pour les autres utilisateurs (cesser le partage)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui, à l'exception du propriétaire</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ip"></a>
+<p class="para">Assigner des droits d'accès aux dossiers iFolder à d'autres utilisateurs</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui, à l'exception du propriétaire</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iq"></a>
+<p class="para">Lire les répertoires et les fichiers dans le dossier iFolder </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ir"></a>
+<p class="para">Ajouter, modifier ou supprimer des répertoires et des fichiers dans le dossier iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035is"></a>
+<p class="para">Renommer les répertoires et les fichiers d'un dossier iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035it"></a>
+<p class="para">Renommer le dossier iFolder</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iu"></a>
+<p class="para">Configurer un dossier iFolder sur plusieurs ordinateurs</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iv"></a>
+<p class="para">Convertir un dossier iFolder (ne pas participer à un dossier sur un ordinateur local)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035iw"></a>
+<p class="para">Supprimer un dossier iFolder disponible pour ne pas y participer</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b4035ix"></a>
+<p class="para">Supprimer le dossier iFolder et ses fichiers sur le serveur (convertir le dossier en dossier normal et ne plus le partager avec d'autres utilisateurs)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Oui</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Non</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect2" id="b41tbcf">
+
+<h2 class="title"> Accès à l'onglet Partage</h2>
+
+<p class="para">Vous pouvez gérer l'adhésion pour le dossier iFolder à partir de l'onglet <span class="guimenu">Partage</span> dans la boîte de dialogue Propriétés iFolder.</p>
+<div class="procedure">
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Vous ne pouvez partager des dossiers iFolder que si l'administrateur iFolder a activé la stratégie de partage pour votre compte.</p></div>
+
+<ol class="steps">
+<li class="step" id="b41tmw1">
+<p class="para">Si iFolder n'est pas exécuté, lancez-le.</p></li>
+<li class="step" id="b41tmw2">
+<p class="para">Effectuez l'une des opérations suivantes pour ouvrir la boîte de dialogue Propriétés iFolder sous l'onglet <span class="guimenu">Partage</span>.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Dans un gestionnaire de fichiers, cliquez avec le bouton droit sur le dossier iFolder que vous souhaitez partager, puis cliquez sur <span class="guimenu">Partager avec</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Dans le navigateur iFolder, sélectionnez le dossier iFolder, puis sélectionnez <span class="guimenu">Partager avec</span>.</p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwm0">
+
+<h2 class="title"> Ajout d'un utilisateur à un dossier iFolder</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b41tjp8">
+<p class="para">Sous l'onglet <span class="guimenu">Partage</span>, cliquez sur <span class="guimenu">Ajouter</span> pour ouvrir la boîte de dialogue Sélectionner des utilisateurs.</p></li>
+<li class="step" id="bv2hqlb">
+<p class="para">Dans la liste des utilisateurs, sélectionnez un ou plusieurs utilisateurs ou groupes LDAP en les ajoutant à la liste <span class="guimenu">Utilisateurs à ajouter</span>, puis cliquez sur <span class="guimenu">OK</span>.</p>
+<p class="para">La synchronisation avec le serveur peut prendre quelques secondes. Immédiatement après la synchronisation, une notification apparaît dans la partie inférieure droite de la page.</p></li>
+<li class="step" id="bv2hqlc">
+<p class="para">Sous l'onglet <span class="guimenu">Partage</span>, sélectionnez un ou plusieurs utilisateurs auxquels vous souhaitez assigner le même droit d'accès. </p></li>
+<li class="step" id="b41tpyv">
+<p class="para">Cliquez sur <span class="guimenu">Droits</span>, sélectionnez le droit d'accès <span class="guimenu">Contrôle total</span>, <span class="guimenu">Lecture/écriture</span> ou <span class="guimenu">Lecture seule</span>, puis cliquez sur <span class="guimenu">OK</span>.</p></li>
+<li class="step" id="bx3vxly">
+<p class="para">Répétez les étapes précédentes jusqu'à ce que vous ayez invité tous les utilisateurs ou groupes LDAP souhaités à partager le dossier iFolder et défini leurs droits d'accès.</p></li>
+<li class="step" id="bv2hqld">
+<p class="para">Cliquez sur <span class="guimenu">Fermer</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwma">
+
+<h2 class="title"> Modification des droits d'accès des utilisateurs</h2>
+
+<p class="para">Étant donné que les relations de travail et l'état des membres d'un dossier iFolder changent, il peut être nécessaire de modifier le droit d'accès d'un utilisateur au dossier iFolder. Ainsi, il se peut que vous souhaitiez accorder à un utilisateur de confiance le droit Contrôle total pour le dossier iFolder.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hncw">
+<p class="para">Sous l'onglet <span class="guimenu">Partage</span>, sélectionnez un ou plusieurs utilisateurs auxquels vous souhaitez assigner le même droit d'accès.</p></li>
+<li class="step" id="bv2hoj5">
+<p class="para">Sélectionnez <span class="guimenu">Droits</span>, puis spécifiez le droit <span class="guimenu">Contrôle total</span>, <span class="guimenu">Lecture/écriture</span> ou <span class="guimenu">Lecture seule</span>.</p>
+<p class="para">Lorsque vous invitez pour la première fois un utilisateur ou un groupe LDAP à participer, l'option <span class="guimenu">Faire de cet utilisateur le propriétaire du dossier iFolder</span> est désactivée (grisée) dans la boîte de dialogue Accès.  Si vous prévoyez de faire du nouvel utilisateur le propriétaire du dossier, vous devez attendre que l'état de l'utilisateur passe de <span class="guimenu">Utilisateur invité</span> à <span class="guimenu">Utilisateur iFolder</span>. Vous pouvez ensuite transférer la propriété. Lorsque vous transférez la propriété à un groupe LDAP, tous les membres de ce groupe LDAP disposent des droits de possession.</p></li>
+<li class="step" id="bv2hpae">
+<p class="para">Cliquez sur <span class="guimenu">OK</span>, puis cliquez sur <span class="guimenu">OK</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bq6lwmr">
+
+<h2 class="title"> Suppression d'un utilisateur d'un dossier iFolder</h2>
+
+<p class="para">Pour annuler le partage d'un dossier iFolder, vous devez supprimer un utilisateur ou un groupe LDAP qui est membre de ce dossier.   Le dossier iFolder sur le poste de travail de l'utilisateur ou du membre du groupe LDAP devient un dossier normal.  Une copie des données est conservée sur le poste de travail de l'ancien membre, mais les fichiers ne sont plus synchronisés avec le dossier iFolder partagé.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bv2hug0">
+<p class="para">Sous l'onglet <span class="guimenu">Partage</span>, sélectionnez un ou plusieurs utilisateurs dans la liste.</p></li>
+<li class="step" id="bv2hug1">
+<p class="para">Cliquez sur <span class="guimenu">Supprimer</span>, puis sur <span class="guimenu">Oui</span>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="b47q8t9">
+
+<h2 class="title"> Transfert de propriété à un utilisateur iFolder </h2>
+
+<p class="para">Le propriétaire d'un dossier iFolder peut transférer la propriété de ce dernier à un autre membre individuel ou groupe LDAP dont l'état est Utilisateur iFolder.  Après le transfert, le propriétaire d'origine devient un membre disposant du droit Lecture-écriture, et l'espace occupé par le dossier iFolder est attribué au nouveau propriétaire. Lorsqu'un groupe LDAP devient le propriétaire d'un dossier iFolder, tous les membres du groupe disposent des droits de possession.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b47q70j">
+<p class="para">Dans un gestionnaire de fichiers ou le navigateur iFolder, cliquez avec le bouton droit sur le dossier iFolder que vous souhaitez transférer, puis sélectionnez <span class="guimenu">Partager avec</span> pour ouvrir la boîte de dialogue Propriétés du dossier iFolder dans l'onglet <span class="guimenu">Partage</span></p></li>
+<li class="step" id="b47q8tb">
+<p class="para">Dans la liste des utilisateurs, sélectionnez l'utilisateur iFolder que vous souhaitez définir comme nouveau propriétaire, puis cliquez sur <span class="guimenu">Droits</span>.</p></li>
+<li class="step" id="b47q70k">
+<p class="para">Sélectionnez <span class="guimenu">Désigner cet utilisateur comme propriétaire du dossier iFolder</span>.</p>
+<p class="para">L'option <span class="guimenu">Désigner cet utilisateur comme propriétaire du dossier iFolder</span> est désactivée (grisée) dans la boîte de dialogue Accès si l'état de l'utilisateur est <span class="guimenu">Utilisateur invité</span>. Dans ce cas, quittez la boîte de dialogue, attendez que l'état de l'utilisateur passe de <span class="guimenu">Utilisateur invité</span> à <span class="guimenu">Utilisateur iFolder</span>, puis répétez les étapes précédentes pour transférer la propriété.</p></li>
+<li class="step" id="b47qbju">
+<p class="para">Cliquez sur <span class="guimenu">OK</span>, puis cliquez sur <span class="guimenu">OK</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="viewhide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+</body>
+</html>

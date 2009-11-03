@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>Správa složek iFolder</title>
+ <entry leaf="true" id="locguide">Pokyny pro lokalizaci a použití složek iFolder</entry>
+ <entry leaf="true" id="typeguide">Pokyny pro typy souborů a velikosti, které nejsou určeny k synchronizování</entry>
+ <entry leaf="true" id="nameconv">Konvence pojmenování iFolder a jejích složek a souborů</entry>
+ <entry leaf="true" id="ificons">Porozumění ikonám iFolder</entry>
+ <entry leaf="true" id="bkjj1f9">Prohlížeč iFolder</entry>
+ <entry leaf="true" id="createifolder">Vytvoření a vyslání složek iFolder</entry>
+ <entry leaf="true" id="sharewith">Sdílení složky iFolder</entry>
+ <entry leaf="true" id="viewhide">Zobrazení a skrytí dostupných složek iFolder</entry>
+ <entry leaf="true" id="merge">Sloučení složek iFolder</entry>
+ <entry leaf="true" id="setupifolder">Stažení dostupných složek iFolder</entry>
+ <entry leaf="true" id="propifolders">Zobrazení a konfigurování vlastností složek iFolder</entry>
+ <entry leaf="true" id="managingpassphrse">Správa hesel pro zašifrované složky iFolder</entry>
+ <entry leaf="true" id="bkmgmdj">Změna hesla</entry>
+ <entry leaf="true" id="ifquota">Nastavení kvóty iFolder</entry>
+ <entry leaf="true" id="sync">Synchronizace souborů</entry>
+ <entry leaf="true" id="conflicts">Řešení souborových konfliktů</entry>
+ <entry leaf="true" id="movelocation">Přesunutí složky iFolder</entry>
+ <entry leaf="true" id="reverting">Převod složky iFolder na normální složku</entry>
+ <entry leaf="true" id="bbb7rj2">Odebrání členství ze sdílené složky iFolder</entry>
+ <entry leaf="true" id="deleting">Odstranění složky iFolder</entry>
+ <entry leaf="true" id="bbbcabq">Co dále</entry>
+</tocsection>

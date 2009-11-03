@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-cn" lang="zh-cn">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-cn" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:28" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>配置 iFolder 帐户</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "accounts";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
+
+<div class="sect1" id="accounts">
+
+<h1 class="title"> 配置 iFolder 帐户</h1>
+
+<p class="para"><span class="guimenu">使用 iFolder 帐户创建向导</span>添加并配置新帐户。您必须至少配置一个 iFolder 帐户才能创建 iFolder 或在系统上共享 iFolder。在任何给定时间均可使用一个帐户连接到 iFolder 服务器。但如果要连接到多个 iFolder 服务器，则可以配置多个帐户。您可以分别登录到每个帐户，也可以同时登录多个帐户。</p>
+<p class="para">持有不同本地登录身份的多个用户可以在同一台计算机上拥有 iFolder。在您第一次使用当前本地登录身份启动 iFolder 时，iFolder 会提示您设置一个 iFolder 帐户。</p>
+<div class="important">
+<p class="para"><em class="title">重要说明：</em>iFolder 3.7 和更高版本增加了一种称为自动创建帐户的新功能，可帮助 iFolder 管理员为您创建和配置帐户。如果您的 iFolder 管理员已启用了自动帐户创建功能，则不必为您自己配置帐户。当您首次启动 iFolder 时，将出现提示要求您输入口令。输入您的口令并完成帐户配置。</p></div>
+
+<p class="para">配置新帐户：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bviaku6">
+<p class="para">使用下列方法之一，访问 <span class="guimenu">iFolder 帐户创建向导</span>：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">在您第一次使用当前本地登录身份启动 iFolder 时，iFolder 会提示您设置一个 iFolder 帐户。单击<span class="guimenu">“向前”</span>直接转到<span class="guimenu">“iFolder 帐户创建向导”</span>。</p></li>
+<li class="listitem">
+<p class="listitem">右击通知区域中的 iFolder 服务 <img src="images/ifolder22.png" alt="iFolder 应用程序图标" title="iFolder 应用程序图标" class="inline" /> 图标，选择“帐户”<span class="guimenu">以打开“iFolder 首选设置”对话框，进入</span>“帐户”<span class="guimenu">选项卡，然后单击</span>“添加”<span class="guimenu">以打开</span>“iFolder 帐户创建向导”<span class="guimenu">。</span>
+      </p></li></ul></div>
+</li>
+<li class="step" id="bviamdh">
+<p class="para">遵循屏幕指导指定以下值：</p>
+<div class="informaltable">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bvibwik"></a>
+<p class="para">参数</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">说明</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwil"></a>
+<p class="para">服务器地址</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">您帐户所在的 iFolder Enterprise Server 的 DNS 名称或 IP 地址。从 iFolder 管理员处获取此信息。</p>
+<p class="para">例如： <span class="literal">svr21.example.com</span> 或 <span class="literal">192.168.1.1</span></p>
+<p class="para">服务器名始终随同其 IP 地址一起显示在 iFolder 用户界面上。例如：iFolder - 192.168.1.1</p>
+<div class="important">
+<p class="para"><em class="title">重要说明：</em>您不能使用 iFolder 3.7 或更高版本客户程序连接到 iFolder 3.2 服务器。</p></div>
+</td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwiq"></a>
+<p class="para">将此服务器设置为我的默认服务器</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">如果帐户连接有多个服务器，选中<span class="guimenu">“将此服务器设置为我的默认服务器”</span>复选框，将服务器下拉列表中选定的服务器设置为创建或上载 iFolder 时的默认服务器。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwim"></a>
+<p class="para">用户名</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">指定此帐户对应的用户身份。iFolder 管理员决定您应使用的格式是网络用户 ID（LDAP 常用名）还是电子邮件地址。</p>
+<p class="para">例如，如果您的姓名是 John Smith，用户 ID 是 jsmith，电子邮件地址是 john.smith@example.com<span class="literal"></span>，则管理员将为服务器配置一个设置以确定<span class="guimenu">“用户名”</span>字段接受两种格式中的哪一种来进行鉴定。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwin"></a>
+<p class="para">口令</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">指定用户名的口令。 </p>
+<p class="para">通过安全通道 (SSL) 进行鉴定。系统提示您是否验证并接受服务器证书。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvibwio"></a>
+<p class="para">记住口令<span class="guimenu"></span></p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">选中<span class="guimenu">此计算机上的“记住口令”</span>复选框，可以在登录到计算机时自动登录到此 iFolder 帐户。 </p>
+<p class="para">如果更改了网络口令，则在下一次 iFolder 尝试登录到 iFolder 帐户时，自动鉴定将失败。iFolder 将提示您用新口令登录并且允许您指定和保存新口令。</p></td>
+</tr></table>
+</div>
+</li>
+<li class="step" id="bk93jdq">
+<p class="para">校验您输入的信息。要进行任何更改，单击<span class="guimenu">“返回”</span>按钮，重新访问之前的页面。单击<span class="guimenu">“连接”</span> 以继续并验证与服务器的连接。</p></li>
+<li class="step" id="b2m63qj">
+<p class="para">如果提示您<span class="guimenu">“接受此服务器的证书”</span>，则单击<span class="guimenu">“细节”</span>查看证书信息，然后单击<span class="guimenu">“确定”</span>接受该证书信息。 </p>
+<div class="note">
+<p class="para"><em class="title">注：</em>创建帐户期间，用户通过 SSL 进行登录。当系统提示您接受服务器证书时，必须验证并接受该证书，才能成功连接。</p></div>
+</li>
+<li class="step" id="b8yvcnt">
+<p class="para">如果管理员已启用加密策略<span class="emphasis"></span>，iFolder 会提示您输入通行口令。 </p>
+<p class="para">在<span class="guimenu">“通行口令”</span>字段中输入通行口令。</p>
+<p class="para">在<span class="guimenu">“重新键入通行口令”</span>字段中重新输入通行口令。</p>
+<p class="para">选中<span class="guimenu">“记住通行口令”</span>复选框以在当前会话过程中自动访问加密的 iFolder 数据。如果选择此选项，iFolder 可在下次登录过程中记住您的通行口令。此通行口令交换会自动进行。</p></li>
+<li class="step" id="bkcapke">
+<p class="para">从列表中选择所需的恢复代理，然后单击<span class="guimenu">“确定”</span>。</p></li>
+<li class="step" id="bbba119">
+<p class="para">指定用于创建默认 iFolder 的位置。 </p>
+<p class="para">默认情况下，默认 iFolder 存储在<span class="filename">&lt;用户主目录&gt;/ifolder/服务器名/用户名</span>。 </p></li>
+<li class="step" id="bctnqjm">
+<p class="para">选择您希望创建的默认 iFolder 的类型。如果选择<span class="guimenu">“加密”</span>，则系统会提示您提供通行口令。 </p>
+<div class="important">
+<p class="para"><em class="title">重要说明：</em>您只能共享常规 iFolder。无法共享加密的 iFolder。</p></div>
+
+<p class="para">如果 iFolder 管理员尚未对您的当前帐户启用加密，您只能创建常规 iFolder，而如果启用加密，则默认情况下，<span class="guimenu">“常规”</span>选项处于选中状态。 </p></li>
+<li class="step" id="bft4h62">
+<p class="para">选择<span class="guimenu">“安全同步”</span>可对所创建的 iFolder 中的文件启用安全同步。</p>
+<p class="para">您可以同时对常规 iFolder 和加密 iFolder 启用安全通道。在选中此选项时，iFolder 允许使用安全通道在服务器上的 iFolder 与本地计算机上的 iFolder 间进行同步。</p>
+<p class="para">如果您去除服务器上的默认 iFolder，则下次从任何富客户端配置该帐户时，iFolder 将会提示您再次创建一个默认 iFolder。 </p>
+<p class="para">但如果从本地计算机去除默认的 iFolder，则下次配置帐户时 iFolder 会提示您下载默认的 iFolder。</p></li>
+<li class="step" id="bctnqjn">
+<p class="para">如果已设置了一个默认 iFolder，那么您可以将其下载到本地计算机。</p>
+<p class="para">下载默认 iFolder，单击<span class="guimenu">“下一步”</span>继续。</p></li>
+<li class="step" id="bk84xbh">
+<p class="para">如果系统中已存在与默认 iFolder 同名的文件夹，则您会收到合并两个文件夹或将默认 iFolder 下载至其他位置的提示。</p>
+<p class="para">单击<span class="guimenu">“确定”</span>合并两个文件夹或单击<span class="guimenu">“取消”</span>将默认 iFolder 下载至其他位置</p></li>
+<li class="step" id="b407oqi">
+<p class="para">单击<span class="guimenu">“完成”</span>，关闭 iFolder 帐户创建向导。</p>
+<p class="para">iFolder 同步指定帐户的用户列表，并且标识可用于下载的 iFolder。初次下载可能需要花费一些时间，这取决于帐户的用户列表的大小。 </p></li>
+<li class="step" id="b2m64i3">
+<p class="para">校验您设置的帐户是否出现在帐户列表中。</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b41ned9">
+<p class="para">在通知区域中右击<span class="guimenu">“iFolder 服务”</span><img src="images/ifolder22.png" alt="iFolder 应用程序图标" title="iFolder 应用程序图标" class="inline" /> 图标，然后从菜单中选择<span class="guimenu">“首选设置”</span>以打开<span class="guimenu">“iFolder 首选设置”</span>对话框并进入<span class="guimenu">“帐户”</span>选项卡。 
+      </p>
+<p class="para">当连接到 iFolder 服务器时，将选中<span class="guimenu">“联机”</span>复选框。</p></li>
+<li class="step" id="bvib1d8">
+<p class="para">关闭“iFolder 首选设置”对话框</p></li></ol>
+</div>
+</li>
+<li class="step" id="bvwsa5n">
+<p class="para">使用以下两种方法之一为帐户设置 iFolder：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">右击通知区域中的 <span class="guimenu">iFolder 服务</span>图标，然后选择<span class="guimenu">“iFolder”</span>以打开 iFolder 浏览器。继续<a href="createifolder.html">创建和上载 iFolder</a>。</p></li>
+<li class="listitem">
+<p class="listitem">如果此帐户的 iFolder 可从服务器下载，则将在 &lt;<span class="replaceable">iFolder 服务器名</span>&gt; 上 iFolder 窗口的“iFolder”下列出来。下载图标 <img src="images/if3_download.png" alt="iFolder 应用程序图标" title="iFolder 应用程序图标" class="inline" /> 指示 iFolder 可供下载。继续<a href="setupifolder.html">下载可用的 iFolder</a>。
+      </p></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="login.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
+</body>
+</html>

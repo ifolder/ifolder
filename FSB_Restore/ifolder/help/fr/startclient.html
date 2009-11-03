@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="fr" lang="fr">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="fr" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Démarrage du client iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "startclient";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+
+<div class="sect1" id="startclient">
+
+<h1 class="title"> Démarrage du client iFolder</h1>
+
+<p class="para">Lorsque iFolder s'exécute, l'icône <span class="guimenu">Services iFolder</span> <img src="images/ifolder22.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> apparaît dans la zone Notification de la barre des tâches. iFolder est intégré dans l'environnement de bureau.  Le symbole de iFolder (un « i » vert) <img src="images/ifolder32.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> s'affiche sur les dossiers iFolder lorsque ceux-ci s'affichent dans un gestionnaire de fichiers, sur le Bureau ou dans le navigateur iFolder. Le dossier codé iFolder est indiqué par le symbole<img src="images/ifolder_encrypted_fold.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> (dossier verrouillé).
+  </p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>La zone Notification de la barre des tâches doit être activée pour que l'icône <span class="guimenu">Services iFolder </span> apparaisse lorsque iFolder est en cours d'exécution. </p></div>
+
+<p class="para">Vous pouvez à tout moment travailler en local sur les fichiers se trouvant dans vos dossiers iFolder locaux. Lorsque le client iFolder est en cours d'exécution, il enregistre les changements que vous apportez aux données iFolder locales au fur et à mesure de votre travail. Si vous modifiez les données iFolder locales alors que iFolder n'est pas en cours d'exécution, iFolder identifie et consigne les différences au prochain démarrage.</p>
+<p class="para">Lorsque iFolder ne s'exécute pas, les dossiers iFolder apparaissent dans le gestionnaire de fichiers ou sur le Bureau.  Il vous est possible d'accéder aux fichiers dans votre copie locale d'un dossier iFolder, mais pas de gérer les dossiers iFolder. En outre, vous devez vous loguer à un compte pour créer un dossier iFolder ou synchroniser ses fichiers.</p>
+<div class="note">
+<p class="para"><em class="title">REMARQUE :</em>Lors de la création du compte, le login de l'utilisateur s'effectue via SSL. Lorsque vous êtes invité à accepter le certificat de serveur, vous devez le valider et l'accepter pour pouvoir établir une connexion.</p></div>
+
+<p class="para">Pour plus d'informations sur l'arrêt du client iFolder, reportez-vous à la section <a href="stopclient.html">Fermeture du client iFolder</a>.</p>
+<div class="sect2" id="b4064a7">
+
+<h2 class="title"> Linux</h2>
+
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#b40miua">Démarrage automatique de iFolder lors du login</a>
+            </p></li>
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#b4tb73z">Démarrage manuel de iFolder</a>
+            </p></li></ul></div>
+
+<div class="sect3" id="b40miua">
+
+<h3 class="title"> Démarrage automatique de iFolder lors du login</h3>
+
+<p class="para">Pour activer le démarrage automatique de iFolder lors du login, effectuez l'une des opérations suivantes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Ouvrez le menu Applications, cliquez sur <span class="guimenu">Plus d'applications</span>, localisez et cliquez avec le bouton droit sur <span class="guimenu">iFolder 3</span>, puis sélectionnez <span class="guimenu">Ajouter aux programmes de démarrage</span> dans le menu.</p></li>
+<li class="listitem">
+<p class="listitem">Assurez-vous que iFolder est en cours d'exécution lorsque vous vous déloguez, puis enregistrez les paramètres de la session. Sélectionnez cette option de session lorsque vous vous loguez sur l'ordinateur.</p></li>
+<li class="listitem">
+<p class="listitem">Ouvrez une fenêtre de terminal, loguez-vous en tant qu'utilisateur <span class="systemitem">root</span>, puis exécutez <span class="filename">/opt/gnome/bin/gnome-session-properties</span> pour ajouter iFolder aux programmes qui démarrent lorsque vous vous loguez.</p></li></ul></div>
+
+<p class="para">Pour désactiver le démarrage automatique de iFolder lors du login, effectuez l'une des opérations suivantes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Ouvrez le menu Applications, localisez et cliquez avec le bouton droit sur <span class="guimenu">iFolder 3</span>, puis sélectionnez <span class="guimenu">Supprimer des programmes de démarrage</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Assurez-vous que iFolder n'est pas en cours d'exécution lorsque vous vous déloguez, puis enregistrez les paramètres de la session.  Sélectionnez cette option de session lorsque vous vous loguez sur l'ordinateur.</p></li></ul></div>
+
+</div>
+
+<div class="sect3" id="b4tb73z">
+
+<h3 class="title"> Démarrage manuel de iFolder</h3>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bw187q5">
+<p class="para">Loguez-vous avec l'identité d'utilisateur Linux local que vous souhaitez utiliser lorsque vous créez des dossiers iFolder.</p></li>
+<li class="step" id="bw18fdr">
+<p class="para">Démarrez iFolder en faisant appel à l'une des méthodes suivantes :</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Dans la barre des tâches, ouvrez le menu Applications, cliquez sur <span class="guimenu">Plus d'applications</span>, localisez <span class="guimenu">iFolder 3</span> en lançant une recherche ou en faisant défiler les options disponibles, cliquez avec le bouton droit sur iFolder 3, puis sélectionnez <span class="guimenu">Démarrer iFolder 3</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Ouvrez un shell terminal et entrez :</p><pre class="screen">
+/usr/bin/ifolder
+</pre></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+</div>
+
+<div class="sect2" id="b406cyo">
+
+<h2 class="title"> Windows :</h2>
+
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#b4tb7g5">Démarrage automatique de iFolder lors du login</a>
+            </p></li>
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#b4tb879">Démarrage manuel de iFolder</a>
+            </p></li></ul></div>
+
+<div class="sect3" id="b4tb7g5">
+
+<h3 class="title"> Démarrage automatique de iFolder lors du login</h3>
+
+<p class="para">Pour démarrer automatiquement iFolder lors du login sur l'ordinateur :</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b41mcvg">
+<p class="para">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder </span><img src="images/ifolder22.png" alt="Icône de l'application iFolder " title="Icône de l'application iFolder " class="inline" />, puis sélectionnez <span class="guimenu">Préférences</span> pour ouvrir la boîte de dialogue Préférences iFolder sous l'onglet <span class="guimenu">Général</span>.
+      </p></li>
+<li class="step" id="b41mcvh">
+<p class="para">Sélectionnez <span class="guimenu">Démarrer iFolder lors du login sur l'ordinateur</span>, puis cliquez sur <span class="guimenu">Appliquer</span>.</p></li>
+<li class="step" id="b41mcvi">
+<p class="para">Cliquez sur <span class="guimenu">OK</span> pour fermer la boîte de dialogue Préférences iFolder.</p></li></ol>
+</div>
+
+<p class="para">Pour désactiver le démarrage automatique de iFolder lors du login sur l'ordinateur :</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b41m94h">
+<p class="para">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder</span>, puis sélectionnez <span class="guimenu">Préférences</span> pour ouvrir la boîte de dialogue Préférences iFolder sous l'onglet <span class="guimenu">Général</span>.</p></li>
+<li class="step" id="b41m9ty">
+<p class="para">Désélectionnez <span class="guimenu">Démarrer iFolder lors du login sur l'ordinateur</span>, puis cliquez sur <span class="guimenu">Appliquer</span>.</p></li>
+<li class="step" id="b41mac7">
+<p class="para">Cliquez sur <span class="guimenu">OK</span> pour fermer la boîte de dialogue Préférences iFolder.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect3" id="b4tb879">
+
+<h3 class="title"> Démarrage manuel de iFolder</h3>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bw08fxw">
+<p class="para">Loguez-vous avec l'identité d'utilisateur Windows local que vous souhaitez utiliser lorsque vous créez des dossiers iFolder.</p></li>
+<li class="step" id="bw08fxx">
+<p class="para">Si l'application iFolder ne démarre pas automatiquement après le login, démarrez-la en cliquant sur <span class="menuchoice"><span class="guimenu">Démarrer</span> > <span class="guimenu">Programmes</span> > <span class="guimenu">iFolder 3</span></span>, puis sélectionnez l'application <span class="guimenu">Client iFolder 3</span>. </p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<div class="sect2" id="b406d69">
+
+<h2 class="title"> Macintosh</h2>
+
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#bcpho1i">Démarrage automatique de iFolder lors du login</a>
+            </p></li>
+<li class="listitem">
+<p class="listitem">
+              <a href="startclient.html#bcphogg">Démarrage manuel de iFolder</a>
+            </p></li></ul></div>
+
+<div class="sect3" id="bcpho1i">
+
+<h3 class="title"> Démarrage automatique de iFolder lors du login</h3>
+
+<p class="para">Pour activer le démarrage automatique de iFolder lorsque vous vous loguez à votre ordinateur Macintosh, ajoutez iFolder aux <span class="guimenu">Éléments de démarrage</span>.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcphuq0">
+<p class="para">Démarrez iFolder.</p></li>
+<li class="step" id="bcphuse">
+<p class="para">À partir du dock, cliquez avec le bouton droit sur l'icône iFolder et sélectionnez l'option <span class="guimenu">Ouvrir au login</span>.</p>
+<p class="para">ou</p>
+<p class="para">À partir du dock, appuyez sur la touche Ctrl, cliquez sur l'icône iFolder, puis sélectionnez <span class="guimenu">Ouvrir au login</span>.</p></li></ol>
+</div>
+
+<p class="para">Pour désactiver le démarrage automatique de iFolder, supprimez iFolder des <span class="guimenu">Éléments de démarrage</span>.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcpi1cj">
+<p class="para">À partir du dock, cliquez avec le bouton droit sur l'icône iFolder et désélectionnez <span class="guimenu">Ouvrir au login</span>.</p>
+<p class="para">ou</p>
+<p class="para">À partir du dock, cliquez avec le bouton droit sur l'icône iFolder ou cliquez sur la touche Ctrl, puis désélectionnez <span class="guimenu">Ouvrir au login.</span></p></li></ol>
+</div>
+
+</div>
+
+<div class="sect3" id="bcphogg">
+
+<h3 class="title"> Démarrage manuel de iFolder</h3>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bw08fy1">
+<p class="para">Loguez-vous avec l'identité d'utilisateur Macintosh local que vous souhaitez utiliser lorsque vous créez des dossiers iFolder.</p></li>
+<li class="step" id="bw08fy2">
+<p class="para">Démarrez iFolder en faisant appel à l'une des méthodes suivantes : </p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Ouvrez le répertoire <span class="guimenu">Applications</span> sur l'unité <span class="systemitem">Macintosh HD</span>, sélectionnez <span class="guimenu">Applications</span>, puis double-cliquez sur <span class="guimenu"> iFolder 3</span>.</p></li>
+<li class="listitem">
+<p class="listitem">Tapez <span class="command">iFolder</span> dans Spotlight (bouton Apple + barre d'espace ou cliquez sur l'icône de la loupe en haut à droite), puis cliquez sur le dossier <span class="guimenu">iFolder 3</span> sous Applications.</p></li>
+<li class="listitem">
+<p class="listitem">Ouvrez un shell de terminal, loguez-vous en tant qu'utilisateur racine, puis entrez </p><pre class="screen">
+/Applications/iFolder 3.app/Contents/MacOS/iFolder 3
+</pre></li></ul></div>
+</li></ol>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="accounts.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+</body>
+</html>

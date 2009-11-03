@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>Verwalten von iFolder-Ordnern</title>
+ <entry leaf="true" id="locguide">Richtlinien für den Speicherort und die Verwendung von iFolder-Ordnern</entry>
+ <entry leaf="true" id="typeguide">Richtlinien für nicht zu synchronisierende Dateitypen und -größen</entry>
+ <entry leaf="true" id="nameconv">Benennungskonventionen für iFolder-Ordner und zugehörige Ordner und Dateien</entry>
+ <entry leaf="true" id="ificons">Einzelheiten zu den iFolder-Symbolen</entry>
+ <entry leaf="true" id="bkjj1f9">iFolder-Browser</entry>
+ <entry leaf="true" id="createifolder">Erstellen und Hochladen eines iFolder-Ordners</entry>
+ <entry leaf="true" id="sharewith">Freigeben von iFolder-Ordnern</entry>
+ <entry leaf="true" id="viewhide">Anzeigen und Ausblenden verfügbarer iFolder-Ordner</entry>
+ <entry leaf="true" id="merge">iFolder-Ordner zusammenführen</entry>
+ <entry leaf="true" id="setupifolder">Herunterladen verfügbarer iFolder-Ordner</entry>
+ <entry leaf="true" id="propifolders">Anzeigen und Konfigurieren der Eigenschaften von iFolder-Ordnern</entry>
+ <entry leaf="true" id="managingpassphrse">Verwalten von Passwortsätzen für verschlüsselte iFolder-Ordner</entry>
+ <entry leaf="true" id="bkmgmdj">Ändern des Passworts</entry>
+ <entry leaf="true" id="ifquota">Festlegen einer iFolder-Quote</entry>
+ <entry leaf="true" id="sync">Synchronisieren von Dateien</entry>
+ <entry leaf="true" id="conflicts">Lösen von Dateikonflikten</entry>
+ <entry leaf="true" id="movelocation">Verschieben von iFolder-Ordnern</entry>
+ <entry leaf="true" id="reverting">Zurücksetzen von iFolder-Ordnern auf normale Ordner</entry>
+ <entry leaf="true" id="bbb7rj2">Entfernen der Mitgliedschaft aus einem freigegebenen iFolder-Ordner</entry>
+ <entry leaf="true" id="deleting">Löschen von iFolder-Ordnern</entry>
+ <entry leaf="true" id="bbbcabq">Weitere Schritte</entry>
+</tocsection>

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="hu" lang="hu">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="hu" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:45" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>iFolder 3.x ügyfelek frissítése</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> iFolder 3.<span class="replaceable">x</span> ügyfelek frissítése</h1>
+
+<p class="para">Ebben a részben az alábbi témák ismertetése található:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bctryt8">Automatikus frissítés az iFolder 3.7 verzióra vagy újabb verziókra</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bbjs0lm">Manuális frissítés az iFolder 3.7-es vagy újabb verziójára</a>
+          </p></li></ul></div>
+
+<div class="important">
+<p class="para"><em class="title">FONTOS:</em>A 3.4.1 verziójú ügyfél frissítése előtt készítsen biztonsági mentést a helyi Simias-tárolóról. Ha nem végzi el a biztonsági mentést, a számítógépen található összes konfigurációs információ elvész, mivel sikertelen frissítésnél törlődik a Simias-tároló.</p></div>
+
+<div class="sect2" id="bctryt8">
+
+<h2 class="title"> Automatikus frissítés az iFolder 3.7 verzióra vagy újabb verziókra</h2>
+
+<p class="para">Az automatikus frissítés csak akkor lehetséges, ha Ön gyökér szintű hozzáférési jogokkal rendelkezik, mivel ennek a folyamatnak telepítenie kell az RPM csomagokat. A frissítés során a program kéri a gyökér szintű jelszót. Ha Ön nem rendelkezik gyökér szintű hozzáférési jogokkal, a csomag nem telepítődik automatikusan. Az ügyfél csomagjai azonban letöltődnek egy ideiglenes helyre. A Linux ügyfél letöltésének helye: <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Így a későbbiekben elvégezheti a frissítést, mert a letöltési helyen megtalálható két telepítési parancsfájl is, amelyek manuálisan futtathatók. Az ügyfél frissítéséig nem tud a 3.7-es vagy újabb verziójú iFolder-tartományhoz iFolder 3.<span class="replaceable">x</span> verziójú ügyféllel csatlakozni.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjrxu1">
+<p class="para">Az iFolder 3.<span class="replaceable">x</span> verziójú, az iFolder 3.7 verziónál korábbi iFolder ügyfél esetén próbáljon meg kapcsolódni az iFolder kiszolgálóhoz. A program rákérdez, hogy el kívánja-e végezni a frissítést.</p></li>
+<li class="step" id="bctryta">
+<p class="para">Kattintson az <span class="guimenu">Igen</span> gombra az iFolder 3.<span class="guimenu">x</span> verziójú ügyfél automatikus frissítéséhez.</p></li></ol>
+</div>
+
+<p class="para">Az iFolder 3.4.1-es verziója esetén ha a <span class="guimenu">Nem</span> gombra kattint, és megpróbál csatlakozni az iFolder 3.4.1 ügyféllel a 3.7-es vagy újabb iFolder kiszolgálóhoz, hibaüzenetet kap. Kattintson az <span class="guimenu">OK</span> gombra  az üzenet elvetéséhez.</p>
+</div>
+
+<div class="sect2" id="bbjs0lm">
+
+<h2 class="title"> Manuális frissítés az iFolder 3.7-es vagy újabb verziójára</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjefu4">
+<p class="para">Nyisson meg egy terminált. A parancssorból futtassa az <span class="command">install-ifolder.sh</span>.</p></li>
+<li class="step" id="bbjeh6h">
+<p class="para">Amikor a rendszer kéri, adja meg a gyökér szintű jelszót.</p>
+<p class="para">Ennek hatására bezáródik az iFolder ügyfél, ha már fut, majd frissítődik az XPS webkiszolgáló, az iFolder ügyfél, valamint a Nautilus-ifolder3 beépülő modul.</p></li>
+<li class="step" id="bbjehh4">
+<p class="para">Indítsa el az iFolder programot az <span class="guimenu">Alkalmazás</span> menüből.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+</body>
+</html>

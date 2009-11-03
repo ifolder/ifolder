@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-tw" lang="zh-tw">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-tw" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>管理已加密 iFolder 的密碼片語</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "managingpassphrse";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+
+<div class="sect1" id="managingpassphrse">
+
+<h1 class="title"> 管理已加密 iFolder 的密碼片語</h1>
+
+<p class="para">加密的 iFolder 有唯一的資料加密金鑰，這是在 iFolder 建立期間自動產生。該金鑰是使用密碼片語 (由使用者提供) 以及復原代理程式的公用金鑰所加密。 </p>
+<p class="para">若 iFolder 管理員已在伺服器上啟用加密規則，則建立 iFolder 帳戶期間會選取復原代理程式。</p>
+<p class="para">若 iFolder 管理員已啟用加密，則建立 iFolder 時會顯示一個對話方塊，讓您輸入您的密碼片語。iFolder 使用該密碼片語來產生唯一的加密金鑰，以加密或解密 iFolder 伺服器上的 iFolder 資料。若忘記該密碼片語，您將無法存取 iFolder 資料。您必須重設密碼片語，才能取得 iFolder 資料的存取權。</p>
+<div class="sect2" id="bknig1s">
+
+<h2 class="title"> 復原加密的 iFolder</h2>
+
+<p class="para">使用「密碼片語復原精靈」來重設密碼片語及復原加密的 iFolder。依照下列步驟啟動「密碼片語復原精靈」：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknk4gv">
+<p class="para">在 iFolder 瀏覽器中，按一下<span class="guimenu">「安全性」&gt;「忘記密碼片語」</span>以啟動精靈。</p></li>
+<li class="step" id="bknk53e">
+<p class="para">從<span class="guimenu">「iFolder 帳戶」</span>清單中，選取要重設密碼片語的網域，然後按一下<span class="guimenu">「下一步」</span>。</p>
+<p class="para">在建立 iFolder 帳戶期間，若已選取 Server_Default 選項做為復原代理程式，則會顯示「設定新密碼片語」頁面。若要重設新密碼片語，請參閱<a href="managingpassphrse.html#bknigkn">在復原代理程式是 Server_Default 時重設密碼片語</a>。</p>
+<p class="para">換句話說，若選取 Server_Default 以外的復原代理程式，則您必須使用<a href="managingpassphrse.html#bknigq8">在復原代理程式不是 Server_Default 時重設密碼片語</a>來重設密碼片語。</p></li></ol>
+</div>
+
+<div class="sect3" id="bknigkn">
+
+<h3 class="title"> 在復原代理程式是 Server_Default 時重設密碼片語</h3>
+
+<p class="para">若要設定新密碼片語，請執行下列步驟：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknkrbv">
+<p class="para">在「設定新密碼片語」頁面中的<span class="guimenu">「新密碼片語」</span>欄位指定新密碼片語。</p></li>
+<li class="step" id="bknkt5g">
+<p class="para">在<span class="guimenu">「確認密碼片語」</span>欄位重新輸入新密碼片語。<span class="guimenu"></span></p></li>
+<li class="step" id="bknkxtk">
+<p class="para">在<span class="guimenu">「密碼」</span>欄位指定密碼，然後按一下<span class="guimenu">「下一步」</span>。</p></li>
+<li class="step" id="bknl4px">
+<p class="para">成功重設密碼片語之後，請按一下<span class="guimenu">「完成」</span>關閉精靈。</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect3" id="bknigq8">
+
+<h3 class="title"> 在復原代理程式不是 Server_Default 時重設密碼片語</h3>
+
+<p class="para">若要在選取的復原代理程式不是 Server_Default 的情況下重設密碼片語，<span class="guimenu"></span>請依照下列步驟執行：</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bknihtk">
+<p class="para">精靈的「歡迎使用」頁面會顯示重設密碼片語所需的資訊。按一下<span class="guimenu">「下一步」</span>以顯示「密碼片語復原方式」頁面。</p></li>
+<li class="step" id="bknihtm">
+<p class="para">在該精靈中，有三種方式可用來重設密碼片語：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bknijt2">
+                    <p class="title"><em class="title">使用祕密檔案與其密碼：</em>
+                    使用祕密檔案與其密碼來重設密碼片語。若您有維護祕密檔案與其密碼，則可以使用精靈來指定祕密檔案的位置並提供其密碼。若要使用祕密檔案來重設密碼片語，請參閱<a href="managingpassphrse.html#bknilk4">使用祕密檔案來重設密碼片語</a>。</p>
+                  </div>
+
+<div class="note">
+<p class="para"><em class="title">附註：</em>您可以向 iFolder 管理員索取祕密檔案與其密碼。 </p></div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bknijt3">
+                    <p class="title"><em class="title">使用新資料檔：</em>
+                    您也可以使用新資料檔來重設密碼片語。執行完舊資料檔的輸出操作之後，您可以向管理員索取新資料檔。若要使用新資料檔來重設密碼片語，請參閱<a href="managingpassphrse.html#bknim3f">使用新資料檔來重設密碼片語</a>。 </p>
+                  </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bkninnm">
+                    <p class="title"><em class="title">輸出舊資料檔：</em>
+                    若沒有祕密檔案或新資料檔，您可以使用精靈來輸出舊資料檔，然後使用電子郵件將該檔案寄給您的管理員。當管理員送回新資料檔時，您就可以使用精靈來重設密碼片語。若要輸出舊資料檔，請參閱<a href="managingpassphrse.html#bknim8d">使用輸出的檔案來重設密碼片語</a>。</p>
+                  </div>
+</li></ul></div>
+</li></ol>
+</div>
+
+<p class="para">下表摘述您執行的決定。</p>
+<div class="table" id="bknihtq">
+<table class="topbot-lines">
+                
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bknihtr"></a>
+<p class="para">設定</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">描述</p></th>
+</tr>
+              
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihts"></a>
+<p class="para">「iFolder 帳戶」清單</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">顯示已設定的 iFolder 帳戶清單。根據預設，會選取第一個登入的帳戶。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtt"></a>
+<p class="para">祕密檔案位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表可向 iFolder 管理員取得之證書的的私密金鑰檔案位置。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtu"></a>
+<p class="para">祕密密碼</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表祕密金鑰檔案的密碼。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtv"></a>
+<p class="para">一次性密碼</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表管理員用來加密新資料檔的密碼。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtw"></a>
+<p class="para">新資料檔位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表解密之金鑰檔案的位置。您可以在執行完舊資料檔的輸出操作之後，向 iFolder 管理員索取新資料檔。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtx"></a>
+<p class="para">要用來儲存舊資料檔的位置</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表要用來儲存輸出之金鑰檔案的位置。輸出舊資料檔之後，您可以使用電子郵件將它寄給您的管理員。管理員接著會傳送新資料檔給您。</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihty"></a>
+<p class="para">新密碼片語</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表您輸入的新密碼片語，此密碼片語會用來加密唯一的資料加密金鑰 (此金鑰是在 iFolder 建立期間自動產生)。</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtz"></a>
+<p class="para">確認密碼片語</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">代表您必須再次輸入的新密碼片語。</p></td>
+</tr></table>
+</div>
+
+</div>
+
+<div class="sect3" id="bknilk4">
+
+<h3 class="title"> 使用祕密檔案來重設密碼片語</h3>
+
+<p class="para">若要使用祕密檔案來重設密碼片語，請執行下列步驟：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">選取<span class="guimenu">「我有祕密檔案與其密碼」</span>選項，然後按一下<span class="guimenu">「下一步」</span>。</p></li>
+            
+<li class="listitem">
+<p class="listitem">填寫下列欄位：</p>
+<div class="formalpara" id="bknm2yo">
+                <p class="title"><em class="title">祕密檔案位置：</em>
+                指定祕密檔案位置，或按一下<span class="guimenu">「瀏覽」</span>按鈕尋找並選取祕密檔案。</p>
+              </div>
+
+<div class="formalpara" id="bknm4il">
+                <p class="title"><em class="title">祕密密碼：</em>
+                指定祕密檔案的密碼。</p>
+              </div>
+
+<div class="formalpara" id="bknm4im">
+                <p class="title"><em class="title">新密碼片語：</em>
+                指定新密碼片語。</p>
+              </div>
+
+<div class="formalpara" id="bknm4in">
+                <p class="title"><em class="title">確認密碼片語</em>
+                再次輸入新密碼片語。</p>
+              </div>
+</li>
+            
+<li class="listitem">
+<p class="listitem">按一下<span class="guimenu">「下一步」</span>以重設密碼片語。</p></li>
+            
+<li class="listitem">
+<p class="listitem">按一下「<span class="guimenu">完成</span>」，便可關閉精靈。</p></li>
+          </ol></div>
+
+<div class="note">
+<p class="para"><em class="title">附註：</em>您可以向 iFolder 管理員索取祕密檔案與其密碼。 </p></div>
+
+</div>
+
+<div class="sect3" id="bknim3f">
+
+<h3 class="title"> 使用新資料檔來重設密碼片語</h3>
+
+<p class="para">若要使用新資料檔來重設密碼片語，請執行下列步驟：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">選取<span class="guimenu">「我有管理員傳送給我的新資料檔」</span>選項，然後按一下<span class="guimenu">「下一步」</span>。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">「新資料檔位置」</span>欄位中，指定新資料檔的位置，或按一下<span class="guimenu">「瀏覽」</span>按鈕尋找並選取新資料檔。</p></li>
+            
+<li class="listitem">
+<p class="listitem">若管理員送給您的新資料檔已加密，請選取<span class="guimenu">「上列檔案是否已加密？」</span>核取方塊。當您選取此核取方塊時，會啟用<span class="guimenu">「一次性密碼」</span>欄位。 </p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">「一次性密碼」</span>欄位中，指定管理員用來加密新資料檔的密碼。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">「新密碼片語」</span>欄位中，指定新密碼片語。</p></li>
+            
+<li class="listitem">
+<p class="listitem"> 在<span class="guimenu">「確認密碼片語」</span>欄位中，再次輸入新密碼片語。</p></li>
+            
+<li class="listitem">
+<p class="listitem">按一下<span class="guimenu">「下一步」</span>以重設密碼片語。</p></li>
+            
+<li class="listitem">
+<p class="listitem">按一下「<span class="guimenu">完成</span>」，便可關閉精靈。</p></li>
+          </ol></div>
+
+</div>
+
+<div class="sect3" id="bknim8d">
+
+<h3 class="title"> 使用輸出的檔案來重設密碼片語</h3>
+
+<p class="para">若要在沒有祕密檔案或新資料檔的情況下重設密碼片語：</p>
+<div class="orderedlist">
+<ol class="orderedlist">
+            
+<li class="listitem">
+<p class="listitem">選取<span class="guimenu">「我沒有祕密檔案或資料檔」</span>選項，然後按一下<span class="guimenu">「下一步」</span>。</p></li>
+            
+<li class="listitem">
+<p class="listitem">在<span class="guimenu">「要用來儲存舊資料檔的位置」</span>欄位中，指定要用來儲存舊資料檔的位置，或按一下<span class="guimenu">「瀏覽」</span>按鈕以指定要用來儲存舊資料檔的位置。 </p></li>
+            
+<li class="listitem">
+<p class="listitem">按一下<span class="guimenu">「下一步」</span>以取得舊資料檔。會顯示舊資料檔位置與 iFolder 管理員的電子郵件地址。您可以使用此資訊來取得新資料檔。</p></li>
+            
+<li class="listitem">
+<p class="listitem">按一下「<span class="guimenu">完成</span>」，便可關閉精靈。</p></li>
+            
+<li class="listitem">
+<p class="listitem">使用電子郵件將舊資料檔寄給您的 iFolder 管理員，並要求取得新資料檔。</p></li>
+            
+<li class="listitem">
+<p class="listitem">當您收到新資料檔時，請參閱<a href="managingpassphrse.html#bknim3f">使用新資料檔來重設密碼片語</a>以重設您的密碼片語。 </p></li>
+          </ol></div>
+
+</div>
+
+</div>
+
+<div class="sect2" id="bkmh0g8">
+
+<h2 class="title"> 變更密碼片語</h2>
+
+<p class="para">基於安全性理由，您必須定期變更密碼片語。您可以使用您的「復原」代理程式傳送給您的一次性密碼片語來重設密碼片語。</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bkmh1hl">
+<p class="para">在 iFolder 瀏覽器中，選取<span class="guimenu">「安全性」&gt;「變更密碼片語」</span>。</p></li>
+<li class="step" id="bkmh1of">
+<p class="para">在<span class="guimenu">「變更密碼片語」</span>視窗中，選取要重設密碼片語的 iFolder 帳戶，並指定下列詳細資料：</p>
+<div class="formalpara" id="bkmh1ww">
+              <p class="title"><em class="title">輸入通關密語：</em>
+              指定目前的密碼片語。</p>
+            </div>
+
+<div class="formalpara" id="bkmh318">
+              <p class="title"><em class="title">輸入新的通關密語：</em>
+              指定要為目前 iFolder 帳戶設定的新密碼片語。</p>
+            </div>
+
+<div class="formalpara" id="bkmh319">
+              <p class="title"><em class="title">重新輸入通關密語：</em>
+              再次指定新密碼片語進行確認。</p>
+            </div>
+
+<div class="formalpara" id="bkmh31a">
+              <p class="title"><em class="title">復原代理程式：</em>
+              選取您為目前 iFolder 帳戶設定的復原代理程式。</p>
+            </div>
+</li>
+<li class="step" id="bkmh2t3">
+<p class="para">按一下<span class="guimenu">「重設」</span>。</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bkmgmdj.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+</body>
+</html>

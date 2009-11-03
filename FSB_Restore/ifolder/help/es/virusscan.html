@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="es" lang="es">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="es" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:54" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Configuración de los valores de exploración de virus local para el tráfico de iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "virusscan";
+  var parentId = "accountsprefs";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tabla de contenido' title='Tabla de contenido' />Tabla de contenido</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+
+<div class="sect1" id="virusscan">
+
+<h1 class="title"> Configuración de los valores de exploración de virus local para el tráfico de iFolder</h1>
+
+<p class="para">Si utiliza un software de exploración de virus en el equipo, excluya el directorio <span class="filename">..\simias\WorkArea\</span> de la exploración. Por ejemplo, la ubicación del directorio <span class="filename">..\simias\WorkArea\</span> en Windows es <span class="filename">c:\documents and settings\<span class="replaceable">nombre_usuario</span>\configuración local\datos de programa\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
+<p class="para">El directorio <span class="filename">....\simias\WorkArea\</span> es donde iFolder organiza los archivos para descargar del servidor. Si un archivo de una carpeta iFolder contiene un virus y el software de exploración de virus encuentra dicho virus mientras el archivo se encuentra en el directorio <span class="filename">..\simias\WorkArea</span>, el explorador de virus mostrará un mensaje emergente que indicará que se ha detectado un virus, pondrá el archivo en cuarentena y, a continuación, iFolder intentará de nuevo sincronizar el archivo. </p>
+<p class="para">Si no se explora el directorio WorkArea, podrá terminar la sincronización. El archivo infectado se descargará correctamente y se moverá a la carpeta iFolder local. A continuación, la exploración de virus detectará el archivo infectado en la carpeta iFolder y lo pondrá en cuarentena, con lo que protegerá al equipo de la infección. iFolder detectará la supresión del archivo y, al comenzar la siguiente sincronización, lo eliminará del servidor y de los equipos miembro. </p>
+<p class="para">No obstante, si la carpeta iFolder en la que se ha descargado el archivo es de sólo lectura, la supresión local no se aplicará al servidor ni a otros equipos miembro. El virus debe detectarse en todas las ubicaciones con permisos para sincronizar cambios. Probablemente, el explorador de virus del usuario alertará al usuario de la existencia de un virus, por lo que dicho usuario deberá alertar a los demás miembros de la carpeta iFolder acerca de su existencia.</p>
+</div>
+
+<p class="trademark"> Para obtener más información, consulte <a href="legal.html">Información legal</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="delacct.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
+</div>
+
+</body>
+</html>

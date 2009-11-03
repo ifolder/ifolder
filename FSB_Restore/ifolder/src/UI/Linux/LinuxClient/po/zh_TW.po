@@ -1,0 +1,2863 @@
+# Copyright (C) 2006 SuSE Linux Products GmbH, Nuernberg
+# This file is distributed under the same license as the package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: en\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-11-09 12:01-0700\n"
+"PO-Revision-Date: 2009-08-12 11:16\n"
+"Last-Translator: Novell Language <language@novell.com>\n"
+"Language-Team: Novell Language <language@novell.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/LinuxClient/application/iFolderApplication.cs:377 
+msgid "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "iFolder 已滿。\n\n按一下<a href=\"ShowSyncLog\">這裡</a>以檢視「同步化記錄」。"
+
+#: src/LinuxClient/application/iFolderApplication.cs:396 
+msgid "You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
+msgstr "您具有此 iFolder 的唯讀存取權限。您放置在此 iFolder 的檔案將不會進行同步化。\n\n按一下<a href=\"ShowSyncLog\">這裡</a>以檢視「同步化記錄」。"
+
+#: src/LinuxClient/application/iFolderApplication.cs:466 
+#, csharp-format
+msgid "Incomplete Synchronization: {0}"
+msgstr "同步化未完成：{0}"
+
+#: src/LinuxClient/application/iFolderApplication.cs:533 
+#, csharp-format
+msgid "New iFolder \"{0}\""
+msgstr "新增 iFolder「{0}」"
+
+#: src/LinuxClient/application/iFolderApplication.cs:535 
+#, csharp-format
+msgid "{0} has invited you to participate in this shared iFolder.\n\nClick <a href=\"SetUpiFolder:{1}\">here</a> to set up this iFolder."
+msgstr "{0} 已經邀請您參與共享 iFolder。\n\n按一下<a href=\"SetUpiFolder:{1}\">這裡</a>以設定此 iFolder。"
+
+#: src/LinuxClient/application/iFolderApplication.cs:591 
+#, csharp-format
+msgid "A conflict has been detected in this iFolder.\n\nClick <a href=\"ResolveiFolderConflicts:{0}\">here</a> to resolve the conflicts.\nWhat is a <a href=\"ShowConflictHelp\">conflict</a>?"
+msgstr "在此 iFolder 中偵測到衝突。\n\n按一下<a href=\"ResolveiFolderConflicts:{0}\">這裡</a>以解決衝突。\n<a href=\"ShowConflictHelp\">衝突</a>是什麼？"
+
+#: src/LinuxClient/application/iFolderApplication.cs:650 
+msgid "New iFolder User"
+msgstr "新 iFolder 使用者"
+
+#: src/LinuxClient/application/iFolderApplication.cs:651 
+#, csharp-format
+msgid "{0} has joined the iFolder \"{1}\""
+msgstr "{0} 已經加入 iFolder「{1}」"
+
+#: src/LinuxClient/application/iFolderApplication.cs:757 
+msgid "Welcome to iFolder"
+msgstr "歡迎使用 iFolder"
+
+#: src/LinuxClient/application/iFolderApplication.cs:826 
+msgid "iFolder is starting"
+msgstr "iFolder 正在啟動"
+
+#: src/LinuxClient/application/iFolderApplication.cs:839 
+msgid "iFolder is shutting down"
+msgstr "iFolder 正在關閉"
+
+#: src/LinuxClient/application/iFolderApplication.cs:879 
+#: src/LinuxClient/library/iFolderWindow.cs:290
+msgid "iFolders"
+msgstr "iFolder"
+
+#: src/LinuxClient/application/iFolderApplication.cs:886 
+msgid "Accounts"
+msgstr "帳戶"
+
+msgid "General"
+msgstr "一般"
+
+#: src/LinuxClient/application/iFolderApplication.cs:893 
+msgid "Synchronization Log"
+msgstr "同步化記錄"
+
+#: src/LinuxClient/application/iFolderApplication.cs:903 
+msgid "Preferences"
+msgstr "優先設定"
+
+#: src/LinuxClient/application/iFolderApplication.cs:912 
+msgid "Help"
+msgstr "說明"
+
+#: src/LinuxClient/application/iFolderApplication.cs:921 
+msgid "About"
+msgstr "關於"
+
+#: src/LinuxClient/application/iFolderApplication.cs:949 
+msgid "Quit"
+msgstr "結束"
+
+#: src/LinuxClient/library/AccountDialog.cs:54 
+msgid "Details"
+msgstr "詳細資料"
+
+#: src/LinuxClient/library/AccountDialog.cs:65 
+msgid "Close"
+msgstr "關閉"
+
+#: src/LinuxClient/library/AccountDialog.cs:108 
+msgid "System Information"
+msgstr "系統資訊"
+
+#: src/LinuxClient/library/AccountDialog.cs:140 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:340
+#: src/LinuxClient/library/iFolderConflictDialog.cs:387
+#: src/LinuxClient/library/iFolderConflictDialog.cs:431
+#: src/LinuxClient/library/iFolderConflictDialog.cs:491
+msgid "Name:"
+msgstr "名稱："
+
+#: src/LinuxClient/library/AccountDialog.cs:150 
+#: src/LinuxClient/library/CreateDialog.cs:139
+msgid "Description:"
+msgstr "描述："
+
+#: src/LinuxClient/library/AccountDialog.cs:181 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:372
+msgid "Disk Space on Server"
+msgstr "伺服器上的磁碟空間"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:100
+msgid "0"
+msgstr "0"
+
+#: src/LinuxClient/library/AccountDialog.cs:201 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
+msgid "Quota:"
+msgstr "配額： "
+
+#: src/LinuxClient/library/AccountDialog.cs:209 
+#: src/LinuxClient/library/AccountDialog.cs:221
+#: src/LinuxClient/library/AccountDialog.cs:233
+#: src/LinuxClient/library/AccountDialog.cs:294
+#: src/LinuxClient/library/AccountDialog.cs:306
+#: src/LinuxClient/library/AccountDialog.cs:318
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:402
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:407
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:420
+msgid "MB"
+msgstr "MB"
+
+#: src/LinuxClient/library/AccountDialog.cs:213 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:394
+msgid "Used:"
+msgstr "已使用： "
+
+#: src/LinuxClient/library/AccountDialog.cs:225 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:412
+msgid "Available:"
+msgstr "可用： "
+
+#: src/LinuxClient/library/AccountDialog.cs:258 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
+msgid "full"
+msgstr "已滿"
+
+#: src/LinuxClient/library/AccountDialog.cs:263 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:446
+msgid "empty"
+msgstr "空的"
+
+#: src/LinuxClient/library/AccountDialog.cs:273 
+#: src/LinuxClient/library/AccountDialog.cs:275
+#: src/LinuxClient/library/AccountDialog.cs:277
+#: src/LinuxClient/library/AccountDialog.cs:287
+#: src/LinuxClient/library/AccountDialog.cs:299
+#: src/LinuxClient/library/AccountDialog.cs:311
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:89
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:128
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:490
+msgid "N/A"
+msgstr "N/A"
+
+#: src/LinuxClient/library/CreateDialog.cs:81 
+msgid "New iFolder..."
+msgstr "新增 iFolder..."
+
+#: src/LinuxClient/library/CreateDialog.cs:105 
+msgid "More options"
+msgstr "更多選項"
+
+#: src/LinuxClient/library/CreateDialog.cs:114 
+#: src/LinuxClient/library/iFolderLoginDialog.cs:176
+#: src/LinuxClient/library/iFolderLoginDialog.cs:195
+msgid "iFolder Server:"
+msgstr "iFolder 伺服器："
+
+#: src/LinuxClient/library/FileRenameDialog.cs:57 
+msgid "Rename file"
+msgstr "重新命名檔案"
+
+#: src/LinuxClient/library/FileRenameDialog.cs:68 
+msgid "File name:"
+msgstr "檔案名稱："
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:65 
+msgid "Set Up iFolder: "
+msgstr "設定 iFolder： "
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:78 
+msgid "Details:"
+msgstr "詳細資料： "
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:88 
+#, csharp-format
+msgid "Name: {0}\nShared by: {1}\nAccess: {2}"
+msgstr "名稱：{0}\n共享者：{1}\n存取：{2}"
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:96 
+msgid "The iFolder will be set up here:"
+msgstr "iFolder 將會在此設定："
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:142 
+#: src/LinuxClient/library/iFolderAccessDialog.cs:114
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:628
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:702
+msgid "Read/Write"
+msgstr "讀/寫"
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:144 
+#: src/LinuxClient/library/iFolderAccessDialog.cs:111
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:630
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:697
+msgid "Full Control"
+msgstr "完整控制"
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:146 
+#: src/LinuxClient/library/iFolderAccessDialog.cs:117
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:632
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:707
+msgid "Read Only"
+msgstr "唯讀"
+
+#: src/LinuxClient/library/iFolderAcceptDialog.cs:148 
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:634
+#: src/LinuxClient/library/iFolderUserSelector.cs:738
+#: src/LinuxClient/library/iFolderWindow.cs:166
+#: src/LinuxClient/library/iFolderWindow.cs:192
+msgid "Unknown"
+msgstr "未知"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:75 
+msgid "Access for Multiple Users"
+msgstr "多個使用者的存取"
+
+msgid "Access Rights for Multiple Users"
+msgstr "多個使用者的存取權限"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:77 
+#, csharp-format
+msgid "Access for {0}"
+msgstr "{0} 的存取"
+
+msgid "Access Rights for {0}"
+msgstr "{0} 的存取權限"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:93 
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:144
+msgid "Access"
+msgstr "存取"
+
+msgid "Access Rights"
+msgstr "存取權限"
+
+#: src/LinuxClient/library/iFolderAccessDialog.cs:124 
+msgid "Make this user the owner of the iFolder."
+msgstr "讓此名使用者成為 iFolder 的擁有者。"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:152 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:521
+#: src/LinuxClient/library/iFolderWindow.cs:688
+msgid "Name"
+msgstr "名稱"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:154 
+msgid "File"
+msgstr "檔案"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:275 
+msgid "Resolve Conflicts"
+msgstr "解決衝突"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:327 
+msgid "This iFolder contains conflicts"
+msgstr "此 iFolder 包含衝突"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:350 
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:350
+msgid "Location:"
+msgstr "位置： "
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:380 
+msgid "Local Version"
+msgstr "本地版本"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:397 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:441
+msgid "Date:"
+msgstr "日期："
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:406 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:450
+msgid "Size:"
+msgstr "大小："
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:424 
+msgid "Server Version"
+msgstr "伺服器版本"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:479 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:504
+msgid "Rename"
+msgstr "重新命名"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:482 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:773
+msgid "Enter a new name and click Rename to resolve the conflict."
+msgstr "輸入新名稱並按一下「重新命名」，以解決衝突。"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:533 
+msgid "Folder"
+msgstr "資料夾"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:546 
+msgid "Conflict Type"
+msgstr "衝突類型"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:646 
+msgid "You have read only access"
+msgstr "您具有唯讀存取權限"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:647 
+msgid "Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server."
+msgstr "因為您具有此 iFolder 的唯讀存取權限，所以您解決衝突的能力會受到限制。必須在本地重新命名名稱衝突。伺服器上的檔案版本將會改寫檔案衝突。"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:823 
+msgid "Name conflicts must be resolved individually."
+msgstr "必須分別解決名稱衝突。"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:854 
+#: src/LinuxClient/library/iFolderConflictDialog.cs:858
+msgid "Multiple selected"
+msgstr "已選取多個"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1006 
+msgid "iFolder Conflict Error"
+msgstr "iFolder 衝突錯誤"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1007 
+msgid "An error was encountered while resolving the conflict."
+msgstr "解決衝突時發生錯誤。"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1011 
+msgid "Invalid Characters in Name"
+msgstr "名稱中有無效的字元"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1012 
+#, csharp-format
+msgid "The specified name contains invalid characters.  Please choose a different name and try again.\n\nNames must not contain any of these characters: {0}"
+msgstr "指定的名稱包含無效的字元。請選擇其他名稱，並再試一次。\n\n名稱不能包含以下其中一個字：{0}"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1017 
+msgid "Name Already Exists"
+msgstr "此名稱已經存在"
+
+#: src/LinuxClient/library/iFolderConflictDialog.cs:1018 
+msgid "The specified name already exists.  Please choose a different name."
+msgstr "指定的名稱已經存在。請選擇其他名稱。"
+
+#: src/LinuxClient/library/iFolderCrashDialog.cs:50 
+msgid "iFolder crashed because of an unhandled exception"
+msgstr "iFolder 由於未處理的例外而損毀"
+
+#: src/LinuxClient/library/iFolderCreationDialog.cs:70 
+msgid "iFolder Created"
+msgstr "已建立 iFolder"
+
+#: src/LinuxClient/library/iFolderCreationDialog.cs:79 
+msgid "The folder you selected is now an iFolder.  To learn more about using iFolder and sharing iFolders with other users, see \"Managing iFolders\" in iFolder Help."
+msgstr "您選取的資料夾現在是 iFolder。若要瞭解使用 iFolder 及與其他使用者共享 iFolder 的詳細資訊，請參閱「iFolder 說明」中的「管理 iFolder」。"
+
+#: src/LinuxClient/library/iFolderCreationDialog.cs:92 
+msgid "Do not show this message again."
+msgstr "不要再顯示這個訊息。"
+
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:39 
+msgid "iFolder Error"
+msgstr "iFolder 錯誤"
+
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:70 
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:91
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:99
+msgid "Show Details"
+msgstr "顯示細節"
+
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:76 
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:98
+msgid "Click \"Show Details\" below to get the full message returned with this error"
+msgstr "按一下下面的「顯示詳細資料」，以取得此錯誤傳回的完整訊息"
+
+#: src/LinuxClient/library/iFolderExceptionDialog.cs:94 
+msgid "Hide Details"
+msgstr "隱藏詳細資料"
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:116 
+msgid "iFolder Login"
+msgstr "iFolder 登入"
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:153 
+#: src/LinuxClient/library/iFolderLoginDialog.cs:209
+#: src/LinuxClient/library/RemoveAccountDialog.cs:104
+msgid "Username:"
+msgstr "使用者名稱："
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:164 
+#: src/LinuxClient/library/iFolderLoginDialog.cs:221
+#: src/LinuxClient/library/PrefsAccountsPage.cs:275
+msgid "Password:"
+msgstr "密碼："
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:189 
+#: src/LinuxClient/library/iFolderLoginDialog.cs:235
+msgid "_Remember password"
+msgstr "記住密碼(_R)"
+
+#: src/LinuxClient/library/iFolderLoginDialog.cs:245 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:327
+#: src/LinuxClient/library/PrefsAccountsPage.cs:633
+#: src/LinuxClient/library/PrefsAccountsPage.cs:899
+#: src/LinuxClient/library/PrefsAccountsPage.cs:910
+#: src/LinuxClient/library/PrefsAccountsPage.cs:941
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1001
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1014
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1075
+msgid "_Log In"
+msgstr "登入(_L)"
+
+#: src/LinuxClient/library/iFolderMsgDialog.cs:142 
+#: src/LinuxClient/library/iFolderMsgDialog.cs:197
+#: src/LinuxClient/library/iFolderMsgDialog.cs:204
+msgid "Show _Details"
+msgstr "顯示細節(_D)"
+
+#: src/LinuxClient/library/iFolderMsgDialog.cs:199 
+msgid "Hide _Details"
+msgstr "隱藏細節(_D)"
+
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:109 
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:159
+msgid "iFolder Properties"
+msgstr "iFolder 內容"
+
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:208 
+#: src/LinuxClient/library/PreferencesWindow.cs:107
+msgid "_General"
+msgstr "一般(_G)"
+
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:213 
+msgid "_Sharing"
+msgstr "共用(_S)"
+
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:249 
+msgid "This iFolder contains conflicts."
+msgstr "此 iFolder 包含衝突。"
+
+#: src/LinuxClient/library/iFolderPropertiesDialog.cs:256 
+msgid "_Resolve conflicts"
+msgstr "解決衝突(_R)"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:115 
+msgid "minute(s)"
+msgstr "分鐘"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:158 
+msgid "Set _Quota:"
+msgstr "設定配額(_Q)："
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:337 
+msgid "Owner:"
+msgstr "擁有者："
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:461 
+#: src/LinuxClient/library/PrefsGeneralPage.cs:198
+msgid "Synchronization"
+msgstr "同步"
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:486 
+msgid "Last Successful Synchronization:"
+msgstr "上次成功同步化："
+
+msgid "Last successful synchronization:"
+msgstr "上次成功同步："
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:495 
+msgid "Files/Folders to Synchronize:"
+msgstr "待同步的檔案/資料夾："
+
+msgid "Files/Folders to synchronize:"
+msgstr "待同步的檔案/資料夾："
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:504 
+msgid "Automatically Synchronizes Every:"
+msgstr "自動同步化間隔："
+
+msgid "Automatically synchronizes every:"
+msgstr "自動同步化間隔："
+
+#: src/LinuxClient/library/iFolderPropSettingsPage.cs:516 
+msgid "Synchronize _Now"
+msgstr "立即同步化(_N)"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:128 
+msgid "User"
+msgstr "使用者"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:135 
+msgid "State"
+msgstr "狀態"
+
+msgid "Role"
+msgstr "職能"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:189 
+msgid "Acc_ess..."
+msgstr "存取(_E)..."
+
+msgid "R_ights..."
+msgstr "權限(_I)..."
+
+msgid "Rights"
+msgstr "權限"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:272 
+msgid "Owner"
+msgstr "擁有者"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:274 
+msgid "Invited User"
+msgstr "已經邀請使用者"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:276 
+msgid "iFolder User"
+msgstr "iFolder 使用者"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:320 
+msgid "Remove the selected users?"
+msgstr "移除選定使用者？"
+
+#: src/LinuxClient/library/iFolderPropSharingPage.cs:321 
+msgid "This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder."
+msgstr "這會將選定使用者從此 iFolder 中移除。他們將不再能夠將其與此 iFolder 同步化。"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:91 
+msgid "Select Users"
+msgstr "選取使用者"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:148 
+msgid "Find:"
+msgstr "尋找："
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:154 
+msgid "First Name"
+msgstr "名字"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:155 
+msgid "Last Name"
+msgstr "姓氏"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:156 
+msgid "Full Name"
+msgstr "全名"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:162 
+#: src/LinuxClient/library/iFolderUserSelector.cs:393
+msgid "<Enter text to find a user>"
+msgstr "<輸入文字以尋找使用者>"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:169 
+msgid "(Full or partial name)"
+msgstr "(完整或部分名稱)"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:207 
+msgid "_Add >>"
+msgstr "新增(_A) >>"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:211 
+msgid "_Remove"
+msgstr "移除(_R)"
+
+#: src/LinuxClient/library/iFolderUserSelector.cs:239 
+msgid "Selected Users"
+msgstr "選定使用者"
+
+#: src/LinuxClient/library/iFolderWindow.cs:144 
+msgid "Has conflicts"
+msgstr "有衝突"
+
+#: src/LinuxClient/library/iFolderWindow.cs:154 
+msgid "Not set up"
+msgstr "未設定"
+
+#: src/LinuxClient/library/iFolderWindow.cs:157 
+msgid "Waiting to connect"
+msgstr "等待連接"
+
+#: src/LinuxClient/library/iFolderWindow.cs:160 
+msgid "Waiting to synchronize"
+msgstr "等待同步化"
+
+#: src/LinuxClient/library/iFolderWindow.cs:163 
+#: src/LinuxClient/library/iFolderWindow.cs:174
+msgid "OK"
+msgstr "確定"
+
+#: src/LinuxClient/library/iFolderWindow.cs:172 
+#, csharp-format
+msgid "{0} items not synchronized"
+msgstr "{0} 個項目未同步化"
+
+#: src/LinuxClient/library/iFolderWindow.cs:178 
+#, csharp-format
+msgid "{0} items to synchronize"
+msgstr "要同步化 {0} 個項目"
+
+#: src/LinuxClient/library/iFolderWindow.cs:180 
+msgid "Synchronizing"
+msgstr "正在同步化"
+
+#: src/LinuxClient/library/iFolderWindow.cs:183 
+msgid "Incomplete synchronization"
+msgstr "同步化未完成"
+
+#: src/LinuxClient/library/iFolderWindow.cs:186 
+msgid "Checking for changes"
+msgstr "正在檢查變更"
+
+#: src/LinuxClient/library/iFolderWindow.cs:189 
+msgid "Server unavailable"
+msgstr "無法使用伺服器"
+
+#: src/LinuxClient/library/iFolderWindow.cs:369 
+#: src/LinuxClient/library/iFolderWindow.cs:1828
+msgid "Idle..."
+msgstr "閒置..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:416 
+msgid "New"
+msgstr "開新檔案"
+
+#: src/LinuxClient/library/iFolderWindow.cs:417 
+msgid "Create a new iFolder"
+msgstr "建立新的 iFolder"
+
+#: src/LinuxClient/library/iFolderWindow.cs:423 
+msgid "Set Up"
+msgstr "設定"
+
+#: src/LinuxClient/library/iFolderWindow.cs:424 
+msgid "Set up the selected iFolder"
+msgstr "設定選定 iFolder"
+
+#: src/LinuxClient/library/iFolderWindow.cs:432 
+msgid "Synchronize"
+msgstr "同步化"
+
+#: src/LinuxClient/library/iFolderWindow.cs:433 
+msgid "Synchronize the selected iFolder"
+msgstr "同步化選定 iFolder"
+
+#: src/LinuxClient/library/iFolderWindow.cs:439 
+msgid "Share"
+msgstr "共用"
+
+#: src/LinuxClient/library/iFolderWindow.cs:440 
+msgid "Share the selected iFolder"
+msgstr "共享選定 iFolder"
+
+#: src/LinuxClient/library/iFolderWindow.cs:446 
+msgid "Resolve"
+msgstr "解決"
+
+#: src/LinuxClient/library/iFolderWindow.cs:447 
+msgid "Resolve conflicts in the selected iFolder"
+msgstr "解決選定 iFolder 中的衝突"
+
+#: src/LinuxClient/library/iFolderWindow.cs:457 
+msgid "Filter the list of iFolders by server"
+msgstr "依伺服器過濾 iFolder 的清單"
+
+#: src/LinuxClient/library/iFolderWindow.cs:460 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:248
+#: src/LinuxClient/library/RemoveAccountDialog.cs:91
+msgid "Server:"
+msgstr "伺服器："
+
+#: src/LinuxClient/library/iFolderWindow.cs:515 
+msgid "_New"
+msgstr "新增(_N)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:525 
+msgid "_Set Up..."
+msgstr "設定(_S)..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:530 
+msgid "_Delete"
+msgstr "刪除(_D)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:536 
+msgid "Re_move"
+msgstr "移除(_M)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:546 
+msgid "Share _with..."
+msgstr "共享者(_W)..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:550 
+msgid "Resolve conflic_ts"
+msgstr "解決衝突(_T)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:555 
+msgid "S_ynchronize now"
+msgstr "立即同步化(_Y)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:560 
+msgid "_Revert to a Normal Folder"
+msgstr "恢復為一般資料夾(_R)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:578 
+msgid "i_Folder"
+msgstr "iFolder(_F)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:586 
+msgid "_Preferences"
+msgstr "優先設定(_P)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:591 
+msgid "_Edit"
+msgstr "編輯(_E)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:609 
+msgid "_Accounts"
+msgstr "帳戶(_A)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:614 
+msgid "Synchronization _Log"
+msgstr "同步化記錄(_L)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:618 
+msgid "_View"
+msgstr "檢視(_V)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:633 
+msgid "A_bout"
+msgstr "關於(_B)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:641 
+msgid "_Help"
+msgstr "說明(_H)"
+
+#: src/LinuxClient/library/iFolderWindow.cs:700 
+msgid "Location"
+msgstr "位置"
+
+#: src/LinuxClient/library/iFolderWindow.cs:713 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:199
+msgid "Status"
+msgstr "狀態"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1049 
+msgid "Open"
+msgstr "開啟舊檔"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1057 
+msgid "Share with..."
+msgstr "共享者..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:1065 
+msgid "Resolve conflicts"
+msgstr "解決衝突"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1074 
+msgid "Synchronize Now"
+msgstr "立即同步化"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1082 
+msgid "Revert to a Normal Folder"
+msgstr "恢復為一般資料夾"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1092 
+#: src/LinuxClient/library/iFolderWindow.cs:1127
+msgid "Delete"
+msgstr "刪除"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1100 
+#: src/LinuxClient/library/iFolderWindow.cs:1135
+#: src/LinuxClient/library/iFolderWindow.cs:1144
+msgid "Remove"
+msgstr "移除"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1110 
+msgid "Properties"
+msgstr "內容"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1118 
+msgid "Set Up..."
+msgstr "設定..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:1154 
+msgid "New..."
+msgstr "新增..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:1160 
+msgid "Refresh"
+msgstr "重新整理"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1228 
+#, csharp-format
+msgid "Unable to open iFolder \"{0}\""
+msgstr "無法開啟 iFolder {0}。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1229 
+msgid "iFolder could not open the Nautilus File Manager or the Konquerer File Manager."
+msgstr "iFolder 無法開啟「Nautilus 檔案管理員」或「Konquerer 檔案管理員」。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1387 
+msgid "Revert this iFolder to a normal folder?"
+msgstr "將此 iFolder 恢復為一般資料夾？"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1388 
+msgid "This reverts the iFolder back to a normal folder and leaves the files intact.  The iFolder is then available from the server and must be set up in a different location to synchronize."
+msgstr "這會將 iFolder 恢復為一般資料夾，但檔案仍保持不變。隨後即可從伺服器使用 iFolder，且必須在其他位置設定 iFolder 以進行同步化。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1497 
+#: src/LinuxClient/library/iFolderWindow.cs:1513
+#: src/LinuxClient/library/iFolderWindow.cs:1527
+#, csharp-format
+msgid "Remove iFolder {0}?"
+msgstr "移除 iFolder {0}？"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1499 
+msgid "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
+msgstr "這會將 iFolder 從您的本地電腦移除。因為您是擁有者，所以會將 iFolder 從所有成員電腦移除。無法在另一個電腦上復原或重新共享 iFolder。不會將檔案從您的本地磁碟機刪除。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1515 
+msgid "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is removed from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive."
+msgstr "這會將 iFolder 從您的本地電腦移除。因為您是擁有者，所以會將 iFolder 從伺服器及所有成員電腦移除。無法在另一個電腦上復原或重新共享 iFolder。不會將檔案從您的本地磁碟機刪除。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1529 
+msgid "This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive."
+msgstr "這會將您做為 iFolder 的成員移除。除非擁有者重新邀請您，否則您無法存取 iFolder。不會將檔案從您的本地磁碟機刪除。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1743 
+#: src/LinuxClient/library/iFolderWindow.cs:1769
+#: src/LinuxClient/library/LogWindow.cs:251
+#, csharp-format
+msgid "Checking for new iFolders: {0}"
+msgstr "正在檢查新的 iFolder：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1745 
+#: src/LinuxClient/library/iFolderWindow.cs:1771
+#: src/LinuxClient/library/LogWindow.cs:253
+msgid "Checking for new iFolders..."
+msgstr "正在檢查新的 iFolder..."
+
+#: src/LinuxClient/library/iFolderWindow.cs:1750 
+#: src/LinuxClient/library/LogWindow.cs:258
+#, csharp-format
+msgid "Checking for changes: {0}"
+msgstr "正在檢查變更：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1776 
+#, csharp-format
+msgid "Synchronizing: {0}"
+msgstr "正在同步化：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1908 
+#: src/LinuxClient/library/LogWindow.cs:310
+#, csharp-format
+msgid "Deleting file: {0}"
+msgstr "正在刪除檔案：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1916 
+#: src/LinuxClient/library/LogWindow.cs:338
+#, csharp-format
+msgid "Uploading file: {0}"
+msgstr "正在上載檔案：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1921 
+#: src/LinuxClient/library/LogWindow.cs:342
+#, csharp-format
+msgid "Downloading file: {0}"
+msgstr "正在下載檔案：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1926 
+#: src/LinuxClient/library/LogWindow.cs:315
+#, csharp-format
+msgid "Found changes in file: {0}"
+msgstr "發現檔案中的變更：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1931 
+#, csharp-format
+msgid "Synchronizing file: {0}"
+msgstr "正在同步化檔案：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1940 
+#: src/LinuxClient/library/LogWindow.cs:350
+#, csharp-format
+msgid "Deleting directory: {0}"
+msgstr "正在刪除目錄：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1948 
+#: src/LinuxClient/library/LogWindow.cs:363
+#, csharp-format
+msgid "Uploading directory: {0}"
+msgstr "正在上載目錄：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1953 
+#: src/LinuxClient/library/LogWindow.cs:367
+#, csharp-format
+msgid "Downloading directory: {0}"
+msgstr "正在下載目錄：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1958 
+#: src/LinuxClient/library/LogWindow.cs:356
+#, csharp-format
+msgid "Found changes in directory: {0}"
+msgstr "發現目錄中的變更：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1963 
+#, csharp-format
+msgid "Synchronizing directory: {0}"
+msgstr "正在同步化目錄：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:1971 
+#: src/LinuxClient/library/LogWindow.cs:373
+#, csharp-format
+msgid "Deleting on server: {0}"
+msgstr "正在伺服器上刪除：{0}"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2131 
+msgid "Set up an iFolder account?"
+msgstr "設定 iFolder 帳戶嗎？"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2132 
+msgid "To begin using iFolder, you must first set up an iFolder account."
+msgstr "若要開始使用 iFolder，您必須先設定 iFolder 帳戶。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2179 
+#: src/LinuxClient/library/iFolderWindow.cs:2195
+#: src/LinuxClient/library/iFolderWindow.cs:2211
+#: src/LinuxClient/library/iFolderWindow.cs:2357
+msgid "Invalid folder specified"
+msgstr "指定的資料夾無效"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2180 
+msgid "An invalid folder was specified."
+msgstr "指定了無效的資料夾。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2196 
+msgid "An invalid folder was specified"
+msgstr "指定了無效的資料夾"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2212 
+msgid "The folder you've specified is invalid.  Please remove the trailing separator character (/) and try again."
+msgstr "您指定的資料夾無效。請移除末端分隔符字元 (/)，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2338 
+msgid "Show All"
+msgstr "顯示全部"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2358 
+msgid "The folder you've specified does not exist.  Please select an existing folder and try again."
+msgstr "您指定的資料夾不存在。請選取現有的資料夾，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2362 
+msgid "A folder with the same name already exists."
+msgstr "同名資料夾已存在。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2363 
+msgid "The location you selected already contains a folder with the same name as this iFolder.  Please select a different location and try again."
+msgstr "您所選取的位置已經包含與此 iFolder 同名的資料夾。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2367 
+msgid "iFolders cannot exist at the drive level."
+msgstr "iFolders 不能位於磁碟機層級。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2368 
+msgid "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again."
+msgstr "您所選取的位置為磁碟機的根目錄。請選取磁碟機根目錄以外的位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2372 
+msgid "The selected location contains invalid characters."
+msgstr "選定位置包含無效的字元。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2373 
+msgid "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again."
+msgstr "字元 \\:*?\"<>| 不能用於 iFolder。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2377 
+msgid "The selected location is inside the iFolder data folder."
+msgstr "選定位置位於 iFolder 資料夾內。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2378 
+msgid "The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "iFolder 資料夾通常位於主資料夾的「.local/share」資料夾中。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2382 
+msgid "The selected location contains the iFolder data files."
+msgstr "選定位置包含 iFolder 資料檔案。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2383 
+msgid "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again."
+msgstr "您所選取的位置包含 iFolder 資料檔案。這些檔案通常位於主資料夾的 「.local/share」資料夾中。請選取不同的位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2387 
+msgid "The selected location is on a network or non-physical drive."
+msgstr "選定位置位於網路或非實體磁碟機上。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2388 
+msgid "iFolders must reside on a physical drive.  Please select a different location and try again."
+msgstr "iFolder 必須位於實體磁碟機上。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2392 
+msgid "The selected location contains a system folder."
+msgstr "選定位置包含系統資料夾。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2393 
+msgid "System folders cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "系統資料夾不能包含在 iFolder 內。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2397 
+msgid "The selected location is a system drive."
+msgstr "選定位置是系統磁碟機。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2398 
+msgid "System drives cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "系統磁碟機不能包含在 iFolder 內。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2402 
+msgid "The selected location includes the Windows folder."
+msgstr "選定位置包括 Windows 資料夾。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2403 
+msgid "The Windows folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "Windows 資料夾不能包含在 iFolder 內。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2407 
+msgid "The selected location includes the Program Files folder."
+msgstr "選定位置包含「程式集」資料夾。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2408 
+msgid "The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again."
+msgstr "「程式集」資料夾不能包含在 iFolder 內。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2412 
+msgid "The selected location does not exist."
+msgstr "選定位置不存在。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2413 
+msgid "iFolders can only be created from folders that exist.  Please select a different location and try again."
+msgstr "只能從存在的資料夾建立 iFolder。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2417 
+msgid "You do not have access to read files in the selected location."
+msgstr "您無權在選定位置中讀取檔案。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2418 
+#: src/LinuxClient/library/iFolderWindow.cs:2423
+msgid "iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again."
+msgstr "只能從您有權讀取及寫入檔案的資料夾建立 iFolder。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2422 
+msgid "You do not have access to write files in the selected location."
+msgstr "您無權在選定位置中寫入檔案。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2427 
+msgid "The selected location already contains an iFolder."
+msgstr "選取的位置已經包含 iFolder。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2428 
+#: src/LinuxClient/library/iFolderWindow.cs:2433
+msgid "iFolders cannot exist inside other iFolders.  Please select a different location and try again."
+msgstr "iFolder 不能位於其他 iFolder 內。請選取其他位置，並再試一次。"
+
+#: src/LinuxClient/library/iFolderWindow.cs:2432 
+msgid "The selected location is inside another iFolder."
+msgstr "選取的位置位於另一個 iFolder 內。"
+
+#: src/LinuxClient/library/LogWindow.cs:60 
+msgid "iFolder Synchronization Log"
+msgstr "iFolder 同步化記錄"
+
+#: src/LinuxClient/library/LogWindow.cs:158 
+msgid "Save the synchronization log"
+msgstr "儲存同步化記錄"
+
+#: src/LinuxClient/library/LogWindow.cs:163 
+msgid "Clear the synchronization log"
+msgstr "清除同步化記錄"
+
+#: src/LinuxClient/library/LogWindow.cs:195 
+msgid "Log"
+msgstr "記錄"
+
+#: src/LinuxClient/library/LogWindow.cs:268 
+#, csharp-format
+msgid "Started synchronization: {0}"
+msgstr "已經啟動同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:279 
+#, csharp-format
+msgid "Done checking for new iFolders: {0}"
+msgstr "新 iFolder 檢查完畢：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:281 
+msgid "Done checking for new iFolders"
+msgstr "新 iFolder 檢查完畢"
+
+#: src/LinuxClient/library/LogWindow.cs:286 
+#, csharp-format
+msgid "Finished synchronization: {0}"
+msgstr "已經完成同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:325 
+#, csharp-format
+msgid "Uploading file: {0}.  Synchronizing changes only: {1}% savings."
+msgstr "正在上載檔案：{0}。僅在同步化變更：{1}% 儲存。"
+
+#: src/LinuxClient/library/LogWindow.cs:330 
+#, csharp-format
+msgid "Downloading file: {0}.  Synchronizing changes only: {1}% savings."
+msgstr "正在下載檔案：{0}。僅在同步化變更：{1}% 儲存。"
+
+#: src/LinuxClient/library/LogWindow.cs:383 
+#, csharp-format
+msgid "Conflict occurred: {0}"
+msgstr "發生衝突：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:388 
+#, csharp-format
+msgid "Policy prevented synchronization: {0}"
+msgstr "規則導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:393 
+#, csharp-format
+msgid "Insuficient rights prevented synchronization: {0}"
+msgstr "權限不足導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:398 
+#, csharp-format
+msgid "Locked iFolder prevented synchronization: {0}"
+msgstr "鎖定的 iFolder 導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:403 
+#, csharp-format
+msgid "Full iFolder prevented synchronization: {0}"
+msgstr "完整的 iFolder 導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:408 
+#, csharp-format
+msgid "Size restriction policy prevented synchronization: {0}"
+msgstr "大小限制規則導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:413 
+#, csharp-format
+msgid "File type restriction policy prevented synchronization: {0}"
+msgstr "檔案類型限制規則導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:420 
+#, csharp-format
+msgid "Insufficient disk space on the server prevented synchronization: {0}"
+msgstr "伺服器上的磁碟空間不足導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:426 
+#, csharp-format
+msgid "Insufficient disk space on this computer prevented synchronization: {0}"
+msgstr "此電腦上的磁碟空間不足導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:432 
+#, csharp-format
+msgid "Read-only iFolder prevented synchronization: {0}"
+msgstr "唯讀的 iFolder 導致無法同步化：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:437 
+#, csharp-format
+msgid "iFolder failed synchronization: {0}"
+msgstr "iFolder 同步化失敗：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:463 
+msgid "Save iFolder Log..."
+msgstr "儲存 iFolder 記錄..."
+
+#: src/LinuxClient/library/LogWindow.cs:485 
+msgid "Overwrite the existing file?"
+msgstr "取代已存在檔案？"
+
+#: src/LinuxClient/library/LogWindow.cs:486 
+msgid "The file you selected exists.  Selecting yes will overwrite the contents of this file."
+msgstr "您選取的檔案已經存在。選取「是」將改寫此檔案的內容。"
+
+#: src/LinuxClient/library/LogWindow.cs:511 
+msgid "Insufficient access"
+msgstr "存取權限不足"
+
+#: src/LinuxClient/library/LogWindow.cs:512 
+msgid "You do not have access to save the file in the location you specified.  Please select a different location."
+msgstr "您無權在指定的位置中儲存檔案。請選取其他位置。"
+
+#: src/LinuxClient/library/LogWindow.cs:526 
+#: src/LinuxClient/library/LogWindow.cs:570
+msgid "Error saving the log file"
+msgstr "儲存記錄檔案時發生錯誤"
+
+#: src/LinuxClient/library/LogWindow.cs:527 
+#, csharp-format
+msgid "An exception occurred trying to save the log: {0}"
+msgstr "嘗試儲存記錄時發生例外：{0}"
+
+#: src/LinuxClient/library/LogWindow.cs:571 
+msgid "The iFolder Client experienced an error trying to save the log.  Please report this bug."
+msgstr "「iFolder 用戶端」在嘗試儲存記錄時遇到錯誤。請報告此錯誤。"
+
+#: src/LinuxClient/library/PreferencesWindow.cs:66 
+msgid "iFolder Preferences"
+msgstr "iFolder 優先設定"
+
+#: src/LinuxClient/library/PreferencesWindow.cs:111 
+msgid "Accou_nts"
+msgstr "帳戶(_N)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:176 
+msgid "System Name"
+msgstr "系統名稱"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:188 
+msgid "Username"
+msgstr "使用者名稱"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:188 
+msgid "Server Name"
+msgstr "伺服器名稱"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:226 
+msgid "_Details"
+msgstr "細節(_D)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:231 
+msgid "Account Settings"
+msgstr "帳戶設定"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:261 
+msgid "User name:"
+msgstr "使用者名稱："
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:295 
+msgid "Remember _password"
+msgstr "記住密碼(_P)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:303 
+msgid "_Enable account"
+msgstr "開啟帳戶(_E)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:310 
+msgid "De_fault account"
+msgstr "預設帳戶(_F)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:431 
+msgid "Logged in"
+msgstr "已經登入"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:435 
+msgid "Logged out"
+msgstr "登出"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:440 
+msgid "Disabled"
+msgstr "停用 "
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:582 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1320
+msgid "Lose current settings?"
+msgstr "遺失目前設定？"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:583 
+msgid "You are currently creating a new account.  By selecting a different account you cancel the operation."
+msgstr "您目前正在建立新帳戶。您可藉由選取其他帳戶以取消操作。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:674 
+msgid "Unable to log out of the iFolder Server"
+msgstr "無法登出 iFolder 伺服器"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:675 
+msgid "An error was encountered while logging out of the iFolder Server.  If the problem persists, please contact your network administrator."
+msgstr "登出 iFolder 伺服器時發生錯誤。如果仍有問題，請與網路管理員聯絡。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:705 
+msgid "An account for this server already exists on the local machine.  Only one account per server is allowed."
+msgstr "本地機器上已經存在此伺服器的帳戶。每個伺服器只允許有一個帳戶。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:717 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:739
+#: src/LinuxClient/library/Util.cs:348
+msgid "Unable to connect to the iFolder Server"
+msgstr "無法連接至 iFolder 伺服器"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:718 
+#: src/LinuxClient/library/PrefsAccountsPage.cs:740
+#: src/LinuxClient/library/Util.cs:349
+msgid "An error was encountered while connecting to the iFolder server.  Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
+msgstr "連接至 iFolder 伺服器時發生錯誤。請驗證所輸入的資訊，並再試一次。如果仍有問題，請與網路管理員聯絡。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:762 
+#, csharp-format
+msgid "iFolder cannot verify the identity of the iFolder Server \"{0}\"."
+msgstr "iFolder 無法驗證「iFolder 伺服器 {0}」的身份。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:763 
+#, csharp-format
+msgid "The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"{0}\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?"
+msgstr "此「iFolder 伺服器」的憑證由不明認證權限簽署。您可能正連接至偽裝成 {0} 的伺服器，這樣會使機密資訊存在風險。在接受此憑證之前，應先洽詢系統管理員。您要永久接受此憑證並繼續連接嗎？"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:894 
+msgid "_Log Out"
+msgstr "登出(_L)"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1275 
+msgid "Your password has expired"
+msgstr "您的密碼已經過期"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1276 
+#, csharp-format
+msgid "You have {0} grace logins remaining."
+msgstr "您剩下的寬限登入次數為 {0}。"
+
+#: src/LinuxClient/library/PrefsAccountsPage.cs:1321 
+msgid "You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."
+msgstr "您目前正在建立新帳戶。您可藉由關閉視窗或變更至其他頁面以取消操作。"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:102 
+msgid "Application"
+msgstr "應用程式"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:122 
+msgid "_Show Confirmation dialog when creating iFolders"
+msgstr "建立 iFolder 時顯示確認對話方塊(_S)"
+
+msgid "_Display confirmation dialog on successful creation of iFolder"
+msgstr "成功建立 iFolder 時顯示確認對話方塊(_D)"
+
+msgid "Show _Network Events  messages when iFolder is started"
+msgstr "在 iFolder 啟動時顯示網路事件訊息(_N)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:127 
+msgid "To start up iFolder at login, leave iFolder running when you log out and save your current setup."
+msgstr "若要在登入時啟動 iFolder，請在登出時讓 iFolder 仍保持執行，並儲存目前的設定。"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:142 
+msgid "Notification"
+msgstr "通知"
+
+msgid "Notify when iFolders are _shared"
+msgstr "共享 iFolders 時通知我(_S)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:163 
+msgid "Notify of share_d iFolders"
+msgstr "通知共享 iFolder(_D)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:170 
+msgid "Notify when conflic_ts arise"
+msgstr "發生衝突時通知我(_T)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:176 
+msgid "Notify when a _user joins the iFolder domain"
+msgstr "使用者加入 iFolder 網域時通知我(_U)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:219 
+msgid "Automatically S_ynchronize iFolders"
+msgstr "自動同步化 iFolder(_Y)"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:229 
+msgid "Synchronize iFolders Every"
+msgstr "同步化 iFolder 間隔"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:240 
+msgid "seconds"
+msgstr "秒鐘"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:241 
+msgid "minutes"
+msgstr "分鐘"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:242 
+msgid "hours"
+msgstr "小時"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:243 
+msgid "days"
+msgstr "天"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:501 
+msgid "Synchronization Interval Limit"
+msgstr "同步化間隔限制"
+
+#: src/LinuxClient/library/PrefsGeneralPage.cs:502 
+msgid "The synchronization interval cannot be set to less than one minute.  It was automatically changed to 60 seconds."
+msgstr "同步化間隔無法設定為少於一分鐘。已自動將它變更為 60 秒。"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:61 
+msgid "Remove this iFolder account?"
+msgstr "移除此 iFolder 帳戶？"
+
+msgid "Remove this iFolder Account?"
+msgstr "移除此 iFolder 帳戶？"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:77 
+msgid "System Name:"
+msgstr "系統名稱："
+
+msgid "iFolder server name:"
+msgstr "iFolder 伺服器名稱："
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:121 
+msgid "_Remove my iFolders and files from the server"
+msgstr "從伺服器移除我的 iFolder 及檔案(_R)"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:163 
+msgid "Removing iFolders from Server"
+msgstr "正在從伺服器移除 iFolder"
+
+#: src/LinuxClient/library/RemoveAccountDialog.cs:164 
+msgid "Removing iFolders from the server will delete the files stored on the server.  Your files will remain intact on this computer.\n\nIf you've shared any iFolders with other users, they will no longer be able to synchronize them with the server.  Additionally, you will no longer be able to access these iFolders from any other computer."
+msgstr "從伺服器移除 iFolder 會刪除伺服器上儲存的檔案。您在此電腦上的檔案將保持不變。\n\n如果您已經與其他使用者共享任何 iFolder，則他們不能再將這些 iFolder 與伺服器同步化。另外，您也不再能夠從任何其他電腦上存取這些 iFolder。"
+
+#: src/LinuxClient/library/Util.cs:167 
+#, csharp-format
+msgid "Error displaying help file \"{0}\""
+msgstr "顯示說明檔「{0}」時發生錯誤"
+
+#: src/LinuxClient/library/Util.cs:168 
+msgid "iFolder could not open the default web browser to show the help file."
+msgstr "iFolder 無法開啟預設 web 瀏覽器來顯示說明檔。"
+
+#: src/LinuxClient/library/Util.cs:180 
+msgid "iFolder 3 Team"
+msgstr "iFolder 3 小組"
+
+#: src/LinuxClient/library/Util.cs:182 
+msgid "Developers:"
+msgstr "開發人員："
+
+#: src/LinuxClient/library/Util.cs:194 
+msgid "Quality Assurance:"
+msgstr "品質保證："
+
+#: src/LinuxClient/library/Util.cs:201 
+msgid "Product Management:"
+msgstr "產品管理："
+
+#: src/LinuxClient/library/Util.cs:205 
+msgid "Documentation:"
+msgstr "說明文件："
+
+#: src/LinuxClient/library/Util.cs:208 
+msgid "Special Thanks"
+msgstr "特別感謝"
+
+#: src/LinuxClient/library/Util.cs:210 
+msgid "Retired Contributers:"
+msgstr "退休顧問："
+
+#: src/LinuxClient/library/Util.cs:216 
+msgid "Organizations:"
+msgstr "組織："
+
+#: src/LinuxClient/library/Util.cs:220 
+msgid "Code Contributors:"
+msgstr "程式碼顧問："
+
+#: src/LinuxClient/library/Util.cs:226 
+msgid "Other Contributors:"
+msgstr "其他顧問："
+
+#: src/LinuxClient/library/Util.cs:231 
+msgid "Copyright (C) 2008 Novell, Inc."
+msgstr "版權 (C) 2008 Novell, Inc."
+
+#: src/LinuxClient/library/Util.cs:232 
+msgid "The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system. This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."
+msgstr "「iFolder 專案」是一種檔案共享解決方案，可讓使用者更加容易地與其他使用者 (無論他們使用的作業系統是否相同) 共享任何類型的資料夾或檔案。此專案建立於 mono/.Net 架構，以完美地整合至現有桌面環境。"
+
+#: src/LinuxClient/library/Util.cs:332 
+msgid "The username or password is invalid"
+msgstr "使用者名稱或密碼無效"
+
+#: src/LinuxClient/library/Util.cs:333 
+msgid "Please try again."
+msgstr "請再試一次。"
+
+#: src/LinuxClient/library/Util.cs:336 
+msgid "The user account is disabled"
+msgstr "使用者帳戶已經停用"
+
+#: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341 
+msgid "Please contact your network administrator for assistance."
+msgstr "請與網路管理員聯絡，以尋求協助。"
+
+#: src/LinuxClient/library/Util.cs:340 
+msgid "The user account is locked"
+msgstr "使用者帳戶已經鎖定"
+
+#: src/LinuxClient/library/Util.cs:344 
+msgid "Unable to contact the specified server"
+msgstr "無法連接指定的伺服器"
+
+#: src/LinuxClient/library/Util.cs:345 
+msgid "Please verify the information entered and try again.  If the problem persists, please contact your network administrator."
+msgstr "請驗證所輸入的資訊，並再試一次。如果仍有問題，請與網路管理員聯絡。"
+
+#: src/LinuxClient/library/Util.cs:350 
+msgid "Authentication Status Code"
+msgstr "驗證狀態碼"
+
+#: src/LinuxClient/library/Util.cs:460 
+msgid "Unable to locate the Simias process"
+msgstr "無法定位 Simias 程序"
+
+#: src/LinuxClient/library/Util.cs:461 
+msgid "The Simias process must be running for iFolder to work.  Restart iFolder.  If the problem persists, please contact your network administrator for assistance."
+msgstr "必須執行 Simias 程序，iFolder 才能運作。重新啟動 iFolder。如果仍有問題，請與網路管理員聯絡，以尋求協助。"
+
+msgid "Configure an iFolder Account"
+msgstr "設定 iFolder 帳戶"
+
+msgid "Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."
+msgstr "歡迎使用 iFolder 帳戶助理。\n\n請按一下「下一步」開始進行。"
+
+msgid "Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."
+msgstr "歡迎使用「iFolder 帳戶建立精靈」。\n\n請按一下「下一步」開始進行。"
+
+msgid "iFolder Server"
+msgstr "iFolder 伺服器："
+
+msgid "Enter the name of your iFolder Server (for example, \"ifolder.example.net\")."
+msgstr "請輸入「iFolder 伺服器」的名稱 (例如「ifolder.example.net」)。"
+
+msgid "Server _Address:"
+msgstr "伺服器位址(_A)︰"
+
+msgid "Server _address:"
+msgstr "伺服器位址(_A)︰"
+
+msgid "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
+msgstr "將這個「iFolder 伺服器」設為預設伺服器，iFolder 即可在新增新的資料夾時，自動選取這個伺服器。"
+
+msgid "Setting this iFolder Server as your default server will enable iFolder to automatically select this server when adding new folders."
+msgstr "將這個「iFolder 伺服器」設為預設伺服器，iFolder 即可在新增新的資料夾時，自動選取這個伺服器。"
+
+msgid "Make this my _default server"
+msgstr "設定為我的預設伺服器(_D)"
+
+msgid "Set this as my _default server"
+msgstr "設定為我的預設伺服器(_D)"
+
+msgid "Identity"
+msgstr "識別"
+
+msgid "iFolder Account Information"
+msgstr "iFolder 帳戶資訊"
+
+msgid "Enter your iFolder user name and password (for example, \"jsmith\")."
+msgstr "輸入 iFolder 使用者名稱與密碼 (例如「jsmith」)。"
+
+msgid "_User Name:"
+msgstr "使用者名稱(_U)："
+
+msgid "_User name:"
+msgstr "使用者名稱(_U)："
+
+msgid "_Password:"
+msgstr "密碼(_P)："
+
+msgid "_Remember my password"
+msgstr "記住密碼(_R)"
+
+msgid "_Remember password on this computer"
+msgstr "在此電腦上記住密碼(_R)"
+
+msgid "Verify and Connect"
+msgstr "驗證並連接"
+
+msgid "Please verify that the information you have entered is correct."
+msgstr "請確認您所輸入的資訊是否正確。"
+
+msgid "Please verify the information you have entered."
+msgstr "請確認您所輸入的資訊是否正確。"
+
+msgid "Server Address:"
+msgstr "伺服器位址︰"
+
+msgid "Server address:"
+msgstr "伺服器位址︰"
+
+msgid "Remember password:"
+msgstr "記住密碼："
+
+msgid "_Remember password:"
+msgstr "記住密碼(_R)："
+
+msgid "Make default account:"
+msgstr "設定預設帳戶："
+
+msgid "Click \"Connect\" to test your connection with the server."
+msgstr "按一下「連接」，測試與伺服器之間的連接。"
+
+msgid "Click \"Connect\" to proceed."
+msgstr "按一下「連接」繼續。"
+
+msgid "Unable to Verify Identity"
+msgstr "無法驗證身分"
+
+msgid "Encryption"
+msgstr "加密"
+
+msgid "Enter the passphrase"
+msgstr "輸入密碼片語"
+
+msgid "_Passphrase:"
+msgstr "通關密語(_P)："
+
+msgid "R_etype the Passphrase:"
+msgstr "重新輸入通關密語(_E)："
+
+msgid "_Remember the Passphrase"
+msgstr "記住通關密語(_R)"
+
+msgid "Select the Passphrase Recovery Agent"
+msgstr "選取「通關密語復原代辦」"
+
+msgid "Passphrase Recovery Agents"
+msgstr "通關密語復原代辦"
+
+msgid "Congratulations!"
+msgstr "恭喜您！"
+
+msgid "iFolder Account Assistant"
+msgstr "iFolder 帳戶助理"
+
+msgid "iFolder Account Creation Wizard"
+msgstr "iFolder 帳戶建立精靈"
+
+msgid "iFolder Account Assistant - (1 of 5)"
+msgstr "iFolder 帳戶助理 - (1/5)"
+
+msgid "iFolder Account Assistant - (2 of 5)"
+msgstr "iFolder 帳戶助理 - (2/5)"
+
+msgid "iFolder Account Assistant - (3 of 5)"
+msgstr "iFolder 帳戶助理 - (3/5)"
+
+msgid "iFolder Account Assistant - (4 of 5)"
+msgstr "iFolder 帳戶助理 - (4/5)"
+
+msgid "iFolder Account Assistant - (5 of 5)"
+msgstr "iFolder 帳戶助理 - (5/5)"
+
+msgid "_Skip"
+msgstr "跳過(_S)"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "No"
+msgstr "否"
+
+msgid "_Yes"
+msgstr "是(_Y)"
+
+msgid "_No"
+msgstr "否(_N)"
+
+msgid "Co_nnect"
+msgstr "連接(_N)"
+
+msgid "Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
+msgstr "恭喜您！您目前已經\n連接至：\n\n帳戶名稱：{0}\n伺服器位址︰{1}\n使用者名稱：{2}\n\n按一下「完成」關閉此視窗。"
+
+msgid "You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."
+msgstr "您目前已連接至：\n\n伺服器名稱：\t{0}\n伺服器位址：\t{1}\n使用者名稱：\t{2}\n\n按一下「完成」關閉此精靈。"
+
+msgid "_Finish"
+msgstr "完成(_F)"
+
+msgid "Passphrase mismatch"
+msgstr "密碼片語不符"
+
+msgid "The passphrase and retyped passphrase are not same"
+msgstr "此密碼片語與重新輸入的密碼片語不同"
+
+msgid "None"
+msgstr "無"
+
+msgid "Error setting the passphrase"
+msgstr "設定密碼片語時發生錯誤"
+
+msgid "Unable to change the Passphrase"
+msgstr "無法變更通關密語"
+
+msgid "PassPhrase Invalid"
+msgstr "通關密語無效"
+
+msgid "Invalid PassPhrase"
+msgstr "通關密語無效"
+
+msgid "The PassPhrase entered is not valid"
+msgstr "輸入的通關密語無效"
+
+msgid "The Current PassPhrase entered is not valid"
+msgstr "您輸入的目前通關密語無效"
+
+msgid "Unable to set the passphrase"
+msgstr "無法設定通關密語"
+
+msgid "Please enter the passphrase again"
+msgstr "請重新輸入通關密語"
+
+msgid "gtk-go-back"
+msgstr "gtk-go-back"
+
+msgid "Connecting..."
+msgstr "連接中..."
+
+msgid "Please wait while your iFolder account is connecting."
+msgstr "iFolder 帳戶正在連接，請稍候。"
+
+msgid "An account already exists"
+msgstr "帳戶已經存在"
+
+msgid "Accept the certificate of this server?"
+msgstr "要接受這個伺服器的憑證嗎？"
+
+msgid "iFolder is unable to verify \"{0}\" as a trusted server.  You should examine this server's identity certificate carefully."
+msgstr "iFolder 無法將「{0}」驗證為信任伺服器。您應該小心檢查此伺服器的身分證書。"
+
+msgid "Certificate"
+msgstr "證書"
+
+msgid "Click Ok to accept the certificate and Cancel to return"
+msgstr "按一下「確定」接受證書，按一下「取消」返回"
+
+msgid "Select a folder..."
+msgstr "選擇資料夾..."
+
+msgid "Passphrase Encryption"
+msgstr "密碼片語加密"
+
+msgid "Regular"
+msgstr "一般"
+
+msgid "Type"
+msgstr "類型"
+
+msgid "Unable to reset the passphrase"
+msgstr "無法重設密碼片語"
+
+msgid "Unable to remove the account"
+msgstr "無法移除帳戶"
+
+msgid "iFolder encountered a problem removing the account.  Please restart iFolder and try again."
+msgstr "iFolder 在移除帳戶時遇到問題。請重新啟動 iFolder，然後重試一次。"
+
+msgid "iFolder passphrase"
+msgstr "iFolder 密碼片語"
+
+msgid "_Re-type passphrase:"
+msgstr "重新輸入密碼片語(_R)："
+
+msgid "Re-type passphrase:"
+msgstr "重新輸入密碼片語："
+
+msgid "Select Passphrase Recovery Agent"
+msgstr "選取「通關密語復原代辦」"
+
+msgid "Recovery Agents"
+msgstr "復原代辦"
+
+msgid "Server"
+msgstr "伺服器"
+
+msgid "Disk Space"
+msgstr "磁碟空間"
+
+msgid "_Automatically connect"
+msgstr "自動連接(_A)"
+
+msgid "Account is _default"
+msgstr "帳戶為預設帳戶(_D)"
+
+msgid "Address:"
+msgstr "位址："
+
+msgid "(You can change the address if you are offline)"
+msgstr "(離線狀態下可以變更此位址)"
+
+msgid "Server address cannot be empty"
+msgstr "伺服器位址不能空白"
+
+msgid "Please enter an address for the server."
+msgstr "請輸入伺服器的位址。"
+
+msgid "Please enter your password"
+msgstr "請輸入您的密碼。"
+
+msgid "Your password is required to change the address of the server."
+msgstr "需要密碼才能變更伺服器的位址。"
+
+msgid "Unable to modify the server address"
+msgstr "無法修改伺服器位址"
+
+msgid "An error was encountered while attempting to modify the server address.  Please verify the address and your password are correct."
+msgstr "嘗試修改伺服器位址時發生錯誤。請確認位址和密碼都正確無誤。"
+
+msgid "Unable to modify the password"
+msgstr "無法修改密碼"
+
+msgid "An error was encountered while attempting to modify the password."
+msgstr "嘗試修改密碼時發生錯誤。"
+
+msgid "Could not enable this account"
+msgstr "無法啟用這個帳戶"
+
+msgid "There was an error enabling this account."
+msgstr "啟用此帳戶時發生錯誤。"
+
+msgid "Could not disable this account"
+msgstr "無法停用這個帳戶"
+
+msgid "There was an error disabling this account."
+msgstr "關閉此帳戶時發生錯誤。"
+
+msgid "Could not make this account the default"
+msgstr "無法讓這個帳戶變成預設帳戶"
+
+msgid "There was an error making this account the default."
+msgstr "將此帳戶設為預設帳戶時發生錯誤。"
+
+msgid "Export Encrypted Keys"
+msgstr "輸出加密的金鑰"
+
+msgid "File path"
+msgstr "檔案路徑"
+
+msgid "Recovery agent"
+msgstr "復原代辦"
+
+msgid "Recovery _agent"
+msgstr "復原代辦(_A)"
+
+msgid "E-Mail ID"
+msgstr "電子郵件 ID"
+
+msgid "Download \"{0}\" to..."
+msgstr "將「{0}」下載到..."
+
+msgid "_Download"
+msgstr "下載(_D)"
+
+msgid "The iFolder Web Service returned a null object when calling RevertiFolder().  You may want to restart your iFolder Client and attempt this operation again."
+msgstr "「iFolder Web 服務」呼叫 RevertiFolder() 時傳回 Null 物件。您可能必須重新啟動「iFolder 用戶端」，然後重試這項作業。"
+
+msgid "An exception occurred while attempting to revert the iFolder to a normal folder.  Exception message: "
+msgstr "試圖將 iFolder 恢復成一般帳戶時發生例外。例外訊息："
+
+msgid "Less than a minute ago"
+msgstr "不到一分鐘以前"
+
+msgid "1 minute ago"
+msgstr "1 分鐘以前"
+
+msgid "{0} minutes ago"
+msgstr "{0} 分鐘以前"
+
+msgid "1 hour ago"
+msgstr "1 小時以前"
+
+msgid "{0} hours ago"
+msgstr "{0} 小時以前"
+
+msgid "{0} hours, 1 minute ago"
+msgstr "{0} 小時又 1 分鐘以前"
+
+msgid "1 hour, 1 minute ago"
+msgstr "1 小時又 1 分鐘以前"
+
+msgid "1 hour, {0} minutes ago"
+msgstr "1 小時又 {0} 分鐘以前"
+
+msgid "{0} hour, {1} minutes ago"
+msgstr "{0} 小時又 {1} 分鐘以前"
+
+msgid "Yesterday"
+msgstr "昨日"
+
+msgid "Connect iFolder Account"
+msgstr "連接 iFolder 帳戶"
+
+msgid "Unable to launch File Browser"
+msgstr "無法啟動檔案瀏覽器"
+
+msgid "iFolder attempted to open the Nautilus File Manager and the Konqueror File Manager and was unable to launch either of them."
+msgstr "iFolder 嘗試開啟「 Nautilus 檔案管理員」和「Konqueror 檔案管理員」，但是無法啟動任何一個。"
+
+msgid "Account:"
+msgstr "帳戶："
+
+msgid "Add Users"
+msgstr "新增使用者"
+
+msgid "Add users to this iFolder"
+msgstr "將使用者新增到此 iFolder"
+
+msgid "_Find:"
+msgstr "尋找(_F)："
+
+msgid "_Add"
+msgstr "新增(_A)"
+
+msgid "_Users to add:"
+msgstr "要新增的使用者(_U)："
+
+msgid "Users to Add..."
+msgstr "要新增的使用者..."
+
+msgid "iFolder"
+msgstr "iFolder"
+
+msgid "_Upload a folder..."
+msgstr "上載資料夾(_U)..."
+
+msgid "_Upload a Folder..."
+msgstr "上載資料夾(_U)..."
+
+msgid "_Download..."
+msgstr "下載(_D)..."
+
+msgid "Dele_te from server"
+msgstr "從伺服器刪除(_T)"
+
+msgid "Dele_te From Server"
+msgstr "從伺服器刪除(_T)"
+
+msgid "Re_move my membership"
+msgstr "移除我的成員資格(_M)"
+
+msgid "_Migrate iFolder"
+msgstr "移轉 iFolder(_M)"
+
+msgid "Migrate from 2.x"
+msgstr "從 2.x 移轉"
+
+msgid "_Account Settings..."
+msgstr "帳戶設定(_A)..."
+
+msgid "View _available iFolders"
+msgstr "檢視可用的 iFolder(_A)"
+
+msgid "_Migrate"
+msgstr "移轉(_M)"
+
+msgid "_Forgot Passphrase"
+msgstr "忘記密碼片語(_F)"
+
+msgid "Import Decrypted Keys"
+msgstr "輸入解密金鑰"
+
+msgid "Change _Passphrase"
+msgstr "變更密碼片語(_P)"
+
+msgid "_Security"
+msgstr "安全性(_S)"
+
+msgid "Filter"
+msgstr "過濾器"
+
+msgid "General Actions"
+msgstr "一般動作"
+
+msgid "Upload a folder..."
+msgstr "上載資料夾..."
+
+msgid "View available iFolders"
+msgstr "檢視可用的 iFolder"
+
+msgid "iFolder Actions"
+msgstr "iFolder 動作"
+
+msgid "Open..."
+msgstr "開啟舊檔..."
+
+msgid "Resolve conflicts..."
+msgstr "解決衝突..."
+
+msgid "Properties..."
+msgstr "內容..."
+
+msgid "Download..."
+msgstr "下載..."
+
+msgid "Delete from server"
+msgstr "從伺服器刪除"
+
+msgid "Delete from Server"
+msgstr "從伺服器刪除"
+
+msgid "Remove my membership"
+msgstr "移除我的成員資格"
+
+msgid "Remove my Membership"
+msgstr "移除我的成員資格"
+
+msgid "iFolders on This Computer"
+msgstr "此電腦上的 iFolder"
+
+msgid "There are no iFolders on this computer.  To set up an iFolder, do one of the following:"
+msgstr "這部電腦上沒有任何 iFolder。若要設定 iFolder，請執行下列其中一個動作："
+
+msgid "Select an existing folder on this computer to upload to an iFolder Server"
+msgstr "選取此電腦上現有的資料夾以上傳至 iFolder 伺服器"
+
+msgid "Select an iFolder on the server to download to this computer"
+msgstr "選取伺服器上要下載到這部電腦的 iFolder"
+
+msgid "No matches found"
+msgstr "找不到訊息"
+
+msgid "Invalid passphrase"
+msgstr "密碼片語無效"
+
+msgid "Passphrase entered is wrong"
+msgstr "輸入的通關密語錯誤"
+
+msgid "Passphrase Reset"
+msgstr "重設通關密語"
+
+msgid "Successfully changed the passphrase"
+msgstr "已成功變更通關密語"
+
+msgid "Use your new passphrase from now"
+msgstr "從現在開始使用新的通關密語"
+
+msgid "Hide available iFolders"
+msgstr "隱藏可用的 iFolder"
+
+msgid "iFolders on {0}"
+msgstr "{0} 上的 iFolder"
+
+msgid "Unable to open folder \"{0}\""
+msgstr "無法開啟資料夾「{0}」"
+
+msgid "Revert this iFolder back to a normal folder?"
+msgstr "要將這個 iFolder 恢復回正常資料夾嗎？"
+
+msgid "The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."
+msgstr "此資料夾將仍然會在您的電腦上，但是不會再與 iFolder 伺服器同步化。"
+
+msgid "Also _delete this iFolder from the server"
+msgstr "也從伺服器刪除這個 iFolder(_D)"
+
+msgid "_Delete this iFolder from the server"
+msgstr "從伺服器刪除這個 iFolder(_D)"
+
+msgid "Also _remove my membership from this iFolder"
+msgstr "也從此 iFolder 移除我的成員資格(_R)"
+
+msgid "_Remove my membership from this iFolder"
+msgstr "從此 iFolder 移除我的成員資格(_R)"
+
+msgid "Revert to Normal Folder"
+msgstr "恢復為一般資料夾"
+
+msgid "Delete \"{0}\" from the server?"
+msgstr "要從伺服器刪除「{0}」嗎？"
+
+msgid "This deletes the iFolder and its files from the server."
+msgstr "這麼做會從伺服器刪除 iFolder 及其檔案。"
+
+msgid "Remove your membership from \"{0}\"?"
+msgstr "要從「{0}」中移除您的成員資格嗎？"
+
+msgid "This removes your membership from the iFolder and removes the iFolder from your list."
+msgstr "這會從 iFolder 移除您的成員資格並從您的清單移除 iFolder。"
+
+msgid "Error creating iFolder"
+msgstr "建立 iFolder 時發生錯誤"
+
+msgid "You should be logged-in to the domain for creating encrypted iFolders."
+msgstr "您應登入領域以建立加密的 iFolder。"
+
+msgid "One time passphrase"
+msgstr "一次性密碼片語"
+
+msgid "New passphrase"
+msgstr "新密碼片語"
+
+msgid "Re-type passphrase"
+msgstr "重新輸入密碼片語"
+
+msgid "iFolder Migration"
+msgstr "iFolder 移轉"
+
+msgid "User Name"
+msgstr "使用者名稱"
+
+msgid "_User name"
+msgstr "使用者名稱(_U)"
+
+msgid "Home Location"
+msgstr "首頁位置"
+
+msgid "Not encrypted"
+msgstr "未加密"
+
+msgid "iFolder Migration Assistant"
+msgstr "iFolder 移轉助理"
+
+msgid "Migrate the iFolder "
+msgstr "移轉 iFolder "
+
+msgid "Welcome to iFolder Migration Assistant.\nThe next few screens will let you,\nmigrate your data to iFolder 3.x.\n\nClick \"Forward\" to continue."
+msgstr "歡迎使用 iFolder 移轉助理。\n接下來的幾個畫面將可讓您\n移轉資料至 iFolder 3.x。\n\n按一下「轉遞」繼續。"
+
+msgid "Migration Options"
+msgstr "移轉選項"
+
+msgid "Select one of the following options"
+msgstr "選取下列其中一個選項"
+
+msgid "Migrate the iFolder and disconnect it from 2.x domain"
+msgstr "移轉 iFolder，並解除與 2.x 領域之間的連接"
+
+msgid "Create a copy of the iFolder and migrate"
+msgstr "建立 iFolder 副本並移轉"
+
+msgid "Copy the parent folder"
+msgstr "複製上層資料夾"
+
+msgid "Server Information"
+msgstr "伺服器資訊"
+
+msgid "Select the server "
+msgstr "選取伺服器 "
+
+msgid "Select Security options"
+msgstr "選取安全性選項"
+
+msgid "Passphrase"
+msgstr "通關密語"
+
+msgid "Verify and Migrate"
+msgstr "驗證並移轉"
+
+msgid "Please verify that the information you've entered is correct"
+msgstr "請確認您所輸入的資訊是否正確"
+
+msgid "Migration Option"
+msgstr "移轉選項"
+
+msgid "Security"
+msgstr "安全性"
+
+msgid "Click \"Migrate\" to migrate your folder to the server specified"
+msgstr "按一下「移轉」將資料夾移轉至指定的伺服器"
+
+msgid "iFolder Migration Assistant - (1 of 5)"
+msgstr "iFolder 移轉助理 - (1/5)"
+
+msgid "iFolder Migration Assistant - (2 of 5)"
+msgstr "iFolder 移轉助理 - (2/5)"
+
+msgid "iFolder Migration Assistant - (3 of 5)"
+msgstr "iFolder 移轉助理 - (3/5)"
+
+msgid "iFolder Migration Assistant - (4 of 5)"
+msgstr "iFolder 移轉助理 - (4/5)"
+
+msgid "iFolder Migration Assistant - (5 of 5)"
+msgstr "iFolder 移轉助理 - (5/5)"
+
+msgid "Migration"
+msgstr "轉移"
+
+msgid "User not Logged-in to the domain"
+msgstr "使用者未登入領域"
+
+msgid "For creating an encrypted iFolder you should be connected to the domain."
+msgstr "若要建立加密的 iFolder，您應該連接至領域。"
+
+msgid "Delete from iFolder2.X server"
+msgstr "從 iFolder2.X 伺服器刪除"
+
+msgid "Create a copy and migrate to iFolder3.x"
+msgstr "建立副本並移轉至 iFolder3.x"
+
+msgid "Encrypt the iFolder "
+msgstr "加密 iFolder "
+
+msgid "Regular iFolder"
+msgstr "一般 iFolder"
+
+msgid "Migrate"
+msgstr "移轉"
+
+msgid "Congratulations!  Your folder has been\nsuccessfully migrated to \nthe latest version of iFolder.\nIt is recommended to \ndisconnect from 2.x server to \n avoid multiple synchronizations.\n\nClick \"Finish\" to close this window."
+msgstr "恭喜您！您的資料夾\n已成功移轉至\n最新版的 iFolder。\n建議您\n解除與 2.x 伺服器的連接以\n避免多重同步。\n\n按一下「完成」關閉此視窗。"
+
+msgid "Error in Migration"
+msgstr "移轉時發生錯誤"
+
+msgid "Sorry! The iFolder cannot be migrated to the specified account.\n\nPlease try again."
+msgstr "很抱歉！iFolder 無法移轉至指定的帳戶。\n\n請重試。"
+
+msgid "Online"
+msgstr "線上"
+
+msgid "Account Name:"
+msgstr "帳戶名稱："
+
+msgid "Change Passphrase"
+msgstr "變更密碼片語"
+
+msgid "Enter passphrase"
+msgstr "輸入密碼片語"
+
+msgid "Enter new passphrase"
+msgstr "輸入新密碼片語"
+
+msgid "_Enter passphrase"
+msgstr "輸入密碼片語(_E)"
+
+msgid "Enter new _passphrase"
+msgstr "輸入新密碼片語(_P)"
+
+msgid "Reset"
+msgstr "重設"
+
+msgid "_Remember passphrase"
+msgstr "記住密碼片語(_R)"
+
+msgid "Remember passphrase"
+msgstr "記住密碼片語"
+
+msgid "iFolder Server Older"
+msgstr "iFolder 伺服器版本較舊"
+
+msgid "The server is running an older version."
+msgstr "伺服器執行的版本較舊。"
+
+msgid "The server needs to be upgraded to be connected from this client"
+msgstr "需要升級伺服器，才能從這個用戶端連接"
+
+msgid "iFolder Client Upgrade"
+msgstr "iFolder 用戶端升級"
+
+msgid "The client needs to be upgraded to be connected to the server"
+msgstr "需要升級用戶端，才能連接到伺服器"
+
+msgid "Would you like to download new iFolder Client?"
+msgstr "是否要下載新版的「iFolder 用戶端」？"
+
+msgid "A newer version \"{0}\" of the iFolder Client is available."
+msgstr "有「iFolder 用戶端」的更新版本「{0}」。"
+
+msgid "Download Complete..."
+msgstr "下載完成..."
+
+msgid "Download Finished "
+msgstr "下載已經完成 "
+
+msgid "The new client rpm's have been downloaded."
+msgstr "新的用戶端 RPM 已下載完成。"
+
+msgid "Upgrade Failure"
+msgstr "升級失敗"
+
+msgid "The iFolder client upgrade failed."
+msgstr "iFolder 用戶端升級失敗。"
+
+msgid "Please contact your system administrator."
+msgstr "請與系統管理員聯絡。"
+
+msgid "Account Error"
+msgstr "帳戶錯誤"
+
+msgid "This account has been removed from your computer."
+msgstr "已從電腦上移除這個帳戶。"
+
+msgid "If you wish to connect to this account again, please add it in the Account Settings Dialog."
+msgstr "如果您要再次連接至此帳戶，請在「帳戶設定」對話方塊中新增此帳戶。"
+
+msgid "Migration Alert"
+msgstr "移轉警告"
+
+msgid "There are 2.x iFolders on this machine."
+msgstr "此機器上有 2.x iFolder。"
+
+msgid "Do you want to migrate them?"
+msgstr "您要將它們移轉嗎？"
+
+msgid "Don't show this message again"
+msgstr "不要再顯示這個訊息"
+
+msgid "Default iFolder"
+msgstr "預設 iFolder"
+
+msgid "Create default iFolder."
+msgstr "建立預設 iFolder。"
+
+msgid "Browse"
+msgstr "瀏覽"
+
+msgid "Security:"
+msgstr "安全性："
+
+msgid "Select Location..."
+msgstr "選取位置..."
+
+msgid "Download Default iFolder:"
+msgstr "下載預設 iFolder："
+
+msgid "_Download default iFolder"
+msgstr "下載預設 iFolder(_D)"
+
+msgid "Next"
+msgstr "下一步"
+
+msgid "iFolder account"
+msgstr "iFolder 帳戶"
+
+msgid "Convert to an iFolder..."
+msgstr "轉換成 iFolder..."
+
+msgid "_Browse"
+msgstr "瀏覽(_B)"
+
+msgid "Synchronized: {0}"
+msgstr "已同步化的：{0}"
+
+msgid "No Logged-In domains"
+msgstr "沒有已登入的領域"
+
+msgid "There are no logged-in domains for importing keys."
+msgstr "沒有已登入領域可用於輸入金鑰。"
+
+msgid "For resetting keys the domain should be connected. Log on to the domain and try."
+msgstr "需要連接網域才能重設金鑰。請登入網域然後再試一次。"
+
+msgid "Successfully imported the keys and changed the passphrase"
+msgstr "已成功輸入金鑰並變更通關密語"
+
+msgid "Error importing the keys."
+msgstr "輸入金鑰時發生錯誤。"
+
+msgid "There are no logged-in domains for changing the passphrase."
+msgstr "沒有已登入領域可用於變更通關密語。"
+
+msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
+msgstr "需要連接領域才能變更密碼片語。請登入領域然後再試一次。"
+
+msgid "Successfully exported the keys."
+msgstr "已成功輸出金鑰。"
+
+msgid "There is no iFolder 2.x data present on this computer."
+msgstr "此電腦上沒有 iFolder 2.x 資料。"
+
+msgid "The client tarball {0} is downlaoded to the location {1}. Run the script {2} from the downloaded location with root permissions to install the new client."
+msgstr "用戶端 Tar 聚合檔 {0} 已下載至位置 {1}。請從下載位置以 root 許可權執行程序檔 {2} 安裝新用戶端。"
+
+msgid "There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
+msgstr "未選取「復原代辦」。如果遺失通關密語，稍後將無法復原加密資料。您要繼續嗎？"
+
+msgid "Recovery Agent Not Selected"
+msgstr "未選取復原代辦"
+
+msgid "Policy Violation"
+msgstr "違反原則"
+
+msgid "Sharing is disabled so this iFolder can not be shared."
+msgstr "共享已經停用，所以無法共享此 iFolder。"
+
+msgid "Save to Conflict Bin"
+msgstr "儲存到衝突容器"
+
+msgid "Save to iFolder"
+msgstr "儲存到 iFolder"
+
+msgid "Action"
+msgstr "動作"
+
+msgid ":"
+msgstr ": "
+
+msgid "/"
+msgstr "/"
+
+msgid "Enable"
+msgstr "開啟"
+
+msgid "No Password"
+msgstr "沒有密碼"
+
+msgid "Entering password is cancelled. If password is not provided, Automatic Account creation will fail. Do you want to continue?"
+msgstr "已取消輸入密碼。如果未提供密碼，建立「自動帳戶」將會失敗。您要繼續嗎？"
+
+msgid "No Passphrase"
+msgstr "沒有通關密語"
+
+msgid "Entering Passphrase is cancelled. If Passphrase is not provided, Default iFolder creation/download will fail. Do you want to continue?"
+msgstr "已取消輸入通關密語。如果未提供通關密語，建立/下載「預設 iFolder」將會失敗。您要繼續嗎？"
+
+msgid "Entering Passphrase is cancelled"
+msgstr "已取消輸入通關密語"
+
+msgid "Entering password is cancelled"
+msgstr "已取消輸入密碼"
+
+msgid "Exit Novell iFolder"
+msgstr "結束 Novell iFolder"
+
+msgid "If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked.\nThe next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application ?"
+msgstr "如果您離開 Novell iFolder 應用程式，則您的 iFolder 中的變更將不被追蹤。\n當您下次登入時，Novell iFolder 將使您的 iFolder 與伺服器間的任何差異趨於一致。\n\n您確定要離開應用程式？"
+
+msgid "Novell iFolder does not currently support this machine's Network card to detect Network events. DBus failed to initialize for the Network card."
+msgstr "Novell iFolder 目前不支援使用此電腦上的網路卡來偵測網路事件。無法為網路卡初始化 DBus。"
+
+msgid "Network Events"
+msgstr "網路事件"
+
+msgid "Specify a valid path for the Conflict Bin"
+msgstr "為衝突容器指定有效路徑"
+
+msgid "Path field is Empty"
+msgstr "路徑欄位是空的"
+
+msgid "Invalid Conflict Bin Directory"
+msgstr "衝突容器目錄無效"
+
+msgid "Merge"
+msgstr "合併"
+
+msgid "Merge to Folder"
+msgstr "合併至資料夾"
+
+msgid "_Merge"
+msgstr "合併(_M)"
+
+msgid "Merge \"{0}\" to..."
+msgstr "將 \"{0}\" 合併至..."
+
+msgid "Domain Name"
+msgstr "領域名稱"
+
+msgid "Enter your iFolder password"
+msgstr "輸入您的 iFolder 密碼"
+
+msgid "The name of folder and iFolder must be the same"
+msgstr "資料夾與 iFolder 必須具有相同名稱"
+
+msgid "You can merge an iFolder only with a folder with same name. Select a folder with the same name as the iFolder and try again."
+msgstr "您只能將 iFolder 與相同名稱的資料夾合併。請選取與 iFolder 名稱相同的資料夾，然後再試一次。"
+
+msgid "The iFolder does not exist."
+msgstr "iFolder 不存在。"
+
+msgid "The iFolder you have chosen could not be found on the server."
+msgstr "伺服器上找不到您選擇的 iFolder。"
+
+msgid "iFolder could not be created as you are exceeding the limit of ifolders set by your Administrator."
+msgstr "無法建立 iFolder，因為您超過您的管理員所設定的 iFolder 限制。"
+
+msgid "Please Re-login to iFolder and web client to continue the encrypted iFolder processing"
+msgstr "請重新登入 iFolder 和 Web 用戶端，繼續進行已加密 iFolder 處理"
+
+msgid "OwnerShip of the iFolder {0} could not be tranferred to {1} as it is violating the limit of iFolder's set by the Administrator."
+msgstr "無法將 iFolder {0} 的所有權轉移給 {1}，因為這樣做將違反管理員所設定的 iFolder 限制。"
+
+msgid "Ownership of the iFolder {0} could not be transferred to {1} as it is violating the limit of iFolders set by the Administrator."
+msgstr "無法將 iFolder {0} 的所有權轉移給 {1}，因為這樣做將違反管理員所設定的 iFolder 限制。"
+
+msgid "Certificate Expired! for \"{0}\" server. Unable to verify \"{0}\" as a trusted server. You should examine this server's identity certificate carefully. Do you still want to continue?"
+msgstr "「{0}」伺服器的憑證已過期！無法驗證「{0}」為受信任的伺服器。您應該要小心檢查這部伺服器的身份憑證。您仍然要繼續嗎？"
+
+msgid "Secure Sync"
+msgstr "安全同步"
+
+msgid "Secure sync:"
+msgstr "安全同步："
+
+msgid "port"
+msgstr "連接埠"
+
+msgid "Disk Space Available: {0}"
+msgstr "可用磁碟空間：{0}"
+
+msgid "The iFolder you have selected for downloading is a migrated iFolder."
+msgstr "您選取下載的 iFolder 是移轉的 iFolder。"
+
+msgid "There are 2.x iFolders on your local machine. Do you want to merge this iFolder with any of the 2.x iFolders?"
+msgstr "您的本地機器上有 2.x iFolder。您想要合併此 iFolder 與任何 2.x iFolder 嗎？"
+
+msgid "The name of the iFolder on the server and on your local machine are different."
+msgstr "伺服器上 iFolder 的名稱和本地機器上的名稱不同。"
+
+msgid "Do you want to rename the iFolder on the server to the name of iFolder on your local machine?"
+msgstr "您想要將伺服器上的 iFolder 重新命名成本地機器上的 iFolder 名稱嗎？"
+
+msgid "Unlimited"
+msgstr "沒有限制的"
+
+msgid "Deny"
+msgstr "拒絕"
+
+msgid "Accept"
+msgstr "接受"
+
+msgid "_Deny"
+msgstr "拒絕(_D)"
+
+msgid "_Accept"
+msgstr "接受(_A)"
+
+msgid "Information Not Available"
+msgstr "資訊無法使用"
+
+msgid "Disk Space Used: {0}"
+msgstr "已使用的磁碟空間：{0}"
+
+msgid "Cannot share iFolder"
+msgstr "無法共享 iFolder"
+
+msgid "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared"
+msgstr "無法共享加密的 iFolder。只能共享一般 iFolder"
+
+msgid "Incorrect old password."
+msgstr "舊密碼不正確。"
+
+msgid "Failed to reset password."
+msgstr "無法重設密碼。"
+
+msgid "Login disabled."
+msgstr "已停用登入。"
+
+msgid "User account expired."
+msgstr "使用者帳戶已過期。"
+
+msgid "User can not change password."
+msgstr "使用者無法變更密碼。"
+
+msgid "User password expired."
+msgstr "使用者密碼已過期。"
+
+msgid "Minimum password length restriction not met."
+msgstr "不符合最短密碼長度限制。"
+
+msgid "User not found in simias."
+msgstr "在 simias 中找不到使用者。"
+
+msgid "Could not change password, "
+msgstr "無法變更密碼，"
+
+msgid "Change password"
+msgstr "變更密碼"
+
+msgid "_Change Password"
+msgstr "變更密碼(_C)"
+
+msgid "Successfully changed the password. Log on to the domain with new password."
+msgstr "已成功變更密碼。請使用新密碼登入網域。"
+
+msgid "_Current password"
+msgstr "目前的密碼(_C)"
+
+msgid "_New password"
+msgstr "新密碼(_N)"
+
+msgid "Confirm new _password"
+msgstr "確認新密碼(_P)"
+
+msgid "Current password"
+msgstr "目前的密碼"
+
+msgid "New password"
+msgstr "新密碼"
+
+msgid "Confirm new password"
+msgstr "確認新密碼"
+
+msgid "There are no logged-in domains for changing the password."
+msgstr "未登入網域，因此無法變更密碼。"
+
+msgid "For changing password the domain should be connected. Log on to the domain and try."
+msgstr "需要連接網域才能變更密碼。請登入網域然後再試一次。"
+
+msgid "Old password and new password should not be same."
+msgstr "舊密碼與新密碼不能相同。"
+
+msgid "New password and confirm password do not match."
+msgstr "新密碼與確認密碼不符。"
+
+msgid "Click Ok to merge the folder or Cancel to select a different location"
+msgstr "按一下「確定」合併資料夾，或按一下「取消」選取不同位置"
+
+msgid "Size"
+msgstr "大小"
+
+msgid "Upload a folder"
+msgstr "上載資料夾"
+
+msgid "Create iFolder"
+msgstr "建立 iFolder"
+
+msgid "Share with"
+msgstr "共享者"
+
+msgid "Download"
+msgstr "下載"
+
+msgid "Open Panel"
+msgstr "開啟面板"
+
+msgid "Close Panel"
+msgstr "關閉面板"
+
+msgid "Thumbnail View"
+msgstr "縮圖檢視"
+
+msgid "List View"
+msgstr "清單檢視"
+
+msgid "Name: {0}"
+msgstr "名稱：{0}"
+
+msgid "Owner: {0}"
+msgstr "擁有者：{0}"
+
+msgid "Access: {0}"
+msgstr "存取：{0}"
+
+msgid "Server: {0}"
+msgstr "伺服器：{0}"
+
+msgid "Last Successfull Sync time: {0}"
+msgstr "上次成功同步時間：{0}"
+
+msgid "File/Folder to synchronize: {0}"
+msgstr "待同步的檔案/資料夾：{0}"
+
+msgid "iFolder Size: {0}"
+msgstr "iFolder 大小：{0}"
+
+msgid "iFolder Type: {0}"
+msgstr "iFolder 類型：{0}"
+
+msgid "Domain List"
+msgstr "網域清單"
+
+msgid "User: {0}"
+msgstr "使用者：{0}"
+
+msgid "No. of iFolder: {0}"
+msgstr "iFolder 數目：{0}"
+
+msgid "Disk Quota: {0}"
+msgstr "磁碟配額：{0}"
+
+msgid "Disk Used: {0}"
+msgstr "已使用的磁碟：{0}"
+
+msgid "Disk Available: {0}"
+msgstr "可用的磁碟：{0}"
+
+msgid "Disconnect"
+msgstr "解除連接"
+
+msgid "Connect"
+msgstr "連接"
+
+msgid "Encrypted"
+msgstr "已加密"
+
+msgid "iFolder Type:    {0}"
+msgstr "iFolder 類型：{0}"
+
+msgid "Welcome to the Passphrase Recovery Wizard"
+msgstr "歡迎使用密碼片語復原精靈"
+
+msgid "Select the account for which the passphrase must to be reset."
+msgstr "選取必須重設密碼片語的帳戶。"
+
+msgid "Click Forward to proceed."
+msgstr "按一下「下一步」繼續。"
+
+msgid "_New passphrase"
+msgstr "新密碼片語(_N)"
+
+msgid "_Confirm passphrase"
+msgstr "確認密碼片語(_C)"
+
+msgid "To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."
+msgstr "若要復原遺失的密碼片語，您需要祕密檔案 (證書的私密金鑰) 與其密碼，或來自管理員的資料檔。"
+
+msgid "If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."
+msgstr "若沒有此資訊，必須使用此精靈取得舊資料檔，然後將該檔案寄給您的管理員。管理員將送回新的資料檔，您可以使用此檔案來重設密碼片語。"
+
+msgid "I have the secret file and it password, I have the new data file sent by the administrator, I have no secret or data file."
+msgstr "我有祕密檔案與其密碼、我有管理員傳送給我的新資料檔、我沒有祕密檔案或資料檔。"
+
+msgid "_iFolder account"
+msgstr "iFolder 帳戶(_I)"
+
+msgid "_Location of secret file"
+msgstr "祕密檔案位置(_L)"
+
+msgid "_Secret password"
+msgstr "祕密密碼(_S)"
+
+msgid "_Location of new data file"
+msgstr "新資料檔位置(_L)"
+
+msgid "_One time password"
+msgstr "一次性密碼(_O)"
+
+msgid "Passphrase is reset using the new data file obtained from the administrator."
+msgstr "已使用管理員提供的新資料檔重設密碼片語。"
+
+msgid "Send this file to the administrator to obtain the new data file. You must then use the new data file to reset your passphrase using the second option of the wizard. "
+msgstr "將此檔案傳送給管理員以取得新資料檔。接著，您必須選取精靈中的第二個選項，以使用新資料檔來重設密碼片語。 "
+
+msgid "The old data file was successfully stored at the following path"
+msgstr "舊資料檔已成功儲存在下列路徑"
+
+msgid "_Location to save old data file"
+msgstr "要用來儲存舊資料檔的位置(_L)"
+
+msgid "Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data."
+msgstr "恭喜！您已經成功重設密碼片語。現在您可以使用新的密碼片語來存取您的資料。"
+
+msgid "Set new passphrase"
+msgstr "設定新密碼片語"
+
+msgid "Old data file sent successfully"
+msgstr "已成功傳送舊資料檔"
+
+msgid "Obtain old data file"
+msgstr "取得舊資料檔"
+
+msgid "Select passphrase recovery step"
+msgstr "選取密碼片語復原步驟"
+
+msgid "Select account"
+msgstr "選取帳戶"
+
+msgid "Select an option to recover your passphrase."
+msgstr "選取選項以復原您的密碼片語。"
+
+msgid "I have the _secret file and its password"
+msgstr "我有祕密檔案與其密碼(_S)"
+
+msgid "I have the new _data file sent by the administrator"
+msgstr "我有管理員傳送給我的新資料檔(_D)"
+
+msgid "_I have no secret or data file"
+msgstr "我沒有祕密檔案或資料檔(_I)"
+
+msgid "Select a file ...."
+msgstr "選取檔案..."
+
+msgid "Is the _above file encrypted?"
+msgstr "上列檔案是否已加密？(_A)"
+
+msgid "Finish"
+msgstr "完成"
+
+msgid "Passphrase reset failed"
+msgstr "密碼片語重設失敗"
+
+msgid "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
+msgstr "無法向網域驗證。已將您的帳戶登出。請登入並再試一次"
+
+msgid "You have been logged out of the account.Please login and try again."
+msgstr "已將您的帳戶登出。請登入並再試一次。"
+
+msgid "Passphrase reset successfully"
+msgstr "密碼片語重設成功"
+
+msgid "Server_Default"
+msgstr "Server_Default"
+
+msgid "The values in the new and confirm passphrase fields do not match"
+msgstr "新密碼片語欄位與確認密碼片語欄位中的值不符"
+
+msgid "New data location is invalid"
+msgstr "新資料位置無效"
+
+msgid "Enter the location of an xml file"
+msgstr "輸入 xml 檔案的位置"
+
+msgid "Unable to send old data file"
+msgstr "無法傳送舊資料檔"
+
+msgid "Display synchronization _logs"
+msgstr "顯示同步記錄(_L)"
+
+msgid "Display notifications for _policy violations"
+msgstr "顯示規則違規通知(_P)"
+
+msgid "Hide ifolder _main window at startup"
+msgstr "啟動時隱藏 ifolder 主視窗(_M)"
+
+msgid "_Location:"
+msgstr "位置(_L)："
+
+msgid "Please wait for iFolder to start...\n\nPress <a href=\"CancelStartup\">here</a> to cancel."
+msgstr "請等候 iFolder 啟動...\n\n按下<a href=\"CancelStartup\">這裡</a>取消。"
+
+msgid "Save as..."
+msgstr "另存新檔..."
+
+msgid "Passphrase Recovery Wizard"
+msgstr "密碼片語復原精靈"
+
+msgid "_iFolder Account"
+msgstr "iFolder 帳戶(_I)"
+
+msgid "Conflict Bin Path"
+msgstr "衝突容器路徑"
+
+msgid "Account Not Encrypted"
+msgstr "帳戶未加密"
+
+msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
+msgstr "未針對此帳戶啟動加密。請聯絡您的系統管理員以啟動加密。"
+
+msgid "Passphrase Not Set"
+msgstr "未設定密碼片語"
+
+msgid "Passphrase is not set for this account."
+msgstr "未針對此帳戶設定密碼片語。"
+
+msgid "Available for download"
+msgstr "可供下載"
+
+msgid "Available: {0}"
+msgstr "可用的： {0}"
+
+msgid "Used: {0}"
+msgstr "已使用：{0}"
+

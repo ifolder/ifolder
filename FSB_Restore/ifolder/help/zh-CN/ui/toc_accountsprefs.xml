@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="accountsprefs">
+ <title>管理 iFolder 帐户和首选设置</title>
+ <entry leaf="true" id="startclient">启动 iFolder 客户程序</entry>
+ <entry leaf="true" id="accounts">配置 iFolder 帐户</entry>
+ <entry leaf="true" id="login">登录 iFolder 帐户</entry>
+ <entry leaf="true" id="accountdetails">查看和修改 iFolder 帐户设置</entry>
+ <entry leaf="true" id="preferences">为客户程序配置 iFolder 首选设置</entry>
+ <entry leaf="true" id="firewall">为 iFolder 通讯配置本地防火墙设置</entry>
+ <entry leaf="true" id="virusscan">为 iFolder 通讯配置本地病毒扫描程序设置</entry>
+ <entry leaf="true" id="delacct">删除 iFolder 帐户</entry>
+ <entry leaf="true" id="logout">注销 iFolder 帐户</entry>
+ <entry leaf="true" id="stopclient">退出 iFolder 客户程序</entry>
+ <entry leaf="true" id="b9lvmk9">下一步</entry>
+</tocsection>

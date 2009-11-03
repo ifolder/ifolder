@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-cn" lang="zh-cn">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-cn" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:28" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>升级 iFolder 3。x 客户程序</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "bctryt7";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
+
+<div class="sect1" id="bctryt7">
+
+<h1 class="title"> 升级 iFolder 3。<span class="replaceable">x</span> 客户程序</h1>
+
+<p class="para">本节讨论以下内容：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bctryt8">自动升级到 iFolder 3.7 或更高版本</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="bctryt7.html#bbjs0lm">手动升级到 iFolder 3.7 或更高版本</a>
+          </p></li></ul></div>
+
+<div class="important">
+<p class="para"><em class="title">重要说明：</em>在升级 3.4.1 客户程序前，必须备份本地 Simias 储存。如果不进行备份，当升级操作失败时，则会丢失计算机上的所有配置信息，因为该操作将删除 Simias 储存。</p></div>
+
+<div class="sect2" id="bctryt8">
+
+<h2 class="title"> 自动升级到 iFolder 3.7 或更高版本</h2>
+
+<p class="para">仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户程序前，将不能使用 iFolder 3.<span class="replaceable">x</span> 客户程序连接到 iFolder 3.7 或更高版本的域。</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjrxu1">
+<p class="para">从 iFolder 3.<span class="replaceable">x</span> 客户程序（低于 iFolder 3.7 版本），尝试连接到 iFolder 服务器。将出现提示，询问您是否要升级。</p></li>
+<li class="step" id="bctryta">
+<p class="para">单击<span class="guimenu">“是”</span>以自动升级 iFolder 3.<span class="guimenu">x</span> 客户程序。</p></li></ol>
+</div>
+
+<p class="para">对于 iFolder 3.4.1，如果您单击<span class="guimenu">“否”</span>并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 或更高版本服务器，则将显示一条错误讯息。单击<span class="guimenu">“确定”</span>关闭此讯息。</p>
+</div>
+
+<div class="sect2" id="bbjs0lm">
+
+<h2 class="title"> 手动升级到 iFolder 3.7 或更高版本</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bbjefu4">
+<p class="para">打开一个终端。在命令提示符下，运行 <span class="command">install-ifolder.sh</span>。</p></li>
+<li class="step" id="bbjeh6h">
+<p class="para">在系统请求根口令时输入该口令。</p>
+<p class="para">如果 iFolder 客户程序已在运行，此过程将关闭该客户程序，然后更新 XSP 万维网服务器和 iFolder 客户程序以及 Nautilus-ifolder3 插件。</p></li>
+<li class="step" id="bbjehh4">
+<p class="para">从<span class="guimenu">“应用程序”</span>菜单启动 iFolder。</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="migration.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctrxs4.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
+</div>
+
+</body>
+</html>

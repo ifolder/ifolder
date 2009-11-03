@@ -1,0 +1,1027 @@
+/* Message in notification window */
+"%@ has invited you to participate in this shared iFolder" = "%@ has invited you to participate in this shared iFolder";
+
+/* iFolder Status Message */
+"%u items not synchronized" = "%u items not synchronized";
+
+/* prefix on a file sync for the iFolder Window status message */
+"%u of %u items - " = "%1$u of %2$u items - ";
+
+/* iFolder folderexists create error dialog message */
+"Cannot download iFolder" = "Cannot download iFolder";
+
+/* Dialog question when a user selects to share with more than 20 users in Properties/Sharing */
+"A large number of users is selected." = "A large number of users is selected.";
+
+/* No comment provided by engineer. */
+"About %@" = "About %@";
+
+/* Menu Tile for the Access menu for the sharing properties dialog */
+"Access" = "Access";
+
+/* Attach Error Account Exists message */
+"Account Already Exists" = "Account Already Exists";
+
+/* Accounts Prefs Toolbar Selector Button
+   Accounts Prefs Toolbar ToolTip
+   Accounts Prefs Toolbar Pallette Button */
+"Accounts" = "Accounts";
+
+/* Attach Error Account Exists details */
+"An account for this server already exists for your current local login identity on this computer.  Only one account per server is allowed." = "An account for this server already exists for your current local login identity on this computer.  Only one account per server is allowed.";
+
+/* Exception error dialog message for login
+   Exception error message for login
+   General error dialog message for login
+   Exception error message title for login */
+"An error was encountered while connecting to the iFolder server" = "An error was encountered while connecting to the iFolder server";
+
+/* iFolder delete error dialog message */
+"An error was encountered while deleting the iFolder." = "An error was encountered while deleting the iFolder.";
+
+/* Error Logout Dialog message on Accounts dialog */
+"An error was encountered while logging out of the iFolder server." = "An error was encountered while logging out of the iFolder server.";
+
+/* Revert error Dialog message */
+"An error was encountered while reverting the iFolder." = "An error was encountered while reverting the iFolder.";
+
+/* iFolder Conflict Exception Message */
+"An exception was encountered while resolving the conflict : %@" = "An exception was encountered while resolving the conflict : %@";
+
+/* Delete iFolder Dialog Title */
+"Are you sure you want to delete the iFolder?" = "Are you sure you want to delete the iFolder?";
+
+/* Delete iFolder Dialog message */
+"Because you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up." = "Because you are the iFolder owner, this unshares the iFolder, reverts all copies of the iFolder to normal folders, and deletes the iFolder from the server. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up.";
+
+/* Quit Application Cancel button
+   Delete iFolder Dialog button */
+"Cancel" = "Cancel";
+
+/* Creating Directory failure */
+"Cannot create directory at the specified path." = "Cannot create directory at the specified path.";
+
+/* Certificate Error Title */
+"Certifiate Error" = "Certifiate Error";
+
+/* ResetPP Check PP Title */
+"Check Passphrase" = "Check Passphrase";
+
+/* iFolder Window Status Message */
+"Checking for changes: %@" = "Checking for changes: %@";
+
+/* iFolder Window Status Message */
+"Checking for new iFolders on: %@" = "Checking for new iFolders on: %@";
+
+/* iFolder Window Status Message */
+"Checking for new iFolders..." = "Checking for new iFolders...";
+
+/* LogWindow Toolbar button - clear */
+"Clear" = "Clear";
+
+/* LogWindow Toolbar Pallette button - clear */
+"Clear Synchronization Log" = "Clear Synchronization Log";
+
+/* LogWindow Toolbar tooltip - clear */
+"Clear the synchronization log" = "Clear the synchronization log";
+
+/* iFolder Window Status Message */
+"Conflict occurred: %@" = "Conflict occurred: %@";
+
+/* Title for notification window */
+"Conflicts detected!" = "Conflicts detected!";
+
+/* Error dialog message when users attempt to share and they don't have access
+   Error dialog message when removing users without access */
+"Contact the owner of the iFolder if changes need to be made." = "Contact the owner of the iFolder if changes need to be made.";
+
+/* Create Default iFolder Text */
+"Create" = "Create";
+
+/* iFolderWin Toolbar New ToolTip
+   iFolderWin Toolbar New Pallette Button */
+"Create a new iFolder" = "Create a new iFolder";
+
+/* To Upload default iFolder Text */
+"Create Default iFolder" = "Create Default iFolder";
+
+/* Time span for one day, sync in 1 \"day\" */
+"day" = "day";
+
+/* Time span for multiple days, sync in 5 \"days\" */
+"days" = "days";
+
+/* DefaultDirName */
+"Default" = "Default";
+
+/* iFolderWin Toolbar Delete Selector Button */
+"Delete" = "Delete";
+
+/* iFolderWin Toolbar Delete Pallette Button */
+"Delete iFolder" = "Delete iFolder";
+
+/* iFolderWin Toolbar Delete ToolTip */
+"Delete the selected iFolder" = "Delete the selected iFolder";
+
+/* iFolder Window Status Message */
+"Deleting file: %@" = "Deleting file: %@";
+
+/* iFolder Window Status Message */
+"Deleting folder: %@" = "Deleting folder: %@";
+
+/* iFolder Window Status Message */
+"Deleting on server: %@" = "Deleting on server: %@";
+
+/* Creating Directory failure title */
+"Directory creation failed" = "Directory creation failed";
+
+/* state on acocunts dialog */
+"Disabled" = "Disabled";
+
+/* Dialog title when a user selects to share with more than 20 users in Properties/Sharing */
+"Do you want to share with all %d selected users?" = "Do you want to share with all %d selected users?";
+
+/* iFolder Window Status Message */
+"Done checking for new iFolders on: %@" = "Done checking for new iFolders on: %@";
+
+/* iFolder Window Status Message */
+"Done checking for new iFolders." = "Done checking for new iFolders.";
+
+/* Download Default iFolder Text
+   iFolderWin Toolbar Set Up Selector Button */
+"Download" = "Download";
+
+/* To download default iFolder Text */
+"Download Default iFolder" = "Download Default iFolder";
+
+/* iFolderWin Toolbar Set Up Pallette Button */
+"Download iFolder" = "Download iFolder";
+
+/* iFolderWin Toolbar Set Up ToolTip */
+"Download the selected iFolder" = "Download the selected iFolder";
+
+/* iFolder Window Status Message */
+"Downloading file: %@" = "Downloading file: %@";
+
+/* iFolder Window Status Message */
+"Downloading folder: %@" = "Downloading folder: %@";
+
+/* Passphrase success title */
+"Enter Passphrase" = "Enter Passphrase";
+
+/* ResetPP Failure Message */
+"Error changing the Passphrase" = "Error changing the Passphrase";
+
+/* iFolder create error dialog title */
+"Error creating iFolder" = "Error creating iFolder";
+
+/* No comment provided by engineer. */
+"Error deregistering the events" = "Error deregistering the events";
+
+/* ImportKey Failure Message */
+"Error importing the keys: %@ for Reason: %@" = "Error importing the keys: %@ for Reason: %@";
+
+/* No comment provided by engineer. */
+"Error initializing the events" = "Error initializing the events";
+
+/* No comment provided by engineer. */
+"Error registering the events" = "Error registering the events";
+
+/* No comment provided by engineer. */
+"Error resolving conflict" = "Error resolving conflict";
+
+/* iFolder setup error dialog title */
+"Error setting up iFolder" = "Error setting up iFolder";
+
+/* No comment provided by engineer. */
+"events de-registered" = "events de-registered";
+
+/* No comment provided by engineer. */
+"Events initialized and registered" = "Events initialized and registered";
+
+/* Create iFolder Exception Title */
+"Exception in Create iFolder" = "Exception in Create iFolder";
+
+/* Quit Application Title */
+"Exit Application" = "Exit Application";
+
+/* Error Dialog Title when password has expired
+   Grace Login Warning Dialog Title */
+"Expired Password" = "Expired Password";
+
+/* ExportKey Title */
+"Export Encrypted Keys" = "Export Encrypted Keys";
+
+/* Sync Log Message */
+"Failed synchronization: %@" = "Failed synchronization: %@";
+
+/* iFolder Window Status Message */
+"File type restriction policy prevented synchronization: %@" = "File type restriction policy prevented synchronization: %@";
+
+/* Message in notification window */
+"Files placed in this read-only iFolder will not be synchronized." = "Files placed in this read-only iFolder will not be synchronized.";
+
+/* Sync Log Message */
+"Finished synchronization: %@" = "Finished synchronization: %@";
+
+/* iFolder Folder DoesNot Exist Error Title */
+"Folder does not exist!" = "Folder does not exist!";
+
+/* Sync Log Message */
+"Found changes in file: %@" = "Found changes in file: %@";
+
+/* Sync Log Message */
+"Found local change in folder: %@" = "Found local change in folder: %@";
+
+/* iFolder Member Access */
+"Full Control" = "Full Control";
+
+/* iFolder Window Status Message */
+"Full iFolder prevented synchronization: %@" = "Full iFolder prevented synchronization: %@";
+
+/* General Prefs Toolbar Selector Button
+   General Prefs Toolbar Pallette Button */
+"General" = "General";
+
+/* General Prefs Toolbar ToolTip */
+"General Settings" = "General Settings";
+
+/* iFolder Status Message */
+"Has conflicts" = "Has conflicts";
+
+/* Time span for one hour, sync in 1 \"hour\" */
+"hour" = "hour";
+
+/* Time span for multiple hours, sync in 5 \"hours\" */
+"hours" = "hours";
+
+/* iFolder Window Status Message */
+"Idle..." = "Idle...";
+
+/* Error Logout Dialog details on Accounts dialog */
+"If the problem persists, please contact your network administrator." = "If the problem persists, please contact your network administrator.";
+
+/* Quit Application Message */
+"If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application?" = "If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application?";
+
+/* Accept Certificate Message */
+"iFolder cannot verify the identity of the iFolder Server \"%@\"." = "iFolder cannot verify the identity of the iFolder Server \"%@\".";
+
+/* Verify Encryption Certificate Message */
+"iFolder cannot verify the identity of the iFolder Server \"%@\".  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"%@\" which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?" = "iFolder cannot verify the identity of the iFolder Server \"%1$@\".  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"%2$@\" which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?";
+
+/* iFolder Conflict Exception Title */
+"iFolder Conflict Exception" = "iFolder Conflict Exception";
+
+/* iFolder delete error dialog title */
+"iFolder Deletion Error" = "iFolder Deletion Error";
+
+/* iFolder Window Status Message */
+"iFolder failed synchronization: %@" = "iFolder failed synchronization: %@";
+
+/* Grace Login Warning Dialog Title */
+"iFolder Password Expired" = "iFolder Password Expired";
+
+/* Accounts Prefs Window Title */
+"iFolder Preferences: Accounts" = "iFolder Preferences: Accounts";
+
+/* General Prefs Window Title */
+"iFolder Preferences: General" = "iFolder Preferences: General";
+
+/* Notify Prefs Window Title */
+"iFolder Preferences: Notification" = "iFolder Preferences: Notification";
+
+/* Sync Prefs Window Title */
+"iFolder Preferences: Synchronization" = "iFolder Preferences: Synchronization";
+
+/* Revert error Dialog title */
+"iFolder Revert Error" = "iFolder Revert Error";
+
+/* iFolder create error dialog details */
+"iFolder was unable to convert the selected folder to an iFolder for an unknown reason.  Please check the path selected and try again." = "iFolder was unable to convert the selected folder to an iFolder for an unknown reason.  Please check the path selected and try again.";
+
+/* Log file save details */
+"iFolder was unable to create a file in the location you specified.  The log file was not saved." = "iFolder was unable to create a file in the location you specified.  The log file was not saved.";
+
+/* iFolder setup error dialog details */
+"iFolder was unable to set up the selected iFolder for an unknown reason.  Please check the path selected and try again." = "iFolder was unable to set up the selected iFolder for an unknown reason.  Please check the path selected and try again.";
+
+/* iFolder notexist create error dialog details */
+"iFolders can only be created from folders that exist.  Please select a different location and try again." = "iFolders can only be created from folders that exist.  Please select a different location and try again.";
+
+/* iFolder readrights create error dialog details
+   iFolder writerights create error dialog details */
+"iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again." = "iFolders can only be created from folders where you have access to read and write files.  Please select a different location and try again.";
+
+/* iFolder rootdrive create error dialog message */
+"iFolders cannot exist at the drive level." = "iFolders cannot exist at the drive level.";
+
+/* iFolder insideCollection create error dialog details
+   iFolder containsCollection create error dialog details */
+"iFolders cannot exist inside other iFolders.  Please select a different location and try again." = "iFolders cannot exist inside other iFolders.  Please select a different location and try again.";
+
+/* iFolder notfixed create error dialog details */
+"iFolders must reside on a physical drive.  Please select a different location and try again." = "iFolders must reside on a physical drive.  Please select a different location and try again.";
+
+/* ImportKey Title */
+"Import Decrypted Keys" = "Import Decrypted Keys";
+
+/* Message in notification window */
+"Incomplete synchronization because the iFolder is full." = "Incomplete synchronization because the iFolder is full.";
+
+/* iFolder SyncFail Title */
+"Incomplete Synchronization: %@" = "Incomplete Synchronization: %@";
+
+/* iFolder Status Message */
+"Initial wait to synchronize" = "Initial wait to synchronize";
+
+/* iFolder Window Status Message */
+"Insufficient disk space on the server prevented synchronization: %@" = "Insufficient disk space on the server prevented synchronization: %@";
+
+/* iFolder Window Status Message */
+"Insufficient disk space on this computer prevented synchronization: %@" = "Insufficient disk space on this computer prevented synchronization: %@";
+
+/* iFolder Window Status Message */
+"Insufficient rights prevented synchronization: %@" = "Insufficient rights prevented synchronization: %@";
+
+/* Invalid Directory Selection title */
+"Invalid Directory" = "Invalid Directory";
+
+/* Invalid passphrase title */
+"Invalid Passphrase" = "Invalid Passphrase";
+
+/* Passphrase status */
+"Invalid PassPhrase Status" = "Invalid PassPhrase Status";
+
+/* Create iFolder Exception Message */
+"Invalid Path. Please check the path that you entered" = "Invalid Path. Please check the path that you entered";
+
+/* iFolder Member Status */
+"Invited User" = "Invited User";
+
+/* Initial iFolder Status Message */
+"Loading synchronization process..." = "Loading synchronization process...";
+
+/* iFolder Window Status Message */
+"Locked iFolder prevented synchronization: %@" = "Locked iFolder prevented synchronization: %@";
+
+/* Login/out button on accounts dialog
+   Login/Logout Button on Accounts Dialog */
+"Log In" = "Log In";
+
+/* Login/out button on accounts dialog
+   Login/Logout Button on Accounts Dialog */
+"Log Out" = "Log Out";
+
+/* state on acocunts dialog
+   Login status on Accounts Dialog */
+"Logged in" = "Logged in";
+
+/* state on acocunts dialog
+   Login/Logout status on Accounts dialog
+   Initial Status of login state on Accounts dialog */
+"Logged out" = "Logged out";
+
+/* iFolder Member Status */
+"Member" = "Member";
+
+/* iFolderWin Toolbar Merge Selector Button */
+"Merge" = "Merge";
+
+/* iFolderWin Toolbar Merge iFolder Pallette Button */
+"Merge iFolder" = "Merge iFolder";
+
+/* iFolderWin Toolbar Merge ToolTip */
+"Merge the selected iFolder with local folder" = "Merge the selected iFolder with local folder";
+
+/* Time span for one minute, sync in 1 \"minute\" */
+"minute" = "minute";
+
+/* Time span for multiple minutes, sync in 5 \"minutes\" */
+"minutes" = "minutes";
+
+/* Title in notification window */
+"New iFolder \"%@\"" = "New iFolder \"%@\"";
+
+/* Title for notification window */
+"New iFolder Users" = "New iFolder Users";
+
+/* Message in notification window */
+"New users have joined the iFolder \"%@\"" = "New users have joined the iFolder \"%@\"";
+
+/* Confirmation dialog button to remove users from an iFolder
+   Dialog button when a user selects to share with more than 20 users in Properties/Sharing
+   Initial Setup Dialog Button
+    No Certificate Alert panel button 
+	Negative confiramtion to download default ifolder and merge */
+"No" = "No";
+
+/* No Encryption Certificate Title */
+"No Recovery agent" = "No Recovery agent";
+
+/* RA Not found title */
+"No Recovery Agent Available" = "No Recovery Agent Available";
+
+/* RA Not found message */
+"No Recovery Agent is selected for this domain" = "No Recovery Agent is selected for this domain";
+
+/* No comment provided by engineer. */
+"No sound" = "No sound";
+
+/* None Text */
+"None" = "None";
+
+/* Invalid Default Directory Selection Title */
+"Not a valid Directory name" = "Not a valid Directory name";
+
+/* No comment provided by engineer. */
+"Not available" = "Not available";
+
+/* iFolder Status Message */
+"Not set up" = "Not set up";
+
+/* Sync Log Message */
+"Not synchronized: %@" = "Not synchronized: %@";
+
+/* Notification Prefs Toolbar ToolTip
+   Notification Prefs Toolbar Selector Button
+   Notification Prefs Toolbar Pallette Button */
+"Notification" = "Notification";
+
+/* Verify passphrase default button
+   Error dialog button new iFolder
+   iFolder readrights create error dialog button
+   iFolder containsCollection create error dialog button
+   Read Only Access Warning button
+   Error Logout Dialog button on Accounts dialog
+   iFolder folderexists create error dialog button
+   iFolder instorepath create error dialog button
+   iFolder badchar create error dialog button
+   iFolder rootdrive create error dialog button
+   iFolder storepath create error dialog button
+   iFolder progdir create error dialog button
+   iFolder writerights create error dialog button
+   Error dialog button when domain is unknown
+   Error dialog button when iFolder account disabled
+   Error dialog button when users attempt to share and they don't have access
+   Export Keys successfully
+   Resolve has duplicate name error button
+   Error dialog button when account is locked
+   Import Keys Check
+   OKButton Text
+   Folder Doesnot exist dialog button
+   iFolder sysdir create error dialog button
+   iFolder windir create error dialog button
+   Error Dialog button when user account disabled
+   Grace Login Warning Dialog button
+   iFolder delete error dialog button
+   iFolder create error dialog button
+   iFolder setup error dialog button
+   Log file save error
+   Error Dialog Button when password has expired
+   Error Dialog button when password invalid
+   Exception error button title for login
+   Attach Error Account Exists Button
+   iFolder notfixed create error dialog button
+   iFolder sysdrive create error dialog button
+   iFolder notexist create error dialog button
+   Error dialog button when removing users without access
+   iFolder insideCollection create error dialog button
+   Revert error Dialog button
+   General error dialog button for login
+   OK Button */
+"OK" = "OK";
+
+/* iFolder Member Status */
+"Owner" = "Owner";
+
+/* PP for Encryption Needed */
+"Passphrase should be supplied for encrypting the iFolder" = "Passphrase should be supplied for encrypting the iFolder";
+
+/* Cannot store passphrase title */
+"Passphrase store error" = "Passphrase store error";
+
+/* AdvConflict Empty Conflict Bin Title */
+"Path field is empty" = "Path field is empty";
+
+/* ResetPP Check PP MEssage */
+"Please check whether passphrase's entered are not null, also check New passphrase and Retype passphrase are same" = "Please check whether passphrase's entered are not null, also check New passphrase and Retype passphrase are same";
+
+/* Resolve has duplicate name error details */
+"Please choose a different name." = "Please choose a different name.";
+
+/* Error dialog details when account is locked
+   Error Dialog details when user account disabled
+   Error dialog details when iFolder account disabled */
+"Please contact your network administrator for assistance." = "Please contact your network administrator for assistance.";
+
+/* Error Dialog details when password invalid */
+"Please verify the information entered and try again." = "Please verify the information entered and try again.";
+
+/* Error dialog details when domain is unknown
+   General error dialog title for login
+   General error dialog details for login
+   Exception error dialog details for login */
+"Verify the information entered by you and try again. If the problem still persists, contact your network administrator." = "Verify the information entered by you and try again. If the problem still persists, contact your network administrator.";
+
+/* iFolder Window Status Message */
+"Policy prevented synchronization: %@" = "Policy prevented synchronization: %@";
+
+/* iFolder Status Message */
+"Preparing to synchronize" = "Preparing to synchronize";
+
+/* Quit Application Quit button */
+"Quit" = "Quit";
+
+/* iFolder Member Access */
+"Read Only" = "Read Only";
+
+/* iFolder Window Status Message */
+"Read-only iFolder prevented synchronization: %@" = "Read-only iFolder prevented synchronization: %@";
+
+/* iFolder Member Access */
+"Read/Write" = "Read/Write";
+
+/* Log Message when refreshing main window */
+"Refreshing iFolder view" = "Refreshing iFolder view";
+
+/* Confirmation dialog message to remove users from an iFolder */
+"Remove the selected users?" = "Remove the selected users?";
+
+/* ResetPP Title */
+"Reset PassPhrase" = "Reset PassPhrase";
+
+/* iFolderWin Toolbar Resolve Selector Button */
+"Resolve" = "Resolve";
+
+/* iFolderWin Toolbar Resolve Pallette Button */
+"Resolve Conflicts" = "Resolve Conflicts";
+
+/* iFolderWin Toolbar Resolve ToolTip */
+"Resolve conflicts in the selected iFolder" = "Resolve conflicts in the selected iFolder";
+
+/* LogWindow Toolbar button - save */
+"Save" = "Save";
+
+/* LogWindow Toolbar Pallette button - save */
+"Save Synchronization Log" = "Save Synchronization Log";
+
+/* LogWindow Toolbar tooltip - save */
+"Save the syncrhonization log" = "Save the syncrhonization log";
+
+/* Time span for one second, sync in 1 \"second\" */
+"second" = "second";
+
+/* Time span for multiple seconds, sync in 5 \"seconds\" */
+"seconds" = "seconds";
+
+/* Invalid Directory Selection Message */
+"Selected path is a file. Please select a Directory" = "Selected path is a file. Please select a Directory";
+
+/* iFolder Status Message */
+"Server unavailable" = "Server unavailable";
+
+/* Initial Setup Dialog Title */
+"Set Up an iFolder Account" = "Set Up an iFolder Account";
+
+/* Error dialog Title new iFolder */
+"Set Up an iFolder Account" = "Set Up an iFolder Account";
+
+/* iFolderWin Toolbar Share Selector Button */
+"Share" = "Share";
+
+/* iFolderWin Toolbar Share Pallette Button */
+"Share an iFolder" = "Share an iFolder";
+
+/* iFolderWin Toolbar Share ToolTip */
+"Share the selected iFolder" = "Share the selected iFolder";
+
+/* Sync Log Message */
+"Shutting down Simias..." = "Shutting down Simias...";
+
+/* Sync Log Message */
+"Simias is shut down" = "Simias is shut down";
+
+/* iFolder Window Status Message */
+"Size restriction policy prevented synchronization: %@" = "Size restriction policy prevented synchronization: %@";
+
+/* AdvConflict Empty Conflict Bin Message */
+"Specify a valid path for the Conflict bin" = "Specify a valid path for the Conflict bin";
+
+/* ExportKey Success Message */
+"Successfully exported the keys" = "Successfully exported the keys";
+
+/* ImportKey Success Message */
+"Successfully imported the keys. You can use the new passphrase" = "Successfully imported the keys. You can use the new passphrase";
+
+/* Passphrase success message */
+"Successfully set the passphrase." = "Successfully set the passphrase.";
+
+/* Synchronization Prefs Toolbar Selector Button
+   Synchronization Prefs Toolbar ToolTip
+   Synchronization Prefs Toolbar Pallette Button */
+"Synchronization" = "Synchronization";
+
+/* iFolder SyncFail Notification Message */
+"Synchronization log contains the information regarding the files that are not synchronized" = "Synchronization log contains the information regarding the files that are not synchronized";
+
+/* iFolderWin Toolbar Synchronize Selector Button */
+"Synchronize" = "Synchronize";
+
+/* iFolderWin Toolbar Synchronize Pallette Button */
+"Synchronize iFolder" = "Synchronize iFolder";
+
+/* iFolderWin Toolbar Synchronize ToolTip */
+"Synchronize the selected iFolder" = "Synchronize the selected iFolder";
+
+/* iFolder Status Message */
+"Synchronized: %@" = "Synchronized: %@";
+
+/* iFolder Status Message */
+"Synchronizing" = "Synchronizing";
+
+/* iFolder Window Status Message */
+"Synchronizing: %@" = "Synchronizing: %@";
+
+/* iFolder sysdrive create error dialog details */
+"System drives cannot be contained in an iFolder.  Please select a different location and try again." = "System drives cannot be contained in an iFolder.  Please select a different location and try again.";
+
+/* iFolder sysdir create error dialog details */
+"System folders cannot be contained in an iFolder.  Please select a different location and try again." = "System folders cannot be contained in an iFolder.  Please select a different location and try again.";
+
+/* Accept Certificate Details */
+"The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"%@\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?" = "The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be \"%@\" which could put your confidential information at risk.   Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?";
+
+/* iFolder badchar create error dialog details */
+"The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again." = "The characters \\:*?\"<>| cannot be used in an iFolder. Please select a different location and try again.";
+
+/* message in notification widnow */
+"The iFolder \"%@\" has conflicts" = "The iFolder \"%@\" has conflicts";
+
+/* Error dialog message when iFolder account disabled */
+"The iFolder account is disabled" = "The iFolder account is disabled";
+
+/* iFolder instorepath create error dialog details */
+"The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again." = "The iFolder data folder is normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.";
+
+/* iFolder storepath create error dialog details */
+"The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again." = "The location you have selected contains the iFolder data files.  These are normally located in your home folder in the folder \".local/share\".  Please select a different location and try again.";
+
+/* iFolder folderexists create error dialog details */
+"A folder with the same name already exists in the location you specified. Specify a different location and try again" = "A folder with the same name already exists in the location you specified. Specify a different location and try again";
+
+/* iFolder rootdrive create error dialog details */
+"The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again." = "The location you selected is at the root of the drive.  Please select a location that is not at the root of a drive and try again.";
+
+/* iFolder Folder DoesNot Exist Error Message */
+"The name of folder and iFolder must be the same." = "The name of folder and iFolder must be the same.";
+
+/* Invalid passphrase */
+"The passphrase entered is invalid" = "The passphrase entered is invalid";
+
+/* Invalid Default Directory Selection Message */
+"The path entered is not a valid directory. Please select/enter a valid directory name" = "The path entered is not a valid directory. Please select/enter a valid directory name";
+
+/* iFolder progdir create error dialog details */
+"The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again." = "The Program Files folder cannot be contained in an iFolder.  Please select a different location and try again.";
+
+/* iFolder containsCollection create error dialog message */
+"The selected location already contains an iFolder." = "The selected location already contains an iFolder.";
+
+/* iFolder sysdir create error dialog message */
+"The selected location contains a system folder." = "The selected location contains a system folder.";
+
+/* iFolder badchar create error dialog message */
+"The selected location contains invalid characters." = "The selected location contains invalid characters.";
+
+/* iFolder storepath create error dialog message */
+"The selected location contains the iFolder data files." = "The selected location contains the iFolder data files.";
+
+/* iFolder notexist create error dialog message */
+"The selected location does not exist." = "The selected location does not exist.";
+
+/* iFolder progdir create error dialog message */
+"The selected location includes the Program Files folder." = "The selected location includes the Program Files folder.";
+
+/* iFolder windir create error dialog message */
+"The selected location includes the Windows folder." = "The selected location includes the Windows folder.";
+
+/* iFolder sysdrive create error dialog message */
+"The selected location is a system drive." = "The selected location is a system drive.";
+
+/* iFolder insideCollection create error dialog message */
+"The selected location is inside another iFolder." = "The selected location is inside another iFolder.";
+
+/* iFolder instorepath create error dialog message */
+"The selected location is inside the iFolder data folder." = "The selected location is inside the iFolder data folder.";
+
+/* iFolder notfixed create error dialog message */
+"The selected location is on a network or non-physical drive." = "The selected location is on a network or non-physical drive.";
+
+/* Error dialog message when domain is unknown */
+"The server specified can not be located" = "The server specified can not be located";
+
+/* Resolve has duplicate name error message */
+"The specified name already exists" = "The specified name already exists";
+
+/* Error dialog message when account is locked */
+"The user account has been locked out" = "The user account has been locked out";
+
+/* Error Dialog message when user account disabled */
+"The user account is disabled" = "The user account is disabled";
+
+/* Error Dialog message when password invalid */
+"The username or password is invalid" = "The username or password is invalid";
+
+/* iFolder windir create error dialog details */
+"The Windows folder cannot be contained in an iFolder.  Please select a different location and try again." = "The Windows folder cannot be contained in an iFolder.  Please select a different location and try again.";
+
+/* No Encryption Certificate Message */
+"There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?" = "There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?";
+
+/* No comment provided by engineer. */
+"This iFolder does not automatically sync" = "This iFolder does not automatically sync";
+
+/* Delete iFolder Dialog message */
+"This removes the iFolder from your local computer.  Because you are the owner, the iFolder is deleted from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive." = "This removes the iFolder from your local computer.  Because you are the owner, the iFolder is deleted from the server and all member computers.  The iFolder cannot be recovered or re-shared on another computer.  The files are not deleted from your local hard drive.";
+
+/* Delete iFolder Dialog message */
+"This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive." = "This removes you as a member of the iFolder.  You cannot access the iFolder unless the owner re-invites you.  The files are not deleted from your local hard drive.";
+
+/* Delete iFolder Dialog message */
+"This removes you as a member of the iFolder. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up. You cannot access the original iFolder from any computer unless the owner re-invites you." = "This removes you as a member of the iFolder. Local copies of the iFolder contents are not deleted from computers where the iFolder is currently set up. You cannot access the original iFolder from any computer unless the owner re-invites you.";
+
+/* Confirmation dialog details to remove users from an iFolder */
+"This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder." = "This will remove the selected users from this iFolder.  They will no longer be able to synchronize files with this iFolder.";
+
+/* Error dialog message new iFolder */
+"To begin using iFolder, you must first set up an iFolder account." = "To begin using iFolder, you must first set up an iFolder account.";
+
+/* Initial Setup Dialog Message */
+"There are no iFolder accounts configured. You must first set up an iFolder account. Would you like to set up an iFolder account now?" = "There are no iFolder accounts configured. You must first set up an iFolder account. Would you like to set up an iFolder account now?";
+
+/* ExportKey Failure Message */
+"Unable to export keys: %@" = "Unable to export keys: %@";
+
+/* Log file save error */
+"Unable to save log to specified location" = "Unable to save log to specified location";
+
+/* Cannot store passphrase message */
+"Unable to store Passphrase." = "Unable to store Passphrase.";
+
+/* Verify Encryption Certificate Title */
+"Unable to Verify Identity \"%@\"" = "Unable to Verify Identity \"%@\"";
+
+/* No comment provided by engineer. */
+"unknown" = "unknown";
+
+/* iFolder Member Access
+   iFolder Status Message */
+"Unknown" = "Unknown";
+
+/* iFolderWin Toolbar New Selector Button */
+"Upload" = "Upload";
+
+/* iFolder Window Status Message */
+"Uploading file: %@" = "Uploading file: %@";
+
+/* iFolder Window Status Message */
+"Uploading folder: %@" = "Uploading folder: %@";
+
+/* No comment provided by engineer. */
+"User count: %d" = "User count: %d";
+
+/* Didn't accept Certificate */
+"User did not accept certificate, not storing or authenticating" = "User did not accept certificate, not storing or authenticating";
+
+/* No comment provided by engineer. */
+"Version %@" = "Version %@";
+
+/* iFolder Status Message */
+"Waiting to connect" = "Waiting to connect";
+
+/* iFolder Status Message */
+"Waiting to synchronize" = "Waiting to synchronize";
+
+/* iFolder Status Message */
+"Not Setup" = "Not Setup";
+
+/* Delete iFolder Dialog button
+   Passphrase successfully set button
+   Cannot store passphrase button
+   Initial Setup Dialog Button
+   Dialog button when a user selects to share with more than 20 users in Properties/Sharing
+   No Encryption Certificate button
+   Confirmation dialog button to remove users from an iFolder */
+"Yes" = "Yes";
+
+/* Error dialog title when users attempt to share and they don't have access */
+"You do not have access to add users to this iFolder" = "You do not have access to add users to this iFolder";
+
+/* iFolder readrights create error dialog message */
+"You do not have access to read files in the selected location." = "You do not have access to read files in the selected location.";
+
+/* Error dialog message when removing users without access */
+"You do not have access to remove users from this iFolder" = "You do not have access to remove users from this iFolder";
+
+/* iFolder writerights create error dialog message */
+"You do not have access to write files in the selected location." = "You do not have access to write files in the selected location.";
+
+/* Read Only Access Warning Message */
+"You have read only access" = "You have read only access";
+
+/* Read Only Access Warning details */
+"Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server." = "Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.";
+
+/* Error Dialog Message when password has expired
+   Grace Login Warning Dialog message */
+"Your password has expired.  You have %d grace logins remaining." = "Your password has expired.  You have %d grace logins remaining.";
+
+/*ResetPP Success Title*/
+"Successfully Reset the Passphrase" = "Successfully Reset the Passphrase";
+
+/*ResetPP Success Message*/
+"Please Re-login to iFolder and web client to continue the encrypted iFolder Processing" = "Please Re-login to iFolder and web client to continue the encrypted iFolder Processing";
+
+/*New iFolder Notification title*/
+"iFolder Created" = "iFolder Created";
+
+/*New iFolder Notification message*/
+"The selected folder is now an iFolder. To learn more about using iFolder and sharing iFolders with other users, see iFolder Help" = "The selected folder is now an iFolder. To learn more about using iFolder and sharing iFolders with other users, see iFolder Help";
+
+/*Name conflict title*/
+"File Name Conflict" = "File Name Conflict";
+
+/*Name conflict message*/
+"Fail to resolve Name Conflict, rename the local file to resolve the conflict." = "Fail to resolve Name Conflict, rename the local file to resolve the conflict.";
+
+/*Error Title*/
+"iFolder Error" = "iFolder Error";
+
+/*iFolder Limit Error*/
+"iFolder could not be created as you are exceeding the limit of ifolder set by your Administrator" = "iFolder could not be created as you are exceeding the limit of ifolder set by your Administrator";
+
+/*UpgradeAvailableTitle*/
+"Client Upgrade Available" = "Client Upgrade Available";
+
+/*UpgradeAvailableTitle*/
+"Would you like to upgrade your client to %@. If you click Yes, the client will be closed automatically" = "Would you like to upgrade your client to %@. If you click Yes, the client will be closed automatically";
+
+/*Download latest client title*/
+"Browse the Location" = "Browse the Location";
+
+/*Stop upgrade title*/
+"Upgrade Interrupted" = "Upgrade Interrupted";
+
+/*Stop upgrade message*/
+"Cannot upgrade to the latest client" = "Cannot upgrade to the latest client";
+
+/*Upgrade exception title*/
+"Upgrade Failed" = "Upgrade Failed";
+
+/*Upgrade exception message*/
+"Error in upgrade. Upgrading to the latest client failed" = "Error in upgrade. Upgrading to the latest client failed";
+
+/*Upgrade status title*/
+"New Client is Available for Installing" = "New Client is Available for Installing";
+
+/*Upgrade status message*/
+"Install the latest client available at the location %@" = "Install the latest client available at the location %@";
+
+/*ServerOldTitle*/
+"Old Server" = "Old Server";
+
+/*ServerOldMessage*/
+"Server is old. Cannot connect to the server" = "Server is old. Cannot connect to the server";
+
+/*iFolder policy Notification Message*/
+"A policy prevented complete synchronization" = "A policy prevented complete synchronization";
+
+/*iFolder Access Notification Message*/
+"Insufficient rights prevented complete synchronization: \"%@\"" = "Insufficient rights prevented complete synchronization: \"%@\"";
+
+/*iFolder Locked Notification Message*/
+"The iFolder is locked: \"%@\"" = "The iFolder is locked: \"%@\"";
+
+/*iFolder Policy Size Notification Message*/
+"A size restriction policy prevented complete synchronization: \"%@\"" = "A size restriction policy prevented complete synchronization: \"%@\"";
+
+/*iFolder Policy Type Notification Message*/
+"A file type restriction policy prevented complete synchronization: \"%@\"" = "A file type restriction policy prevented complete synchronization: \"%@\"";
+
+/*iFolder disk full Notification Message*/
+"Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"" = "Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"";
+
+/*SyncInterval update title*/
+"Sync interval is not set" = "Sync interval is not set";
+
+/*SyncInterval update message*/
+"Sync interval is not updated. Do you want to update sync interval?" = "Sync interval is not updated. Do you want to update sync interval?";
+
+/*Select directory title*/
+"Select Directory" = "Select Directory";
+
+/*Select directory message*/
+"Either the selected item is not a directory or the selected path does not exist.  Select an available directory to upload" = "Either the selected item is not a directory or the selected path does not exist. Select an available directory to upload";
+
+/*Cannot share iFolder title*/
+"Cannot share iFolder" = "Cannot share iFolder";
+
+/*Cannot share iFolder message*/
+"It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared" = "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared.";
+
+/* iFolder Window Status Message */
+"Path is too long for the file \"%@\" to be downloaded" = "Path is too long for the file \"%@\" to be downloaded";
+
+/*Invalid new password*/
+"Invalid new password" = "Invalid new password";
+
+/*Old password and new password should not be same*/
+"Old password and new password should not be same" = "Old password and new password should not be same";
+
+/*New password and confirm password do not match*/
+"New password and confirm password do not match" = "New password and confirm password do not match";
+
+/*Error Changing Password*/
+"Error Changing Password" = "Error Changing Password";
+
+/*Successful*/
+"Successfuly changed password.Log on to the domain with new password" = "Successfuly changed password.Log on to the domain with new password";
+
+/*Incorrect old password*/
+"Incorrect old password" = "Incorrect old password";
+
+/*Failed to reset password*/
+"Failed to reset password" = "Failed to reset password";
+
+/*Login disabled*/
+"Login disabled"="Login disabled";
+
+/*User account expired*/
+"User account expired"="User account expired";
+
+/*User cannot change password*/
+"User cannot change password"="User cannot change password";
+
+/*User password expired*/
+"User password expired"="User password expired";
+
+/*Minimum password length restriction not met*/
+"Minimum password length restriction not met"="Minimum password length restriction not met";
+
+/*User not found in simias*/
+"User not found in simias"="User not found in simias";
+
+/*Error changing password*/
+"Error changing password"="Error changing password";
+
+/*Server_Default encrypt RA*/
+"Server_Default" = "Server_Default";
+
+/*Invalid UserName*/
+"Invalid Username" = "Invalid Username";
+
+/*Check UserName*/
+"Verify the username that you entered" = "Verify the username that you entered";
+
+/*Authentication failed title*/
+"Authentication failed" = "Authentication failed";
+
+/*Authentication failed message*/
+"Unable to authenticate to the domain \"%@\"" = "Unable to authenticate to the domain \"%@\"";
+
+/*ForgotPP reset failed title*/
+"Passphrase reset failed" = "Passphrase reset failed";
+ 
+/*ForgotPP reset failed message*/
+"Cannot reset passphrase. You have been logged out of the domain" = "Cannot reset passphrase. You have been logged out of the domain";
+
+/*Domain logout title*/
+"Domain Logout" = "Domain Logout";
+
+/*Domain logout message*/
+"Unable to authenticate to the domain. You have been logged out of the domain" = "Unable to authenticate to the domain. You have been logged out of the domain";
+
+/*Dont support title*/
+"Cannot reset passphrase" = "Cannot reset passphrase";
+
+/*Dont support message*/
+"This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu." = "This iFolder account does not support server side passphrase recovery. To reset your passphrase, use the Export, Key Recovery and Import options from the Security Menu.";
+
+/*Folder already exists*/
+"A folder with the name you specified already exists" = "A folder with the name you specified already exists";
+
+/*Download default ifolder merge option*/
+"Click Yes to merge or No to select a different location" = "Click Yes to merge or No to select a different location";
+
+/*No passphrase set*/
+"Passphrase not provided, will not sync the folder \"%@\"" = "Passphrase not provided, will not sync the folder \"%@\"";
+
+/*No passphrase iFolder Status Message*/
+"Passphrase not provided" = "Passphrase not provided";
+
+/*Policy violation title*/
+"Policy Vilolation" = "Policy Vilolation";
+
+/*Policy violation message*/
+"Sharing is disabled so this iFolder cannot be shared" = "Sharing is disabled so this iFolder cannot be shared";

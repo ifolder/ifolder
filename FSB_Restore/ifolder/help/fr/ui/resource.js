@@ -1,0 +1,11 @@
+﻿var RES_PREV_STR="précédent";
+var RES_NEXT_STR="Suivant";
+var RES_CONTENTS_STR = "Sommaire";
+var RES_INDEX_STR = "Index";
+var RES_SEARCH_STR = "rechercher";
+var RES_WORDSEPREGEX="[\\s -:;,\\[\\]<>{}&'\"!\?|()/\\\\]";
+var RES_COMMONWORDS="";
+var RES_STEMMING="";
+var RES_SPELLING="";
+var RES_MSGNOTFOUND="Aucune rubrique trouvée.";
+var RES_MSGRESULTS="résultats";

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="fr" lang="fr">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="fr" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Fusion de dossiers iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "merge";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+
+<div class="sect1" id="merge">
+
+<h1 class="title"> Fusion de dossiers iFolder</h1>
+
+<p class="para">La fusion contribue à consolider les données iFolder et à minimiser le transfert de données entre serveur et client iFolder. Vous pouvez fusionner le contenu d'un dossier iFolder du serveur avec celui d'un dossier existant de la machine locale.</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0ign">Fusion iFolder-dossier</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0kks">Déplacement de dossiers iFolder existants</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="merge.html#bcq0l8i">Fusion de dossiers iFolder 2.x migrés avec des dossiers iFolder 3.7 ou version ultérieure</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bcq0ign">
+
+<h2 class="title"> Fusion iFolder-dossier</h2>
+
+<p class="para">Vous pouvez fusionner un dossier iFolder et un dossier normal de même nom. Par exemple, vous pouvez fusionner le contenu d'un dossier iFolder nommé <span class="filename">entreprise</span> avec celui d'un dossier normal également nommé <span class="filename">entreprise</span>. </p>
+<p class="para">Supposons que le dossier iFolder <span class="filename">entreprise</span> a trois sous-dossiers : <span class="filename">rh</span>, <span class="filename">finance</span> et <span class="filename">marketing</span>. Vous souhaitez télécharger le contenu du dossier iFolder <span class="filename">entreprise</span> dans le dossier nommé <span class="filename">entreprise</span> qui ne contient que les dossiers <span class="filename">rh</span> et <span class="filename">finance</span>. Dans ce cas, vous ne devez pas télécharger les trois dossiers dans le dossier <span class="filename">entreprise</span> ni augmenter la vitesse de transfert. Au lieu de cela, vous pouvez fusionner le dossier iFolder <span class="filename">entreprise</span> dans le dossier <span class="filename">entreprise</span> de sorte que la fonction <span class="guimenu">Fusionner dans le dossier</span> évite intelligemment le téléchargement des sous-dossiers <span class="filename">rh</span> et <span class="filename">finance</span> et ne télécharge que le sous-dossier <span class="filename">marketing</span>. Si les données du dossier iFolder <span class="filename">entreprise</span> et du dossier <span class="filename">entreprise</span> diffèrent, un conflit de version s'affiche. Vous pouvez résoudre les conflits manuellement. De même, si un conflit de nom de fichier s'affiche, vous pouvez le résoudre manuellement.</p>
+<p class="para">Pour fusionner un dossier iFolder sur le serveur avec le contenu d'un dossier existant sur la machine locale :</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr3w0i">
+<p class="para">Dans le navigateur iFolder, cliquez avec le bouton droit sur le dossier iFolder désiré dans la liste de dossiers iFolder sur le serveur sélectionné, puis sélectionnez <span class="guimenu">Fusionner dans le dossier</span>.</p></li>
+<li class="step" id="bcr4m9d">
+<p class="para">Recherchez et sélectionnez le dossier et cliquez sur <span class="guimenu">OK</span>.</p></li></ol>
+</div>
+
+<p class="para">Le contenu de ces deux dossiers est alors comparé et les fichiers qui ne sont pas présents dans le dossier sont téléchargés à partir du dossier iFolder. Les fichiers qui ne sont pas présents dans le dossier iFolder, mais disponible dans le dossier sont téléchargés dans le dossier iFolder.</p>
+</div>
+
+<div class="sect2" id="bcq0kks">
+
+<h2 class="title"> Déplacement de dossiers iFolder existants</h2>
+
+<p class="para">Pour déplacer un dossier iFolder existant nommé <span class="filename">entreprise</span> à un emplacement différent sur la machine cliente : </p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr4vli">
+<p class="para">Convertissez le dossier iFolder <span class="filename">entreprise</span> en un dossier normal.</p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Vous ne devez pas supprimer le dossier iFolder du serveur.</p></div>
+
+<p class="para">Pour plus d'informations, reportez-vous au <a href="reverting.html">Conversion d'un dossier iFolder en dossier normal</a>.</p></li>
+<li class="step" id="bcr4vww">
+<p class="para">Déplacez le dossier <span class="filename">entreprise</span>. </p>
+<div class="important">
+<p class="para"><em class="title">IMPORTANT :</em>Vous ne devez pas changer le nom du dossier pendant son déplacement.</p></div>
+</li>
+<li class="step" id="bcr4w5o">
+<p class="para">Dans la fenêtre de navigation iFolder, sélectionnez le dossier iFolder <span class="filename">entreprise</span> sur le serveur, puis cliquez sur <span class="guimenu">Fusionner dans le dossier</span>.</p></li>
+<li class="step" id="bcr4y94">
+<p class="para">Sélectionnez le dossier <span class="filename">entreprise</span> sur la machine locale, puis cliquez sur <span class="guimenu">OK</span> pour fusionner le contenu.</p>
+<div class="note">
+<p class="para"><em class="title">REMARQUE :</em>Si vous utilisez la fonction <span class="guimenu">Synchroniser maintenant</span> (plutôt que <span class="guimenu">Fusionner dans le dossier</span>), comme indiqué à la <a href="movelocation.html">Déplacement d'un dossier iFolder</a>, toutes les données du dossier iFolder du serveur seront vérifiées et l'ensemble des données synchronisées, augmentant ainsi la durée de transfert de données. À l'inverse, la fonction <span class="guimenu">Fusionner dans le dossier </span>minimise le transfert de données dans la mesure où elle se limite à fusionner le contenu du dossier iFolder et du dossier normal.</p></div>
+
+<p class="para">Pour plus d'informations sur la fusion, reportez-vous à la section <a href="merge.html#bcq0ign">Fusion iFolder-dossier</a>.</p></li></ol>
+</div>
+
+</div>
+
+<div class="sect2" id="bcq0l8i">
+
+<h2 class="title"> Fusion de dossiers iFolder 2.<span class="replaceable">x</span> migrés avec des dossiers iFolder 3.7 ou version ultérieure </h2>
+
+<p class="para">Vous pouvez fusionner un dossier iFolder 2.x migré avec un dossier iFolder créé avec un serveur iFolder 3.7 ou version ultérieure. Pour plus d'informations sur la migration, reportez-vous à la section <a href="coexistmig.html">Migration et mise à niveau de Novell iFolder</a>. </p>
+<p class="para">Après migration, les dossiers iFolder 2.<span class="replaceable">x</span> sont déplacés sur le serveur iFolder 3.7 ou version ultérieure. Vous pouvez décider de télécharger sur la machine client les dossiers iFolder migrés sur la version 3.7 ou une version ultérieure du serveur. Cependant, il est possible que ces dossiers iFolder existent déjà sur la machine cliente. Si c'est le cas, utilisez la fonction de fusion pour éviter un transfert de données inutile du serveur au client. </p>
+<p class="para">Pour fusionner des dossiers iFolder 2.<span class="replaceable">x</span> migrés avec des dossiers iFolder 3.7 ou version ultérieure,</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bcr6eex">
+<p class="para">migrez les dossiers iFolder 2.<span class="replaceable">x</span> dans le domaine iFolder 3.7 ou version ultérieure.</p></li>
+<li class="step" id="bcr6f1n">
+<p class="para">Convertissez les dossiers iFolder 2.<span class="replaceable">x</span> de la machine locale en dossiers normaux.</p></li>
+<li class="step" id="bcr6f5l">
+<p class="para">Sélectionnez la copie serveur de chaque dossier iFolder et cliquez sur <span class="replaceable">Fusionner dans le dossier</span>.</p></li>
+<li class="step" id="bcr6is8">
+<p class="para">Pour fusionner le contenu, sélectionnez le dossier normal et cliquez sur <span class="guimenu">OK</span>.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="setupifolder.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+</div>
+
+</body>
+</html>

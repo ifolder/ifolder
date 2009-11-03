@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="zh-tw" lang="zh-tw">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-tw" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>iFolder 及其資料夾和檔案的命名慣例</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "nameconv";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目錄' title='目錄' />目錄</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+
+<div class="sect1" id="nameconv">
+
+<h1 class="title"> iFolder 及其資料夾和檔案的命名慣例</h1>
+
+<p class="para">iFolder 用戶端會使用命名慣例，考慮 Linux 及 Windows 檔案系統的一系列限制。iFolder、資料夾或檔案必須具有符合命名慣例的有效名稱，才能進行同步化。</p>
+<p class="para">請將下列命名慣例用於您的 iFolder 以及其中的資料夾和檔案：</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">iFolder 支援以 UTF-8 編碼的 <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> 字元集。 </p></li>
+<li class="listitem">
+<p class="listitem">不要在 iFolder 的名稱或其資料夾和檔案的名稱中使用下列無效字元：</p><pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">如果您在檔案或資料夾名稱中使用無效的字元，iFolder 會建立命名衝突。必須解決此衝突，才能同步化檔案或資料夾。</p></li>
+<li class="listitem">
+<p class="listitem">單一路徑元件的名稱長度上限會因用戶端檔案系統而異。對於檔案名稱，最大長度值還包括點 (.) 以及副檔名。 </p>
+<p class="listitem">當您嘗試下載或同步 iFolder，其名稱長度超過檔案系統支援的上限時，iFolder 會顯示錯誤訊息。</p></li>
+<li class="listitem">
+<p class="listitem">iFolder、資料夾和檔案的名稱區分大小寫；不過會保留大小寫。如果檔案名稱僅大小寫不同，iFolder 也會建立命名衝突。必須解決此衝突，才能同步化檔案或資料夾。</p></li>
+<li class="listitem">
+<p class="listitem">如果您要在 Linux 的 FAT32 檔案系統上建立 iFolder，請避免全部用大寫字元命名檔案。Linux 上的 VFAT 或 FAT32 檔案處理，會將全部使用大寫字元且符合 MS-DOS 8.3 檔案格式的檔案名稱從全大寫字元自動變更為全小寫字元。如果將 iFolder 設定為「唯讀」存取權限，上述情況便會造成那些檔案的同步問題。</p></li></ul></div>
+
+</div>
+
+<p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="ificons.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
+</div>
+
+</body>
+</html>

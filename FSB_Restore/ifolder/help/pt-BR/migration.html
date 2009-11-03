@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="pt-br" lang="pt-br">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="pt-br" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:53" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Migrando do iFolder 2.x para o iFolder 3.7 ou posterior</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "migration";
+  var parentId = "coexistmig";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Índice' title='Índice' />Índice</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
+
+
+<div class="sect1" id="migration">
+
+<h1 class="title"> Migrando do iFolder 2.<span class="replaceable">x</span> para o iFolder 3.7 ou posterior</h1>
+
+<p class="para">Esta seção aborda o seguinte:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6kho">Entendendo o processo de migração</a>
+          </p></li>
+<li class="listitem">
+<p class="listitem">
+            <a href="migration.html#bax6esx">Procedimento de migração</a>
+          </p></li></ul></div>
+
+<div class="sect2" id="bax6kho">
+
+<h2 class="title"> Entendendo o processo de migração</h2>
+
+<p class="para">O Novell iFolder fornece uma migração simples do cliente do iFolder 2.<span class="replaceable">x</span> para o cliente do iFolder 3.7 ou posterior. O Assistente de Migração fornecido no cliente do iFolder ajuda você a migrar os dados existentes do iFolder 2.<span class="replaceable">X</span> de forma rápida e fácil.</p>
+<p class="para">Durante a inicialização, o Assistente de Migração detecta a instalação da versão 2.<span class="replaceable">x</span> e solicita que você migre os dados. Durante a migração dos dados, ele solicita novamente que você converta as pastas existentes ou faça uma cópia da pasta do iFolder 2. <span class="replaceable">x</span>. Para obter mais informações sobre isso, consulte a <a href="migration.html#b8anh5z">Etapa 6</a>.</p>
+<p class="para">O iFolder questiona você sobre a ressincronização dos arquivos com o servidor 3.7 ou posterior e pergunta se é necessário reter o cliente 2.<span class="replaceable">x</span> até o término da sincronização. Durante esse processo, somente os dados são migrados; portanto, o usuário precisa definir a preferência no novo cliente. </p>
+</div>
+
+<div class="sect2" id="bax6esx">
+
+<h2 class="title"> Procedimento de migração</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="b88immv">
+<p class="para">Instale o cliente do iFolder para o servidor do iFolder 3.7 ou posterior e, em seguida, configure sua conta para o servidor empresarial do iFolder 3.7 ou posterior.</p>
+<p class="para">Para obter informações sobre a instalação do cliente e a configuração da conta, consulte <a href="accountsprefs.html">Gerenciando as contas e preferências do iFolder</a>.</p></li>
+<li class="step" id="b88immw">
+<p class="para">No browser do iFolder, crie uma ou mais pastas do iFolder no seu computador local.</p>
+<p class="para">Você pode usar qualquer nome válido para uma pasta do iFolder. Não crie uma pasta do iFolder no mesmo caminho do diretório atual do iFolder 2.<span class="replaceable">x</span>. Para obter informações, consulte a <a href="createifolder.html">Criando e fazendo upload de uma pasta do iFolder</a>.</p></li>
+<li class="step" id="bb0b2z9">
+<p class="para">O iFolder exibe uma mensagem sobre a existência de dados da versão anterior e uma solicitação de migração. </p>
+<p class="para">Clique em <span class="guimenu">OK</span> para abrir uma lista de 2 disponíveis.<span class="replaceable">x</span>.</p></li>
+<li class="step" id="b8annny">
+<p class="para">Selecione a pasta do iFolder 2.<span class="replaceable">x</span> Pastas do iFolder que você deseja migrar.</p>
+<p class="para">Clique em <span class="guimenu">Migrar</span> para abrir o Assistente de Migração.</p>
+<div class="note">
+<p class="para"><em class="title">NOTA:</em>Você também pode acessar o Assistente de Migração com<span class="guimenu">iFolder &gt; Migração &gt; Migrar do iFolder 2.x</span>.</p></div>
+
+<p class="para">O Assistente de Migração o direciona durante o processo de migração para que você conclua a migração de dados.</p></li>
+<li class="step" id="b8andsn">
+<p class="para"> Clique em<span class="guimenu"> Avançar </span>para exibir as opções de migração.</p></li>
+<li class="step" id="b8anh5z">
+<p class="para">Selecione um dos seguintes itens:</p>
+<div class="formalpara" id="b8ydakq">
+              <p class="title"><em class="title"><span class="guimenu">Migrar o iFolder e desconectá-lo do domínio 2.x</span>:</em>
+               selecione esta opção para desconectar a pasta existente do domínio iFolder 2.<span class="replaceable">x</span> depois de migrá-la para o 3.7 ou posterior.</p>
+            </div>
+
+<div class="formalpara" id="b8ydbqu">
+              <p class="title"><em class="title">
+                <span class="guimenu">Criar uma cópia do iFolder e migrar:</span>
+              </em>
+               selecione esta opção para criar uma cópia dos arquivos do iFolder 2.<span class="replaceable">x</span> e convertê-los em arquivos do iFolder 3.7 ou posterior. Isso não fará com que os arquivos do domínio iFolder 2.<span class="replaceable">x</span> sejam removidos, mesmo depois que você migrá-los para o iFolder 3.7 ou posterior.</p>
+            </div>
+
+<p class="para">Se você selecionar essa opção, também poderá selecionar<span class="guimenu"> Copiar a pasta pai</span> se quiser copiar não apenas o conteúdo da pasta do 2.<span class="replaceable">x</span>, mas também da pasta pai. Se você deixar essa opção desmarcada, somente o conteúdo da pasta selecionada será migrado para o 3.7 ou posterior. </p>
+<p class="para">Clique em <span class="guimenu">Procurar</span> para encontrar a localização para gravar a pasta migrada.</p>
+<p class="para">Por exemplo, <span class="filename">c:/Documents and Settings/&lt;nome_do_usuário&gt;/ifolder2dir</span> é um iFolder 2.<span class="replaceable">x</span> iFolder e <span class="filename">dir1</span> e <span class="filename">dir2</span> são diretórios sob <span class="filename">ifolder2dir</span>. Quando você seleciona a opção <span class="guimenu">Copiar o diretório pai</span>, ela cria o <span class="filename">ifolder2dir </span>na nova localização e os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> são copiados para ela. Se a opção permanecer desmarcada, somente os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> serão movidos para o local especificado.</p></li>
+<li class="step" id="b8ann46">
+<p class="para">Clique em <span class="guimenu">Avançar</span> para selecionar o domínio e as Opções de Segurança da seguinte maneira:</p>
+<div class="substeps">
+<ol class="steps">
+<li class="step" id="b8ao41w">
+<p class="para">Selecione o domínio na lista suspensa:</p></li>
+<li class="step" id="b8ao481">
+<p class="para">Selecione a opção de segurança desejada:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Selecione <span class="guimenu">Criptografado</span> para criptografar a pasta do iFolder selecionada.</p>
+<p class="listitem">Se você não tiver definido uma frase secreta durante o login, o iFolder solicitará que você a digite. Você pode ignorar essa opção e definir a frase secreta posteriormente.</p>
+<p class="listitem">Se você não estiver conectado ao domínio iFolder, terá de se conectar ao domínio.</p></li>
+<li class="listitem">
+<p class="listitem">Selecione <span class="guimenu">Compartilhado </span>para compartilhar a pasta do iFolder com outros membros do domínio do iFolder </p>
+<p class="listitem">Você pode migrar um iFolder 2.<span class="guimenu">X</span> para a pasta compartilhada. Quando você tentar migrar uma pasta criptografada do iFolder 2.<span class="replaceable">x</span> para uma pasta compartilhada, será solicitado que você confirme a ação.</p>
+<p class="listitem">Clique em <span class="guimenu">OK</span> para confirmar sua ação.</p></li></ul></div>
+</li></ol>
+</div>
+</li>
+<li class="step" id="b8ao7ou">
+<p class="para">Clique em <span class="guimenu">Avançar</span> para migrar a pasta do iFolder selecionada.</p></li>
+<li class="step" id="b8ao9s7">
+<p class="para">Verifique se as informações inseridas estão corretas; se necessário, clique em <span class="guimenu">Voltar </span>para retornar às páginas anteriores e fazer correções. </p>
+<p class="para">Se as informações fornecidas estiverem corretas, clique em <span class="guimenu">Migrar </span>para iniciar a migração.</p>
+<p class="para">Clique em <span class="guimenu">Voltar</span> para voltar e fazer as mudanças necessárias.</p></li>
+<li class="step" id="bb51sen">
+<p class="para">Clique em <span class="guimenu">Concluir</span> para concluir a migração.</p></li></ol>
+</div>
+
+</div>
+
+</div>
+
+<p class="trademark"> Para obter mais informações, consulte <a href="legal.html">Informações legais</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="coexistmig.html" class="nav"><img src="ui/images/prev.png" alt="anterior" title="anterior" />anterior</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bctryt7.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
+</div>
+
+</body>
+</html>

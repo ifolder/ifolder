@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="" level="1" id="bookinfo">
+ <title>Novell iFolder 3.8 跨平台帮助</title>
+ <entry leaf="false" id="overview">iFolder 概述</entry>
+ <entry leaf="false" id="accountsprefs">管理 iFolder 帐户和首选设置</entry>
+ <entry leaf="false" id="myifolders">管理 iFolder</entry>
+ <entry leaf="false" id="coexistmig">Novell iFolder 迁移和升级</entry>
+ <entry leaf="true" id="legal">法律声明</entry>
+</tocsection>

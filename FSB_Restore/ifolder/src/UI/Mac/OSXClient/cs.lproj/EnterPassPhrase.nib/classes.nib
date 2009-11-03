@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {okOK = id; onCancel = id; }; 
+            CLASS = iFolderEncryptController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                domainNameLabel = NSTextField; 
+                enterPassPhrase = NSSecureTextField; 
+                okButton = NSButton; 
+                recoveryAgent = NSComboBox; 
+                rememberPassPhrase = NSButton; 
+                retypePassPhrase = NSSecureTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

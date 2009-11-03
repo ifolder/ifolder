@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="hu" lang="hu">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="hu" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:45" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Irányelvek az iFolder mappák helyéhez és használatához</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Tartalomjegyzék' title='Tartalomjegyzék' />Tartalomjegyzék</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> Irányelvek az iFolder mappák helyéhez és használatához</h1>
+
+<p class="para">A felhasználó a helyi merevlemezen bárhol elhelyezheti az iFolder mappákat, akár saját maga hoz létre egy iFolder mappát, akár beállít egy olyan iFolder mappát, amely meg van vele osztva.  Van azonban néhány gyakorlati és specifikus megszorítás. Az iFolder mappáknak a számítógépen való elhelyezése és használata során érdemes szem előtt tartani a következő irányelveket:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Az iFolder mappa nevének egyedinek kell lennie abban a könyvtárban, ahol az iFolder mappát elhelyezi.</p></li>
+<li class="listitem">
+<p class="listitem">Az iFolder neve nem tartalmazhatja az alábbi érvénytelen karaktereket:</p><pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">Egyéb névadási konvenciókkal kapcsolatos tudnivalók: <a href="nameconv.html">Az iFolder mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Az iFolder mappának helyi merevlemezen kell lennie, nem lehet hálózati meghajtón vagy nem fizikai meghajtón.</p></li>
+<li class="listitem">
+<p class="listitem">iFolder mappa nem lehet a merevlemez gyökerében. </p></li>
+<li class="listitem">
+<p class="listitem">iFolder mappát csak olyan mappából lehet létrehozni, amelyben a felhasználónak van olvasási és írási jogosultsága a fájlrendszerhez. Ha egy számítógépen megosztott iFolder mappát hoz létre, ahhoz a helyhez, ahol az iFolder mappát el szeretné helyezni, hozzáféréssel kell rendelkeznie a fájlrendszerhez.</p></li>
+<li class="listitem">
+<p class="listitem">iFolder mappa nem tartalmazhat alkalmazásmappát (például Program Files mappa), és nem is lehet ilyenben.</p></li>
+<li class="listitem">
+<p class="listitem">Az iFolder nem tartalmazhatja az iFolder metaadatokat tartalmazó mappát, és nem is lehet benne. A metaadatok mappájának alapértelmezett helye a következő:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bx09dxu">
+                <p class="title"><em class="title">Linux:</em>
+                A <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span> alkönyvtárban levő alapkönyvtárban</p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bx09ffv">
+                <p class="title"><em class="title">Windows:</em>
+                A <span class="filename">C:\Documents and Settings\<span class="replaceable">Windows_bejelentkezési_felhasználónév</span>\Local Settings\Application Data\simias</span> könyvtárban</p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bcto9jx">
+                <p class="title"><em class="title">Macintosh operációs rendszerekhez:</em>
+                A <span class="filename">$HOME/.local/share/simias</span> alkönyvtárban</p>
+              </div>
+</li></ul></div>
+</li>
+<li class="listitem">
+<p class="listitem">Az iFolder nem tartalmazhat más iFolder mappát, beleértve a Novell iFolder 2<span class="replaceable">x</span> mappát is, és nem lehet ilyenben.</p>
+<p class="listitem">Az iFolder nem támogatja a hálózati mappák iFolder mappaként való használatát. Például az iFolder mappák nem lehetnek a felhasználói hálózati alapú kezdőkönyvtárai, amelyek a felhasználók munkaállomásaihoz vannak hozzárendelve. Az iFolder nem támogatja a felhasználók WebDAV-hozzáférését sem az asztalról az iFolder felhasználói adatokat tartalmazó kötetén elhelyezkedő iFolder gyűjteményükhöz.</p></li>
+<li class="listitem">
+<p class="listitem">Bár egyszerre egynél több iFolder-fiókba is be lehet jelentkezni, egy iFolder mappa csak egyetlen iFolder-fiókhoz kapcsolódhat. Egy iFolder nem szinkronizálható több fiókkal. Amikor létrehoz egy iFolder mappát, az iFolder mappa csak azokkal a felhasználókkal és LDAP-csoportokkal osztható meg, akik ugyanahhoz az iFolder kiszolgálóhoz vagy tartományhoz vannak engedélyezve.</p></li>
+<li class="listitem">
+<p class="listitem">Az iFolder mappa egy-egy LDAP-csoport összes tagja számára elérhető, ha meg van osztva az adott LDAP-csoporttal.</p></li>
+<li class="listitem">
+<p class="listitem">Amikor több felhasználó használ egy számítógépet, az iFolder mappák helyi példányai a lemezen található saját tárterületen magánjellegűek, amennyiben a fájlrendszer támogatja az adatvédelmi funkciókat, és ha azok használatát Ön beállította a rendszeren.</p>
+<p class="listitem">A Windows rendszereken az NTFS fájlrendszer tartalmaz olyan beépített biztonsági funkciókat, mint például a fájl- és mappaengedélyek, valamint a titkosított fájlrendszer (EFS), mely utóbbi az NTFS-köteteken a titkosított fájlok tárolását végző technológia. A FAT32 fájlrendszerek nem támogatják ezeket a biztonsági funkciókat. Ügyeljen arra, hogy a felhasználók helyi bejelentkezési identitásai (természetesen a rendszergazda identitás kivételével) ne tartalmazzanak rendszergazdai vagy azzal egyenértékű jogokat. A rendszergazda felhasználó a számítógép összes fájljához és könyvtárához hozzá tud férni. Közösen használt számítógépek esetén, ahol minden felhasználó számára alapvető fontosságú az adatvédelem és a biztonság. a felhasználók az iFolder-adatok helyi példányait az EFS vagy külső fájlrendszeri titkosítás használatával titkosíthatják.</p>
+<p class="listitem">A Linux és Macintosh fájlrendszerek többfelhasználós környezethez készültek. A fájlengedélyek a felhasználók, csoportok és egyebek hozzáférésének szabályozását is lehetővé teszik. A felhasználók személyes fájljai rendszerint a felhasználó számára teljes körű engedélyekkel, a csoportok és egyebek beállításaiban pedig a hozzáférés letiltásával vannak beállítva. </p>
+<p class="listitem">Ha iFolder mappákat helyben, Linux rendszer FAT32 kötetén tárolja, ez különleges kezelést igényel, mert a FAT32 fájlrendszerek nem POSIX*-kompatibilisek. További információkért lásd: <a href="createifolder.html#fat32mtpt">iFolder mappák létrehozása FAT32 csatlakozási ponton (Linux)</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Ha ugyanazon a számítógépen több felhasználó is használ iFolder mappákat, előfordulhat, hogy ugyanazon az eszközön az iFolder több példányban létezik, külön mindegyik felhasználó számára, aki letölti azt a kiszolgálóról. A különböző bejelentkezési identitások nem használhatnak közös helyet a megosztott iFolder mappák számára.</p></li></ul></div>
+
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
+</div>
+
+</body>
+</html>

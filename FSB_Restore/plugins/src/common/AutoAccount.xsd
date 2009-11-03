@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema id="auto-account" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="auto-account">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="user-account" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="server" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="user-id" type="xs:string" minOccurs="1" maxOccurs="1" />
+              <xs:element name="remember-password" type="xs:string" minOccurs="1" maxOccurs="1" default="false" />
+              <xs:element name="prompt-to-accept-cert" type="xs:string" minOccurs="1" maxOccurs="1" default="false" />
+              <xs:element name="default-ifolder" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="path" type="xs:string" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="encrypted" type="xs:string" minOccurs="1" maxOccurs="1" />
+                    <xs:element name="securesync" type="xs:string" minOccurs="1" maxOccurs="1" /> 
+		    <xs:element name="forcemerge" type="xs:string" minOccurs="1" maxOccurs="1" />
+                  </xs:sequence>
+                  <xs:attribute name="default" type="xs:string" default="false"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="default" type="xs:string" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="general-preferences" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="iFolder-creation-confirmation" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="iFolder-share-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="user-join-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="conflict-notify" type="xs:string" minOccurs="1" maxOccurs="1" default="true" />
+              <xs:element name="auto-sync" nillable="true" minOccurs="1" maxOccurs="1" default="true" >
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="interval" type="xs:integer" default="300" />
+		      <xs:attribute name="duration" default="seconds">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="seconds"/>
+					<xs:enumeration value="Seconds"/>
+					<xs:enumeration value="minutes"/>
+					<xs:enumeration value="Minutes"/>
+					<xs:enumeration value="hours"/>
+					<xs:enumeration value="Hours"/>
+					<xs:enumeration value="days"/>	
+					<xs:enumeration value="Days"/>	
+				</xs:restriction>
+			</xs:simpleType>
+		      </xs:attribute>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

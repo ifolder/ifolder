@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- saved from url=(0014)about:internet -->
+
+<tocsection parent="bookinfo" level="2" id="myifolders">
+ <title>Zarządzanie iFolderami</title>
+ <entry leaf="true" id="locguide">Wskazówki dotyczące lokalizacji i używania iFolderów</entry>
+ <entry leaf="true" id="typeguide">Wytyczne dotyczące typów i rozmiarów plików, które nie powinny być synchronizowane</entry>
+ <entry leaf="true" id="nameconv">Konwencje nazewnictwa dotyczące iFolderów oraz zawartych w nich folderów i plików</entry>
+ <entry leaf="true" id="ificons">Znaczenie ikon programu iFolder</entry>
+ <entry leaf="true" id="bkjj1f9">Przeglądarka folderów iFolder</entry>
+ <entry leaf="true" id="createifolder">Tworzenie i przekazywanie iFolderu</entry>
+ <entry leaf="true" id="sharewith">Współużytkowanie iFolderu</entry>
+ <entry leaf="true" id="viewhide">Wyświetlanie i ukrywanie dostępnych iFolderów</entry>
+ <entry leaf="true" id="merge">Scalanie iFolderów</entry>
+ <entry leaf="true" id="setupifolder">Pobieranie dostępnego iFolderu</entry>
+ <entry leaf="true" id="propifolders">Wyświetlanie i konfigurowanie właściwości iFolderu</entry>
+ <entry leaf="true" id="managingpassphrse">Zarządzanie zwrotami hasłowymi dla zaszyfrowanych folderów iFolder</entry>
+ <entry leaf="true" id="bkmgmdj">Zmienianie hasła</entry>
+ <entry leaf="true" id="ifquota">Ustawianie przydziału folderu iFolder</entry>
+ <entry leaf="true" id="sync">Synchronizowanie plików</entry>
+ <entry leaf="true" id="conflicts">Rozwiązywanie konfliktów plików</entry>
+ <entry leaf="true" id="movelocation">Przenoszenie iFolderu</entry>
+ <entry leaf="true" id="reverting">Przywracanie iFolderu do postaci zwykłego folderu</entry>
+ <entry leaf="true" id="bbb7rj2">Usuwanie członkostwa ze współdzielonego iFolderu</entry>
+ <entry leaf="true" id="deleting">Usuwanie iFolderu</entry>
+ <entry leaf="true" id="bbbcabq">Co dalej</entry>
+</tocsection>

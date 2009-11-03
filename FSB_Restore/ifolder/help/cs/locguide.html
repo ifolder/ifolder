@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="cs" lang="cs">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="cs" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Pokyny pro lokalizaci a použití složek iFolder</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "locguide";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+
+<div class="sect1" id="locguide">
+
+<h1 class="title"> Pokyny pro lokalizaci a použití složek iFolder</h1>
+
+<p class="para">Obecně můžete složky iFolder uložit kdekoliv na místním pevném disku, když vytváříte složku iFolder nebo nastavujete složku iFolder, která je s vámi sdílena. Existují však některá praktická a specifická omezení. Při umísťování a používání složek iFolder v počítači zvažte následující pokyny:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<p class="listitem">Název složky iFolder musí být jedinečný název složky, kde svou složku iFolder umístíte.</p></li>
+<li class="listitem">
+<p class="listitem">Název složky iFolder nemůže obsahovat následující znaky:</p><pre class="screen">
+\/:*?"&lt;&gt;|;
+</pre>
+<p class="listitem">Další konvence názvů jsou popsány v části <a href="nameconv.html">Konvence pojmenování iFolder a jejích složek a souborů</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder musí být uložena na místním pevném disku; nesmí se nacházet v síťové jednotce ani na nefyzické jednotce.</p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder se nemůže vyskytovat v kořenovém adresáři pevného disku. </p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder může být vytvořena pouze z takové složky, kde máte systémová přístupová právě pro čtení a zápis do souborů. Když nastavíte sdílenou složku iFolder v počítači, musíte mít systémová přístupová práva pro složku, kam složku iFolder umísťujete.</p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder nesmí obsahovat složku aplikací, například Program Files, ani v ní nesmí být umístěna.</p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder nesmí obsahovat složky s metadaty iFolder ani v ní nesmí být umístěna. Výchozí umístění složky s metadaty je následující:</p>
+<div class="itemizedlist">
+<ul class="listbullet">
+<li class="listitem">
+<div class="formalpara" id="bx09dxu">
+                <p class="title"><em class="title">Linux:</em>
+                V domovské složce v podadresáři <span class="filename">&lt;Home Directory&gt;\.local\share</span>\<span class="filename">simias</span></p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bx09ffv">
+                <p class="title"><em class="title">Windows:</em>
+                v adresáři <span class="filename">C:\Documents and Settings\<span class="replaceable">WindowsLogonUsername</span>\Local Settings\Application Data\simias</span></p>
+              </div>
+</li>
+<li class="listitem">
+<div class="formalpara" id="bcto9jx">
+                <p class="title"><em class="title">Macintosh:</em>
+                V složce <span class="filename">$HOME/.local/share/simias</span></p>
+              </div>
+</li></ul></div>
+</li>
+<li class="listitem">
+<p class="listitem">Složka iFolder nesmí obsahovat jiné složky iFolder, včetně vaší složky Novell iFolder 2.<span class="replaceable">x</span> iFolder. </p>
+<p class="listitem">iFolder nepodporuje síťové složky, jako jsou složky iFolder. Například složky iFolder nesmí obsahovat uživatelský síťový adresář /home, který je zamapovaný na pracovní stanici uživatele. iFolder také nepodporuje přístup WebDAV pro uživatele z jejich pracovních ploch do kolekce iFolder v uživatelském datovém svazku serveru iFolder.</p></li>
+<li class="listitem">
+<p class="listitem">I když se můžete přihlásit k více než jednomu účtu iFolder najednou, složka iFolder může být synchronizována pouze s jedním účtem iFolder. Nemůžete synchronizovat jednu složku iFolder s více účty. Když vytváříte složku iFolder, můžete iFolder sdílet pouze s ostatními uživateli a skupinami LDAPGroups, kteří jsou přiděleni ke stejnému server/doméně iFolder.</p></li>
+<li class="listitem">
+<p class="listitem">Složka iFolder je k dispozici pro všechny členy skupiny LDAPGroup, když je sdílena s touto skupinou LDAPGroup.</p></li>
+<li class="listitem">
+<p class="listitem">Když počítač sdílí několik uživatelů, místní kopie složek iFolder jsou soukromé pro váš paměťový prostor na disku v případě, že souborový systém podporuje funkce zachování soukromí a pokud systém k jejich použití nakonfigurujete.</p>
+<p class="listitem">U systému Windows souborový systém NTFS zahrnuje vlastnosti, jako je například práva pro soubor a složku a Systém šifrování souborů (EFS), což je technologie používaná pro ukládání zašifrovaných souborů ve svazcích NTFS. Tyto bezpečnostní vlastnosti nejsou podporovány u souborových systémů FAT32. Ujistěte se, že místní identity pro přihlášení uživatelů (kromě identity správce) nemají práva správce nebo ekvivalentní. Správce má přístup ke všem souborům a adresářům v počítačích. V případě sdílených počítačů, kde je soukromí a zabezpečení základním požadavkem pro každého uživatele, mohou uživatelé zašifrovat místní kopii dat iFolder pomocí EFS nebo šifrovacím systémem souborů jiného výrobce.</p>
+<p class="listitem">Souborové systémy Linux a Macintosh jsou navrženy pro víceuživatelská prostředí. Povolení pro soubory vám umožňuje ovládat přístup pro uživatele, skupiny a ostatní. Osobní soubory uživatele jsou obvykle nastaveny s plným oprávněným pro uživatele a s žádným přístupem pro skupiny a dalším nastavením. </p>
+<p class="listitem">Pokud složky iFolder uložíte lokálně na svazku FAT32 v systému Linux, vyžaduje to zvláštní zacházení, protože souborové systémy FAT32 nejsou kompatibilní s POSIX*. Další informace naleznete v části <a href="createifolder.html#fat32mtpt">Vytvoření složek iFolder v místě připojení svazku FAT32 (Linux)</a>.</p></li>
+<li class="listitem">
+<p class="listitem">Pokud uživatelé jednoho počítače sdílí složky iFolder, může v tomto zařízení existovat několik kopií složky iFolder, jedna pro každého uživatele, který si ji stáhne ze serveru. Různé místní identity pro přihlášení nemohou sdílet jedno umístění pro sdílené složky iFolder.</p></li></ul></div>
+
+</div>
+
+<p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="myifolders.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="typeguide.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
+</div>
+
+</body>
+</html>

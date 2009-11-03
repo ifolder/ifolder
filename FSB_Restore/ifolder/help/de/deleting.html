@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- saved from url=(0014)about:internet -->
+<html xml:lang="de" lang="de">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="de" />
+<meta name="Generator" content="Novell Documentation" />
+<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:51" />
+<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+
+<style type="text/css">
+  @import url(ui/styles.css);
+</style>
+
+<title>Löschen von iFolder-Ordnern</title>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+  var thisId = "deleting";
+  var parentId = "myifolders";
+//--><!]]>
+</script>
+<script type="text/javascript" src="ui/config.js"></script>
+<script type="text/javascript" src="ui/resource.js"></script>
+<script type="text/javascript" src="ui/topic.js"></script>
+</head>
+
+<body>
+
+<noscript>
+  <div class='nav'>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+  </div>
+</noscript>
+
+<div class='nav' id='topnav'>
+  <a href="bbb7rj2.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bbbcabq.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+
+<div class="sect1" id="deleting">
+
+<h1 class="title"> Löschen von iFolder-Ordnern</h1>
+
+<p class="para">Wenn sie einen iFolder-Ordner aus Ihrer Sammlung löschen, werden die lokale Kopie des iFolder-Ordners und deren Inhalt gelöscht. Außerdem kann dies Auswirkungen auf die Freigabebeziehung des iFolder-Ordners haben, je nachdem, über welche Zugriffsrechte Sie dafür verfügen. </p>
+<p class="para">Sie können die lokale Kopie des iFolder-Ordners löschen, die für die LDAP-Gruppe freigegeben ist, deren Mitglied Sie sind. Sie können jedoch nicht Ihre Mitgliedschaft in diesem iFolder-Ordner löschen.</p>
+<p class="para">In der folgenden Tabelle wird die Wirkung auf die Freigabebeziehung und die iFolder-Mitgliedsordner auf der Grundlage der Zugriffsrechte des Benutzers angegeben, der den iFolder-Ordner löscht.</p>
+<div class="table" id="b403b0h">
+<table class="topbot-lines">
+            
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="b403cby"></a>
+<p class="para">Zugriffsrechte des Benutzers, der den iFolder-Ordner löscht</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Freigabebeziehung</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Serverkopie des iFolder-Ordners</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Mitgliederkopien des iFolder-Ordners</p></th>
+</tr>
+          
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cbz"></a>
+<p class="para">Eigentümer</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Beendet die Freigabebeziehung für den iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Löscht die iFolder-Metadaten und -Inhalte vom Server. </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt den iFolder-Ordner für alle Benutzer auf einen normalen Ordner zurück. </p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc0"></a>
+<p class="para">Benutzer mit vollständiger Kontrolle</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Beendet die Beteiligung des Benutzers an der Freigabe.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Wirkung</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc1"></a>
+<p class="para">Benutzer mit Lese-/Schreibrechten</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Entfernt die Mitgliedschaft des Benutzers aus der Freigabe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Wirkung</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="b403cc2"></a>
+<p class="para">Benutzer mit der Berechtigung "Nur Lesen"</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Entfernt die Mitgliedschaft des Benutzers aus der Freigabe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Wirkung</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr></table>
+</div>
+
+<p class="para">In der folgenden Tabelle wird die Wirkung auf die Freigabebeziehung und die iFolder-Mitgliedsordner auf der Grundlage der Zugriffsrechte des LDAP-Gruppenmitglieds erläutert, das den iFolder-Ordner löscht.</p>
+<div class="table" id="bcx7q0q">
+<table class="topbot-lines">
+            
+<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bcx7tk4"></a>
+<p class="para">Zugriffsrechte des LDAP-Gruppenmitglieds, das den iFolder-Ordner löscht</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Freigabebeziehung</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Serverkopie des iFolder-Ordners</p></th>
+<th align="left" valign="top" colspan="1" rowspan="1" scope="col">
+<p class="para">Mitgliederkopien des iFolder-Ordners</p></th>
+</tr>
+          
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk5"></a>
+<p class="para">Eigentümer</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Beendet die Freigabebeziehung für den iFolder.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Löscht die iFolder-Metadaten und -Inhalte vom Server.</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt den iFolder-Ordner für alle Benutzer auf einen normalen Ordner zurück.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk7"></a>
+<p class="para">Vollständige Kontrolle über die LDAP-Gruppe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Wirkung</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Berechtigung, den iFolder-Ordner auf dem Server zu löschen</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7tk8"></a>
+<p class="para">Lese-/Schreibzugriff für die LDAP-Gruppe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Berechtigung, die Freigabebeziehung zu beenden</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Berechtigung, den iFolder-Ordner auf dem Server zu löschen</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx7zxx"></a>
+<p class="para">Nur Lesezugriff für LDAP-Gruppe</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Berechtigung, die Freigabebeziehung zu beenden</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Keine Berechtigung, den iFolder-Ordner auf dem Server zu löschen</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Setzt die lokale Kopie des iFolder-Ordners auf einen normalen Ordner zurück.</p></td>
+</tr></table>
+</div>
+
+<p class="para">Durch das Löschen eines iFolder-Ordners wird der iFolder-Client nicht von Ihrer Arbeitsstation gelöscht.</p>
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bq8ubrz">
+<p class="para">Suchen Sie den zu löschenden iFolder-Ordner in einem Dateimanager oder im iFolder-Browser.</p></li>
+<li class="step" id="bq8u9b1">
+<p class="para">Klicken Sie mit der rechten Maustaste auf den iFolder-Ordner und klicken Sie dann auf <span class="guimenu">Löschen</span>.</p></li></ol>
+</div>
+
+</div>
+
+<p class="trademark"> Weitere Informationen hierzu finden Sie unter <a href="legal.html">Rechtliche Hinweise</a>.</p>
+
+<div class='nav' id='bottomnav'>
+  <a href="bbb7rj2.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
+  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <a href="bbbcabq.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
+</div>
+
+</body>
+</html>
