@@ -404,6 +404,10 @@ namespace Novell.FormsTrayApp
                 try
                 {
                     status = simws.ValidatePassPhrase(this.domainID, this.passPhrase.Text);
+		    if(status.statusCode == StatusCodes.PassPhraseInvalid)	
+		    {
+			 status = simws.ValidatePassPhrase(this.domainID, this.newPassphrase.Text);
+		    }
                 }
                 catch (Exception ex)
                 {

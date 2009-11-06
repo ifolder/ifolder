@@ -1243,10 +1243,12 @@ static iFolderData *sharedInstance = nil;
 	
 	if(passPhraseStatus == ns1__StatusCodes__PassPhraseInvalid)
 	{
+		/*
 		NSRunAlertPanel(NSLocalizedString(@"Invalid Passphrase",@"Invalid passphrase title"),
 						NSLocalizedString(@"The passphrase entered is invalid",@"Invalid passphrase"),
 						NSLocalizedString(@"OK",@"Verify passphrase default button"),
 						nil,nil);
+		*/
 		return NO;
 	}	
 	return YES;

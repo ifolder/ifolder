@@ -130,7 +130,7 @@
 //=======================================================================
 - (IBAction)onReset:(id)sender
 {
-	int option;
+int option;
 	NSString* recoveryAgentText = [recoveryAgent objectValueOfSelectedItem];
 	
 	/*
@@ -154,7 +154,13 @@
 		([[retypePassphrase stringValue] compare:@""] != NSOrderedSame) &&
 		([[newPassphrase stringValue] isEqualToString:[retypePassphrase stringValue]] == YES ))
 	{
-		if([[iFolderData sharedInstance] validatePassPhrase:[domainID stringValue] andPassPhrase:[enterPassphrase stringValue]])
+		BOOL validPPStatus = [[iFolderData sharedInstance] validatePassPhrase:[domainID stringValue] andPassPhrase:[enterPassphrase stringValue]];
+		if(!validPPStatus)
+		{
+			validPPStatus = [[iFolderData sharedInstance] validatePassPhrase:[domainID stringValue] andPassPhrase:[newPassphrase stringValue]];
+		}
+		
+		if(validPPStatus)
 		{
 			if(![recoveryAgentText isEqualToString:NSLocalizedString(@"Server_Default",@"Server_Default encrypt RA")])
 			{
@@ -182,6 +188,10 @@
 		}
 		else
 		{
+			NSRunAlertPanel(NSLocalizedString(@"Invalid Passphrase",@"Invalid passphrase title"),
+							NSLocalizedString(@"The passphrase entered is invalid",@"Invalid passphrase"),
+							NSLocalizedString(@"OK",@"Verify passphrase default button"),
+							nil,nil);
 			return;
 		}
 	}

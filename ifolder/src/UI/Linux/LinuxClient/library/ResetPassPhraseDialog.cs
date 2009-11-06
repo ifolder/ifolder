@@ -327,6 +327,11 @@ namespace Novell.iFolder
 
            try{
 		 Status passphraseStatus = simws.ValidatePassPhrase(this.Domain, this.OldPassphrase);
+		 if( (passphraseStatus != null) 
+		  && (passphraseStatus.statusCode == StatusCodes.PassPhraseInvalid))
+		{
+		 	passphraseStatus = simws.ValidatePassPhrase(this.Domain, this.NewPassphrase);
+		}
             if( passphraseStatus != null)
             {
                 if( passphraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
