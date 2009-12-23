@@ -222,7 +222,6 @@ namespace Simias.UserMovement
 								{
 									Thread.Sleep(1000);
 									smConn.ClearConnection();
-									WebState.ResetWebState(domain.ID);
 									smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
 									svc = new SimiasWebService();
 									svc.Url = ifUserMove.MasterHomeServer.PublicUrl;
@@ -296,6 +295,7 @@ namespace Simias.UserMovement
                         store = Store.GetStore();
                         domain = store.GetDomain(store.DefaultDomain);
 			string userID = store.GetUserIDFromDomainID(domain.ID);
+			SimiasConnection smConn = null;
 			bool result = false;
 			try
 			{
@@ -311,13 +311,39 @@ namespace Simias.UserMovement
 				}
 				else
 				{	
-	                        	SimiasConnection smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
+	                        	smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
  		                       	SimiasWebService svc = new SimiasWebService();
                 	        	svc.Url = ifUserMove.MasterHomeServer.PublicUrl;
 
                         		smConn.Authenticate ();
                         		smConn.InitializeWebClient(svc, "Simias.asmx");
-                        		result = svc.UpdateHomeServer(domain.ID, ifUserMove.member.UserID, ifUserMove.NewHomeServer.UserID);
+					for(int retrycount = 0; retrycount < 3 ; retrycount++)
+                                        {
+                                                // In successful condition , this loop must be executed only once.
+                                                try
+                                                {
+
+                        				result = svc.UpdateHomeServer(domain.ID, ifUserMove.member.UserID, ifUserMove.NewHomeServer.UserID);
+						}catch(Exception ex)
+                                                {
+                                                        if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+                                                        {
+                                                                if( retrycount < 3)
+                                                                {
+                                                                        Thread.Sleep(1000);
+                                                                        smConn.ClearConnection();
+                                                                        smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
+                                                                        svc = new SimiasWebService();
+                                                                        svc.Url = ifUserMove.MasterHomeServer.PublicUrl;
+                                                                        smConn.Authenticate ();
+                                                                        smConn.InitializeWebClient(svc, "Simias.asmx");
+									log.Debug("MoveUserObject: Retrying because of 401 exception");
+                                                                        continue;
+                                                                }
+                                                        }
+                                                }
+                                                break;
+					}
 					smConn.ClearConnection();
 					if( !result )
 					{
@@ -328,6 +354,8 @@ namespace Simias.UserMovement
 			}
 			catch(Exception e)
 			{
+				if(smConn != null)
+					smConn.ClearConnection();
 				log.Debug("UpdateHomeServer Failed, {0} {1}", e.Message, e.StackTrace);
 				return false;
 			}
@@ -454,7 +482,32 @@ namespace Simias.UserMovement
 
                         	smConn.Authenticate ();
      		                smConn.InitializeWebClient(svc, "Simias.asmx");
-               			result = svc.UpdateUserMoveState(domain.ID, member.UserID, userMoveStatus);
+				for(int retrycount = 0; retrycount < 3 ; retrycount++)
+				{
+					// In successful condition , this loop must be executed only once.
+					try
+					{
+
+		               			result = svc.UpdateUserMoveState(domain.ID, member.UserID, userMoveStatus);
+					}catch(Exception ex)
+					{	
+						if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+						{
+							if( retrycount < 3)
+							{
+								Thread.Sleep(1000);
+								smConn.ClearConnection();
+								smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, masterHost);
+								svc = new SimiasWebService();
+								svc.Url = masterHost.PublicUrl;
+								smConn.Authenticate ();
+                                                        	smConn.InitializeWebClient(svc, "Simias.asmx");
+                                                                continue;
+                                                        }
+                                                 }
+                                         }
+                                         break;
+				}
 				smConn.ClearConnection();
 				if( !result )
 				{
@@ -505,13 +558,38 @@ namespace Simias.UserMovement
                         store = Store.GetStore();
                         domain = store.GetDomain(store.DefaultDomain);
 			string userID = store.GetUserIDFromDomainID(domain.ID);
+			bool result = false;
                         SimiasConnection smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, newHost);
                         SimiasWebService svc = new SimiasWebService();
                         svc.Url = newHost.PublicUrl;
 
                         smConn.Authenticate ();
                         smConn.InitializeWebClient(svc, "Simias.asmx");
-                        bool result = svc.UpdateLocalProperties(domain.ID, member.UserID, member.EncryptionKey, member.EncryptionVersion, member.EncryptionBlob, member.RAName, member.RAPublicKey);
+			for(int retrycount = 0; retrycount < 3 ; retrycount++)
+			{
+				// In successful condition , this loop must be executed only once.
+				try
+				{
+                        		result = svc.UpdateLocalProperties(domain.ID, member.UserID, member.EncryptionKey, member.EncryptionVersion, member.EncryptionBlob, member.RAName, member.RAPublicKey);
+				}catch(Exception ex)
+				{
+					if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+					{
+						if( retrycount < 3)
+						{
+							Thread.Sleep(1000);
+							smConn.ClearConnection();
+							smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, newHost);
+							svc = new SimiasWebService();
+							svc.Url = newHost.PublicUrl;
+							smConn.Authenticate ();
+							smConn.InitializeWebClient(svc, "Simias.asmx");
+							continue;
+						}
+					}
+				}
+				break;
+			}
 			smConn.ClearConnection();
 			if( !result )
 			{
@@ -586,6 +664,7 @@ namespace Simias.UserMovement
 								log.Debug("ProcessMovement: About to move DATA for ifolder ID {0}", id);
 								if(!MoveiFolderData(domainID, member.UserID, id, NewHomeServer))
 									return false;
+								log.Debug("ProcessMovement: MoveiFolderData fn returned true...");
 								member.iFolderMoveState(domainID, true, id, (int)iFolderMoveState.Completed, iFolderSize);
 								if( logger != null)
 									logger.LogAccess("User Move", "iFolder Name: " + col.Name, "iFolder ID: " +id, "Data Movement Completed");
@@ -605,6 +684,7 @@ namespace Simias.UserMovement
 					goto case (int)Member.userMoveStates.MoveCompleted;
 				case (int)Member.userMoveStates.MoveCompleted:
 					log.Debug("ProcessMovement: state  MoveCompleted {0}", member.FN);
+						
 					iFolderList = GetiFoldersByMember(member.UserID);
 					foreach(string id in iFolderList)
 					{
@@ -670,16 +750,39 @@ namespace Simias.UserMovement
                         smConn.Authenticate ();
                         smConn.InitializeWebClient(svc, "Simias.asmx");
                         bool status = false;
-                        try
-                        {
-                                status = svc.DownloadiFolder(iFolderID, col.Name, col.Domain, UserID, DirNodeID, MemberUserID, member.ID, null);
-                        }
-                        catch(Exception ex)
-                        {
-                                smConn.ClearConnection();
-                                log.Debug("MoveiFolderData: Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace);
-                                throw new Exception(String.Format("Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace));
-                        }
+			for(int retrycount = 0; retrycount < 3 ; retrycount++)
+			{
+				// In successful condition , this loop must be executed only once.
+                        	try
+                        	{
+	                                status = svc.DownloadiFolder(iFolderID, col.Name, col.Domain, UserID, DirNodeID, MemberUserID, member.ID, null);
+        	                }
+                	        catch(Exception ex)
+                        	{
+					if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+					{
+						if( retrycount < 3)
+						{
+							Thread.Sleep(1000);
+							smConn.ClearConnection();
+							smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, NewServer);
+							svc = new SimiasWebService();
+							svc.Url = NewServer.PublicUrl;
+							smConn.Authenticate ();
+							smConn.InitializeWebClient(svc, "Simias.asmx");
+							continue;
+						}
+					}
+					else
+					{
+
+		                                smConn.ClearConnection();
+		      	                        log.Debug("MoveiFolderData: Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace);
+	                	                throw new Exception(String.Format("Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace));
+	        	                }
+				}
+				break;
+			}
                         smConn.ClearConnection();
                         if( status == true )
                         {
