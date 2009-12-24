@@ -1230,7 +1230,7 @@ namespace Novell.iFolder.Controller
 						args =
 								new DomainClientUpgradeAvailableEventArgs(
 									domainID, serverVersion);
-				//	DomainClientUpgradeAvailable(this, args);
+					DomainClientUpgradeAvailable(this, args);
 						break;
 				case UpgradeResult.Unknown:
 						DomainController.upgradeStatus.statusCode = StatusCodes.Unknown;
