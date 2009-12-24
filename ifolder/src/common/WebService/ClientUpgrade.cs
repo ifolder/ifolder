@@ -417,16 +417,34 @@ namespace Novell.iFolder.Install
         /// <returns>Returns win32 for 32 bit and win64 for 64 bit</returns>
         string GetWinOSPlatform()
         {
-		    string str = System.Environment.GetEnvironmentVariable("ProgramFiles");
-            if (str != null && str.IndexOf("x86") != -1)
+            string platform = "windows";
+            string str = System.Environment.GetEnvironmentVariable("ProgramFiles");
+            log.Debug("Program file enviornment value is:{0}", str);
+            log.Debug("Intprt  value is :{0}", IntPtr.Size.ToString());
+            if (str == null)
             {
-            	return "windows64";
+                log.Debug("unable to get enviornment variable");
+                return "windows";
+
             }
-           	else
-           	{
-              	return "windows32";
-           	}
-            return "windows";
+            if (8 == IntPtr.Size && str.IndexOf("x86") == -1)
+            {
+                log.Debug("windows64");
+                platform = "windows64";
+
+            }
+            else if (4 == IntPtr.Size)
+            {
+                log.Debug("windows32");
+                platform = "windows32";
+            }
+            else
+            {
+                log.Debug("Unable to determine platform");
+                platform = "windows";
+            }
+
+            return platform;
         }
 
 
