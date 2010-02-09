@@ -267,8 +267,19 @@ namespace Novell.AutoAccount
                                 }
                                 newIter.Current.MoveToParent();
                                 break;
-                            case serverXML:
-                                userAccount[i].Server = newIter.Current.Value;
+                            case serverXML:                                
+                                if (newIter.Current.Value.StartsWith("https://"))                                     
+                                {
+                                    userAccount[i].Server = newIter.Current.Value.Remove(0, 8);
+                                }
+                                else if (newIter.Current.Value.StartsWith("http://"))
+                                {
+                                    userAccount[i].Server = newIter.Current.Value.Remove(0, 7);
+                                }
+                                else
+                                {
+                                    userAccount[i].Server = newIter.Current.Value;
+                                }                                
                                 break;
                             case userIdXML:
                                 //userAccount[i].UserName = newIter.Current.Value;                                
