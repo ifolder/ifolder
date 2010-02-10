@@ -865,7 +865,7 @@
 "Client Upgrade Available" = "Client Upgrade Available";
 
 /*UpgradeAvailableTitle*/
-"Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation." = "Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.";
+"Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation." = "Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.";
 
 /*Download latest client title*/
 "Browse the Location" = "Browse the Location";

@@ -1536,7 +1536,7 @@ static iFolderData *sharedInstance = nil;
 	cliUpdate = nil;
 	forceQuit = NO;
 	
-	//Satya: Variables needed to handle upgrade client
+	//Variables needed to handle upgrade client
 	NSString* dirName;
 	int loopCount;
 	int result;
@@ -1602,7 +1602,7 @@ static iFolderData *sharedInstance = nil;
 		case UpgradeNeeded:
 		
 			 //Client upgrade is mandatory. So just logout the domain
-			//Satya: Alert can be handled this way also
+			//Alert can be handled this way also
 			/*NSBeginAlertSheet(NSLocalizedString(@"Client upgrade available.",@"UpgradeAvailableTitle"),
 							  NSLocalizedString(@"OK",@"OK Button"),
 							  NSLocalizedString(@"Cancel",@"Cancel"),
@@ -1620,9 +1620,10 @@ static iFolderData *sharedInstance = nil;
 									 NSLocalizedString(@"OK",@"OK Button"),
 									 nil,nil);
 			*/
-			//Satya: Actual message to display for upgrade available and handling it.
+			//Actual message to display for upgrade available and handling it.
+
 			answer = NSRunAlertPanel(NSLocalizedString(@"Client Upgrade Available",@"UpgradeAvailableTitle"),
-									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
+									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
 									 NSLocalizedString(@"Yes",@"Yes"),
 									 NSLocalizedString(@"No",@"No"),nil);
 			
@@ -1696,7 +1697,7 @@ static iFolderData *sharedInstance = nil;
 			
 		case UpgradeAvailable:
 			//Latest upgrade available and can or cannot download. Still the current one runs
-			/*Satya: Alert can be handled this way also
+			/*Alert can be handled this way also
 			NSBeginAlertSheet(NSLocalizedString(@"Client upgrade available.",@"UpgradeAvailableTitle"),
 			NSLocalizedString(@"OK",@"OK Button"),
 			NSLocalizedString(@"Cancel",@"Cancel"),
@@ -1716,7 +1717,7 @@ static iFolderData *sharedInstance = nil;
 									 nil,nil);
 			*/
 			answer = NSRunAlertPanel(NSLocalizedString(@"Client Upgrade Available",@"UpgradeAvailableTitle"),
-									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to 3.8.0.0? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
+									 [NSString stringWithFormat:NSLocalizedString(@"Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.",@"UpgradeAvailableTitle"),[cliUpdate ServerVersion]],
 									 NSLocalizedString(@"Yes",@"Yes"),
 									 NSLocalizedString(@"No",@"No"),nil);
 			
