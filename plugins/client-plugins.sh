@@ -48,13 +48,13 @@ fi
 # Prepare spec file
 mkdir -p $PACKAGE
 echo "Preparing spec file and copying to $PACKAGE/ ..."
-sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.autobuild > $PACKAGE/$PACKAGE.spec
+sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.in > $PACKAGE/$PACKAGE.spec
 
 # Create the tarballs
 echo "Generating tarball for $PACKAGE..."
 pushd $PACKAGE_DIR
 #tar -c --wildcards --exclude "*.svn*" --exclude "$PACKAGE/" --exclude "*.tar.gz" -zhf $TARBALL_NAME.tar.gz $TARBALL_NAME
-tar -c --wildcards --exclude "*.svn*" --exclude "*.tar.gz" -czf $TARBALL_NAME.tar.gz $TARBALL_NAME
+tar -c --wildcards --exclude "*.svn*" --exclude "*.tar.gz" --exclude "package/windows" --exclude "package/linux/novell-ifolder-enterprise-plugins.spec.*" --exclude "package/linux/novell-ifolder-client-plugins.spec.autobuild" --exclude "src/WindowsClient" --exclude "client-plugins.sh" --exclude "enterprise-plugins.sh" --exclude "ifolder3-client-plugins.sh" --exclude "ifolder3-enterprise-plugins.sh" --exclude "src/LdapGroup" --exclude "src/UserMovement"  -czf $TARBALL_NAME.tar.gz $TARBALL_NAME
 popd
 
 # Copy tarball 
