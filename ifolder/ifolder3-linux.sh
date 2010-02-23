@@ -53,13 +53,13 @@ fi
 # Prepare spec file
 mkdir -p $PACKAGE
 echo "Preparing spec file and copying to $PACKAGE/ ..."
-sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.autobuild > $PACKAGE/$PACKAGE.spec
+sed -e "s/@@BUILDNUM@@/$BUILDNUM/" package/linux/$PACKAGE.spec.in > $PACKAGE/$PACKAGE.spec
 
 # Create the tarballs
 echo "Generating tarball for $PACKAGE..."
 pushd $PACKAGE_DIR
 #tar -c --wildcards --exclude "*.svn*" --exclude "$PACKAGE" --exclude "*.tar.gz" -zhf $TARBALL_NAME.tar.gz $TARBALL_NAME
-tar -c --wildcards --exclude "*.svn*" --exclude "*.tar.gz" -czf $TARBALL_NAME.tar.gz $TARBALL_NAME
+tar -c --wildcards --exclude "*.svn*" --exclude "*.tar.gz" --exclude "src/UI/Mac" --exclude "src/UI/Windows" --exclude "package/windows"  --exclude "package/darwin" --exclude "package/linux/ifolder3.spec.in" --exclude "build-linux.sh" --exclude "NovelliFolder.sh" --exclude "ifolder3-linux.sh" -czf $TARBALL_NAME.tar.gz $TARBALL_NAME
 popd
 
 # Copying tarballs
