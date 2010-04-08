@@ -3149,9 +3149,19 @@ msgstr ""
 "There are no logged-in domains for importing keys."
 
 msgid ""
+"There are no logged-in domains for resetting keys."
+msgstr ""
+"There are no logged-in domains for resetting keys."
+
+msgid ""
 "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr ""
 "For resetting keys the domain should be connected. Log on to the domain and try."
+
+msgid ""
+"For resetting the passphrase the domain should be connected. Log on to the domain and try."
+msgstr ""
+"For resetting the passphrase the domain should be connected. Log on to the domain and try."
 
 msgid ""
 "Successfully imported the keys and changed the passphrase"
