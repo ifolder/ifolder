@@ -587,13 +587,11 @@ namespace Novell.iFolder
 			RetypePassPhraseLabel = new Label(Util.GS("R_etype the Passphrase:"));
 			table.Attach(RetypePassPhraseLabel, 1,2, 2,3,
 				AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
-			l.Xalign = 0.0F;
 			PassPhraseVerifyEntry = new Entry();
 			PassPhraseVerifyEntry.Visibility = false;
 			table.Attach(PassPhraseVerifyEntry, 2,3, 2,3,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
 			PassPhraseVerifyEntry.Changed += new EventHandler(ChangeSensitivity);
-			l.MnemonicWidget = PassPhraseVerifyEntry;
 
 			// Row 4
 			RememberPassPhraseCheckButton = new CheckButton(Util.GS("_Remember the Passphrase"));
@@ -604,8 +602,6 @@ namespace Novell.iFolder
 			SelectRALabel = new Label(Util.GS("Select the Passphrase Recovery Agent"));
 			table.Attach(SelectRALabel, 0,3, 4,5,
 				AttachOptions.Fill | AttachOptions.Expand, 0,0,0);
-			l.LineWrap = true;
-			l.Xalign = 0.0F;
 
 			// Row 6-7
 			RATreeView = new iFolderTreeView ();
