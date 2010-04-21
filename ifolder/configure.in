@@ -52,8 +52,8 @@ case $host_os in
     ;;   
     darwin*)
         IFOLDER_OS='darwin'
-        AC_CHECK_PROG(CSC, mcs, mcs)
-        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: mcs not found in \$PATH])
+        AC_CHECK_PROG(CSC, gmcs, gmcs)
+        test -z "$CSC" && AC_MSG_ERROR([no C Sharp compiler: gmcs not found in \$PATH])
         PKG_CONFIG_DIR='lib'
     ;;
     cygwin*)
@@ -73,7 +73,12 @@ AC_SUBST(SIMIASVER)
 AM_CONDITIONAL(LINUX, test "$IFOLDER_OS" = "linux")
 AM_CONDITIONAL(WINDOWS, test "$IFOLDER_OS" = "windows")
 AM_CONDITIONAL(DARWIN, test "$IFOLDER_OS" = "darwin")
-AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
+if test "$host_os" = "darwin"; then
+	AM_CONDITIONAL(MONO, test "$CSC" = "gmcs")
+else
+	AM_CONDITIONAL(MONO, test "$CSC" = "mcs")
+fi
+
 AM_CONDITIONAL(DOTNET, test "$CSC" = "csc")
 
 
@@ -107,6 +112,18 @@ case $CSC in
     #
     # Mono-specific configuration
     #
+    gmcs)
+        CSC_EXEFLAG=/target:exe
+        CSC_LIBFLAG=/target:library
+        CSC_WINEXEFLAG=/target:winexe
+        CSCFLAGS='/d:MONO /warn:4 /d:TRACE /d:MONOTRACE'
+        CSCFLAGS_DEBUG="/debug+ /d:DEBUG"
+        CSCFLAGS_OPTIMIZE="/optimize+"
+        MONO=mono
+        MONO_DEBUG='mono --debug'
+        MONO_PATH="\$(subst \$(SPACE),:,\$(addprefix \$(SRCDIR)\$(SEP),iFolder)):`pkg-config --variable=libdir simias`"
+        SYSTEM_XML='System.Xml.dll'
+    ;;
     mcs)
         CSC_EXEFLAG=/target:exe
         CSC_LIBFLAG=/target:library
