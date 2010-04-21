@@ -35,6 +35,7 @@ using System.Collections;
 using System.Reflection;
 using System.Net;
 using System.Web;
+using System.Text;
 using System.Threading;
 
 using Simias;
@@ -385,8 +386,8 @@ namespace Simias.Identity
 
 				if ( credentials.Length == 2 )
 				{
-					this.username = credentials[ 0 ];
-					this.password = credentials[ 1 ];
+					this.username = DecodeCreds(credentials[ 0 ], encodingName);
+                                        this.password = DecodeCreds(credentials[ 1 ], encodingName);
 					this.authType = "basic";
 					returnStatus = true;
 				}
@@ -396,6 +397,27 @@ namespace Simias.Identity
 
 			return returnStatus;
 		}
+
+		/// <summary>
+                /// Returns the decoded value of user creds if its encoded. Else will return the same [ Old Client ] .
+                /// </summary>
+                /// <returns>String - User Creds in String</returns>
+                private string DecodeCreds(string creds, string encodingName)
+                {
+                        try
+                        {
+                                byte[] encodedCredsByteArray = Convert.FromBase64String(creds);
+                                Encoding encoder = System.Text.Encoding.GetEncoding( encodingName );
+                                return encoder.GetString(encodedCredsByteArray, 0, encodedCredsByteArray.Length);
+                        }
+                        catch(Exception ex)
+                        {
+				// Exception occurs when we try to decode string which is not encoded
+                                // TODO : Find the right exception and catch it.
+                                return creds;
+                        }
+
+                }
 
 		/// <summary>
 		/// Returns whether the object has credentials.
@@ -452,7 +474,7 @@ namespace Simias.Identity
 			defaultBasicEncodingName = Store.Config.Get( Storage.Domain.SectionName, Storage.Domain.Encoding );
 			if ( defaultBasicEncodingName == null )
 			{
-				defaultBasicEncodingName = "iso-8859-1";
+				defaultBasicEncodingName = "utf-8";
 			}
 			
 			store = Store.GetStore();
