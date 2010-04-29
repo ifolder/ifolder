@@ -202,6 +202,12 @@ static iFolderNotificationController *sharedInstance = nil;
 											withObject:ifolderAndFileName waitUntilDone:YES ];		
 }
 
++ (void)ioErrorNotification:(NSString*)errorMessage
+{
+	[[self defaultManager] performSelectorOnMainThread:@selector(ioErrorNotify:) 
+						withObject:errorMessage waitUntilDone:YES ];		
+}
+
 //========================================================================================
 // ifolderNotify
 // This method will show a notification inviting you to participate in sharing iFolder
@@ -355,6 +361,19 @@ static iFolderNotificationController *sharedInstance = nil;
 	
 	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
 	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Insufficient disk space on the server\/client prevented complete synchronization: \"%@\"", @"iFolder disk full Notification Message"),[nameList objectAtIndex:1]] forKey:@"description"];
+	
+	[self performNotification:notifyContext];	
+	
+}
+
+- (void) ioErrorNotify:(NSString*)notificationMessageDetails
+{
+	NSArray* nameList = [notificationMessageDetails componentsSeparatedByString:@"###"];
+	
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"),
+				    [nameList objectAtIndex:0]] forKey:@"title"];
+	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"%@", @"iFolder IO error Notification Message"),
+				    [nameList objectAtIndex:2]] forKey:@"description"];
 	
 	[self performNotification:notifyContext];	
 	

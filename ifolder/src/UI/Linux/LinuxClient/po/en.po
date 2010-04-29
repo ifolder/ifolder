@@ -104,6 +104,14 @@ msgstr "iFolders"
 msgid "Accounts"
 msgstr "Accounts"
 
+#: src/LinuxClient/application/iFolderApplication.cs:884 
+msgid "Unable to read files from the folder. Verify the permissions on your local folder."
+msgstr "Unable to read files from the folder. Verify the permissions on your local folder."
+
+#: src/LinuxClient/application/iFolderApplication.cs:886 
+msgid "Unable to write files in the folder. Verify the permissions on your local folder."
+msgstr "Unable to write files in the folder. Verify the permissions on your local folder."
+
 msgid "General"
 msgstr "General"
 

@@ -1827,6 +1827,18 @@ namespace Novell.FormsTrayApp
                             syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Path is too long for the file \"{0}\" to be downloaded.", syncEventArgs.Name));
                         }
                         break;
+		    case SyncStatus.IOError:
+		        string notificationMessage;
+                        if (syncEventArgs.Direction == Direction.Downloading)
+                            notificationMessage = resourceManager.GetString("ioErrorWriteFailure");
+                        else
+                            notificationMessage = resourceManager.GetString("ioErrorReadFailure");
+
+			syncLog.AddMessageToLog(syncEventArgs.TimeStamp, notificationMessage);
+			shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName),
+							      notificationMessage, BalloonType.Error);
+                        break;
+
                     case SyncStatus.Busy:
                         syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Could not synchronize because the server is busy: {0}", syncEventArgs.Name));
                         break;

@@ -1707,6 +1707,28 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				[iFolderWindowController updateStatusTS:[NSString stringWithFormat:@"%@%@",syncItemMessage, syncMessage]];
 				[self addLogTS:syncMessage];
 			}
+			else if([[fse status] compare:@"IOError"] == 0)
+			{
+				if([fse direction] == FILE_SYNC_DOWNLOADING)
+				{
+					syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Unable to write files in the folder. Verify the permissions on your local folder.",
+											   @"iFolder Window Status Message")];
+				}
+				else
+				{
+					syncMessage = [NSString
+							stringWithFormat:NSLocalizedString(@"Unable to read files from the folder. Verify the permissions on your local folder.",
+											   @"iFolder Window Status Message")];
+				}
+
+				[iFolderWindowController updateStatusTS:[NSString stringWithFormat:@"%@%@",syncItemMessage, syncMessage]];
+
+				NSString *notificationMessageDetails = [NSString stringWithFormat:@"%@###%@###%@",[ifolder Name],[fse name], syncMessage];
+				[iFolderNotificationController ioErrorNotification:notificationMessageDetails];
+
+				[self addLogTS:syncMessage];
+			}
 			// All other errors
 			else
 			{

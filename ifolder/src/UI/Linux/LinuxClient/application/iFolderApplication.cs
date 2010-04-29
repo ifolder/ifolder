@@ -879,6 +879,12 @@ namespace Novell.iFolder
 					case SyncStatus.ReadOnly:
 						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
 						break;
+				        case SyncStatus.IOError:
+						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+						    message = Util.GS("Unable to read files from the folder. Verify the permissions on your local folder.");
+						else
+						    message = Util.GS("Unable to write files in the folder. Verify the permissions on your local folder.");
+						break;
 					default:
 						message = Util.GS("iFolder synchronization failed.");
 						break;

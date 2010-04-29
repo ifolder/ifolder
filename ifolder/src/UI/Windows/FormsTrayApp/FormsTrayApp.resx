@@ -1139,4 +1139,10 @@ Are you sure you want to exit the Application ?</value>
   <data name="ValidatePPError">
     <value>Unable to validate the passphrase</value>
   </data>
+  <data name="ioErrorReadFailure">
+    <value>Unable to read files from the folder. Verify permissions on your local folder.</value>
+  </data>
+  <data name="ioErrorWriteFailure">
+    <value>Unable to write files in the folder. Verify permissions on your local folder.</value>
+  </data>
 </root>
