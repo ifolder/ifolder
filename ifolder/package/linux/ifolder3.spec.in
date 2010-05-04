@@ -1,7 +1,7 @@
 #
 # spec file for package ifolder3 (Version 3.8.1.@@BUILDNUM@@.1)
 #
-# Copyright (c) 2009 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2010 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -20,7 +20,10 @@
 
 Name:           ifolder3
 
-BuildRequires: aspell-en bison cairo cairo-devel flex gcc-c++ gconf-sharp2 gdk-pixbuf glitz-devel gnome-sharp2 gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp  
+BuildRequires:  aspell-en bison cairo cairo-devel fdupes flex gcc-c++ gconf-sharp2 glitz-devel gnome-sharp2 gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp
+%if 0%{suse_version} > 1120
+BuildRequires:  simias-devel
+%endif
 
 %define buildnum @@BUILDNUM@@
 
@@ -29,7 +32,7 @@ URL:            http://www.ifolder.com
 %define sysconfdir /etc
 License:        GNU General Public License (GPL) v2
 Group:          System/GUI/Other
-Autoreqprov:    on
+AutoReqProv:    on
 Requires:       simias >= 1.8.4
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
@@ -49,11 +52,26 @@ The iFolder Project is a project focused on file sharing and
 collaboration, released under the GPL and supporting the iFolder 3
 protocol from Novell.
 
+%if 0%{suse_version} > 1120
 
+%package devel
+License:        GPLv2
+Summary:        Development files for ifolder
+Group:          Development/Libraries/C and C++
+Requires:       %{name} = %{version}
+Requires:       simias-devel
+
+%description devel
+Development files for iFolder.  The iFolder Project is a project
+focused on file sharing and collaboration, released under the GPL and
+supporting the iFolder 3 protocol from Novell.
+
+%endif
+ 
 
 %prep
 export BUILDNUM=%{buildnum}
-%setup -n %{name}
+%setup -q -n %{name}
 #=============================================================================
 
 %build
@@ -61,6 +79,8 @@ export BUILDNUM=%{buildnum}
 export CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 export CXXFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing"
 ./autogen.sh --prefix=%{prefix} --sysconfdir=%{sysconfdir}
+rm dependencies/external/tools/gsoap/linux-2.7/soapcpp2
+rm dependencies/external/tools/gsoap/linux-2.7/wsdl2h
 pushd dependencies/external/tools/gsoap/linux-2.7  
         cd src  
                 make -f MakefileMacOSX COFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing" LIBS=""  
@@ -80,6 +100,10 @@ export BUILDNUM=%{buildnum}
 export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make DESTDIR=$RPM_BUILD_ROOT install
 unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
+# Cleanup filelist, remove not needed files
+rm $RPM_BUILD_ROOT/%{prefix}/share/ifolder3/COPYING
+rm $RPM_BUILD_ROOT/%{prefix}/%_lib/libtrayicon.la \
+   $RPM_BUILD_ROOT/%{prefix}/%_lib/libtrayicon.a
 #
 # Set up iFolder in the menu for Gnome
 #
@@ -95,66 +119,56 @@ unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 if ! [ -d  $RPM_BUILD_ROOT/usr/bin ]; then
 	mkdir -p $RPM_BUILD_ROOT/usr/bin
 fi
+%find_lang %{name}
 %find_gconf_schemas
+%fdupes $RPM_BUILD_ROOT/%{prefix}/share/ifolder3
 #=============================================================================
 
 %pre -f %{name}.schemas_pre
 
-%post 
+%post
+/sbin/ldconfig
 echo "Restart the system before you start using iFolder"
 
 %preun -f %{name}.schemas_preun
-/sbin/ldconfig
 
 %posttrans -f %{name}.schemas_posttrans
 
-%postun
-ldconfig
+%postun -p /sbin/ldconfig
 #=============================================================================
 
-%files -f %{name}.schemas_list
-%defattr(755,root,root)
-%{prefix}/bin/*
+%files -f %{name}.schemas_list -f %{name}.lang
+%defattr(644,root,root, 755)
+%doc COPYING
+%attr(755,root,root)  %{prefix}/bin/*
 %{sysconfdir}/UI.log4net
-%attr(755,root,root) %{prefix}/include/ifolder3
-%attr(755,root,root) %{prefix}/include/ifolder3/*
-%attr(755,root,root) %{prefix}/share/ifolder3
+%dir %{prefix}/share/ifolder3
 %{prefix}/share/ifolder3/*
-%{prefix}/%_lib/TrayIcon.dll
+%attr(755,root,root) %{prefix}/%_lib/TrayIcon.dll
 %attr(755,root,root) %dir %{prefix}/%_lib/simias
-%{prefix}/%_lib/Novell.iFolder.UI.gtk.dll
-%{prefix}/%_lib/Novell.iFolder.dll
-%{prefix}/%_lib/libifolderclient.so
-%{prefix}/%_lib/libifolderclient.so.0
-%{prefix}/%_lib/libifolderclient.so.0.0.0
-%{prefix}/%_lib/libtrayicon.a
-%{prefix}/%_lib/libtrayicon.la
-%{prefix}/%_lib/libtrayicon.so
-%{prefix}/%_lib/libtrayicon.so.0
-%{prefix}/%_lib/libtrayicon.so.0.0.0    
+%attr(755,root,root) %{prefix}/%_lib/Novell.iFolder.UI.gtk.dll
+%attr(755,root,root) %{prefix}/%_lib/Novell.iFolder.dll
+%attr(755,root,root) %{prefix}/%_lib/libifolderclient.so
+%attr(755,root,root) %{prefix}/%_lib/libifolderclient.so.0
+%attr(755,root,root) %{prefix}/%_lib/libifolderclient.so.0.0.0
+# .so files are needed in main package
+%attr(755,root,root) %{prefix}/%_lib/libtrayicon.so
+%attr(755,root,root) %{prefix}/%_lib/libtrayicon.so.0
+%attr(755,root,root) %{prefix}/%_lib/libtrayicon.so.0.0.0
 %attr(755,root,root) %dir %{prefix}/%_lib/simias/web
 %attr(755,root,root) %dir %{prefix}/%_lib/simias/web/bin
-%{prefix}/%_lib/simias/web/bin/*
-%{prefix}/%_lib/simias/web/*
-%{prefix}/%_lib/pkgconfig/*
-%{prefix}/bin/ifolder
+%attr(755,root,root) %{prefix}/%_lib/simias/web/bin/*
+%attr(755,root,root) %{prefix}/%_lib/simias/web/*
 %{prefix}/share/applications/ifolder.desktop
-%{prefix}/share/locale/cs/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/de/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/en/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/es/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/fi/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/fr/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/hu/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/it/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/ja/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/pl/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/pt/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/pt_BR/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/ru/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/sk/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/zh_CN/LC_MESSAGES/ifolder3.mo
-%{prefix}/share/locale/zh_TW/LC_MESSAGES/ifolder3.mo
+
+%if 0%{suse_version} > 01120
+
+%files devel
+%defattr(644,root,root, 755)
+%endif
+%dir %{prefix}/include/ifolder3
+%{prefix}/include/ifolder3/*
+%attr(644,root,root) %{prefix}/%_lib/pkgconfig/*
 
 %changelog -n ifolder3
 * Tue Feb 06 2007 - ro@suse.de

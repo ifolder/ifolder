@@ -1,7 +1,7 @@
 #
-# spec file for package ifolder3 (Version 3.8.1.@@BUILDNUM@@.1)
+# spec file for package novell-ifolder-client-plugins  (Version 3.8.1.@@BUILDNUM@@.1)
 #
-# Copyright (c) 2009 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2010 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -19,7 +19,10 @@
 
 Name:           novell-ifolder-client-plugins
 
-BuildRequires:  aspell-en cairo cairo-devel e2fsprogs-devel gcc-c++ gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel ifolder3 libflaim libflaim-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp  
+BuildRequires:  aspell-en cairo cairo-devel e2fsprogs-devel gcc-c++ glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel ifolder3 libflaim libflaim-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp
+%if 0%{suse_version} > 1120
+BuildRequires:  ifolder3-devel
+%endif
 
 
 %define buildnum @@BUILDNUM@@
@@ -49,7 +52,9 @@ Plugins adding additional capability to iFolder 3 client
 
 %prep
 export BUILDNUM=%{buildnum}
-%setup -n %{name}
+%setup -n %{name} -q
+%patch
+%patch1
 #=============================================================================
 
 %build
@@ -63,20 +68,16 @@ make
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
-#=============================================================================
-
-%post
-
-%preun
+rm $RPM_BUILD_ROOT/%{prefix}/share/plugins/COPYING
 #=============================================================================
 
 %files
-%defattr(755,root,root)
+%defattr(644,root,root, 755)
+%doc COPYING
 %dir %{prefix}/%_lib/plugins/
 %dir %{prefix}/share/plugins/
-%{prefix}/%_lib/plugins/*
-%{prefix}/bin/AutoAccount.xsd
-%{prefix}/bin/AutoAccount.xml
-%{prefix}/share/plugins/COPYING
+%attr(755,root,root) %{prefix}/%_lib/plugins/*
+%attr(755,root,root) %{prefix}/bin/AutoAccount.xsd
+%attr(755,root,root) %{prefix}/bin/AutoAccount.xml
 
 %changelog -n ifolder3

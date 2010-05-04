@@ -12,7 +12,6 @@ dist-hook:
 
 lib_LTLIBRARIES = libifolderclient.la
 
-override CFLAGS =
 
 libifolderclient_la_SOURCES = \
  	iFolderClientLib.c stdsoap2.h ifolder.c ifolder.h

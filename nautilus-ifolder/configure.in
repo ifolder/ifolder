@@ -64,10 +64,7 @@ AC_SUBST(old)
 # Check for a 32 / 64
 #HACK ALERT : for libflaim 64bit builds
 case $host_cpu in
-    x86_64)
-        LIB64='lib64'
-    ;;
-    amd64)
+    x86_64|amd64|s390x|ppc64|powerpc64))
         LIB64='lib64'
     ;;
     *)

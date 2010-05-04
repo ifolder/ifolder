@@ -26,7 +26,7 @@ else
     run_versioned automake 1.7 -a -c --foreign
     autoconf -Wall
 
-    CFLAGS="-g -O0" ./configure --prefix=/usr --sysconfdir=/etc "$@"
+    ./configure --prefix=/usr --sysconfdir=/etc "$@"
 
     make clean
 fi

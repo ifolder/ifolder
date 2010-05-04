@@ -1,7 +1,7 @@
 #
-# spec file for package ifolder3 (Version 3.8.1.@@BUILDNUM@@.1)
+# spec file for package nautilus-ifolder3 (Version 3.8.1.@@BUILDNUM@@.1)
 #
-# Copyright (c) 2009 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2010 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -17,7 +17,13 @@
 
 # norootforbuild
 
-BuildRequires: aspell-en gconf2 gconf2-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel mDNSResponder nautilus-devel perl-XML-Parser update-desktop-files gnome-vfs2 gnome-vfs2-devel
+BuildRequires:  gconf2 gconf2-devel gnome-sharp2 gtk-sharp2 ifolder3 intltool mono-devel nautilus-devel perl-XML-Parser update-desktop-files
+%if 0%{suse_version} > 1120
+BuildRequires:  ifolder3-devel simias-devel
+%endif
+%if %suse_version >= 1110
+BuildRequires:  gnome-vfs2-devel
+%endif
 
 Name:         nautilus-ifolder3
 
@@ -49,21 +55,22 @@ Provides the iFolder plugin interface to the Nautilus File Manager
 
 %prep
 export BUILDNUM=%{buildnum}
-%setup -n %{name}
+%setup -n -q %{name}
 #=============================================================================
 
 %build
 export BUILDNUM=%{buildnum}
 export CFLAGS="$RPM_OPT_FLAGS"
-./autogen.sh --prefix=%{prefix} --with-newnautilus
-make
+./autogen.sh --prefix=%{prefix} --libdir=%{prefix}/%_lib --with-newnautilus --disable-static
+make CFLAGS="$RPM_OPT_FLAGS"
 #make dist
 #=============================================================================
 
 %install
 export BUILDNUM=%{buildnum}
-%{__rm} -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
+# Do not install .la files
+rm $RPM_BUILD_ROOT/%{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder.la
 %find_lang %{name}
 #=============================================================================
 
@@ -83,7 +90,7 @@ echo "Restart the system before you start using iFolder"
 %dir %{gnome_root}/share/icons/gnome/48x48
 %dir %{gnome_root}/share/icons/gnome/48x48/emblems
 %dir %{gnome_root}/%_lib/nautilus/%{extension}
-%{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder*
+%{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder.so
 %{prefix}/%_lib/nautilus-ifolder
 %{prefix}/%_lib/nautilus-ifolder.exe
 %attr(644,root,root) %{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.icon

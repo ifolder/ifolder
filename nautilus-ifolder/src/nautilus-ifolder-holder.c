@@ -31,6 +31,8 @@
 *
 *******************************************************************************/
 #include "nautilus-ifolder-holder.h"
+#include <string.h>
+#include <stdlib.h>
 
 ///<summary>
 /// Create a new iFolder holder

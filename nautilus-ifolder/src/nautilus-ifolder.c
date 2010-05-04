@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>
+#include <pthread.h>
 
 #include <libgnomevfs/gnome-vfs-utils.h>
 
@@ -60,9 +61,9 @@
 
 /* Turn this on to see debug messages */
 #if DEBUG
-#define DEBUG_IFOLDER(args) (g_print("nautilus-ifolder: "), g_printf args)
+#define DEBUG_IFOLDER(args) do {g_print("nautilus-ifolder: "); g_printf args} while (0)
 #else
-#define DEBUG_IFOLDER
+#define DEBUG_IFOLDER(args) do {} while (0)
 #endif
 
 #ifdef _
@@ -1062,6 +1063,7 @@ passphrase_dialog(gchar *domain_id)
 				ns1__IsPassPhraseSetResponse.IsPassPhraseSetResult;
 	}
 */
+	return NULL;
 }
 
 ///<summary>
@@ -1623,7 +1625,7 @@ ifolder_dialog_thread (gpointer user_data)
 		errMsg->detail	= _("Sorry, unable to open the window to perform the specified action.");
 		g_idle_add (show_ifolder_error_message, errMsg);
 		g_object_unref(item);
-		return;
+		return NULL;
 	}
 	
 	if (fgets (readBuffer, 1024, output) != NULL) {
@@ -1676,7 +1678,7 @@ create_ifolder_thread (gpointer user_data)
 	DEBUG_IFOLDER(("Calling the ifolder_dialog_thread.\n"));
 	pthread_create(&thread, NULL, ifolder_dialog_thread, item);
 	DEBUG_IFOLDER(("Returned from the ifolder_dialog_thread.\n"));
-	return;
+	return NULL;
 	/*
 	error = create_ifolder_in_domain (file, domain_id, encryption);
 
@@ -1987,6 +1989,7 @@ revert_ifolder_thread (gpointer user_data)
 	}
 
 	g_object_unref(item);
+	return NULL;
 }
 
 ///<summary>
@@ -2091,7 +2094,8 @@ revert_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 ///Call back to share ifolder
 ///</summary>
 ///<param name="item">Pointer to Nautilus menu item</param>
-///<param name="user_data">Pointer to user data</param>static void
+///<param name="user_data">Pointer to user data</param>
+static void
 share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	gchar *ifolder_path;
@@ -2136,7 +2140,8 @@ share_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 /// Call back for ifolder properties
 ///</summary>
 ///<param name="item">Pointer to Nautilus menu item</param>
-///<param name="user_data">Pointer to user data</param>static void
+///<param name="user_data">Pointer to user data</param>
+static void
 ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	gchar *ifolder_path;
@@ -2181,7 +2186,8 @@ ifolder_properties_callback (NautilusMenuItem *item, gpointer user_data)
 /// Call back for iFolder help
 ///</summary>
 ///<param name="item">Pointer to Nautilus menu item</param>
-///<param name="user_data">Pointer to user data</param>static void
+///<param name="user_data">Pointer to user data</param>
+static void
 ifolder_help_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	pthread_t thread;
