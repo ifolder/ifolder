@@ -749,19 +749,19 @@
 		<value>Welcome to iFolder</value>
 	</data>
 	<data name="ServerOld">
-		<value>Server Is Old. Cannot connect to the server</value>
+		<value>You are connecting to an older version of the iFolder server. Cannot connect to the server</value>
 	</data>
 	<data name="ServerOldTitle">
-		<value>Server Old</value>
+		<value>iFolder Server Old</value>
 	</data>
 	<data name="UpgradeClientMsg">
-		<value>Would you like to upgrade your client to {0}? The client will be closed automatically if you click Yes.</value>
+		<value>Would you like to upgrade your iFolder client to {0}? The client will be closed automatically if you click Yes.</value>
 	</data>
 	<data name="UpgradeAvailableTitle">
-		<value>Client upgrade available.</value>
+		<value>iFolder Client upgrade available.</value>
 	</data>
 	<data name="UpgradeNeededTitle">
-		<value>Client upgrade needed.</value>
+		<value>iFolder Client upgrade required.</value>
 	</data>
 	<data name="IsPassphraseSetException">
 		<value>Unable to check for passphrase. </value>
