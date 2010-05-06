@@ -162,14 +162,17 @@ namespace Novell.Wizard
             this.encryptionCheckButton.Location = new Point(this.defaultValuePos + 2, this.label2.Location.Y);
 			this.encryptionCheckButton.Text = this.resManager.GetString("EncryptedText");//"Encrypted";
             this.encryptionCheckButton.TabIndex = 4;
+            this.encryptionCheckButton.AutoSize = true;
             
             this.sslCheckButton.Location = new Point(this.defaultValuePos + this.encryptionCheckButton.Width + 10, this.label2.Location.Y);
             this.sslCheckButton.Text = this.resManager.GetString("SharableText");//"Shared";
             this.sslCheckButton.TabIndex = 5;
+            this.sslCheckButton.AutoSize = true;
 
             this.SecureSync.Location = new Point(this.sslCheckButton.Location.X + this.sslCheckButton.Width + 10, this.label2.Location.Y - 3);
             this.SecureSync.Text = this.resManager.GetString("SecureSync"); //Secure Sync
             this.SecureSync.TabIndex = 6;
+            this.SecureSync.AutoSize = true;
                      
             this.Controls.Add(this.CreateDefault);
 			this.Controls.Add(this.LocationEntry);
