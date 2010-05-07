@@ -130,7 +130,7 @@
 		if(newiFolderID != nil && [[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_CREATEIFOLDER])
 		{
 			NSRunAlertPanel(NSLocalizedString(@"iFolder Created",@"New iFolder Notification title"),
-							NSLocalizedString(@"The selected folder is now an iFolder. To learn more about using iFolder and sharing iFolders with other users, see in iFolder Help",@"New iFolder Notification message"),
+							NSLocalizedString(@"The selected folder is now an iFolder. To learn more about using iFolder and sharing iFolders with other users, see iFolder Help",@"New iFolder Notification message"),
 							NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 		}
 		
