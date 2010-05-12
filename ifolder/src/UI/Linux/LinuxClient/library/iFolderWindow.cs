@@ -1390,7 +1390,7 @@ namespace Novell.iFolder
 						    displayName = displayName.Substring(0,displayableName) + "...";
 						}
 						if(holder.State == iFolderState.RevertAndDelete)
-							ifstate = Util.GS("Deletion In Prgoress");
+							ifstate = Util.GS("Deletion In Progress");
 						else
 							ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
                                         	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);

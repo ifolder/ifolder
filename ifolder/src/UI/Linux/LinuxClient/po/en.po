@@ -4007,6 +4007,6 @@ msgstr ""
 "Used: {0}"
 
 msgid ""
-"Deletion In Prgoress"
+"Deletion In Progress"
 msgstr ""
-"Deletion In Prgoress"
+"Deletion In Progress"
