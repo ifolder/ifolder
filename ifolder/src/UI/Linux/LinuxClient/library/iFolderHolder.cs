@@ -86,12 +86,14 @@ namespace Novell.iFolder
 		/// <summary>
 		/// Passphrase not provided. 
 		/// </summary>
-		NoPassphrase
+		NoPassphrase,
 
 		///<summary>
 		/// Network Cable Disconnected.
 		/// </summmary>
-//		NetworkCableDisc
+//		NetworkCableDisc,
+		
+		RevertAndDelete	
 	}
 	
 	/// <summary>
@@ -324,6 +326,9 @@ namespace Novell.iFolder
 							break;
 						case iFolderState.Disconnected:
 							stateString = Util.GS("Server unavailable");
+							break;
+						case iFolderState.RevertAndDelete:
+							stateString = Util.GS("Deletion In Prgoress");
 							break;
 /*						case iFolderState.NetworkCableDisc:
 							stateString=Util.GS("Network unavailable");   	

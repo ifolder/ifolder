@@ -212,6 +212,12 @@ namespace Novell.iFolder
 		public string diskQuotaAvailable = Util.GS("N/A");	
 		private int displayableName = 20; //Initilizing it to 20 char	
 
+		//For Revert iFolder Thread 
+		private string selectedDomainID = null;
+		private string holderID = null;
+		private string subHolderID = null;
+		private bool IsRemoveDefaultiFolder = false;	
+
 		public int LastXPos
 		{
 			get
@@ -1383,7 +1389,10 @@ namespace Novell.iFolder
 						{
 						    displayName = displayName.Substring(0,displayableName) + "...";
 						}
-						ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
+						if(holder.State == iFolderState.RevertAndDelete)
+							ifstate = Util.GS("Deletion In Prgoress");
+						else
+							ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
                                         	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
                                 	}
 				}
@@ -1701,6 +1710,7 @@ namespace Novell.iFolder
 			 {
 				 UriBuilder serverUri = new UriBuilder(currentDomain.HostUrl);	
 				 labelServer.Text = string.Format(Util.GS("Server: {0}"), serverUri.Host);
+
 				 labeliFolderCount.Text = string.Format(Util.GS("No. of iFolder: {0}"),ifws.GetiFoldersForDomain(currentDomain.ID).Length);
 				 //  labeliDiskQouta.Text = string.Format(Util.GS("Disk Quota: {0}"), CalcualteTotalQouta(currentDomain.MemberUserID) );
 				 PopulateUsedAvailableQuotaData(currentDomain);
@@ -4326,6 +4336,7 @@ namespace Novell.iFolder
 					Util.GS("The folder will still be on your computer, but it will no longer synchronize with the iFolder Server."));
 
 				CheckButton deleteFromServerCB;
+				bool isDeleteFromServer = false;
 
 				if (domain.MemberUserID == holder.iFolder.OwnerID)
 					deleteFromServerCB = new CheckButton(Util.GS("_Delete this iFolder from the server"));
@@ -4337,6 +4348,7 @@ namespace Novell.iFolder
 				dialog.ExtraWidget = deleteFromServerCB;
 
 				int rc = dialog.Run();
+				isDeleteFromServer = deleteFromServerCB.Active;
 				dialog.Hide();
 				dialog.Destroy();
 				if(rc == -8)
@@ -4350,23 +4362,23 @@ namespace Novell.iFolder
 							Debug.PrintLine("Removing default iFolder");
 							removeDefault = true;
 						}
-						iFolderHolder subHolder =
-							ifdata.RevertiFolder(holder.iFolder.ID);
-						
-						if (deleteFromServerCB.Active)
-						{
-							if (subHolder == null)
-							{
-								ifdata.DeleteiFolder(holder.iFolder.ID);
-							}
-							else
-							{
-								ifdata.DeleteiFolder(subHolder.iFolder.ID);
-							}
-							if( removeDefault )
-								simws.DefaultAccount(domainID, null);
+						if(isDeleteFromServer)
+							holder.State = iFolderState.RevertAndDelete;	
 
-			        			UpdateServerInfoForSelectedDomain();
+						iFolderHolder subHolder = ifdata.RevertiFolder(holder.iFolder.ID);
+						
+						if (isDeleteFromServer)
+						{
+							holder.State = iFolderState.RevertAndDelete;
+					                selectedDomainID = domainID;
+					                holderID = holder.iFolder.ID;
+					                subHolderID = subHolder.iFolder.ID;
+					                IsRemoveDefaultiFolder = removeDefault;
+							
+							System.Threading.Thread thread = new System.Threading.Thread(
+								new System.Threading.ThreadStart(RevertAndDeleteiFolder));
+							thread.IsBackground = true;
+							thread.Start();
 						}
 						
 						if( ifolderlistview.Visible )
@@ -4388,6 +4400,23 @@ namespace Novell.iFolder
 					UpdateSensitivity();
 				}
 			}
+		}
+
+		private void RevertAndDeleteiFolder()
+		{
+			if (subHolderID == null)
+			{
+				ifdata.DeleteiFolder(holderID);
+			}
+			else
+			{
+				ifdata.DeleteiFolder(subHolderID);
+			}
+			if( IsRemoveDefaultiFolder)
+				simws.DefaultAccount(selectedDomainID, null);
+
+			UpdateServerInfoForSelectedDomain();
+
 		}
 
 		private int AskDeleteiFolder(iFolderHolder holder)
