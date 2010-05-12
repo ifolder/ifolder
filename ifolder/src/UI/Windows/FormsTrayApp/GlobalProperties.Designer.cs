@@ -105,7 +105,6 @@ namespace Novell.FormsTrayApp
             this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.iFolder = new System.Windows.Forms.ColumnHeader();
@@ -113,7 +112,7 @@ namespace Novell.FormsTrayApp
             this.Server = new System.Windows.Forms.ColumnHeader();
             this.Status = new System.Windows.Forms.ColumnHeader();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -403,8 +402,7 @@ namespace Novell.FormsTrayApp
             this.toolStripBtnMerge,
             this.toolStripBtnDelete,
             this.toolStipBtnChangeView,
-            this.toolStripBtnFilter,
-            this.toolStripLabel1});
+            this.toolStripBtnFilter});
             resources.ApplyResources(this.toolStripiFolderActions, "toolStripiFolderActions");
             this.toolStripiFolderActions.Name = "toolStripiFolderActions";
             // 
@@ -474,9 +472,9 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripMenuLeftPane
             // 
-            this.toolStripMenuLeftPane.Checked = true;
-            this.toolStripMenuLeftPane.CheckOnClick = true;
-            this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
+           // this.toolStripMenuLeftPane.Checked = true;
+           // this.toolStripMenuLeftPane.CheckOnClick = true;
+            //this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
             this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
@@ -728,22 +726,6 @@ namespace Novell.FormsTrayApp
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
-            // iFolderView
-            // 
-            resources.ApplyResources(this.iFolderView, "iFolderView");
-            this.iFolderView.BackColor = System.Drawing.Color.White;
-            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
-            this.iFolderView.HorizontalSpacing = 5;
-            this.iFolderView.ItemHeight = 72;
-            this.iFolderView.ItemWidth = 280;
-            this.iFolderView.LargeImageList = null;
-            this.iFolderView.Name = "iFolderView";
-            this.iFolderView.SelectedItem = null;
-            this.iFolderView.VerticleSpacing = 5;
-            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
-            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
-            // 
             // localiFoldersHeading
             // 
             this.localiFoldersHeading.BackColor = System.Drawing.Color.LightGray;
@@ -800,11 +782,21 @@ namespace Novell.FormsTrayApp
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
             // 
-            // toolStripLabel1
+            // iFolderView
             // 
-            this.toolStripLabel1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            resources.ApplyResources(this.toolStripLabel1, "toolStripLabel1");
+            resources.ApplyResources(this.iFolderView, "iFolderView");
+            this.iFolderView.BackColor = System.Drawing.Color.White;
+            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
+            this.iFolderView.HorizontalSpacing = 5;
+            this.iFolderView.ItemHeight = 72;
+            this.iFolderView.ItemWidth = 280;
+            this.iFolderView.LargeImageList = null;
+            this.iFolderView.Name = "iFolderView";
+            this.iFolderView.SelectedItem = null;
+            this.iFolderView.VerticleSpacing = 5;
+            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
+            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // GlobalProperties
             // 
@@ -959,7 +951,6 @@ namespace Novell.FormsTrayApp
         private ColumnHeader Status;
         private ToolStripButton toolStripBtnRevert;
         private ToolStripButton toolStripBtnDelete;
-        private ToolStripLabel toolStripLabel1;
 
 	}
 }

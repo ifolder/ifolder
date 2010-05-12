@@ -1998,16 +1998,8 @@ namespace Novell.FormsTrayApp
 						this.menuActionRevert.Enabled = this.menuActionShare.Enabled =
 						this.menuActionSync.Enabled = true;
 
-                  
-
-					if ( ifolderWeb.HasConflicts )
-					{
-                        this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = true;
-					}
-					else
-					{
-                        this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = false;
-					}
+                  	this.menuActionResolve.Enabled = this.toolStripBtnResolve.Enabled = this.toolStripBtnResolve.Visible = ifolderWeb.HasConflicts;
+				
 					if( ifolderObject.iFolderState == iFolderState.Initial )
 					{
                         this.toolStripBtnShare.Enabled = false;
@@ -2026,6 +2018,7 @@ namespace Novell.FormsTrayApp
                     
                     //Conditon to enable/disable revert option based on current status of ifolder.
                     //code should get executed at the end of this function
+                   
                     if ((ifolderWeb.State == "Local" || ifolderWeb.State == "WaitSync") && ((ifolderObject.iFolderState == iFolderState.SynchronizingLocal) || (ifolderObject.iFolderState == iFolderState.Synchronizing)))
                     {
                         this.toolStripBtnRevert.Enabled = this.menuActionRevert.Enabled = this.MenuRevert.Enabled = false;
@@ -3482,7 +3475,8 @@ namespace Novell.FormsTrayApp
 
         private void setThumbnailView(bool value)
         {
-            updateChangeViewMenuText();
+           updateChangeViewMenuText();
+            panel2.SuspendLayout();
             //show/hide panel2 that contains thumnail view.
             this.iFolderView.Visible = value;
             this.localiFoldersHeading.Visible = value;
@@ -3492,14 +3486,24 @@ namespace Novell.FormsTrayApp
             panel1.Visible = !value;
             listView1.Visible = !value;
 
-            //need to refresh when the view change from list to thumbnail
-            //and set focus on listview when changed to listview.
-            if (value)
-                refreshAllInvoke();
-            else  
-                setListViewItemSelected();
-        }
+            //ensure UI is re-painted
+            //Invalidate();
+            this.iFolderView.Items.Sort();
+            updateView();
+            //panel2.ResumeLayout();
 
+            Update();
+             //need to refresh when the view change from list to thumbnail
+             //and set focus on listview when changed to listview.
+        
+             if (!value)
+                 setListViewItemSelected();
+             //    refreshAllInvoke();
+           panel2.ResumeLayout();
+           
+         
+            
+          }
         private void showiFolderinListView()
         {
             listView1.SuspendLayout();
@@ -3560,27 +3564,33 @@ namespace Novell.FormsTrayApp
 
         private void toolStripMenuLeftPane_Click(object sender, EventArgs e)
         {
-            const int margin = 3;
+          
             if (panel3.Visible)
             {
                 panel3.Visible = !panel3.Visible;
 
-                panel1.Left = panel3.Left ;
-                panel2.Left = panel3.Left ;
-
-                panel1.Width = panel1.Right + panel3.Width -margin;
-                panel2.Width = panel2.Right + panel3.Width -margin;
-
+                panel1.Left = panel3.Left;
+                panel2.Left = panel3.Left;
                 tableLayoutPanel1.Left = panel3.Left;
-                tableLayoutPanel1.Width = tableLayoutPanel1.Right + panel3.Width;
+                 
+                panel1.Width = panel1.Width + panel3.Width;
+                panel2.Width = panel2.Width + panel3.Width;
             }
             else
             {
                 panel3.Visible = !panel3.Visible;
-                panel1.Left = panel3.Right ;
-                panel2.Left = panel3.Right ;
-                tableLayoutPanel1.Left = panel3.Right +margin ;
+
+                panel1.Left = panel3.Right;
+                panel2.Left = panel3.Right;
+                tableLayoutPanel1.Left = panel3.Right;
+
+                panel1.Width = panel1.Width - panel3.Width;
+                panel2.Width = panel2.Width - panel3.Width;
+
             }
+            tableLayoutPanel1.Width = panel1.Width;
+            //first 'ifolder on iFolder' label was getting truncated some times so reseting  iFolderView hieght
+            this.iFolderView.ItemHeight = 72;
         }
         
         private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
