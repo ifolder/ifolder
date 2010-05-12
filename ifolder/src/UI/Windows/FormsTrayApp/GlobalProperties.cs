@@ -143,6 +143,9 @@ namespace Novell.FormsTrayApp
         private Domain Currentdomain = null;
         private int comboBoxSelectedIndex = -1;
         private bool thumbnailView = false;
+        private string selectediFolderID = null ;
+        private string selectedDomainID = null;
+        private bool IsDomainMaster = false;
 
         private enum Index
         {
@@ -2629,9 +2632,12 @@ namespace Novell.FormsTrayApp
 
 			try
 			{
+                
 				iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
 				//bool IsMaster = (this.ifWebService.GetUserID( ifolder.DomainID) == ifolder.OwnerID);
 				bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
+
+                IsDomainMaster = IsMaster;
 
 				RevertiFolder revertiFolder = new RevertiFolder();
                 
@@ -2646,7 +2652,10 @@ namespace Novell.FormsTrayApp
 					Invalidate();
 					Update();
 					Cursor.Current = Cursors.WaitCursor;
-					
+
+                    if (revertiFolder.RemoveFromServer)
+                         ((iFolderObject)selectedItem.Tag).iFolderState = iFolderState.RevertAndDelete;
+
 					// Delete the iFolder.
 					iFolderWeb newiFolder = ifWebService.RevertiFolder(ifolder.ID);
 					
@@ -2659,16 +2668,15 @@ namespace Novell.FormsTrayApp
 						if ( revertiFolder.RemoveFromServer )
 						{
 							// Remove the iFolder from the server.
-							if( IsMaster )
-							{
-								string defaultiFolderID = this.simiasWebService.GetDefaultiFolder( newiFolder.DomainID );
-								if( defaultiFolderID == newiFolder.ID)
-								{
-									this.simiasWebService.DefaultAccount( newiFolder.DomainID, null );
-								}
-								ifWebService.DeleteiFolder(newiFolder.DomainID, newiFolder.ID);
-							}
-							ifWebService.DeclineiFolderInvitation( newiFolder.DomainID, newiFolder.ID );
+                            selectediFolderID = newiFolder.ID;
+                            selectedDomainID = newiFolder.DomainID;                   
+                			Thread revertiFolderThread;
+			                revertiFolderThread = new Thread(new ThreadStart(RemoveiFolderFromServer));
+			                revertiFolderThread.Name = "RevertAndDeleteiFolder";
+			                revertiFolderThread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
+			                revertiFolderThread.IsBackground = true;
+			                revertiFolderThread.Priority = ThreadPriority.BelowNormal;
+                            revertiFolderThread.Start();
 						}
 						else
 						{
@@ -2677,17 +2685,12 @@ namespace Novell.FormsTrayApp
                                 this.removeTileListViewItem((TileListViewItem)ht[newiFolder.ID]);
                                 iFolderObject ifolderobj = new iFolderObject(newiFolder, iFolderState.Normal);
                                 addiFolderToListView(ifolderobj);
+                                updateView();
 							}
 						}
-					}
-
-					lock (ht)
-					{
-						removeTileListViewItem( selectedItem );
-					}
+					}                  
 				}
-                refreshAll();
-				updateView();
+
 				revertiFolder.Dispose();
 			}
 			catch (Exception ex)
@@ -2707,6 +2710,26 @@ namespace Novell.FormsTrayApp
             
 		}
 
+        private void RemoveiFolderFromServer()
+        {
+            
+            if (IsDomainMaster)
+            {
+                string defaultiFolderID = this.simiasWebService.GetDefaultiFolder(selectedDomainID);
+                if (defaultiFolderID == selectediFolderID)
+                {
+                    this.simiasWebService.DefaultAccount(selectedDomainID, null);
+                }
+                ifWebService.DeleteiFolder(selectedDomainID, selectediFolderID);
+            }
+            ifWebService.DeclineiFolderInvitation(selectedDomainID, selectediFolderID);
+
+            lock (ht)
+			{
+					removeTileListViewItem( selectedItem );
+			}
+				refreshAll();
+        }
         public static bool AdvancedConflictResolver(iFolderWebService ifWebService, iFolderWeb selectedItem)
         {
             const string assemblyName = @"lib\plugins\EnhancedConflictResolution.dll";
@@ -3526,12 +3549,19 @@ namespace Novell.FormsTrayApp
                         //don't perform any action
                         continue;
                     }
+                    string state = null;
+
+                    if (ifObj.iFolderState == iFolderState.RevertAndDelete)
+                        state = Resources.deletionInProgress;
+                    else
+                        state = ifObj.iFolderWeb.IsSubscription ? Resources.availablefordownload : tlvi.Status;
+
                     ListViewItem listViewItem1 = new ListViewItem(
                     new string[] { 
                     ifObj.iFolderWeb.Name,
                     FormatSize(ifObj.iFolderWeb.iFolderSize),
                     (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
-                    ifObj.iFolderWeb.IsSubscription ? Resources.availablefordownload : tlvi.Status,
+                    state,
                     ifObj.iFolderWeb.ID},
                     imageIndex,
                     Color.Empty,

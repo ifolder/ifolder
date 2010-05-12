@@ -71,7 +71,12 @@ namespace Novell.FormsTrayApp
         /// <summary>
         /// Passphrase not provided, encrypted folder wont sync.
         /// </summary>
-        NoPassphrase
+        NoPassphrase,
+
+        /// <summary>
+        /// State represent when revert and deletion of ifolder is in progress.
+        /// </summary>
+        RevertAndDelete
 	}
 
 	/// <summary>
