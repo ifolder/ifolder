@@ -4005,3 +4005,8 @@ msgid ""
 "Used: {0}"
 msgstr ""
 "Used: {0}"
+
+msgid ""
+"Deletion In Prgoress"
+msgstr ""
+"Deletion In Prgoress"
