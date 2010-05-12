@@ -1969,14 +1969,16 @@ namespace Novell.FormsTrayApp
 
 					if( ifolderWeb.CurrentUserID != ifolderWeb.OwnerID)
 					{
-                        this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership; 
+                        this.MenuRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership;
+                        this.menuActionRemove.Text = Resources.RemoveMyMembershipText;
                         toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\remove_share_48.png"));
                         toolStripBtnDelete.Text = Resources.remove;
                         toolStripBtnDelete.ToolTipText = Resources.RemoveMyMembership;
                     }
 					else
 					{
-                        this.MenuRemove.Text = this.menuActionRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        this.MenuRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        this.menuActionRemove.Text = TrayApp.Properties.Resources.menuRemoveText;
                         toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
                         toolStripBtnDelete.Text = Resources.delete;
                         toolStripBtnDelete.ToolTipText = Resources.menuActionRemove;

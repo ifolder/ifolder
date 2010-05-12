@@ -673,4 +673,10 @@
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Select OK to merge or Cancel to select a different location</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Delete &amp;from server</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Remove my Mem&amp;bership</value>
+  </data>
 </root>

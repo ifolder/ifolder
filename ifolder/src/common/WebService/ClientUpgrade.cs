@@ -355,7 +355,6 @@ namespace Novell.iFolder.Install
 		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
 		private StatusCodes CheckForUpdate(out string ServerVersion)
 		{
-			string updateVersion = null;
 			ServerVersion = null;
 			// Make sure that the service object is authenticated.
 			if ( service != null )
@@ -456,7 +455,6 @@ namespace Novell.iFolder.Install
 		/// <returns>The version of the update if available. Otherwise null is returned.</returns>
 		private bool CheckForServerUpdate()
 		{
-			string updateVersion = null;
 			bool serverOlder = false;
 
 			// Make sure that the service object is authenticated.

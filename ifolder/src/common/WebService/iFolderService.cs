@@ -411,7 +411,7 @@ namespace Novell.iFolder.Web
 				else
 					return false;
 			}
-			return false;
+			
 		}
 
 		/// <summary>
@@ -428,8 +428,7 @@ namespace Novell.iFolder.Web
 		public iFolderWeb GetiFolder(string iFolderID)
 		{
 			iFolderWeb ifolder = null;
-			ArrayList collectionList;
-
+			
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
 			if (col != null)
@@ -472,8 +471,7 @@ namespace Novell.iFolder.Web
 				return GetiFolder(iFolderID);
 			
 			iFolderWeb ifolder = null;
-			ArrayList collectionList;
-
+			
 			Store store = Store.GetStore();
 			Collection col = store.GetCollectionByID(iFolderID);
 			if (col != null)
@@ -2748,7 +2746,7 @@ namespace Novell.iFolder.Web
 			if (col == null)
 				throw new Exception("Invalid iFolderID");
 
-			FileSizeFilter filter = FileSizeFilter.Get(member, col);
+			FileSizeFilter filter = FileSizeFilter.Get(col);
 			if(filter == null)
 				throw new Exception("Unable to get File Size Limit");
 

@@ -137,7 +137,7 @@
     <value>False</value>
   </data>
   <data name="menuActionMerge.Text" xml:space="preserve">
-    <value>Merge to folder</value>
+    <value>&amp;Merge to folder</value>
   </data>
   <data name="menuActionRemove.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
