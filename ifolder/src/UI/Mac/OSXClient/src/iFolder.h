@@ -32,7 +32,8 @@
 *******************************************************************************/
 
 #import <Cocoa/Cocoa.h>
-
+#import "iFolderDomain.h"
+#import "iFolderData.h"
 
 #define SYNC_STATE_PREPARING		1
 #define SYNC_STATE_SYNCING			2
@@ -100,6 +101,7 @@
 -(NSString *)State;
 -(NSString *)LastSync;
 -(NSString *)Role;
+-(NSString *)DomainName;
 -(BOOL)SSL;
 -(NSString *)EncryptionAlgorithm; 
 -(long)SyncInterval;

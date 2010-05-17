@@ -156,7 +156,7 @@ static iFolderWindowController *sharedInstance = nil;
 
 	ifoldersController = [[iFolderData sharedInstance] ifolderArrayController];
 
-    NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
+	NSMutableDictionary *bindingOptions = [NSMutableDictionary dictionary];
     	
 	// binding options for "name"
 	[bindingOptions setObject:@"" forKey:@"NSNullPlaceholder"];
@@ -167,6 +167,7 @@ static iFolderWindowController *sharedInstance = nil;
 	[nameColumn setDataCell:ifolderCell];
 	[locationColumn setDataCell:ifolderCell];
 	[statusColumn setDataCell:ifolderCell];
+	[serverColumn setDataCell:ifolderCell];
 
 	// bind the table column to the log to display it's contents
 	[iconColumn bind:@"value" toObject:ifoldersController
@@ -177,6 +178,8 @@ static iFolderWindowController *sharedInstance = nil;
 					withKeyPath:@"arrangedObjects.properties.Location" options:bindingOptions];	
 	[statusColumn bind:@"value" toObject:ifoldersController
 					withKeyPath:@"arrangedObjects.properties.Status" options:bindingOptions];	
+	[serverColumn bind:@"value" toObject:ifoldersController
+					withKeyPath:@"arrangedObjects.DomainName" options:bindingOptions];	
 
 	// Setup the double click black magic
 	[iFolderTable setDoubleAction:@selector(doubleClickedTable:)];

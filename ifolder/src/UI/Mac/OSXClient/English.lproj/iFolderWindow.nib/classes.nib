@@ -245,6 +245,7 @@
                 nameColumn = NSTableColumn; 
                 resetPPKeySheetController = ResetPPKeySheetController; 
                 revertiFolderController = RevertiFolderController; 
+                serverColumn = NSTableColumn; 
                 setupSheetController = SetupiFolderSheetController; 
                 statusColumn = NSTableColumn; 
                 statusProgress = NSProgressIndicator; 

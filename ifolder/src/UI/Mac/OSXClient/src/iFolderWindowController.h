@@ -71,6 +71,7 @@
 	IBOutlet NSTableColumn					*nameColumn;
 	IBOutlet NSTableColumn					*locationColumn;
 	IBOutlet NSTableColumn					*statusColumn;
+	IBOutlet NSTableColumn					*serverColumn;
 
     NSArrayController						*ifoldersController;
 	

@@ -360,6 +360,15 @@
 	else
 		return NO;
 }
+//=======================================================================
+// DomainName
+// get the domain name of this iFolder
+//=======================================================================
+-(NSString *) DomainName
+{
+       iFolderDomain *domain = [[iFolderData sharedInstance] getDomain: [self DomainID]];
+       return [domain name];
+}
 //===================================================================
 // updateDisplayInformation
 // Updates the Window according to latest info available. First it
