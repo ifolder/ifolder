@@ -4010,11 +4010,10 @@ msgid ""
 "Deletion in progress"
 msgstr ""
 "Deletion in progress"
-
 msgid ""
-"Path is too long for the file (0) to be downloaded"
+"Cannot download the file (0) because the file path exceeds the optimal limit."
 msgstr ""
-"Path is too long for the file (0) to be downloaded"
+"Cannot download the file (0) because the file path exceeds the optimal limit."
 
 msgid ""
 "When quota policy is violated"

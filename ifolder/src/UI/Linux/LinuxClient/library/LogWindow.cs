@@ -518,7 +518,7 @@ namespace Novell.iFolder
 					case SyncStatus.PathTooLong:
 						if (args.Direction == Simias.Client.Event.Direction.Downloading)
 						{
-							message = string.Format(Util.GS("Path is too long for the file (0) to be downloaded"),args.Name);
+							message = string.Format(Util.GS("Cannot download the file (0) because the file path exceeds the optimal limit."),args.Name);
 						}
 						break;
 					default:

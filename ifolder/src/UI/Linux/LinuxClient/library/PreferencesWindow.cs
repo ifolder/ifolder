@@ -236,6 +236,10 @@ namespace Novell.iFolder
 			{
 				Util.ShowHelp("accounts.html", this);
 			}
+			else if (CurrentPage == 2)
+			{
+				Util.ShowHelp("settings.html", this);
+			}
 			else
 			{
 				Util.ShowHelp(Util.HelpMainPage, this);
