@@ -31,24 +31,44 @@ profileNode(_8[i]);
 }
 }
 }
+function addProfileParameterToXrefs(_a){
+var _b=document.links;
+for(var i=0;i<_b.length;i++){
+var _d=_b.item(i);
+var _e=_d.attributes.getNamedItem("class");
+if(_e!=null&&_e.nodeValue.indexOf("xref")!=-1){
+_d.search=setQueryParam("profile",_a,_d.search);
+}
+}
+}
+function updateDocumentTitle(){
+var _f=document.getElementsByTagName("h1");
+if(_f.length){
+document.title=_f.item(0).innerHTML.replace(/<[^>]+>/ig,"");
+}
+}
 function processProfiling(){
 profileNode(document.body);
+updateDocumentTitle();
+if(profileParam.length){
+addProfileParameterToXrefs(profileParam);
+}
 }
 _P_LDRS=Array();
 function callProfilingLoaders(){
 for(var i=0;i<_P_LDRS.length;i++){
-var _b=_P_LDRS[i];
-if(_b!=callProfilingLoaders){
-_b();
+var _11=_P_LDRS[i];
+if(_11!=callProfilingLoaders){
+_11();
 }
 }
 }
-function addProfilingLoader(_c){
+function addProfilingLoader(_12){
 if(window.onload&&window.onload!=callProfilingLoaders){
 _P_LDRS[_P_LDRS.length]=window.onload;
 }
 window.onload=callProfilingLoaders;
-_P_LDRS[_P_LDRS.length]=_c;
+_P_LDRS[_P_LDRS.length]=_12;
 }
 if(typeof (profileArray)!="undefined"&&profileArray.length){
 addProfilingLoader(processProfiling);

@@ -6,4 +6,5 @@ var CFG_RTL_TEXT=false;
 var CFG_HAS_TOC=true;
 var CFG_HAS_SEARCH=true;
 var CFG_HAS_INDEX=false;
+var CFG_HAS_PROFILING=false;
 
