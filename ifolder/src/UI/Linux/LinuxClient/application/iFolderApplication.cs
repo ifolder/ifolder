@@ -849,41 +849,58 @@ namespace Novell.iFolder
 							message = Util.GS("A policy prevented complete synchronization.");
 						break;
 					case SyncStatus.Access:
-						message = Util.GS("Insuficient rights prevented complete synchronization.");
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_PERMISSION_UNAVAILABLE)  )
+							message = Util.GS("Insuficient rights prevented complete synchronization.");
 						break;
 					case SyncStatus.Locked:
 						message = Util.GS("The iFolder is locked.");
 						break;
 					case SyncStatus.PolicyQuota:
-						message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
-						message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						 if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_QUOTA_VIOLATION)  || (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_QUOTA_VIOLATION))
+						 {
+							 message = Util.GS("The iFolder is full.  Click here to view the Synchronization Log.");
+							 message = Util.GS("The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						}
 						break;
 					case SyncStatus.PolicySize:
-						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  ||  (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_FILE_SIZE_VOILATION)   )
 							message = Util.GS("A size restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.PolicyType:
-						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  || (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_EXCLUSION_VOILATION))
 							message = Util.GS("A file type restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.DiskFull:
-						if (args.Direction == Simias.Client.Event.Direction.Uploading)
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_DISK_FULL)  )
 						{
-							message = Util.GS("Insufficient disk space on the server prevented complete synchronization.");
-						}
-						else
-						{
-							message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
+							if (args.Direction == Simias.Client.Event.Direction.Uploading)
+							{
+								message = Util.GS("Insufficient disk space on the server prevented complete synchronization.");
+							}
+							else
+							{
+								message = Util.GS("Insufficient disk space on this computer prevented complete synchronization.");
+							}
 						}
 						break;
 					case SyncStatus.ReadOnly:
-						message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_PERMISSION_UNAVAILABLE)  )
+						{
+							message = Util.GS("You have Read-only access to this iFolder.  Files that you place in this iFolder will not be synchronized.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log.");
+						}
 						break;
 				        case SyncStatus.IOError:
 						if (args.Direction == Simias.Client.Event.Direction.Uploading)
 						    message = Util.GS("Unable to read files from the folder. Verify the permissions on your local folder.");
 						else
 						    message = Util.GS("Unable to write files in the folder. Verify the permissions on your local folder.");
+						break;
+					case SyncStatus.PathTooLong:
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_EXCEEDS_PATH_SIZE)  )
+						{	
+							if (args.Direction == Simias.Client.Event.Direction.Downloading)	
+								message =  string.Format(Util.GS("Path is too long for the file (0) to be downloaded"),args.Name);
+						}
 						break;
 					default:
 						message = Util.GS("iFolder synchronization failed.");

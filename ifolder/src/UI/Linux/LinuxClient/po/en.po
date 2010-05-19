@@ -4007,6 +4007,41 @@ msgstr ""
 "Used: {0}"
 
 msgid ""
-"Deletion In Progress"
+"Deletion in progress"
 msgstr ""
-"Deletion In Progress"
+"Deletion in progress"
+
+msgid ""
+"Path is too long for the file (0) to be downloaded"
+msgstr ""
+"Path is too long for the file (0) to be downloaded"
+
+msgid ""
+"When quota policy is violated"
+msgstr ""
+"When quota policy is violated"
+
+msgid ""
+"When file size policy is violated"
+msgstr ""
+"When file size policy is violated"
+
+msgid ""
+"When file exclusion policy is violated"
+msgstr ""
+"When file exclusion policy is violated"
+
+msgid ""
+"When disk is full"
+msgstr ""
+"When disk is full"
+
+msgid ""
+"When required permissions are unavailable"
+msgstr ""
+"When required permissions are unavailable"
+
+msgid ""
+"When file path exceeds optimal limit"
+msgstr ""
+"When file path exceeds optimal limit"

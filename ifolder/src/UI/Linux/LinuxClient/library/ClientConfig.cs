@@ -60,6 +60,14 @@ namespace Novell.iFolder
 		public const string KEY_NOTIFY_MIGRATION_2_X = "/apps/ifolder3/notification/migrate2x";
 //		public const string KEY_SHOW_NETWORK_ERRORS = "/apps/ifolder3/notification/network";
 		public const string KEY_SHOW_SYNC_LOG = "/apps/ifolder3/notification/synclog";
+		
+		//Advance Notification
+		public const string KEY_SHOW_QUOTA_VIOLATION = "/apps/ifolder3/notifications/quota_violation";
+		public const string KEY_SHOW_FILE_SIZE_VOILATION = "/apps/ifolder3/notifications/file_size_violation";
+		public const string KEY_SHOW_EXCLUSION_VOILATION = "/apps/ifolder3/notifications/file_exclusion_violation";
+		public const string KEY_SHOW_DISK_FULL = "/apps/ifolder3/notifications/disk_full";
+		public const string KEY_SHOW_PERMISSION_UNAVAILABLE = "/apps/ifolder3/notifications/permission_unavailable";
+		public const string KEY_SHOW_EXCEEDS_PATH_SIZE = "/apps/ifolder3/notifications/exceeds_path_size";
 
 		///
 		/// /apps/ifolder3/synchronization
@@ -150,6 +158,12 @@ namespace Novell.iFolder
 				case KEY_IFOLDER_WINDOW_HIDE:
 				case KEY_SHOW_SYNC_LOG:
 				case KEY_NOTIFY_POLICY_VOILATION:		
+				case KEY_SHOW_QUOTA_VIOLATION:
+				case KEY_SHOW_FILE_SIZE_VOILATION:
+				case KEY_SHOW_EXCLUSION_VOILATION:	
+				case KEY_SHOW_DISK_FULL:
+				case KEY_SHOW_PERMISSION_UNAVAILABLE:
+				case KEY_SHOW_EXCEEDS_PATH_SIZE:
 					return false;
 
 				case KEY_SYNC_UNIT:

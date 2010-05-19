@@ -52,6 +52,7 @@ namespace Novell.iFolder
 		private Gtk.Notebook			PrefNoteBook;
 		private PrefsGeneralPage		generalPage;
 		private PrefsAccountsPage		accountsPage;
+		private PrefsSettingPage		settingPage;
 		private MigrationPage			migrationPage;
 		private bool					ControlKeyPressed;
 
@@ -129,6 +130,10 @@ namespace Novell.iFolder
 
 	              /*migrationPage = */new MigrationPage(this, ifws);
 //			PrefNoteBook.AppendPage( migrationPage, new Label(Util.GS("Migration")));
+
+			settingPage = new PrefsSettingPage(this);
+			PrefNoteBook.AppendPage( settingPage, new Label(Util.GS("Settings")));
+
 			PrefNoteBook.SwitchPage +=
 				new SwitchPageHandler(OnSwitchPageEvent);
 
@@ -243,6 +248,7 @@ namespace Novell.iFolder
 //				if (!accountsPage.AllowLeavingAccountsPage())
 //					return;
 
+			settingPage.GetSelectedRow();
 			CloseWindow();
 		}
 

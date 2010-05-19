@@ -515,6 +515,12 @@ namespace Novell.iFolder
 							Util.GS("Updating the metadata for this file failed: {0}"),
 							args.Name);
 						break;
+					case SyncStatus.PathTooLong:
+						if (args.Direction == Simias.Client.Event.Direction.Downloading)
+						{
+							message = string.Format(Util.GS("Path is too long for the file (0) to be downloaded"),args.Name);
+						}
+						break;
 					default:
 						message = string.Format(
 							Util.GS("iFolder failed synchronization: {0}"),
