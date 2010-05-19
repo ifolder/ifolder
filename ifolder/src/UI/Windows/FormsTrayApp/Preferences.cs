@@ -154,6 +154,12 @@ namespace Novell.FormsTrayApp
             LongPath
         };
 
+        enum preferenceTab
+        {
+            General = 0,
+            Accounts = 1,
+            Settings = 2
+        };
 
         #endregion
 
@@ -2625,7 +2631,22 @@ namespace Novell.FormsTrayApp
 
         private void btnHelp_Click(object sender, System.EventArgs e)
         {
-            string helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"preferences.html");
+            string helpFile = null;
+            switch(this.tabControl1.SelectedIndex)
+            {
+                case (int)preferenceTab.General:
+                    helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"preferences.html");
+                    break;
+                case (int)preferenceTab.Accounts:
+                    helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"accounts.html");
+                    break;
+                case (int)preferenceTab.Settings:
+                    helpFile = Path.Combine(Path.Combine(Path.Combine(Application.StartupPath, "help"), iFolderAdvanced.GetLanguageDirectory()), @"settings.html");
+                    break;
+                default:
+                    break;
+
+            }
             new iFolderComponent().ShowHelp(Application.StartupPath, helpFile);
         }
 

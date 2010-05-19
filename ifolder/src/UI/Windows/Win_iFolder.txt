@@ -67,7 +67,8 @@
 			typeguide.html
 			viewhide.html
 			virusscan.html
-
+			settings.html
+	
 			<ui>
 				blank.htm
 				blank.html
