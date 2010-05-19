@@ -51,6 +51,7 @@ namespace Novell.FormsTrayApp
             this.menuHelp = new System.Windows.Forms.MenuItem();
             this.menuHelpHelp = new System.Windows.Forms.MenuItem();
             this.menuHelpAbout = new System.Windows.Forms.MenuItem();
+            this.menuHelpUpgrade = new System.Windows.Forms.MenuItem();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.statusBar1 = new System.Windows.Forms.StatusBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -105,6 +106,7 @@ namespace Novell.FormsTrayApp
             this.titleLastSyncTime = new System.Windows.Forms.Label();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.localiFoldersHeading = new System.Windows.Forms.RichTextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.iFolder = new System.Windows.Forms.ColumnHeader();
@@ -112,7 +114,6 @@ namespace Novell.FormsTrayApp
             this.Server = new System.Windows.Forms.ColumnHeader();
             this.Status = new System.Windows.Forms.ColumnHeader();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.iFolderView = new Novell.FormsTrayApp.TileListView();
             this.toolStripiFolderActions.SuspendLayout();
             this.iFolderContextMenu.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -346,6 +347,7 @@ namespace Novell.FormsTrayApp
             this.menuHelp.Index = 4;
             this.menuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuHelpHelp,
+            this.menuHelpUpgrade,
             this.menuHelpAbout});
             resources.ApplyResources(this.menuHelp, "menuHelp");
             // 
@@ -357,9 +359,15 @@ namespace Novell.FormsTrayApp
             // 
             // menuHelpAbout
             // 
-            this.menuHelpAbout.Index = 1;
+            this.menuHelpAbout.Index = 2;
             resources.ApplyResources(this.menuHelpAbout, "menuHelpAbout");
             this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
+            // 
+            // menuHelpUpgrade
+            // 
+            this.menuHelpUpgrade.Index = 1;
+            resources.ApplyResources(this.menuHelpUpgrade, "menuHelpUpgrade");
+            this.menuHelpUpgrade.Click += new System.EventHandler(this.menuHelpUpgrade_Click);
             // 
             // progressBar1
             // 
@@ -472,9 +480,6 @@ namespace Novell.FormsTrayApp
             // 
             // toolStripMenuLeftPane
             // 
-           // this.toolStripMenuLeftPane.Checked = true;
-           // this.toolStripMenuLeftPane.CheckOnClick = true;
-            //this.toolStripMenuLeftPane.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuLeftPane.Name = "toolStripMenuLeftPane";
             resources.ApplyResources(this.toolStripMenuLeftPane, "toolStripMenuLeftPane");
             this.toolStripMenuLeftPane.Click += new System.EventHandler(this.toolStripMenuLeftPane_Click);
@@ -726,6 +731,22 @@ namespace Novell.FormsTrayApp
             this.panel2.Name = "panel2";
             this.panel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseDown);
             // 
+            // iFolderView
+            // 
+            resources.ApplyResources(this.iFolderView, "iFolderView");
+            this.iFolderView.BackColor = System.Drawing.Color.White;
+            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
+            this.iFolderView.HorizontalSpacing = 5;
+            this.iFolderView.ItemHeight = 72;
+            this.iFolderView.ItemWidth = 280;
+            this.iFolderView.LargeImageList = null;
+            this.iFolderView.Name = "iFolderView";
+            this.iFolderView.SelectedItem = null;
+            this.iFolderView.VerticleSpacing = 5;
+            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
+            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
+            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
+            // 
             // localiFoldersHeading
             // 
             this.localiFoldersHeading.BackColor = System.Drawing.Color.LightGray;
@@ -781,22 +802,6 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Controls.Add(this.listView1);
             this.panel1.Name = "panel1";
-            // 
-            // iFolderView
-            // 
-            resources.ApplyResources(this.iFolderView, "iFolderView");
-            this.iFolderView.BackColor = System.Drawing.Color.White;
-            this.iFolderView.ContextMenuStrip = this.iFolderContextMenu;
-            this.iFolderView.HorizontalSpacing = 5;
-            this.iFolderView.ItemHeight = 72;
-            this.iFolderView.ItemWidth = 280;
-            this.iFolderView.LargeImageList = null;
-            this.iFolderView.Name = "iFolderView";
-            this.iFolderView.SelectedItem = null;
-            this.iFolderView.VerticleSpacing = 5;
-            this.iFolderView.DoubleClick += new System.EventHandler(this.iFolderView_DoubleClick);
-            this.iFolderView.NavigateItem += new Novell.FormsTrayApp.TileListView.NavigateItemDelegate(this.iFolderView_NavigateItem);
-            this.iFolderView.SelectedIndexChanged += new Novell.FormsTrayApp.TileListView.SelectedIndexChangedDelegate(this.ifListView_SelectedIndexChanged);
             // 
             // GlobalProperties
             // 
@@ -951,6 +956,7 @@ namespace Novell.FormsTrayApp
         private ColumnHeader Status;
         private ToolStripButton toolStripBtnRevert;
         private ToolStripButton toolStripBtnDelete;
+        private MenuItem menuHelpUpgrade;
 
 	}
 }

@@ -3736,6 +3736,23 @@ namespace Novell.FormsTrayApp
 
             return formated;
         }
+
+        private void menuHelpUpgrade_Click(object sender, EventArgs e)
+        {
+            bool upgradeAvailable = false;
+            DomainInformation[] domains;
+            try
+            {
+                domains = this.simiasWebService.GetDomains(false);
+                foreach (DomainInformation dw in domains)
+                {
+                    //Iterate over all the added domain
+                    FormsTrayApp.ClientUpdates(dw.ID, out upgradeAvailable);
+
+                }
+            }
+            catch { }
+        }
       }
 	}
 
