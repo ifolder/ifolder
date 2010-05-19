@@ -458,6 +458,7 @@ namespace Novell.FormsTrayApp
                         newClientVersion), 
                         resourceManager.GetString("UpgradeNeededTitle"),
                         MessageBoxButtons.YesNo);
+
 					if( res == (int) DialogResult.Yes)
 					{
 						// download client
@@ -1776,9 +1777,12 @@ namespace Novell.FormsTrayApp
                         {
                             // TODO: need to add a value that indicates what type of failure was displayed.
                             collectionsNotified.Add(syncEventArgs.CollectionID, null);
-                            string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
                             notifyType = NotifyType.SyncError;
-                            shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("quotaFailureInfo"), BalloonType.Error);
+                            if (Preferences.NotifyPolicyQouta)
+                            {
+                                string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
+                                shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("quotaFailureInfo"), BalloonType.Error);
+                            }
                         }
                         message = string.Format(resourceManager.GetString("quotaFailure"), syncEventArgs.Name);
                         errorSyncingCurrentCollection = true;
@@ -1787,7 +1791,10 @@ namespace Novell.FormsTrayApp
                     case SyncStatus.PolicySize:
                         message = string.Format(resourceManager.GetString("policySizeFailure"), syncEventArgs.Name);
                         errorSyncingCurrentCollection = true;
-                        shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName), string.Format(resourceManager.GetString("policySizeFailure"), syncEventArgs.Name), BalloonType.Error);
+                        if (Preferences.NotifyPolicySize)
+                        {
+                            shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName), string.Format(resourceManager.GetString("policySizeFailure"), syncEventArgs.Name), BalloonType.Error);
+                        }
                         infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
                         break;                        
                     case SyncStatus.PolicyType:
@@ -1798,7 +1805,7 @@ namespace Novell.FormsTrayApp
                             infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
                         }
                         notifyType = NotifyType.SyncError;
-                        if (Preferences.HidePolicyVoilationNotification)
+                        if (Preferences.HidePolicyVoilationNotification || Preferences.NotifyPolicyType)
                         {
                            shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName), string.Format(resourceManager.GetString("policyTypeFailure"), syncEventArgs.Name), BalloonType.Error);
                         }
@@ -1807,6 +1814,11 @@ namespace Novell.FormsTrayApp
                         message = string.Format(syncToServer ? resourceManager.GetString("serverDiskFullFailure") : resourceManager.GetString("clientDiskFullFailure"), syncEventArgs.Name);
                         errorSyncingCurrentCollection = true;
                         infolog.AddMessageToLog(syncEventArgs.TimeStamp, message );
+                        //TODO: Modify Title of Ballon type
+                        if(Preferences.NotifyDiskFull)
+                        {   
+                            shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName), message, BalloonType.Error);
+                        }
                         break;
                     case SyncStatus.ReadOnly:
                         if (!collectionsNotified.Contains(syncEventArgs.CollectionID))
@@ -1815,7 +1827,10 @@ namespace Novell.FormsTrayApp
                             collectionsNotified.Add(syncEventArgs.CollectionID, null);
                             string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
                             notifyType = NotifyType.SyncError;
-                            shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("readOnlyFailureInfo"), BalloonType.Error);
+                            if (Preferences.NotifyIOPermission)
+                            {
+                                shellNotifyIcon.DisplayBalloonTooltip(title, resourceManager.GetString("readOnlyFailureInfo"), BalloonType.Error);
+                            }
                         }
                         message = string.Format(resourceManager.GetString("readOnlyFailure"), syncEventArgs.Name);
                         errorSyncingCurrentCollection = true;
@@ -1825,18 +1840,28 @@ namespace Novell.FormsTrayApp
                         if (syncEventArgs.Direction == Direction.Downloading)
                         {
                             syncLog.AddMessageToLog(syncEventArgs.TimeStamp, string.Format("Path is too long for the file \"{0}\" to be downloaded.", syncEventArgs.Name));
+                            if (Preferences.NotifyPathLong)
+                            {
+                                //TODO: modify title
+                                string title = string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName);
+                                //TODO: add message in resource for localization
+                                shellNotifyIcon.DisplayBalloonTooltip(title, string.Format("Path is too long for the file \"{0}\" to be downloaded.", syncEventArgs.Name), BalloonType.Error);
+                            }
                         }
                         break;
-		    case SyncStatus.IOError:
-		        string notificationMessage;
+		            case SyncStatus.IOError:
+		                string notificationMessage;
                         if (syncEventArgs.Direction == Direction.Downloading)
                             notificationMessage = resourceManager.GetString("ioErrorWriteFailure");
                         else
                             notificationMessage = resourceManager.GetString("ioErrorReadFailure");
 
-			syncLog.AddMessageToLog(syncEventArgs.TimeStamp, notificationMessage);
-			shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName),
-							      notificationMessage, BalloonType.Error);
+			            syncLog.AddMessageToLog(syncEventArgs.TimeStamp, notificationMessage);
+                        if (Preferences.NotifyIOPermission)
+                        {
+                            shellNotifyIcon.DisplayBalloonTooltip(string.Format(resourceManager.GetString("quotaFailureTitle"), currentSyncCollectionName),
+                                  notificationMessage, BalloonType.Error);
+                        }
                         break;
 
                     case SyncStatus.Busy:
