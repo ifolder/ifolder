@@ -1164,7 +1164,7 @@ namespace Novell.iFolder.Controller
         /// Check for Update
         /// </summary>
         /// <param name="domainID">Domain ID</param>
-		private void CheckForUpdate( string domainID )
+		public void CheckForUpdate( string domainID )
 		{
 			string serverVersion = null;
 			UpgradeResult status = UpgradeResult.Unknown;
@@ -1172,6 +1172,7 @@ namespace Novell.iFolder.Controller
 			{
 				status = (UpgradeResult)this.ifws.CheckForUpdate(domainID, out serverVersion);
 
+			
 				string clientVersion = Util.Version();
 				Version versionClient = new Version(clientVersion);
 				Version versionServer = new Version(serverVersion);

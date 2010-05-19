@@ -91,6 +91,7 @@ namespace Novell.iFolder
 		private ImageMenuItem 		ResetPasswordMenuItem;
 //		private MenuItem		ResetPasswordMenuItem;
 		private ImageMenuItem		AboutMenuItem;
+		private ImageMenuItem		UpgradeMenuItem;
 		
 		private ImageMenuItem		PreferencesMenuItem;
 
@@ -669,6 +670,13 @@ namespace Novell.iFolder
 			HelpMenu.Append(HelpMenuItem);
 			HelpMenuItem.Activated += new EventHandler(OnHelpMenuItem);
 
+			UpgradeMenuItem = new ImageMenuItem(Util.GS("_Upgrade"));
+			//FIXME with new image
+			UpgradeMenuItem.Image = new Image(Gnome.Stock.About, Gtk.IconSize.Menu);
+			HelpMenu.Append(UpgradeMenuItem);
+			UpgradeMenuItem.Activated += new EventHandler(OnUpgradeMenuItem);
+
+
 			AboutMenuItem = new ImageMenuItem(Util.GS("A_bout"));
 			AboutMenuItem.Image = new Image(Gnome.Stock.About,
 							Gtk.IconSize.Menu);
@@ -676,6 +684,9 @@ namespace Novell.iFolder
 //					new Gdk.Pixbuf(Util.ImagesPath("ifolder16.png")));
 			HelpMenu.Append(AboutMenuItem);
 			AboutMenuItem.Activated += new EventHandler(OnAbout);
+
+
+
 
 			MenuItem MainHelpMenuItem = new MenuItem(Util.GS("_Help"));
 			MainHelpMenuItem.Submenu = HelpMenu;
@@ -3025,6 +3036,27 @@ namespace Novell.iFolder
 		private void OnHelpMenuItem(object o, EventArgs args)
 		{
 			Util.ShowHelp(Util.HelpMainPage, this);
+		}
+
+		private void OnUpgradeMenuItem(object o, EventArgs args)
+		{
+			DomainInformation[] domains = null;
+			try{	
+				if(domainController != null)	
+				{
+					domains = domainController.GetDomains();
+
+					foreach(DomainInformation domain in domains)
+					{
+						domainController.CheckForUpdate(domain.ID);
+						prefsWin.ShowClientUpgradeMessage();
+					}
+				}
+			}
+			catch
+			{
+			}
+					
 		}
 
 		private void OnRecoveryMenuItem(object o, EventArgs args)

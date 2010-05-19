@@ -663,7 +663,7 @@ namespace Novell.iFolder
 		/// This method is called by Successful login handler, it is called before passphrase verify invocation
 		/// The variable used in this method should have been captured during the ClientUpgrade Event handler
 		/// This method should only be called during toggling of checkbox on prefs/account page (logout/login)
-		private void ShowClientUpgradeMessageBox()
+		public void ShowClientUpgradeMessageBox()
 		{
 			if(this.NewClientVersion == null || this.ClientUpgradeStatus == null || this.NewClientDomainID == null)
 			{

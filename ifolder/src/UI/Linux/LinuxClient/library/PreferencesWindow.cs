@@ -290,5 +290,11 @@ namespace Novell.iFolder
 		{	
 			accountsPage.ToggelDomainState(domainInfo, flag);
 		}
+
+		public void ShowClientUpgradeMessage()
+		{
+			accountsPage. ShowClientUpgradeMessageBox();
+		}
+
 	}
 }
