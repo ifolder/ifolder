@@ -94,6 +94,7 @@
 				menu.js
 				profiling.js
 				prototype.js
+				profiles.js
 				resource.js
 				rtlindex.html
 				search.js
