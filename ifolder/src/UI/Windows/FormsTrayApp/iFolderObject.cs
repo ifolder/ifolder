@@ -76,7 +76,12 @@ namespace Novell.FormsTrayApp
         /// <summary>
         /// State represent when revert and deletion of ifolder is in progress.
         /// </summary>
-        RevertAndDelete
+        RevertAndDelete,
+
+        /// <summary>
+        /// State represent when sync is disabled for ifolder
+        /// </summary>
+        SyncDisabled
 	}
 
 	/// <summary>

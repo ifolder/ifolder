@@ -682,4 +682,7 @@
   <data name="RemoveMyMembershipText" xml:space="preserve">
     <value>Remove my Mem&amp;bership</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronization disabled</value>
+  </data>
 </root>

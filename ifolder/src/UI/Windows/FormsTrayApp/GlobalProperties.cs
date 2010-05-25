@@ -245,7 +245,7 @@ namespace Novell.FormsTrayApp
                         method = type.GetMethod("CreateMenu");
                         param[0] = menuHelp;
                         status = (bool)method.Invoke(enhancedMenuItemCreator, param);
-
+                        
                         this.menuHelpHelp.Visible = false;
                         this.menuHelpHelp = menuHelp.MenuItems.Find("iMenuHelpHelp", true)[0];
                         this.menuHelpHelp.Click += new System.EventHandler(this.menuHelpHelp_Click);
@@ -367,7 +367,7 @@ namespace Novell.FormsTrayApp
             ht = new Hashtable();
 
             progressBar1.Minimum = 0;
-
+            
             this.StartPosition = FormStartPosition.CenterScreen;
 
             // Load the application icon
@@ -1236,7 +1236,7 @@ namespace Novell.FormsTrayApp
                             if (tlvi != null)
                             {
                                 iFolderObject ifolderObject = (iFolderObject)tlvi.Tag;
-                                ifolderObject.iFolderState = iFolderState.Normal;
+                                ifolderObject.iFolderState = iFolderState.SyncDisabled;
                                 ifolderObject.iFolderWeb.State = "WaitSync";
                                 
                                 int imageIndex;
@@ -1697,6 +1697,10 @@ namespace Novell.FormsTrayApp
                     case iFolderState.NoPassphrase:
                         imageIndex = 9;  //FIXME : need to get new image for this.
                         status = TrayApp.Properties.Resources.noPassphrase;
+                        break;
+                    case iFolderState.SyncDisabled:
+                        imageIndex = 9; //FIXME : need to get new image for this.
+                        status = TrayApp.Properties.Resources.syncDisabled;
                         break;
 					default:
 						// TODO: what icon to use for unknown status?

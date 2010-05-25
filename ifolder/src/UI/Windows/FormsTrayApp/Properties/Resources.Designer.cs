@@ -1555,6 +1555,15 @@ namespace TrayApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Synchronization.
+        /// </summary>
+        internal static string syncDisabled {
+            get {
+                return ResourceManager.GetString("syncDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error was encountered while synchronizing the iFolder..
         /// </summary>
         internal static string syncError {
