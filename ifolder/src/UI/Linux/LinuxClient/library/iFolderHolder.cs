@@ -93,7 +93,15 @@ namespace Novell.iFolder
 		/// </summmary>
 //		NetworkCableDisc,
 		
-		RevertAndDelete	
+		///<summary>
+		///iFolder being deleted 
+		/// </summmary>
+		RevertAndDelete,
+
+		///<summary>
+		/// Sync disabled for iFolder
+		/// </summmary>
+		SyncDisabled		
 	}
 	
 	/// <summary>
@@ -328,7 +336,10 @@ namespace Novell.iFolder
 							stateString = Util.GS("Server unavailable");
 							break;
 						case iFolderState.RevertAndDelete:
-							stateString = Util.GS("Deletion In Prgoress");
+							stateString = Util.GS("Deletion in progress");
+							break;
+						case iFolderState.SyncDisabled:
+							stateString = Util.GS("Synchronization disabled");		
 							break;
 /*						case iFolderState.NetworkCableDisc:
 							stateString=Util.GS("Network unavailable");   	

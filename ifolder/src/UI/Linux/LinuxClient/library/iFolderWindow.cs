@@ -1401,7 +1401,7 @@ namespace Novell.iFolder
 						    displayName = displayName.Substring(0,displayableName) + "...";
 						}
 						if(holder.State == iFolderState.RevertAndDelete)
-							ifstate = Util.GS("Deletion In Progress");
+							ifstate = Util.GS("Deletion in progress");
 						else
 							ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
                                         	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
@@ -5029,7 +5029,7 @@ namespace Novell.iFolder
                    			holder = iFolderIconView.SelectedFolder;
 					if(holder != null && holder.iFolder != null)
 					{
-						holder.State = iFolderState.Normal;
+						holder.State = iFolderState.SyncDisabled;
 					        holder.iFolder.State = "WaitSync"; 
 					}
 					break;

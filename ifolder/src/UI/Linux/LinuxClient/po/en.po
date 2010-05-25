@@ -4049,3 +4049,8 @@ msgid ""
 "_Upgrade"
 msgstr ""
 "_Upgrade"
+
+msgid ""
+"Synchronization disabled" 
+msgstr ""
+"Synchronization disabled" 
