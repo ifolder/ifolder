@@ -416,16 +416,16 @@
     <value>back</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Back</value>
+    <value>&amp;Back</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Browse</value>
+    <value>B&amp;rowse</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>&amp;Cancel</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Confirm passphrase:</value>
+    <value>Confirm passphrase:</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
     <value>Select the account for which the passphrase needs to be reset.</value>
@@ -485,7 +485,7 @@
     <value>help</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Help</value>
+    <value>&amp;Help</value>
   </data>
   <data name="iFolderAcc" xml:space="preserve">
     <value>&amp;iFolder account :</value>
