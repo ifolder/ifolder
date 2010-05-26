@@ -286,6 +286,8 @@ static iFolderData *sharedInstance = nil;
 		ifexconlog(@"iFolderData:refres", e);
 	}
 
+[ifoldersController rearrangeObjects];
+
 	[[NSApp delegate] startRefreshTimer];
 	[instanceLock unlock];
 
@@ -333,7 +335,10 @@ static iFolderData *sharedInstance = nil;
 		[ifoldersController addObject:ifolder];
 		[keyediFolders setObject:ifolder forKey:[ifolder ID]];
 	}
-	[instanceLock unlock];	
+	
+	
+	[instanceLock unlock];
+	[ifoldersController rearrangeObjects];	
 }
 
 
@@ -491,6 +496,7 @@ static iFolderData *sharedInstance = nil;
 	}
 
 	[instanceLock unlock];
+	[ifoldersController rearrangeObjects];
 
 	return ifolder;
 }
