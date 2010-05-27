@@ -33,7 +33,7 @@ TARBALL_NAME=$PACKAGE
 NPS_BUILDNUM=`printf "%x%s\n" \`date +%_m\` \`date +%d\` | tr [:lower:] [:upper:]`
 RPM_DIR="../rpms/$NPS_BUILDNUM"
 HOST_ARCH=`uname -i`
-OES2=${OES2:="10.3"}
+OES2=${OES2:="sles10-oes2-sp2"}
 
 PUB_DIR=x86_64
 [ "$HOST_ARCH" = "i386" ] && PUB_DIR=i586
