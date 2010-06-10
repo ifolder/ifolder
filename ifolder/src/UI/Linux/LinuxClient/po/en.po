@@ -3662,9 +3662,9 @@ msgstr ""
 "Server: {0}"
 
 msgid ""
-"Last Successfull Sync time: {0}"
+"Last Successful Sync time: {0}"
 msgstr ""
-"Last Successfull Sync time: {0}"
+"Last Successful Sync time: {0}"
 
 msgid ""
 "File/Folder to synchronize: {0}"

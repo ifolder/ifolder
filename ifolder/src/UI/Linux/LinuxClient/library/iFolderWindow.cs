@@ -1147,7 +1147,7 @@ namespace Novell.iFolder
 		    labeliFolderServer.Xalign = 0.0F;
             //####################### ADD LABEL
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Last Successfull Sync time: {0}"),lable); 
+			lable = string.Format(Util.GS("Last Successful Sync time: {0}"),lable); 
 		    labelLastSyncTime = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
 		   	userInfo.PackStart(labelLastSyncTime, false, false, 0);
@@ -1404,7 +1404,7 @@ namespace Novell.iFolder
 							ifstate = Util.GS("Deletion in progress");
 						else
 							ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
-                                        	viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
+						viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
                                 	}
 				}
 				catch(Exception)
@@ -1774,8 +1774,8 @@ namespace Novell.iFolder
 			if(holder != null && labelFolderToSync != null)	
 			{
 	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize: {0}"), holder.ObjectsToSync);
-	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"),syncIntervalInMin);
-	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"),holder.iFolder.LastSyncTime);
+	     		//labelLastSyncTime.Text = string.Format(Util.GS("Last Successful Sync time: {0}"),syncIntervalInMin);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successful Sync time: {0}"),holder.iFolder.LastSyncTime);
 			//	TODO: Verify whether to user SyncInterval or EffecticeSyncInterval
 	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
 
@@ -1853,7 +1853,7 @@ namespace Novell.iFolder
 	     		labelAccess.Text = string.Format(Util.GS("Access: {0}"),label);
 
 	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize: {0}"), label);
-	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successfull Sync time: {0}"), label);
+	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successful Sync time: {0}"), label);
 	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), label);
 	     		labeliFolderServer.Text = string.Format(Util.GS("Server: {0}"), label);
 			   	labeliFolderType.Text= string.Format(Util.GS("iFolder Type: {0}"), label);
