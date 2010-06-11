@@ -431,7 +431,7 @@
 			//Set the image
 			statusImage = [NSImage imageNamed:@"ifolder-waiting48"];
 			//Set the status
-			[properties setObject:NSLocalizedString(@"Waiting to synchronize", @"iFolder Status Message") forKey:@"Status"];
+			[properties setObject:NSLocalizedString(@"Synchronization disabled", @"iFolder Status Message") forKey:@"Status"];
 		}
 				
 		else if([ [properties objectForKey:@"HasConflicts"] boolValue])

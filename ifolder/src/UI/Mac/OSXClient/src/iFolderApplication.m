@@ -1157,7 +1157,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			{
 				[ifolder setSyncState:SYNC_STATE_DISABLEDSYNC];
 				itemSyncCount = 0;
-				NSString* syncMessage = [NSString stringWithFormat:NSLocalizedString(@"Synchronization Disable for %@",@"iFolder disabled on admin"),[cse name]];
+				NSString* syncMessage = [NSString stringWithFormat:NSLocalizedString(@"Synchronization disabled for %@",@"iFolder disabled by admin"),[cse name]];
 				[self addLogTS:syncMessage];
 				[iFolderWindowController updateStatusTS:NSLocalizedString(@"Idle...", @"iFolder Window Status Message")];
 			}
@@ -1236,10 +1236,12 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				{
 					if([cse connected])
 					{
+					  if ([ifolder syncState] != SYNC_STATE_DISABLEDSYNC) {
 						[ifolder setSyncState:SYNC_STATE_OK];
 						syncMessage = [NSString
 							stringWithFormat:NSLocalizedString(@"Finished synchronization: %@", @"Sync Log Message"), 
 							[cse name]];
+					    }
 					}
 					else
 					{
