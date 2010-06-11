@@ -159,6 +159,7 @@
 		B2CB48E40F82354B0051D657 /* ChangePasswordSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2CB48E20F82354B0051D657 /* ChangePasswordSheetController.m */; };
 		B2F757AE0D59C3D8005E3C0F /* ImportKeysSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = B2F757AD0D59C3D8005E3C0F /* ImportKeysSheetController.m */; };
 		B2FA8F3F0DDC1516000D86AE /* ifolder-conflict22.png in Resources */ = {isa = PBXBuildFile; fileRef = B2FA8F3E0DDC1516000D86AE /* ifolder-conflict22.png */; };
+		F0D17BBC11AB8E6E00BDCF9C /* NotificationPrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0D17BBB11AB8E6E00BDCF9C /* NotificationPrefsController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -511,6 +512,8 @@
 		B2F757AC0D59C3D8005E3C0F /* ImportKeysSheetController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ImportKeysSheetController.h; path = src/ImportKeysSheetController.h; sourceTree = "<group>"; };
 		B2F757AD0D59C3D8005E3C0F /* ImportKeysSheetController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ImportKeysSheetController.m; path = src/ImportKeysSheetController.m; sourceTree = "<group>"; };
 		B2FA8F3E0DDC1516000D86AE /* ifolder-conflict22.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ifolder-conflict22.png"; path = "../../../images/ifolder-conflict22.png"; sourceTree = SOURCE_ROOT; };
+		F0D17BBA11AB8E6E00BDCF9C /* NotificationPrefsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NotificationPrefsController.h; path = src/NotificationPrefsController.h; sourceTree = "<group>"; };
+		F0D17BBB11AB8E6E00BDCF9C /* NotificationPrefsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NotificationPrefsController.m; path = src/NotificationPrefsController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -761,6 +764,8 @@
 				3E70A40B078DFCD80075681D /* iFolderPrefsController.m */,
 				3E3BC75407AB5B7B00D2AE46 /* AccountsController.h */,
 				3E3BC75307AB5B7B00D2AE46 /* AccountsController.m */,
+				F0D17BBA11AB8E6E00BDCF9C /* NotificationPrefsController.h */,
+				F0D17BBB11AB8E6E00BDCF9C /* NotificationPrefsController.m */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -864,7 +869,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 3EAD01D70867661F00AB7E6B /* Build configuration list for PBXProject "iFolder" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -1057,6 +1061,7 @@
 				B2A94CF00EB09A6700B1070A /* clientUpdate.m in Sources */,
 				B2CB48E40F82354B0051D657 /* ChangePasswordSheetController.m in Sources */,
 				B213B3B90FD10B340031911A /* ForgotPassphraseSheetController.m in Sources */,
+				F0D17BBC11AB8E6E00BDCF9C /* NotificationPrefsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

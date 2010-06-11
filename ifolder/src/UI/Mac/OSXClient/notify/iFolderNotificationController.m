@@ -108,7 +108,8 @@ static iFolderNotificationController *sharedInstance = nil;
 //============================================================================================================
 + (void) newiFolderNotification:(iFolder *)ifolder
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(ifolderNotify:) 
+        if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYIFOLDERS])  
+	  [[self defaultManager] performSelectorOnMainThread:@selector(ifolderNotify:) 
 				withObject:ifolder waitUntilDone:YES ];	
 }
 
@@ -119,8 +120,9 @@ static iFolderNotificationController *sharedInstance = nil;
 //============================================================================================
 + (void) newUserNotification:(iFolder *)ifolder
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(userNotify:) 
-				withObject:ifolder waitUntilDone:YES ];
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYUSER])
+	  [[self defaultManager] performSelectorOnMainThread:@selector(userNotify:) 
+						  withObject:ifolder waitUntilDone:YES ];
 }
 
 //==============================================================================================
@@ -129,8 +131,9 @@ static iFolderNotificationController *sharedInstance = nil;
 //==============================================================================================
 + (void) collisionNotification:(iFolder *)ifolder
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(colNotify:) 
-				withObject:ifolder waitUntilDone:YES ];
+  	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYCOLL])
+	  [[self defaultManager] performSelectorOnMainThread:@selector(colNotify:) 
+						  withObject:ifolder waitUntilDone:YES ];
 }
 
 //==========================================================================================================
@@ -153,53 +156,44 @@ static iFolderNotificationController *sharedInstance = nil;
 				withObject:ifolderAndFileName waitUntilDone:YES ];
 }
 
-//============================================================================================================
-// syncFailNotification
-// This method will create a thread that shows a notification when sync fails due to exclude file policy.
-//============================================================================================================
-//+ (void) syncFailNotification:(NSString*)ifolderAndFileName
-//{
-//	[[self defaultManager] performSelectorOnMainThread:@selector(syncFailNotify:) 
-//				withObject:ifolder waitUntilDone:YES ];
-//}
-
-/*
-+ (void) policyNotification:(iFolder*)ifolder
-{
-	[[self defaultManager] performSelectorOnMainThread:@selector(policyNotify:) 
-											withObject:ifolder waitUntilDone:YES ];	
-}
-*/
-
 + (void) accessNotification:(NSString*)ifolderAndFileName
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(accessNotify:) 
+  	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYPERMISSIONDENIED])
+	{
+	  [[self defaultManager] performSelectorOnMainThread:@selector(accessNotify:) 
 											withObject:ifolderAndFileName waitUntilDone:YES ];		
+	}
 }
 
 + (void) lockedNotification:(NSString*)ifolderAndFileName
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(lockedNotify:) 
+	  [[self defaultManager] performSelectorOnMainThread:@selector(lockedNotify:) 
 											withObject:ifolderAndFileName waitUntilDone:YES ];	
 }
 
 + (void) policySizeNotification:(NSString*)ifolderAndFileName
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(policySizeNotify:) 
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYSIZEVIOLATION])
+	{
+	  [[self defaultManager] performSelectorOnMainThread:@selector(policySizeNotify:) 
 											withObject:ifolderAndFileName waitUntilDone:YES ];	
-
+	}
 }
 
 + (void) policyTypeNotification:(NSString*)ifolderAndFileName
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(policyTypeNotify:) 
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYEXCLUDEFILE])
+	  [[self defaultManager] performSelectorOnMainThread:@selector(policyTypeNotify:) 
 											withObject:ifolderAndFileName waitUntilDone:YES ];	
 }
 
 + (void) diskFullNotification:(NSString*)ifolderAndFileName
 {
-	[[self defaultManager] performSelectorOnMainThread:@selector(diskFullNotify:) 
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_NOTIFYDISKFULL])
+	{
+	  [[self defaultManager] performSelectorOnMainThread:@selector(diskFullNotify:) 
 											withObject:ifolderAndFileName waitUntilDone:YES ];		
+	}
 }
 
 + (void)ioErrorNotification:(NSString*)errorMessage
@@ -284,36 +278,6 @@ static iFolderNotificationController *sharedInstance = nil;
 	[self performNotification:notifyContext];
 }
 
-//============================================================================================================
-// syncFailNotify
-// This method will show a notification on the top right corner when sync fails due to exclude file policy.
-//============================================================================================================
-//-(void) syncFailNotify:(NSString*)ifolderAndFileName
-//{
-//	if([[NSUserDefaults standardUserDefaults] boolForKey:PREFKEY_SYNCFAIL])
-//	{
-//		NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
-//		
-//		[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: \"%@\"",@"iFolder SyncFail Title"), [nameList objectAtIndex:0]] forKey:@"title"];
-//		[notifyContext setObject:NSLocalizedString(@"Synchronization log contains the information regarding the files that are not synchronized", @"iFolder SyncFail Notification Message")
-//										forKey:@"description"];
-						
-//		[self performNotification:notifyContext];
-//	}
-//}
-
-/*
-- (void) policyNotify:(iFolder*)ifolder
-{
-	[notifyContext setObject:[NSString stringWithFormat:NSLocalizedString(@"Incomplete Synchronization: %@",@"iFolder SyncFail Title"), [ifolder Name]] forKey:@"title"];
-	[notifyContext setObject:NSLocalizedString(@"A policy prevented complete synchronization", @"iFolder policy Notification Message")
-					  forKey:@"description"];
-	
-	[self performNotification:notifyContext];
-	
-}
-*/
-
 - (void) accessNotify:(NSString*)ifolderAndFileName
 {
 	NSArray* nameList = [ifolderAndFileName componentsSeparatedByString:@"###"];
@@ -385,17 +349,9 @@ static iFolderNotificationController *sharedInstance = nil;
 //=================================================================================================
 - (void) performNotification:(NSDictionary *) context
 {
-//	if( [[eventPrefs objectForKey:@"playSound"] boolValue] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatNotificationsMuted"] )
-//		[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
-		[self _playSound:@"bogus"];
+         [self _playSound:@"bogus"];
 
 
-//	if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] )
-//	{
-//		if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )
-//			[self _bounceIconContinuously];
-//		else [self _bounceIconOnce];
-//	}
 	if([[NSUserDefaults standardUserDefaults] integerForKey:PREFKEY_NOTIFYBYINDEX] == 0)
 	{
 		[self _bounceIconOnce];
@@ -475,13 +431,6 @@ static iFolderNotificationController *sharedInstance = nil;
 
 	notifySound = [NSSound soundNamed:sName];
 	
-//	if( ! path ) return;
-
-//	if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
-
-//	NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
-	//[sound setDelegate:self];
-
 	// When run on a laptop using battery power, the play method may block while the audio
 	// hardware warms up.  If it blocks, the sound WILL NOT PLAY after the block ends.
 	// To get around this, we check to make sure the sound is playing, and if it isn't
@@ -491,9 +440,5 @@ static iFolderNotificationController *sharedInstance = nil;
 	if( ! [notifySound isPlaying] ) [notifySound play];
 }
 
-//- (void) sound:(NSSound *) sound didFinishPlaying:(BOOL) finish
-//{
-//	[sound autorelease];
-//}
 @end
 

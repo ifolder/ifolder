@@ -36,15 +36,23 @@
 #define PREFKEY_WINPOS			@"general.winposition"
 #define PREFKEY_WINONSTARTUP	@"general.winonstartup"
 #define PREFKEY_CLICKIFOLDER	@"general.clickifolder"
+#define STATE_SHOWMAINWINDOW	@"state.showmainwindow"
+#define STATE_SHOWLOGWINDOW		@"state.showlogwindow"
+#define PREFKEY_CREATEIFOLDER   @"notify.createifolder"
+
 #define PREFKEY_NOTIFYIFOLDERS	@"notify.ifolders"
 #define PREFKEY_NOTIFYCOLL		@"notify.collisions"
 #define PREFKEY_NOTIFYUSER		@"notify.users"
 #define PREFKEY_NOTIFYBYINDEX	@"notify.byindex"
 #define PREFKEY_NOTIFYSOUND		@"notify.soundName"
+#define PREFKEY_NOTIFYQUOTAVIOLATION    @"notify.quotaviolation"
+#define PREFKEY_NOTIFYSIZEVIOLATION     @"notify.sizeviolation"
+#define PREFKEY_NOTIFYEXCLUDEFILE       @"notify.excludefile"
+#define PREFKEY_NOTIFYDISKFULL          @"notify.diskfull"
+#define PREFKEY_NOTIFYPERMISSIONDENIED  @"notify.permissiondenied"
+#define PREFKEY_NOTIFYPATHLENGTHEXCEEDS @"notify.pathlength"
 #define PREFKEY_SYNCFAIL		@"notify.syncfail"
-#define STATE_SHOWMAINWINDOW	@"state.showmainwindow"
-#define STATE_SHOWLOGWINDOW		@"state.showlogwindow"
-#define PREFKEY_CREATEIFOLDER   @"notify.createifolder"
+
 
 @class LoginWindowController;
 @class iFolder;
