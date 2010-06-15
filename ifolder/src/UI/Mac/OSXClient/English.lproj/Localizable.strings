@@ -1031,3 +1031,39 @@
 
 /*Policy violation message*/
 "Sharing is disabled so this iFolder cannot be shared" = "Sharing is disabled so this iFolder cannot be shared";
+
+/* iFolder shared notification preference */
+"When iFolders are shared" = "When iFolders are shared";
+
+/* iFolder conflict notification preference */
+"When conflicts arise" = "When conflicts arise";
+
+/* New member joins a iFolder notification preference */
+"When user joins the iFolder domain" = "When user joins the iFolder domain";
+
+/* New iFolder creation notification preference */
+"When new iFolder is created" = "When new iFolder is created";
+
+/* Quota policy violation notification preference */
+"When quota policy is violated" = "When quota policy is violated";
+
+/* File size policy violation notification preference */
+"When file size policy is violated" = "When file size policy is violated";
+
+/* File exclusion policy violated notification preference */
+"When file exclusion policy is violated" = "When file exclusion policy is violated";
+
+/* Disk is full notification preference */
+"When disk is full" = "When disk is full";
+
+/* Permissions unavailable notification preference */
+"When required permissions are unavailable" = "When required permissions are unavailable";
+
+/* File path exceeds optimal limit notification preference */
+"When file path exceeds optimal limit" = "When file path exceeds optimal limit";
+
+/* Status message when a iFolder synchronization is disabled */
+"Synchronization disabled" = "Synchronization disabled";
+
+/* Log message for iFolder whose synchronization is disabled */
+"Synchronization disabled for %@" = "Synchronization disabled for %@";
