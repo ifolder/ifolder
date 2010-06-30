@@ -102,7 +102,7 @@ static iFolderData *sharedInstance = nil;
 //			[ifoldersController bind:@"contentArray" toObject:ifolderDataAlias
 //					withKeyPath:@"selection.ifolders" options:nil];
 
-			forceQuit = NO;
+//			forceQuit = NO;
 		}
 		return sharedInstance;
 	}
@@ -150,10 +150,10 @@ static iFolderData *sharedInstance = nil;
 // When an update is made in client, it must quit application without
 // showing any dialog to quit. For this purpose this is used.
 //===================================================================
-- (BOOL)ForceQuit
+/*- (BOOL)ForceQuit
 {
 	return forceQuit;
-}
+}*/
 
 //===================================================================
 // domainArrayController
@@ -513,6 +513,7 @@ static iFolderData *sharedInstance = nil;
 	iFolder* newiFolder = nil;
 	NSString* returnValue = nil;
 	[instanceLock lock];
+	
 	
 	if([ifolderService GetLimitPolicyStatus:domainID] != 1)
 	{
@@ -1540,7 +1541,7 @@ static iFolderData *sharedInstance = nil;
 -(void)clientUpdates:(NSString*)domID
 {	
 	cliUpdate = nil;
-	forceQuit = NO;
+	//forceQuit = NO;
 	
 	//Variables needed to handle upgrade client
 	NSString* dirName;
@@ -1678,7 +1679,7 @@ static iFolderData *sharedInstance = nil;
 									[NSString stringWithFormat:NSLocalizedString(@"Install the latest client available at the location %@",@"Upgrade status message"),dirName],
 									NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 									
-					forceQuit = YES;
+				//	forceQuit = YES;
 					[[NSApplication sharedApplication] terminate:nil ];
 				}
 				
@@ -1697,7 +1698,7 @@ static iFolderData *sharedInstance = nil;
 							NSLocalizedString(@"Server is old. Cannot connect to the server",@"ServerOldMessage"),
 							NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 
-			forceQuit = YES;
+		//	forceQuit = YES;
 			[[NSApplication sharedApplication] terminate:nil ];
 			break;
 			
@@ -1771,7 +1772,7 @@ static iFolderData *sharedInstance = nil;
 									[NSString stringWithFormat:NSLocalizedString(@"Install the latest client available at the location %@",@"Upgrade status message"),dirName],
 									NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 					
-					forceQuit = YES;
+				//	forceQuit = YES;
 					[[NSApplication sharedApplication] terminate:nil ];
 				}
 				
@@ -1781,7 +1782,7 @@ static iFolderData *sharedInstance = nil;
 			
 		case Unknown:
 			//Force the application to close
-			forceQuit = YES;
+		//	forceQuit = YES;
 			[[NSApplication sharedApplication] terminate:nil ];
 			break;
 	}

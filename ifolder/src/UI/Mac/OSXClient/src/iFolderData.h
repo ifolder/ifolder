@@ -74,7 +74,7 @@
 }
 
 + (iFolderData *)sharedInstance;
-- (BOOL)ForceQuit;
+//- (BOOL)ForceQuit;
 
 -(NSArrayController *)domainArrayController;
 -(NSArrayController *)loggedDomainArrayController;

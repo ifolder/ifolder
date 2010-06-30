@@ -626,7 +626,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	int counter;
 	int answer; 
 	
-	if( ![[iFolderData sharedInstance] ForceQuit] )
+	/*if( ![[iFolderData sharedInstance] ForceQuit] )
 	{
 		answer = NSRunAlertPanel(NSLocalizedString(@"Exit Application",@"Quit Application Title"),
 								 NSLocalizedString(@"If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application?",@"Quit Application Message"),
@@ -636,7 +636,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	}
 											
 	if(answer == NSAlertDefaultReturn || [[iFolderData sharedInstance] ForceQuit] )
-	{
+	{*/
 		SimiasService *simiasService = [[SimiasService alloc] init];
 		
 		NSArray* availableDomains  = [simiasService GetDomains:NO];
@@ -659,7 +659,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		[simiasService release];
 		
 		return NSTerminateNow;
-	}
+//}
 		
 		
 	return NSTerminateCancel;
