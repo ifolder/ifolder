@@ -1,4 +1,4 @@
-/*****************************************************************************
+/poli*****************************************************************************
 *
 * Copyright (c) [2009] Novell, Inc.
 * All Rights Reserved.
@@ -1642,7 +1642,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 				NSRange thumbsDB = [[fse name] rangeOfString:@"Thumbs.db"] ;
 				NSRange dsStore = [[fse name] rangeOfString:@".DS_Store"];
 
-				if(thumbsDB.location == 0 || dsStore.location == 0)
+				if(thumbsDB.location == NSNotFound || dsStore.location == NSNotFound)
 				{
 					syncMessage = [NSString stringWithFormat:NSLocalizedString(@"A file type restriction policy prevented complete synchronization: \"%@\"", @"iFolder Policy Type Notification Message"), [fse name]];
 					
