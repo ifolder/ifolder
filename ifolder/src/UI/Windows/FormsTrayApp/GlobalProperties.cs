@@ -1460,7 +1460,7 @@ namespace Novell.FormsTrayApp
 				lock (ht)
 				{
 					// Add only if it isn't already in the list.
-					if (ht[ifolder.ID] == null)
+					if (!ht.ContainsKey(ifolder.ID))
 					{
 						TileListViewItem tlvi = new TileListViewItem( ifolderObject );
 						int imageIndex;
@@ -1482,7 +1482,7 @@ namespace Novell.FormsTrayApp
 			{
 				lock( ht )
 				{
-					if (ht[ifolder.ID] == null)
+					if (!ht.ContainsKey(ifolder.ID))
 					{
 						TileListViewItem tlvi = addiFolderToAvailableListView( ifolderObject );
 						ht.Add( ifolder.ID, tlvi );
@@ -1853,7 +1853,8 @@ namespace Novell.FormsTrayApp
 					ifobj.iFolderWeb.IsSubscription = false;
 					ifobj.iFolderState = iFolderState.Initial;
 					addiFolderToListView( ifobj );
-                    oldHt.Add(ifobj.ID, ifobj.iFolderState);
+                    if(!oldHt.ContainsKey(ifobj.ID))
+                        oldHt.Add(ifobj.ID, ifobj.iFolderState);
 				}
                 string[] ifolders = new string[ht.Count];
                 ht.Keys.CopyTo(ifolders, 0);
