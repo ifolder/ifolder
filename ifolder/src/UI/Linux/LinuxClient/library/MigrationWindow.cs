@@ -54,6 +54,7 @@ namespace Novell.iFolder
                 private ListStore                       AccTreeStore;
                 private Button                          MigrateButton;
                 private Button                          DetailsButton;
+                private Button                          HelpButton;
                 private Hashtable curDomains;
 
 		/// <summary>
@@ -140,19 +141,21 @@ namespace Novell.iFolder
                         statusColumn.MinWidth = 75;
                         AccTreeView.AppendColumn(statusColumn);
 
-                        // Set up buttons for add/remove/accept/decline
-                        HButtonBox buttonBox = new HButtonBox();
-                        buttonBox.Spacing = 10;
-                        buttonBox.Layout = ButtonBoxStyle.End;
-                        vbox.PackStart(buttonBox, false, false, 0);
+			HBox buttonBox = new HBox(false, 0);
+			vbox.PackStart(buttonBox,false,false,0);
+			
+			HelpButton = new Button(Gtk.Stock.Help);
+			buttonBox.PackStart(HelpButton,false,false,0);
+			this.HelpButton.Clicked += new EventHandler(OnHelpClicked);
 
-                        MigrateButton = new Button("_Migrate");
-                        buttonBox.PackStart(MigrateButton);
+			DetailsButton = new Button(Gtk.Stock.Cancel);
+                        buttonBox.PackEnd(DetailsButton,false,false,0);
+                        this.DetailsButton.Clicked += new EventHandler(OnCancelClicked);
+
+			MigrateButton = new Button("_Migrate");
+                        buttonBox.PackEnd(MigrateButton,false,false,2);
                         MigrateButton.Clicked += new EventHandler(OnMigrateAccount);
-
-                        DetailsButton = new Button(Gtk.Stock.Cancel);
-                        buttonBox.PackStart(DetailsButton);
-			this.DetailsButton.Clicked += new EventHandler(OnCancelClicked);
+				
 		}
 
         /// <summary>
@@ -386,6 +389,17 @@ namespace Novell.iFolder
                         curDomains.Remove(id);
                         AccTreeStore.Remove(ref iter);
                 }
+
+		/// <summary>
+		/// Event Handler for Help Button Clicked
+		/// </summary>
+		/// <param name="o"></param>
+		/// <param name="args"></param>
+		private void OnHelpClicked(object o, EventArgs args)
+                {
+			Util.ShowHelp("migration.html", this);
+                }
+
 
 	}
 }
