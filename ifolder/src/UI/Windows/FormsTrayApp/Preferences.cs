@@ -2501,7 +2501,7 @@ namespace Novell.FormsTrayApp
                     break;
                 case 2:
                     // Migration tab clicked
-                    string iFolderRegistryKey = @"Software\Novell iFolder";
+                 /* string iFolderRegistryKey = @"Software\Novell iFolder";
                     RegistryKey iFolderKey = Registry.LocalMachine.OpenSubKey(iFolderRegistryKey);
                     string[] AllKeys = new string[iFolderKey.SubKeyCount];
                     AllKeys = iFolderKey.GetSubKeyNames();
@@ -2510,6 +2510,7 @@ namespace Novell.FormsTrayApp
                         total += AllKeys[i];
                     AddMigrationDetails();
 
+                  */ 
                     break;
             }
         }
