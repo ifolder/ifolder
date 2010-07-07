@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-10-21 14:23-0600\n"
-"PO-Revision-Date: 2009-08-04 19:34\n"
+"PO-Revision-Date: 2010-07-04 18:52\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -89,7 +89,7 @@ msgstr "Cette opération rétablit le dossier iFolder à létat de dossier nor
 
 #: src/nautilus-ifolder.c:1772
 msgid "Revert to a Normal Folder"
-msgstr "Revenir à un dossier normal"
+msgstr "Rétablir en dossier normal"
 
 #: src/nautilus-ifolder.c:1773
 msgid "Revert the selected iFolder back to normal folder"
