@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SecureSync">
-    <value>&amp;Sincronizzazione sicura</value>
+    <value>Sincronizzazione &amp;sicura</value>
   </data>
   <data name="menuHideTrayIcon.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -130,7 +130,7 @@
     <value>True</value>
   </data>
   <data name="DownloadDefaultiFolder">
-    <value>Scarica cartella iFolder di &amp;default</value>
+    <value>Esegui il d&amp;ownload della cartella iFolder di default</value>
   </data>
   <data name="menuTools.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Scegliere un server iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>Impossibile scrivere i file nella cartella. Verificare le autorizzazioni nella cartella locale.</value>
   </data>
   <data name="BrowseText">
     <value>&amp;Sfoglia</value>
@@ -262,10 +262,10 @@
     <value>True</value>
   </data>
   <data name="downloading">
-    <value>Scaricamento in corso: {0}</value>
+    <value>Esecuzione del download in corso: {0}</value>
   </data>
   <data name="downloadFile">
-    <value>Scaricamento del file in corso: {0}</value>
+    <value>Esecuzione del download del file in corso: {0}</value>
   </data>
   <data name="menuStoreBrowser.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -295,7 +295,7 @@
     <value>iFolder</value>
   </data>
   <data name="downloadDeltaSyncFile">
-    <value>Scaricamento del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
+    <value>Esecuzione del download del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
   </data>
   <data name="localSync">
     <value>Ricerca delle modifiche in corso: {0}</value>
@@ -346,10 +346,10 @@
     <value>Log di sincronizzazione</value>
   </data>
   <data name="uploading">
-    <value>Caricamento in corso: {0}</value>
+    <value>Esecuzione upload in corso: {0}</value>
   </data>
   <data name="CongratsDescription">
-    <value>È ora possibile aggiungere cartelle da sincronizzare al server. È inoltre possibile scaricare cartelle dal server ed eseguirne la sincronizzazione nel computer.</value>
+    <value>È ora possibile aggiungere cartelle da sincronizzare al server. È inoltre possibile effettuare il download delle cartelle dal server ed eseguirne la sincronizzazione nel computer.</value>
   </data>
   <data name="menuAbout.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -358,7 +358,7 @@
     <value>Private</value>
   </data>
   <data name="selectoption">
-    <value>Fare clic su OK per unire o su Annulla per selezionare una differente ubicazione</value>
+    <value>Fare clic su OK per unire o su Annulla per selezionare una ubicazione diversa</value>
   </data>
   <data name="menuItem1.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -403,7 +403,7 @@
     <value>Default</value>
   </data>
   <data name="downloadDir">
-    <value>Scaricamento della directory in corso: {0}</value>
+    <value>Esecuzione del download della directory in corso: {0}</value>
   </data>
   <data name="&gt;&gt;contextMenu1.Type">
     <value>System.Windows.Forms.ContextMenu, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -418,7 +418,7 @@
     <value>&amp;Indirizzo del dominio</value>
   </data>
   <data name="VerifyPageHeaderTitle">
-    <value>Verifica informazioni sul conto iFolder</value>
+    <value>Verifica e connetti</value>
   </data>
   <data name="menuProperties.Text">
     <value>iFolder</value>
@@ -442,7 +442,7 @@
     <value>Indirizzo server</value>
   </data>
   <data name="clientUpgradeFailure">
-    <value>Upgrade del client iFolder non riuscito. Contattare l'amministratore di sistema.</value>
+    <value>Esecuzione dell'upgrade del client iFolder non riuscita. Contattare l'amministratore di sistema.</value>
   </data>
   <data name="DomainName">
     <value>Nome dominio</value>
@@ -457,7 +457,7 @@
     <value>Trovate modifiche nel file: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Eseguire l'upgrade del client a {0}? Se si sceglie Sì, il client verrà chiuso automaticamente.</value>
+    <value>Eseguire l'upgrade del client iFolder a {0}? Facendo clic su Sì, il client verrà chiuso automaticamente.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>La stringa di cifratura immessa non è valida.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Impossibile leggere i file dalla cartella. Verificare le autorizzazioni nella cartella locale.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>Per la modifica della stringa di cifratura è necessario essere connessi al dominio. Accedere al dominio e provare."</value>
   </data>
   <data name="AccWizardText">
-    <value>Creazione guidata conto iFolder</value>
+    <value>Creazione guidata account iFolder</value>
   </data>
   <data name="menuAccounts.ShowShortcut" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -547,16 +550,16 @@
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="WelcomePageTitle">
-    <value>Creazione guidata conto iFolder</value>
+    <value>Creazione guidata account iFolder</value>
   </data>
   <data name="uploadDir">
-    <value>Caricamento della directory in corso: {0}</value>
+    <value>Esecuzione dell'upload della directory in corso: {0}</value>
   </data>
   <data name="EncryptTotext">
     <value>La cartella iFolder 3.x originale è cifrata e si è scelto di convertirla in una cartella non cifrata. Continuare?</value>
   </data>
   <data name="VerifyPageName">
-    <value>verificaPagina</value>
+    <value>VerificaPagina</value>
   </data>
   <data name="Security">
     <value>Sicurezza</value>
@@ -566,6 +569,9 @@
   </data>
   <data name="policySizeFailure">
     <value>Sincronizzazione non eseguita a causa delle norme relative alle dimensioni: {0}</value>
+  </data>
+  <data name="menuAccounts.Text">
+    <value>Account</value>
   </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -580,7 +586,7 @@
     <value>iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Upgrade client disponibile.</value>
+    <value>Upgrade del client iFolder disponibile.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Errore durante la creazione della directory</value>
@@ -592,10 +598,10 @@
     <value>Nome utente</value>
   </data>
   <data name="uploadDeltaSyncFile">
-    <value>Caricamento del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
+    <value>Esecuzione dell'upload del file: {0}. Sincronizzazione delle sole modifiche in corso: {1}% salvato.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Server con versione precedente</value>
+    <value>Server iFolder precedente</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Per modificare la password è necessario che il dominio sia connesso. Eseguire il login al dominio e riprovare.</value>
@@ -628,22 +634,19 @@
     <value>Chiusura dei servizi iFolder in corso...</value>
   </data>
   <data name="upgradeErrorTitle">
-    <value>Errore durante l'upgrade</value>
+    <value>Errore durante l'esecuzione dell'upgrade</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Browser archivio</value>
+  <data name="SelectRecoveryAgent">
+    <value>Selezionare l'agente di recupero:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Immettere il nome del dominio iFolder (ad esempio ifolder.esempio.net).</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Errore nel corso della modifica della password</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Upgrade del client necessario.</value>
+    <value>Eseguire l'upgrade del client iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -655,7 +658,7 @@
     <value>None</value>
   </data>
   <data name="serverDiskFullFailure">
-    <value>Spazio su disco insufficiente sul server. Sincronizzazione non eseguita: {0}</value>
+    <value>Spazio su disco nel server insufficiente. Sincronizzazione non eseguita: {0}</value>
   </data>
   <data name="genericFailure">
     <value>Sincronizzazione iFolder non riuscita: {0}</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Informazioni sul server</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Selezionare l'agente di recupero:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -685,10 +685,10 @@ Uscire dall'applicazione?</value>
     <value>5, 13</value>
   </data>
   <data name="WelcomePageDescription">
-    <value>Questa procedura guidata consente di configurare il conto iFolder. </value>
+    <value>Questa procedura guidata consente di configurare l'account iFolder. </value>
   </data>
   <data name="clientUpgradeTitle">
-    <value>Upgrade client iFolder</value>
+    <value>Eseguire l'Upgrade client iFolder</value>
   </data>
   <data name="menuSyncLog.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ Uscire dall'applicazione?</value>
   <data name="quotaFailureInfo">
     <value>Cartella iFolder piena. Fare clic qui per visualizzare il log di sincronizzazione.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Browser archivio</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Verifica e connetti.</value>
   </data>
@@ -755,6 +758,9 @@ Uscire dall'applicazione?</value>
   </data>
   <data name="MigrationCompletionWT">
     <value>Completamento della Migrazione guidata iFolder</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Impossibile convalidare la stringa di cifratura</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -788,7 +794,7 @@ Uscire dall'applicazione?</value>
     <value>Selezionare il dominio</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Esegui la migrazione della cartella iFolder e disconnettila dal dominio 2.x</value>
+    <value>Eseguire la migrazione della cartella iFolder e disconnetterla dal dominio 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
     <value>Per l'importazione è necessario essere connessi al dominio. Accedere al dominio e provare."</value>
@@ -809,7 +815,7 @@ Uscire dall'applicazione?</value>
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Impossibile connettersi a un server di una versione precedente.</value>
+    <value>Si sta stabilendo la connessione a una versione precedente del server iFolder. Impossibile connettersi al server.</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -853,6 +859,9 @@ Uscire dall'applicazione?</value>
   <data name="MigrationOptions">
     <value>Opzioni di migrazione</value>
   </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Scegliere un server iFolder</value>
+  </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
@@ -875,7 +884,7 @@ Uscire dall'applicazione?</value>
     <value>Si dispone dell'accesso in sola lettura alla cartella iFolder. I file inclusi in tale cartella non verranno sincronizzati. Fare clic qui per visualizzare il log di sincronizzazione.</value>
   </data>
   <data name="createAccount">
-    <value>Prima di cominciare a utilizzare iFolder, è necessario configurare un conto iFolder. Fare clic qui per aggiungere un nuovo conto.</value>
+    <value>Prima di cominciare a utilizzare iFolder, è necessario configurare un account iFolder. Fare clic qui per aggiungere un nuovo account.</value>
   </data>
   <data name="MigrationConvert">
     <value>Impossibile eseguire la conversione a una cartella iFolder</value>
@@ -950,7 +959,7 @@ Uscire dall'applicazione?</value>
     <value>Si è verificato un conflitto: {0}</value>
   </data>
   <data name="AccountName">
-    <value>Nome conto</value>
+    <value>Nome dominio</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -962,7 +971,7 @@ Uscire dall'applicazione?</value>
     <value>Sincronizzazione non completata: {0}</value>
   </data>
   <data name="newMemberMessage">
-    <value>{0} ha aderito alla condivisione della cartella iFolder "{1}". Fare clic qui per visualizzare l'elenco dei membri per la cartella iFolder.</value>
+    <value>{0} ha aderito alla cartella iFolder "{1}". Fare clic qui per visualizzare l'elenco dei membri per la cartella iFolder.</value>
   </data>
   <data name="RememberPasswdCheckbox">
     <value>&amp;Memorizza password su questo computer</value>
@@ -971,7 +980,7 @@ Uscire dall'applicazione?</value>
     <value>Nuova cartella iFolder "{0}"</value>
   </data>
   <data name="NextText">
-    <value>A&amp;vanti</value>
+    <value>&amp;Avanti</value>
   </data>
   <data name="menuProperties.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -998,13 +1007,13 @@ Uscire dall'applicazione?</value>
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="uploadFile">
-    <value>Caricamento del file in corso: {0}</value>
+    <value>Esecuzione dell'upload del file in corso: {0}</value>
   </data>
   <data name="menuEventLogReader.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="IdentityPageHeaderTitle">
-    <value>Informazioni sul conto iFolder</value>
+    <value>Informazioni sull'account iFolder</value>
   </data>
   <data name="ifolder2NotPresent">
     <value>iFolder2.x non è installato nel sistema</value>
@@ -1055,14 +1064,17 @@ Uscire dall'applicazione?</value>
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Conti</value>
+  <data name="clientUpgradePrompt">
+    <value>È disponibile una versione più recente "{0}" del client iFolder. Eseguire l'upgrade?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Sincronizzazione non eseguita a causa delle norme relative ai tipi di file: {0}</value>
@@ -1109,8 +1121,8 @@ Uscire dall'applicazione?</value>
   <data name="policyFailure">
     <value>Sincronizzazione non eseguita a causa delle norme: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>È disponibile una versione più recente del client iFolder "{0}". Eseguire l'upgrade?</value>
+  <data name="ResetPasswordError">
+    <value>Errore nel corso della modifica della password</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

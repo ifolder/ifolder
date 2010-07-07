@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Vyberte server iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>Nelze zapisovat soubory do složky. Zkontrolujte oprávnění k místní složce.</value>
   </data>
   <data name="BrowseText">
     <value>&amp;Prohlížet</value>
@@ -457,7 +457,7 @@
     <value>V následujícím souboru nalezeny změny: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Chcete inovovat vašeho klienta na {0}? Pokud klepnete na tlačítko Ano, klient se automaticky zavře.</value>
+    <value>Chcete inovovat klienta iFolder na {0}? Klepnete-li na tlačítko Ano, bude klient automaticky ukončen.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>Zadané heslo je neplatné.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Nelze číst soubory ze složky. Ověřte oprávnění k místní složce.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>Zásady omezující velikost zabránily synchronizaci: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Účty</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Vítejte ve službě iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Inovace klienta je k dispozici.</value>
+    <value>Je k dispozici inovace klienta iFolder.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Chyba při vytváření klienta</value>
@@ -595,7 +601,7 @@
     <value>Probíhá odesílání souboru: {0}. Probíhá pouze synchronizace změn: {1}% zápisu.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Starý server</value>
+    <value>Server iFolder zastaralý</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Ke změně hesla musí být doména připojena. Přihlaste se k doméně a zkuste to znovu.</value>
@@ -630,20 +636,17 @@
   <data name="upgradeErrorTitle">
     <value>Inovace selhala</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Prohlížeč úložiště</value>
+  <data name="SelectRecoveryAgent">
+    <value>Vyberte agenta obnovení:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Zadejte název vašeho serveru iFolder (například: ifolder.priklad.net)</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Chyba při změně hesla</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Je nutná inovace klienta.</value>
+    <value>Je nutná inovace klienta iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Informace o serveru</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Vyberte agenta obnovení:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ Chcete opravdu aplikaci ukončit ?</value>
   <data name="quotaFailureInfo">
     <value>Složka iFolder je plná. Klepněte na tento odkaz pro zobrazení synchronizačního protokolu.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Prohlížeč úložiště</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Ověřit a připojit.</value>
   </data>
@@ -755,6 +758,9 @@ Chcete opravdu aplikaci ukončit ?</value>
   </data>
   <data name="MigrationCompletionWT">
     <value>Probíhá dokončení pomocníka migrací složky iFolder</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Nelze ověřit heslo</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -809,7 +815,7 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Server je starý. K serveru se nelze připojit.</value>
+    <value>Připojujete se ke starší verzi serveru iFolder. Není možné připojení k serveru</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -852,6 +858,9 @@ Chcete opravdu aplikaci ukončit ?</value>
   </data>
   <data name="MigrationOptions">
     <value>Možnosti migrace</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Vyberte server iFolder</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1055,14 +1064,17 @@ Chcete opravdu aplikaci ukončit ?</value>
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Účty</value>
+  <data name="clientUpgradePrompt">
+    <value>Nová verze "{0}" klienta služby iFolder je k dispozici. Chcete nyní provést inovaci?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Zásady omezující typy souborů zabránily synchronizaci: {0}</value>
@@ -1109,8 +1121,8 @@ Chcete opravdu aplikaci ukončit ?</value>
   <data name="policyFailure">
     <value>Zásady zabránily synchronizaci: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Nová verze "{0}" klienta služby iFolder je k dispozici. Chcete nyní provést inovaci?</value>
+  <data name="ResetPasswordError">
+    <value>Chyba při změně hesla</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

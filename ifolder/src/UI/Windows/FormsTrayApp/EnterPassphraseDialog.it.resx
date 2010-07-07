@@ -239,7 +239,7 @@
     <value>False</value>
   </data>
   <data name="lblRecoveryAgent.Text">
-    <value>Agente di recupero</value>
+    <value>Agente di recupero:</value>
   </data>
   <data name="Passphrase.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -413,7 +413,7 @@
     <value>lblRetypePassphrase</value>
   </data>
   <data name="lblPassphrase.Text">
-    <value>Immetti stringa di cifratura</value>
+    <value>Immetti stringa di cifratura:</value>
   </data>
   <data name="savePassphrase.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -440,7 +440,7 @@
     <value>0, 0</value>
   </data>
   <data name="lblDomainName.Text">
-    <value>Nome dominio</value>
+    <value>Nome dominio:</value>
   </data>
   <data name="&gt;&gt;lblPassphrase.Type">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -505,8 +505,8 @@
   <data name="Passphrase.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>156, 122</value>
   </data>
-  <data name="RetypePassphrase.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>240, 20</value>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="RecoveryAgentCombo.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -596,7 +596,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblRetypePassphrase.Text">
-    <value>Ridigita stringa di cifratura</value>
+    <value>Ridigita stringa di cifratura:</value>
   </data>
   <data name="RetypePassphrase.ScrollBars" type="System.Windows.Forms.ScrollBars, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -948,6 +948,9 @@
   </data>
   <data name="panel1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
+  </data>
+  <data name="RetypePassphrase.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>240, 20</value>
   </data>
   <data name="RetypePassphrase.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Elegir un servidor iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>No es posible escribir los archivos en la carpeta. Compruebe los permisos en la carpeta local.</value>
   </data>
   <data name="BrowseText">
     <value>E&amp;xaminar</value>
@@ -457,7 +457,7 @@
     <value>Se han detectado cambios en el archivo: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>¿Desea actualizar el cliente a {0}? Si hace clic en Sí, el cliente se cerrará de forma automática.</value>
+    <value>¿Desea actualizar su cliente iFolder a {0}? El cliente se cerrará automáticamente si hace clic en Sí.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>Se ha introducido una contraseña codificada que no es válida.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>No es posible leer los archivos en la carpeta. Compruebe los permisos en la carpeta local.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>La directiva de restricción de tamaño ha impedido la sincronización: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Cuentas</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Bienvenido a iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Actualización del cliente disponible.</value>
+    <value>Hay una actualización disponible para el cliente iFolder.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Error al crear el directorio</value>
@@ -595,7 +601,7 @@
     <value>Cargando el archivo: {0}. Sincronizando sólo los cambios: {1}% guardado.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Servidor obsoleto</value>
+    <value>Servidor de iFolder antiguo</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Debe estar conectado al dominio para cambiar la contraseña. Inicie sesión en el dominio y vuelva a intentarlo.</value>
@@ -630,20 +636,17 @@
   <data name="upgradeErrorTitle">
     <value>Fallo de actualización</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Almacenar navegador</value>
+  <data name="SelectRecoveryAgent">
+    <value>Seleccionar agente de recuperación:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Introduzca el nombre del dominio de iFolder (por ejemplo, ifolder.ejemplo.net).</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Error al cambiar la contraseña</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Es necesario actualizar el cliente.</value>
+    <value>Se requiere actualizar el cliente iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Información del servidor</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Seleccionar agente de recuperación:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="quotaFailureInfo">
     <value>La carpeta iFolder está llena. Haga clic aquí para ver el registro de sincronización.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Almacenar navegador</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Verificar y conectar</value>
   </data>
@@ -755,6 +758,9 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   </data>
   <data name="MigrationCompletionWT">
     <value>Finalizando el Asistente para la migración de iFolder</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>No es posible validar la contraseña codificada</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -809,7 +815,7 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>El servidor es obsoleto. No es posible conectar con el servidor</value>
+    <value>Está conectándose a una versión antigua del servidor iFolder. No es posible la conexión con el servidor.</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -852,6 +858,9 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   </data>
   <data name="MigrationOptions">
     <value>Opciones de migración</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Elegir un servidor iFolder</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1055,14 +1064,17 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Cuentas</value>
+  <data name="clientUpgradePrompt">
+    <value>Hay disponible una versión más reciente ({0}) del Cliente iFolder. ¿Desea actualizarla ahora?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>La directiva de restricción de tipo de archivo ha impedido la sincronización: {0}</value>
@@ -1109,8 +1121,8 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="policyFailure">
     <value>La directiva ha impedido la sincronización: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Hay disponible una versión más reciente ({0}) del Cliente iFolder. ¿Desea actualizarla ahora?</value>
+  <data name="ResetPasswordError">
+    <value>Error al cambiar la contraseña</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

@@ -136,8 +136,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="graceLoginTitle">
-    <value>Lejárt jelszó</value>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="pictureBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -150,6 +150,9 @@
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>50, 50</value>
+  </data>
+  <data name="graceLoginTitle">
+    <value>Lejárt jelszó</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>426, 88</value>
@@ -197,7 +200,7 @@
     <value>0</value>
   </data>
   <data name="NoPassphraseWarning">
-    <value>Nem adott meg azonosítási kifejezést. Ha nincs megadva azonosítási kifejezés, az alapértelmezett iFolder-fiók létrehozása/letöltése sikertelen lesz. Folytatja?</value>
+    <value>Nem adott meg hozzáférési kódot. Ha nincs megadva hozzáférési kód, az alapértelmezett iFolder-fiók létrehozása és letöltése sikertelen lesz. Folytatja?</value>
   </data>
   <data name="graceLogin">
     <value>A jelszó érvényessége lejárt. Még {0} bejelentkezési kísérletet tehet.</value>
@@ -275,7 +278,7 @@
     <value>Nem lehet csatlakozni az iFolder kiszolgálóhoz</value>
   </data>
   <data name="IsPassphraseSetException">
-    <value>Nem sikerült ellenőrizni az azonosítási kifejezést. </value>
+    <value>Nem sikerült ellenőrizni a hozzáférési kódot. </value>
   </data>
   <data name="$this.Name">
     <value>Connecting</value>
@@ -308,7 +311,7 @@
     <value>Inherit</value>
   </data>
   <data name="NoCertWarning">
-    <value>Nincs kijelölve helyreállítási ügynök. A titkosított adatokat később nem lehet helyreállítani az azonosítási kifejezés elveszítése esetén. Folytatja?</value>
+    <value>Nincs kijelölve helyreállítási ügynök. A titkosított adatokat később nem lehet helyreállítani a hozzáférési kód elveszítése esetén. Folytatja?</value>
   </data>
   <data name="UpgradeNeededMsg">
     <value>Frissítenie kell az ügyfélprogramot ahhoz, hogy kapcsolódni tudjon ehhez a kiszolgálóhoz.</value>
@@ -395,7 +398,7 @@
     <value>True</value>
   </data>
   <data name="NoPassphraseTitle">
-    <value>Nincs azonosítási kifejezés</value>
+    <value>Nincs hozzáférési kód</value>
   </data>
   <data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>80</value>

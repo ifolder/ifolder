@@ -133,6 +133,9 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
+  </data>
   <data name="btnCancel.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
@@ -221,7 +224,7 @@
     <value />
   </data>
   <data name="btnCancel.Text">
-    <value>A&amp;nnulla</value>
+    <value>&amp;Annulla</value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>MigrationWindow</value>
@@ -455,7 +458,7 @@
     <value>Left</value>
   </data>
   <data name="btnMigrate.Text">
-    <value>Eseg&amp;ui migrazione</value>
+    <value>Esegui &amp;migrazione</value>
   </data>
   <data name="$this.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

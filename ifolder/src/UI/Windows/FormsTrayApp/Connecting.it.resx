@@ -136,8 +136,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="graceLoginTitle">
-    <value>Password scaduta</value>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="pictureBox1.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -150,6 +150,9 @@
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>50, 50</value>
+  </data>
+  <data name="graceLoginTitle">
+    <value>Password scaduta</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>426, 88</value>
@@ -197,7 +200,7 @@
     <value>0</value>
   </data>
   <data name="NoPassphraseWarning">
-    <value>Immissione della stringa di cifratura annullata. Se non viene specificata la stringa di cifratura, la creazione o lo scaricamento della cartella iFolder di default avrà esito negativo. Continuare?</value>
+    <value>Immissione della stringa di cifratura annullata. Se non viene specificata la stringa di cifratura, la creazione o l'esecuzione del download della cartella iFolder di default avrà esito negativo. Continuare?</value>
   </data>
   <data name="graceLogin">
     <value>Password scaduta. Si dispone di {0} login extra rimanenti.</value>
@@ -227,16 +230,16 @@
     <value>pictureBox1</value>
   </data>
   <data name="accountDisabled">
-    <value>Conto disabilitato. Contattare l'amministratore di rete per ottenere assistenza. </value>
+    <value>Account disabilitato. Contattare l'amministratore di rete per ottenere assistenza. </value>
   </data>
   <data name="&gt;&gt;$this.Name">
     <value>Connecting</value>
   </data>
   <data name="alreadyJoinedTitle">
-    <value>Conto già esistente</value>
+    <value>Account già esistente</value>
   </data>
   <data name="Migration.Text">
-    <value>Migrazione del conto iFolder in corso. Attendere...</value>
+    <value>Migrazione dell'account iFolder in corso. Attendere...</value>
   </data>
   <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -287,7 +290,7 @@
     <value>Normal</value>
   </data>
   <data name="iFolderAccountDisabled">
-    <value>Conto iFolder disabilitato. Contattare l'amministratore di rete per assistenza.</value>
+    <value>Account iFolder disabilitato. Contattare l'amministratore di rete per assistenza.</value>
   </data>
   <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>5, 13</value>
@@ -299,7 +302,7 @@
     <value>label1</value>
   </data>
   <data name="accountErrorTitle">
-    <value>Errore nel conto iFolder</value>
+    <value>Errore nell'account iFolder</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -374,7 +377,7 @@
     <value />
   </data>
   <data name="setDefaultError">
-    <value>Errore durante l'impostazione del conto di default.</value>
+    <value>Errore durante l'impostazione dell'account di default.</value>
   </data>
   <data name="label1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -389,7 +392,7 @@
     <value>CenterParent</value>
   </data>
   <data name="alreadyJoined">
-    <value>Esiste già un conto per questo server nel computer locale. È consentito un solo conto per server.</value>
+    <value>Esiste già un account per questo server nel computer locale. È consentito un solo account per server.</value>
   </data>
   <data name="$this.SnapToGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -404,7 +407,7 @@
     <value>True</value>
   </data>
   <data name="label1.Text">
-    <value>Connessione del conto iFolder in corso. Attendere.</value>
+    <value>Connessione dell'account iFolder in corso. Attendere.</value>
   </data>
   <data name="pictureBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -413,6 +416,6 @@
     <value>TopLeft</value>
   </data>
   <data name="accountLockout">
-    <value>Conto utente bloccato. Contattare l'amministratore di rete per ottenere assistenza.</value>
+    <value>Account utente bloccato. Contattare l'amministratore di rete per ottenere assistenza.</value>
   </data>
 </root>

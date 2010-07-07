@@ -107,7 +107,7 @@
     <value>False</value>
   </data>
   <data name="$this.Text">
-    <value>Usuwanie konta</value>
+    <value>Usuwanie konta programu iFolder</value>
   </data>
   <data name="icon.BackgroundImage" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -299,7 +299,7 @@
     <value />
   </data>
   <data name="label1.Text">
-    <value>Czy usunąć konto programu iFolder?</value>
+    <value>Czy usunąć to konto?</value>
   </data>
   <data name="removeAll.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>8</value>
@@ -485,7 +485,7 @@
     <value>Private</value>
   </data>
   <data name="label3.Text">
-    <value>Serwer:</value>
+    <value>Adres domeny:</value>
   </data>
   <data name="host.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -752,7 +752,7 @@
     <value>Private</value>
   </data>
   <data name="label2.Text">
-    <value>Nazwa systemu:</value>
+    <value>Nazwa konta:</value>
   </data>
   <data name="&gt;&gt;label1.Name">
     <value>label1</value>
@@ -981,6 +981,9 @@
   </data>
   <data name="removeAll.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>MiddleCenter</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="&gt;&gt;yes.Parent">
     <value>$this</value>

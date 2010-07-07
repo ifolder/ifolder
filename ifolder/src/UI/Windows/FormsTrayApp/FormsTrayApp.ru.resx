@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Выберите сервер iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>Не удается записать файлы в папку. Проверьте права на локальную папку.</value>
   </data>
   <data name="BrowseText">
     <value>&amp;Просмотр</value>
@@ -457,7 +457,7 @@
     <value>Найдены изменения в файле: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Обновить клиента до версии {0}? При нажатии "Да" клиент закроется автоматически.</value>
+    <value>Обновить клиент iFolder до {0}? При нажатии кнопки \"Да\" клиент закроется автоматически.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>Введена недопустимая контрольная фраза.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Не удается прочитать файлы в папке. Проверьте разрешения на локальную папку.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>Синхронизация запрещена из-за политики ограничения размера: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Учетные записи</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Вас приветствует программа iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Доступна новая версия клиента.</value>
+    <value>Доступно обновление клиента iFolder.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Ошибка при создании каталога</value>
@@ -595,7 +601,7 @@
     <value>Отправка файла: {0}. Только синхронизация изменений: {1}% сохранений.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Сервер устарел</value>
+    <value>Старая версия сервера iFolder</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Для смены пароля необходимо подключение к домену. Войдите в систему домена и повторите попытку.</value>
@@ -630,20 +636,17 @@
   <data name="upgradeErrorTitle">
     <value>Сбой при обновлении</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Средство просмотра хранилища</value>
+  <data name="SelectRecoveryAgent">
+    <value>Выберите агент восстановления:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Введите имя домена iFolder (например iFolder.example.net).</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Ошибка смены пароля</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Необходимо обновить клиента.</value>
+    <value>Требуется обновление клиента iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Информация о сервере</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Выберите агент восстановления:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@
   <data name="quotaFailureInfo">
     <value>Папка iFolder заполнена. Щелкните здесь для просмотра журнала синхронизации.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Средство просмотра хранилища</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Проверка и подключение .</value>
   </data>
@@ -755,6 +758,9 @@
   </data>
   <data name="MigrationCompletionWT">
     <value>Выполнение помощника по миграции iFolder</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Не удается проверить ключевую фразу</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -809,7 +815,7 @@
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Сервер устарел. Подключение невозможно</value>
+    <value>Вы подключаетесь к более ранней версии сервера iFolder. Невозможно подключиться к серверу</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -852,6 +858,9 @@
   </data>
   <data name="MigrationOptions">
     <value>Параметры миграции</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Выберите сервер iFolder</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1055,14 +1064,17 @@
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Учетные записи</value>
+  <data name="clientUpgradePrompt">
+    <value>Доступна новая версия "{0}" клиента iFolder. Выполнить обновление сейчас?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Синхронизация запрещена из-за политики ограничения типов файлов: {0}</value>
@@ -1109,8 +1121,8 @@
   <data name="policyFailure">
     <value>Запрещенная политикой синхронизация: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Доступна новая версия "{0}" клиента iFolder. Выполнить обновление сейчас?</value>
+  <data name="ResetPasswordError">
+    <value>Ошибка смены пароля</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

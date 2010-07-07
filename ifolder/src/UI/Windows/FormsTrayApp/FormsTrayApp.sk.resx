@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Vyberte server služby iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>Súbory v priečinku sa nedajú zapísať. Overte povolenia pre lokálny priečinok.</value>
   </data>
   <data name="BrowseText">
     <value>&amp;Prehľadávať</value>
@@ -457,7 +457,7 @@
     <value>Nájdené zmeny v súbore: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Chcete klienta inovovať na verziu {0}. Kliknutím na možnosť Áno sa klient automaticky ukončí.</value>
+    <value>Chcete aktualizovať klienta iFolder na verziu {0}? Ak kliknete na tlačidlo Áno, klient sa zavrie automaticky.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>Zadaný aktuálny prístupový výraz je neplatný.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Súbory v priečinku sa nedajú čítať. Overte povolenia pre lokálny priečinok.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>Synchronizácii zabránila politika obmedzenia veľkosti: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Kontá</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Víta vás služba iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Je k dispozícii inovácia klienta.</value>
+    <value>K dispozícii je aktualizácia klienta iFolder.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Chyba pri vytváraní adresára</value>
@@ -595,7 +601,7 @@
     <value>Odovzdáva sa súbor: {0}. Synchronizujú sa iba zmeny: {1}% uložení.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Stará verzia servera</value>
+    <value>Server iFolder je zastaraný</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Na zmenu hesla je potrebné, aby bola doména pripojená. Prihláste sa do domény a skúste to.</value>
@@ -630,20 +636,17 @@
   <data name="upgradeErrorTitle">
     <value>Zlyhanie inovácie</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Uložiť prehľadávač</value>
+  <data name="SelectRecoveryAgent">
+    <value>Vyberte agenta pre obnovenie:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Zadajte názov svojej domény služby iFolder (napríklad ifolder.example.net).</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Chyba pri zmene hesla</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Je potrebná inovácia klienta.</value>
+    <value>Vyžaduje sa aktualizácia klienta iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Informácie o serveri</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Vyberte agenta pre obnovenie:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="quotaFailureInfo">
     <value>Priečinok iFolder je plný. Kliknutím sem zobrazíte denník synchronizácie.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Uložiť prehľadávač</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Overiť a pripojiť sa</value>
   </data>
@@ -755,6 +758,9 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   </data>
   <data name="MigrationCompletionWT">
     <value>Ukončuje sa pomocník služby iFolder pre prenos</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Prístupový výraz nie je možné overiť</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -809,7 +815,7 @@ Naozaj chcete ukončiť aplikáciu ?</value>
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Stará verzia servera. Nedá sa pripojiť na server</value>
+    <value>Pripájate sa k staršej verzii servera iFolder. K serveru sa nedá pripojiť</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -852,6 +858,9 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   </data>
   <data name="MigrationOptions">
     <value>Možnosti prenosu</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Vyberte server služby iFolder</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1055,14 +1064,17 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Kontá</value>
+  <data name="clientUpgradePrompt">
+    <value>Je k dispozícii novšia verzia „{0}“ klienta služby iFolder. Chcete inovovať verziu?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Synchronizácii zabránila politika obmedzenia typu súboru: {0}</value>
@@ -1109,8 +1121,8 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="policyFailure">
     <value>Synchronizácii zabránila politika: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Je k dispozícii novšia verzia „{0}“ klienta služby iFolder. Chcete inovovať verziu?</value>
+  <data name="ResetPasswordError">
+    <value>Chyba pri zmene hesla</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

@@ -132,7 +132,7 @@
     <value>218, 447</value>
   </data>
   <data name="menuActionAccept.Text" xml:space="preserve">
-    <value>&amp;Scarica</value>
+    <value>&amp;Effettua download</value>
   </data>
   <data name="&gt;&gt;toolStripBtnSyncNow.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -176,6 +176,9 @@
   <data name="&gt;&gt;toolStripiFolderActions.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="menuHelpUpgrade.Text" xml:space="preserve">
+    <value>Esegui &amp;upgrade</value>
+  </data>
   <data name="Size.Text" xml:space="preserve">
     <value>Dimensione</value>
   </data>
@@ -213,7 +216,7 @@
     <value>menuView</value>
   </data>
   <data name="menuActionCreate.Text" xml:space="preserve">
-    <value>&amp;Carica cartella...</value>
+    <value>&amp;Effettua upload della cartella...</value>
   </data>
   <data name="&gt;&gt;MenuRemove.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -248,12 +251,6 @@
   </data>
   <data name="&gt;&gt;menuViewAvailable.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripLabel1.Text" xml:space="preserve">
-    <value>Filtro</value>
-  </data>
-  <data name="toolStripLabel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 22</value>
   </data>
   <data name="&gt;&gt;menuSecurity.Name" xml:space="preserve">
     <value>menuSecurity</value>
@@ -379,7 +376,7 @@
     <value>41, 16</value>
   </data>
   <data name="menuActionRevert.Text" xml:space="preserve">
-    <value>Ripris&amp;tina cartella normale</value>
+    <value>Ri&amp;pristina cartella normale</value>
   </data>
   <data name="menuActionMerge.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -421,7 +418,7 @@
     <value>6</value>
   </data>
   <data name="menuSyncNow.Text" xml:space="preserve">
-    <value>S&amp;incronizza ora</value>
+    <value>Sincroni&amp;zza ora</value>
   </data>
   <data name="menuSyncNow.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
@@ -592,7 +589,7 @@
     <value>6, 15</value>
   </data>
   <data name="MenuAccept.Text" xml:space="preserve">
-    <value>Do&amp;wnload</value>
+    <value>&amp;Download</value>
   </data>
   <data name="MenuAccept.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
@@ -601,7 +598,7 @@
     <value>C&amp;hiudi</value>
   </data>
   <data name="menuAction.Text" xml:space="preserve">
-    <value>i&amp;Folder</value>
+    <value>&amp;iFolder</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>965, 4</value>
@@ -667,7 +664,7 @@
     <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="menuActionSync.Text" xml:space="preserve">
-    <value>Si&amp;ncronizza ora</value>
+    <value>S&amp;incronizza ora</value>
   </data>
   <data name="titleEncrypted.Location" type="System.Drawing.Point, System.Drawing">
     <value>392, 25</value>
@@ -732,6 +729,12 @@
   <data name="&gt;&gt;LoginLogoff.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="&gt;&gt;menuHelpUpgrade.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuHelpUpgrade.Name" xml:space="preserve">
+    <value>menuHelpUpgrade</value>
+  </data>
   <data name="&gt;&gt;menuItem3.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -754,7 +757,7 @@
     <value>menuSeparator1</value>
   </data>
   <data name="menuActionRemove.Text" xml:space="preserve">
-    <value>Canc&amp;ella dal server</value>
+    <value>Cancella &amp;dal server</value>
   </data>
   <data name="toolStripBtnCreate.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>BottomCenter</value>
@@ -784,7 +787,7 @@
     <value>False</value>
   </data>
   <data name="menuViewRefresh.Text" xml:space="preserve">
-    <value>A&amp;ggiorna</value>
+    <value>&amp;Aggiorna</value>
   </data>
   <data name="&gt;&gt;toolStripBtnCreate.Name" xml:space="preserve">
     <value>toolStripBtnCreate</value>
@@ -916,7 +919,7 @@
     <value>209, 22</value>
   </data>
   <data name="menuProperties.Text" xml:space="preserve">
-    <value>&amp;Proprietà</value>
+    <value>Propriet&amp;à</value>
   </data>
   <data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>284, 16</value>
@@ -967,7 +970,7 @@
     <value>0, 0</value>
   </data>
   <data name="menuActionShare.Text" xml:space="preserve">
-    <value>C&amp;ondividi con...</value>
+    <value>&amp;Condividi con...</value>
   </data>
   <data name="toolStripBtnRevert.Text" xml:space="preserve">
     <value>Ripristina</value>
@@ -976,7 +979,7 @@
     <value>44, 22</value>
   </data>
   <data name="menuViewAvailable.Text" xml:space="preserve">
-    <value>Visuali&amp;zza cartelle iFolder disponibili</value>
+    <value>Visualizza cartelle iFolder &amp;disponibili</value>
   </data>
   <data name="titleServerorSize.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Left</value>
@@ -991,7 +994,7 @@
     <value>E&amp;sci</value>
   </data>
   <data name="MenuRemove.Text" xml:space="preserve">
-    <value>Elimina &amp;dal server</value>
+    <value>Elimi&amp;na dal server</value>
   </data>
   <data name="MenuRemove.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
@@ -1006,7 +1009,7 @@
     <value>Inattivo...</value>
   </data>
   <data name="menuEdit.Text" xml:space="preserve">
-    <value>&amp;Modifica</value>
+    <value>M&amp;odifica</value>
   </data>
   <data name="titleEncrypted.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 9.75pt</value>
@@ -1078,10 +1081,10 @@
     <value>groupBox1</value>
   </data>
   <data name="menuViewAccounts.Text" xml:space="preserve">
-    <value>Impostazioni conto&amp;...</value>
+    <value>Impostazioni account&amp;...</value>
   </data>
   <data name="&gt;&gt;iFolderView.Type" xml:space="preserve">
-    <value>Novell.FormsTrayApp.TileListView, iFolderApp, Version=3.7.2.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1</value>
+    <value>Novell.FormsTrayApp.TileListView, iFolderApp, Version=3.8.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1</value>
   </data>
   <data name="&gt;&gt;iFolderView.Name" xml:space="preserve">
     <value>iFolderView</value>
@@ -1180,7 +1183,7 @@
     <value>MenuResolveSeperator</value>
   </data>
   <data name="MenuResolve.Text" xml:space="preserve">
-    <value>Risolvi &amp;conflitti</value>
+    <value>Risolvi con&amp;flitti</value>
   </data>
   <data name="MenuResolve.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
@@ -1259,12 +1262,6 @@
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 122</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
-    <value>toolStripLabel1</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="titleEncrypted.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1807,7 +1804,7 @@
     <value>53, 11</value>
   </data>
   <data name="menuHelpAbout.Text" xml:space="preserve">
-    <value>I&amp;nformazioni su</value>
+    <value>&amp;Informazioni su</value>
   </data>
   <data name="titleAccess.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1816,13 +1813,13 @@
     <value>3, 25</value>
   </data>
   <data name="MenuRefresh.Text" xml:space="preserve">
-    <value>&amp;Aggiorna</value>
+    <value>A&amp;ggiorna</value>
   </data>
   <data name="MenuRefresh.Size" type="System.Drawing.Size, System.Drawing">
     <value>209, 22</value>
   </data>
   <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>657, 544</value>
+    <value>659, 545</value>
   </data>
   <data name="panel2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -1834,7 +1831,7 @@
     <value>Top, Bottom, Left, Right</value>
   </data>
   <data name="menuActionMerge.Text" xml:space="preserve">
-    <value>Unisci alla cartella</value>
+    <value>&amp;Unisci a una cartella</value>
   </data>
   <data name="titleUsed.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -1912,7 +1909,7 @@
     <value>224, 85</value>
   </data>
   <data name="menuActionProperties.Text" xml:space="preserve">
-    <value>Propriet&amp;à</value>
+    <value>Proprie&amp;tà</value>
   </data>
   <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
     <value>15</value>
@@ -1930,7 +1927,7 @@
     <value>58, 22</value>
   </data>
   <data name="toolStripBtnDownload.Text" xml:space="preserve">
-    <value>Download</value>
+    <value>Effettua download</value>
   </data>
   <data name="&gt;&gt;menuActionAccept.Name" xml:space="preserve">
     <value>menuActionAccept</value>

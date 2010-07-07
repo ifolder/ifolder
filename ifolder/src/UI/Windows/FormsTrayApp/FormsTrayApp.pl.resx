@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>Wybierz serwer programu iFolder</value>
+  <data name="ioErrorWriteFailure">
+    <value>Nie można zapisać plików w folderze. Zweryfikuj uprawnienia do folderu lokalnego.</value>
   </data>
   <data name="BrowseText">
     <value>Prze&amp;glądaj</value>
@@ -256,7 +256,7 @@
     <value>menuHelp</value>
   </data>
   <data name="CannotBeiFolder">
-    <value>Folderu nie można przekształcić w iFolder</value>
+    <value>Nie można przekonwertować folderu na folder iFolder</value>
   </data>
   <data name="menuAccounts.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -409,16 +409,16 @@
     <value>System.Windows.Forms.ContextMenu, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="IsPassphraseSetException">
-    <value>Nie można sprawdzić zwrotu szyfrowania. </value>
+    <value>Nie można sprawdzić, czy istnieje zwrot szyfrowania. </value>
   </data>
   <data name="VerifyPP">
-    <value>Zweryfikuj zwrot szyfrowania</value>
+    <value>Weryfikuj zwrot szyfrowania</value>
   </data>
   <data name="ServerNameTextbox">
     <value>Ad&amp;res domeny</value>
   </data>
   <data name="VerifyPageHeaderTitle">
-    <value>Zweryfikuj informacje konta programu iFolder</value>
+    <value>Weryfikuj i połącz</value>
   </data>
   <data name="menuProperties.Text">
     <value>iFoldery</value>
@@ -439,10 +439,10 @@
     <value>Błąd oprogramowania uniemożliwia inicjalizację programu iFolder. Skontaktuj się z administratorem systemu.</value>
   </data>
   <data name="ServerNameText">
-    <value>Adres serwera</value>
+    <value>Adres domeny</value>
   </data>
   <data name="clientUpgradeFailure">
-    <value>Aktualizacja klienta programu iFolder nie powiodła się. Skontaktuj się z administratorem systemu.</value>
+    <value>Uaktualnienie klienta programu iFolder nie powiodło się. Skontaktuj się z administratorem systemu.</value>
   </data>
   <data name="DomainName">
     <value>Nazwa domeny</value>
@@ -457,10 +457,10 @@
     <value>Wykryto zmiany w pliku: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Czy chcesz uaktualnić klienta do wersji {0}? Jeśli klikniesz przycisk Tak, klient zostanie automatycznie zamknięty.</value>
+    <value>Czy chcesz uaktualnić klienta programu iFolder do wersji {0}? Jeśli klikniesz przycisk Tak, klient zostanie automatycznie zamknięty.</value>
   </data>
   <data name="InvalidCurrentPPText">
-    <value>Wprowadzony bieżący zwrot hasłowy jest nieprawidłowy.</value>
+    <value>Wprowadzony bieżący zwrot szyfrowania jest nieprawidłowy.</value>
   </data>
   <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Nie można odczytać plików z folderu. Zweryfikuj uprawnienia do folderu lokalnego.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -496,7 +499,7 @@
     <value>Ukryj</value>
   </data>
   <data name="MigrationWelcomeTitle">
-    <value>Witamy w Asystencie migracji programu iFolder</value>
+    <value>Witamy w Asystencie migracji folderu programu iFolder</value>
   </data>
   <data name="PasswordTxt">
     <value>&amp;Hasło</value>
@@ -535,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Zmiana zwrotu szyfrowania możliwa jest po podłączeniu domeny. Zaloguj się w domenie i spróbuj ponownie.</value>
+    <value>Zmiana zwrotu szyfrowania jest możliwa po podłączeniu domeny. Zaloguj się w domenie i spróbuj ponownie.</value>
   </data>
   <data name="AccWizardText">
     <value>Kreator tworzenia konta programu iFolder</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>Założenia ograniczenia rozmiaru uniemożliwiły synchronizację: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Konta</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Witamy w programie iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Dostępne jest uaktualnienie klienta.</value>
+    <value>Jest dostępne uaktualnienie klienta programu iFolder.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Błąd podczas tworzenia katalogu</value>
@@ -595,10 +601,10 @@
     <value>Przesyłanie pliku: {0}. Synchronizowanie samych zmian: {1}% oszczędności.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Stara wersja serwera</value>
+    <value>Starsza wersja serwera programu iFolder</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>W celu zmiany hasła należy połączyć się z domeną. Zaloguj się do domeny i spróbuj ponownie.</value>
+    <value>Zmiana hasła jest możliwa po podłączeniu domeny. Zaloguj się w domenie i spróbuj ponownie.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>&amp;Utwórz domyślny iFolder</value>
@@ -616,7 +622,7 @@
     <value>Private</value>
   </data>
   <data name="SetPassphraseSuccess">
-    <value>Pomyślnie ustalono zwrot szyfrowania. </value>
+    <value>Pomyślnie ustawiono zwrot szyfrowania. </value>
   </data>
   <data name="Available.Text">
     <value>Dostępne: </value>
@@ -628,22 +634,19 @@
     <value>Zamykanie usług iFolder...</value>
   </data>
   <data name="upgradeErrorTitle">
-    <value>Aktualizacja nie powiodła się</value>
+    <value>Uaktualnienie nie powiodło się</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Przeglądarka magazynu</value>
+  <data name="SelectRecoveryAgent">
+    <value>Wybierz agenta odzyskiwania:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Wprowadź nazwę domeny iFolder (np. ifolder.example.net)</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Błąd podczas zmiany hasła</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Niezbędna aktualizacja klienta.</value>
+    <value>Wymagane jest uaktualnienie klienta programu iFolder.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -669,9 +672,6 @@
   <data name="ServerInfo">
     <value>Informacje o serwerze</value>
   </data>
-  <data name="SelectRecoveryAgent">
-    <value>Wybierz agenta odzyskiwania:</value>
-  </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -688,7 +688,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Ten kreator przeprowadzi Cię przez proces konfiguracji konta programu iFolder. </value>
   </data>
   <data name="clientUpgradeTitle">
-    <value>Aktualizacja klienta programu iFolder</value>
+    <value>Uaktualnienie klienta programu iFolder</value>
   </data>
   <data name="menuSyncLog.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="quotaFailureInfo">
     <value>iFolder jest pełny. Kliknij tutaj, aby wyświetlić dziennik synchronizacji.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Przeglądarka magazynu</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Zweryfikuj i połącz.</value>
   </data>
@@ -754,7 +757,10 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="MigrationCompletionWT">
-    <value>Finalizowanie działania asystenta migracji programu iFolder</value>
+    <value>Finalizowanie działania Asystenta migracji folderu programu iFolder</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Nie można zatwierdzić zwrotu szyfrowania</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -791,7 +797,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Migruj iFolder i odłącz go od domeny 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Importowanie możliwe jest po podłączeniu domeny. Zaloguj się w domenie i spróbuj ponownie.</value>
+    <value>Importowanie jest możliwe po podłączeniu domeny. Zaloguj się w domenie i spróbuj ponownie.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -809,7 +815,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Stara wersja serwera. Połączenie z serwerem jest niemożliwe.</value>
+    <value>Nawiązujesz połączenie ze starszą wersją serwera programu iFolder. Nie można połączyć się z serwerem.</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -842,7 +848,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>True</value>
   </data>
   <data name="MigrationCompleteWT">
-    <value>Finalizowanie działania kreatora migracji programu iFolder</value>
+    <value>Finalizowanie działania Kreatora migracji folderu programu iFolder</value>
   </data>
   <data name="&gt;&gt;menuItem10.Name">
     <value>menuItem10</value>
@@ -852,6 +858,9 @@ Czy na pewno chcesz zakończyć program?</value>
   </data>
   <data name="MigrationOptions">
     <value>Opcje migracji</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>Wybierz serwer programu iFolder</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -878,7 +887,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Przed rozpoczęciem korzystania z iFolderu trzeba najpierw skonfigurować konto programu iFolder. Kliknij tutaj, aby dodać nowe konto.</value>
   </data>
   <data name="MigrationConvert">
-    <value>Nie można przekształcić w iFolder</value>
+    <value>Nie można przekonwertować na iFolder</value>
   </data>
   <data name="contextMenu1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1025,7 +1034,7 @@ Czy na pewno chcesz zakończyć program?</value>
     <value>Usuwanie pliku: {0}</value>
   </data>
   <data name="MigrationTitle">
-    <value>Asystent migracji programu iFolder</value>
+    <value>Asystent migracji folderu programu iFolder</value>
   </data>
   <data name="alreadyexists">
     <value>Folder o podanej nazwie już istnieje.</value>
@@ -1055,14 +1064,17 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Konta</value>
+  <data name="clientUpgradePrompt">
+    <value>Dostępna jest nowsza wersja {0} klienta programu iFolder. Czy chcesz teraz wykonać uaktualnienie?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Założenia ograniczenia typu plików uniemożliwiły synchronizację: {0}</value>
@@ -1109,14 +1121,14 @@ Czy na pewno chcesz zakończyć program?</value>
   <data name="policyFailure">
     <value>Założenia uniemożliwiły synchronizację: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Dostępna jest nowsza wersja "{0}" klienta programu iFolder. Zaktualizować teraz?</value>
+  <data name="ResetPasswordError">
+    <value>Błąd podczas zmiany hasła</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="LocationText">
-    <value>&amp;Lokalizacja:</value>
+    <value>&amp;Położenie:</value>
   </data>
   <data name="menuStoreBrowser.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

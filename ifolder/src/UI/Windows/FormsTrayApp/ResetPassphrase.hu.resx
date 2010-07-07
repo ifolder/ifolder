@@ -150,7 +150,7 @@
     <value>$this</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Jelszó módosítása</value>
+    <value>Hozzáférési kód módosítása</value>
   </data>
   <data name="retypePassphraseLabel.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -229,7 +229,7 @@
     <value>140, 26</value>
   </data>
   <data name="passphraseLabel.Text" xml:space="preserve">
-    <value>Az&amp;onosítási kifejezés megadása:</value>
+    <value>Adja meg a h&amp;ozzáférési kódot:</value>
   </data>
   <data name="newPassphrase.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -298,7 +298,7 @@
     <value>16, 98</value>
   </data>
   <data name="rememberPassphrase.Text" xml:space="preserve">
-    <value>&amp;Az azonosítási kifejezés megjegyzése ezen a számítógépen</value>
+    <value>&amp;A hozzáférési kód megjegyzése ezen a számítógépen</value>
   </data>
   <data name="rememberPassphrase.Size" type="System.Drawing.Size, System.Drawing">
     <value>232, 35</value>
@@ -520,7 +520,7 @@
     <value>$this</value>
   </data>
   <data name="retypePassphraseLabel.Text" xml:space="preserve">
-    <value>A&amp;zonosítási kifejezés ismételt beírása:</value>
+    <value>Írja be újra a ho&amp;zzáférési kódot:</value>
   </data>
   <data name="retypePassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 26</value>
@@ -574,7 +574,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="newPassphraseLabel.Text" xml:space="preserve">
-    <value>&amp;Új azonosítási kifejezés megadása:</value>
+    <value>Adja meg az &amp;új hozzáférési kódot:</value>
   </data>
   <data name="newPassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 27</value>

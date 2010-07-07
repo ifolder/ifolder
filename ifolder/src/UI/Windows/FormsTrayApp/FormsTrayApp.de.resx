@@ -231,8 +231,8 @@
   <data name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="ServerPageHeaderTitle">
-    <value>iFolder-Server auswählen</value>
+  <data name="ioErrorWriteFailure">
+    <value>Fehler beim Schreiben der Dateien in den Ordner. Überprüfen Sie die Berechtigungen für Ihren lokalen Ordner.</value>
   </data>
   <data name="BrowseText">
     <value>&amp;Durchsuchen</value>
@@ -457,7 +457,7 @@
     <value>Änderungen in Datei gefunden: {0}</value>
   </data>
   <data name="UpgradeClientMsg">
-    <value>Möchten Sie Ihren Client auf {0} aufrüsten? Der Client wird automatisch geschlossen, wenn Sie auf 'Ja' klicken.</value>
+    <value>Soll der iFolder-Client auf {0} aufgerüstet werden? Der Client wird automatisch geschlossen, wenn Sie auf 'Ja' klicken.</value>
   </data>
   <data name="InvalidCurrentPPText">
     <value>Der eingegebene aktuelle Passwortsatz ist unzulässig.</value>
@@ -470,6 +470,9 @@
   </data>
   <data name="$this.MaximumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
+  </data>
+  <data name="ioErrorReadFailure">
+    <value>Dateien aus dem Ordner können nicht gelesen werden. Überprüfen Sie die Berechtigungen für Ihren lokalen Ordner.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -567,6 +570,9 @@
   <data name="policySizeFailure">
     <value>Größenbeschränkungsrichtlinie verhinderte Synchronisierung: {0}</value>
   </data>
+  <data name="menuAccounts.Text">
+    <value>Konten</value>
+  </data>
   <data name="&gt;&gt;menuSeparator1.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -580,7 +586,7 @@
     <value>Willkommen bei iFolder</value>
   </data>
   <data name="UpgradeAvailableTitle">
-    <value>Client-Aufrüstung verfügbar.</value>
+    <value>Aufrüstung für iFolder-Client verfügbar.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Fehler bei der Verzeichniserstellung</value>
@@ -595,7 +601,7 @@
     <value>Datei wird heraufgeladen: {0}. Nur Änderungen werden synchronisiert: {1}% Einsparungen.</value>
   </data>
   <data name="ServerOldTitle">
-    <value>Server alt</value>
+    <value>Alter iFolder-Server</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
     <value>Zum Ändern des Passworts sollten Sie mit der Domäne verbunden sein. Melden Sie sich bei der Domäne an und versuchen Sie es erneut.</value>
@@ -630,20 +636,17 @@
   <data name="upgradeErrorTitle">
     <value>Aufrüstfehler</value>
   </data>
-  <data name="menuStoreBrowser.Text">
-    <value>Browser speichern</value>
+  <data name="SelectRecoveryAgent">
+    <value>Wiederherstellungsagenten auswählen:</value>
   </data>
   <data name="ServerPagelbl2txt">
     <value>Geben Sie den Namen Ihrer iFolder-Domäne ein (z.B. ifolder.beispiel.net)</value>
-  </data>
-  <data name="ResetPasswordError">
-    <value>Fehler beim Ändern des Passworts</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
   </data>
   <data name="UpgradeNeededTitle">
-    <value>Client-Aufrüstung erforderlich.</value>
+    <value>Aufrüstung des iFolder-Client erforderlich.</value>
   </data>
   <data name="&gt;&gt;menuEventLogReader.Name">
     <value>menuEventLogReader</value>
@@ -668,9 +671,6 @@
   </data>
   <data name="ServerInfo">
     <value>Serverinformationen</value>
-  </data>
-  <data name="SelectRecoveryAgent">
-    <value>Wiederherstellungsagenten auswählen:</value>
   </data>
   <data name="$this.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -744,6 +744,9 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="quotaFailureInfo">
     <value>Der iFolder-Ordner ist voll. Klicken Sie hier, um das Synchronisierungsprotokoll anzuzeigen.</value>
   </data>
+  <data name="menuStoreBrowser.Text">
+    <value>Browser speichern</value>
+  </data>
   <data name="VerifyPageHeaderST">
     <value>Überprüfen und Verbinden .</value>
   </data>
@@ -755,6 +758,9 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   </data>
   <data name="MigrationCompletionWT">
     <value>iFolder-Migrationsassistenten ausführen</value>
+  </data>
+  <data name="ValidatePPError">
+    <value>Der Passwortsatz kann nicht bestätigt werden</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -809,7 +815,7 @@ Möchten Sie die Anwendung wirklich beenden?</value>
     <value>Private</value>
   </data>
   <data name="ServerOld">
-    <value>Server ist alt. Verbindung zum Server nicht möglich</value>
+    <value>Sie erstellen eine Verbindung zu einer früheren Version des iFolder-Servers. Verbindung zum Server kann nicht aufgebaut werden</value>
   </data>
   <data name="menuEventLogReader.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -852,6 +858,9 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   </data>
   <data name="MigrationOptions">
     <value>Migrationsoptionen</value>
+  </data>
+  <data name="ServerPageHeaderTitle">
+    <value>iFolder-Server auswählen</value>
   </data>
   <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1055,14 +1064,17 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="menuAbout.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
-  <data name="menuAccounts.Text">
-    <value>Konten</value>
+  <data name="clientUpgradePrompt">
+    <value>Eine neuere Version, "{0}", des iFolder-Client ist verfügbar. Möchten Sie jetzt aufrüsten?</value>
   </data>
   <data name="menuSeparator1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
+  </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Dateityp-Beschränkungsrichtlinie verhinderte Synchronisierung: {0}</value>
@@ -1109,8 +1121,8 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="policyFailure">
     <value>Richtlinie verhinderte Synchronisierung: {0}</value>
   </data>
-  <data name="clientUpgradePrompt">
-    <value>Eine neuere Version, "{0}", des iFolder-Client ist verfügbar. Möchten Sie jetzt aufrüsten?</value>
+  <data name="ResetPasswordError">
+    <value>Fehler beim Ändern des Passworts</value>
   </data>
   <data name="menuItem10.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

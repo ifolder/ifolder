@@ -176,6 +176,9 @@
   <data name="&gt;&gt;toolStripiFolderActions.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
+  <data name="menuHelpUpgrade.Text" xml:space="preserve">
+    <value>&amp;Actualizar</value>
+  </data>
   <data name="Size.Text" xml:space="preserve">
     <value>Tamaño</value>
   </data>
@@ -248,12 +251,6 @@
   </data>
   <data name="&gt;&gt;menuViewAvailable.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="toolStripLabel1.Text" xml:space="preserve">
-    <value>Filtro</value>
-  </data>
-  <data name="toolStripLabel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 22</value>
   </data>
   <data name="&gt;&gt;menuSecurity.Name" xml:space="preserve">
     <value>menuSecurity</value>
@@ -732,6 +729,12 @@
   <data name="&gt;&gt;LoginLogoff.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="&gt;&gt;menuHelpUpgrade.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuHelpUpgrade.Name" xml:space="preserve">
+    <value>menuHelpUpgrade</value>
+  </data>
   <data name="&gt;&gt;menuItem3.Type" xml:space="preserve">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1081,7 +1084,7 @@
     <value>Configuraci&amp;ón de la cuenta...</value>
   </data>
   <data name="&gt;&gt;iFolderView.Type" xml:space="preserve">
-    <value>Novell.FormsTrayApp.TileListView, iFolderApp, Version=3.7.2.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1</value>
+    <value>Novell.FormsTrayApp.TileListView, iFolderApp, Version=3.8.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1</value>
   </data>
   <data name="&gt;&gt;iFolderView.Name" xml:space="preserve">
     <value>iFolderView</value>
@@ -1259,12 +1262,6 @@
   </data>
   <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 122</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Name" xml:space="preserve">
-    <value>toolStripLabel1</value>
-  </data>
-  <data name="&gt;&gt;toolStripLabel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="titleEncrypted.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1510,7 +1507,7 @@
     <value>0, -10</value>
   </data>
   <data name="toolStipBtnChangeView.Text" xml:space="preserve">
-    <value>ChangeView</value>
+    <value>Cambiar vista</value>
   </data>
   <data name="toolStipBtnChangeView.Size" type="System.Drawing.Size, System.Drawing">
     <value>79, 22</value>
@@ -1834,7 +1831,7 @@
     <value>Top, Bottom, Left, Right</value>
   </data>
   <data name="menuActionMerge.Text" xml:space="preserve">
-    <value>Fusionar en carpeta</value>
+    <value>&amp;Fusionar en carpeta</value>
   </data>
   <data name="titleUsed.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>

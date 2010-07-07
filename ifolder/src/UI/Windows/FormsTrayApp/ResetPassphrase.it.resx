@@ -150,7 +150,7 @@
     <value>$this</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Reimposta la stringa di cifratura</value>
+    <value>Modifica stringa di cifratura</value>
   </data>
   <data name="retypePassphraseLabel.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -229,7 +229,7 @@
     <value>147, 16</value>
   </data>
   <data name="passphraseLabel.Text" xml:space="preserve">
-    <value>Immetti &amp;stringa di cifratura:</value>
+    <value>I&amp;mmetti stringa di cifratura:</value>
   </data>
   <data name="newPassphrase.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -247,7 +247,7 @@
     <value>11</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
-    <value>&amp;Annulla</value>
+    <value>A&amp;nnulla</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -298,7 +298,7 @@
     <value>16, 104</value>
   </data>
   <data name="rememberPassphrase.Text" xml:space="preserve">
-    <value>&amp;Memorizza stringa di cifratura su questo computer</value>
+    <value>Memorizza stringa di cifratura su &amp;questo computer</value>
   </data>
   <data name="rememberPassphrase.Size" type="System.Drawing.Size, System.Drawing">
     <value>277, 20</value>
@@ -331,7 +331,7 @@
     <value>14</value>
   </data>
   <data name="recoveryAgentLabel.Text" xml:space="preserve">
-    <value>Ag&amp;ente di recupero:</value>
+    <value>&amp;Agente di recupero:</value>
   </data>
   <data name="recoveryAgentLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 20</value>
@@ -430,7 +430,7 @@
     <value>448, 56</value>
   </data>
   <data name="accountLabel.Text" xml:space="preserve">
-    <value>&amp;Conto iFolder:</value>
+    <value>Account &amp;iFolder:</value>
   </data>
   <data name="accountLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 20</value>
@@ -520,7 +520,7 @@
     <value>$this</value>
   </data>
   <data name="retypePassphraseLabel.Text" xml:space="preserve">
-    <value>R&amp;idigita stringa di cifratura:</value>
+    <value>Ridigita &amp;stringa di cifratura:</value>
   </data>
   <data name="retypePassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>148, 16</value>
@@ -574,7 +574,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="newPassphraseLabel.Text" xml:space="preserve">
-    <value>Imme&amp;tti nuova stringa di cifratura:</value>
+    <value>Imm&amp;etti nuova stringa di cifratura:</value>
   </data>
   <data name="newPassphraseLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 29</value>
