@@ -179,7 +179,7 @@
     <value />
   </data>
   <data name="saveLocal.HelpString">
-    <value>Fare clic per sostituire il file nel server iFolder con il file nel computer locale.</value>
+    <value>Fare clic per sostituire il file nel server iFolder con il file presente nel computer locale.</value>
   </data>
   <data name="label10.ShowHelp" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -472,6 +472,9 @@
   <data name="saveServer.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
+  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Invariant Language (Invariant Country)</value>
+  </data>
   <data name="label10.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
@@ -569,7 +572,7 @@
     <value>10, 96</value>
   </data>
   <data name="browseBtn.HelpString">
-    <value>Fare clic per sostituire il file nel computer locale con il file nel server iFolder.</value>
+    <value>Fare clic per sostituire il file nel computer locale con il file presente nel server iFolder.</value>
   </data>
   <data name="localPanel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -587,7 +590,7 @@
     <value>True</value>
   </data>
   <data name="saveServer.HelpString">
-    <value>Fare clic per sostituire il file nel computer locale con il file nel server iFolder.</value>
+    <value>Fare clic per sostituire il file nel computer locale con il file presente nel server iFolder.</value>
   </data>
   <data name="localName.HelpString">
     <value>Nome del file nel computer locale. Fare doppio clic sul nome per aprire il file.</value>
@@ -707,7 +710,7 @@
     <value>200, 128</value>
   </data>
   <data name="saveServer.Text">
-    <value>&amp;Apri</value>
+    <value>A&amp;pri</value>
   </data>
   <data name="label12.Locked" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1001,7 +1004,7 @@
     <value>4</value>
   </data>
   <data name="invalidConflictBinMsg">
-    <value>Specificare un percorso valido per il raccoglitore di conflitti.</value>
+    <value>Specificare un percorso valido per la cartella dei conflitti.</value>
   </data>
   <data name="label4.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1160,7 +1163,7 @@
     <value>System</value>
   </data>
   <data name="conflictBinLabel.Text">
-    <value>Salva nel raccoglitore di conflitti:</value>
+    <value>Salva nella cartella dei conflitti:</value>
   </data>
   <data name="&gt;&gt;conflictBinLocalRdBtn.Type">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1211,7 +1214,7 @@
     <value />
   </data>
   <data name="actionSave.HelpString">
-    <value>Fare clic per sostituire il file nel computer locale con il file nel server iFolder.</value>
+    <value>Fare clic per sostituire il file nel computer locale con il file presente nel server iFolder.</value>
   </data>
   <data name="serverSize.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1400,7 +1403,7 @@
     <value />
   </data>
   <data name="conflictBinPathLbl.Text">
-    <value>Percorso del raccoglitore di conflitti:</value>
+    <value>Percorso della cartella dei conflitti:</value>
   </data>
   <data name="close.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>75, 23</value>
@@ -1793,7 +1796,7 @@
     <value>NoControl</value>
   </data>
   <data name="invalidConflictBinTitle">
-    <value>Directory del raccoglitore di conflitti non valida</value>
+    <value>Directory della cartella dei conflitti non valida</value>
   </data>
   <data name="label6.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>4</value>
@@ -2255,7 +2258,7 @@
     <value>Data del file nel computer locale.</value>
   </data>
   <data name="saveLocal.Text">
-    <value>A&amp;pri</value>
+    <value>Apr&amp;i</value>
   </data>
   <data name="&gt;&gt;columnHeader3.Name">
     <value>columnHeader3</value>
@@ -2267,7 +2270,7 @@
     <value>True</value>
   </data>
   <data name="accessDenied">
-    <value>Diritti di accesso insufficienti per l'ubicazione selezionata. È possibile creare questi file solo in cartelle per le quali si dispone di diritti di accesso in lettura e scrittura. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>Diritti di accesso insufficienti per l'ubicazione selezionata. È possibile creare questi file solo in cartelle per le quali si dispone dei diritti di accesso in lettura e scrittura. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="close.HelpString" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -2441,7 +2444,7 @@
     <value />
   </data>
   <data name="actionSave.Text">
-    <value>&amp;Salva</value>
+    <value>S&amp;alva</value>
   </data>
   <data name="label3.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -2588,7 +2591,7 @@
     <value>16, 16</value>
   </data>
   <data name="label6.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>56, 16</value>
+    <value>69, 16</value>
   </data>
   <data name="serverSize.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -2912,7 +2915,7 @@
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="readOnlyInfo">
-    <value>La possibilità di risolvere i conflitti è limitata poiché si dispone dell'accesso in sola lettura alla cartella iFolder. È necessario modificare i nomi in conflitto localmente. I file in conflitto verranno sovrascritti dalle rispettive versioni sul server.</value>
+    <value>La possibilità di risolvere i conflitti è limitata poiché si dispone dell'accesso in sola lettura alla cartella iFolder. È necessario rinominare i conflitti tra i nomi localmente. I conflitti tra i file verranno sovrascritti dalla versione del file presente sul server.</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>3</value>
@@ -3179,7 +3182,7 @@
     <value>AssociateIndex</value>
   </data>
   <data name="emptyConflictBinMsg">
-    <value>Specificare un percorso valido per il raccoglitore di conflitti.</value>
+    <value>Specificare un percorso valido per la cartella dei conflitti.</value>
   </data>
   <data name="ifolderName.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left, Right</value>
