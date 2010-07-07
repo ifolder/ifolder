@@ -76,6 +76,16 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            CLASS = NotificationPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                notificationDescriptionColumn = NSTableColumn; 
+                notificationEnabledColumn = NSTableColumn; 
+                notificationPrefsTable = NSTableView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
         {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             ACTIONS = {
