@@ -287,7 +287,7 @@
     <value>$this</value>
   </data>
   <data name="createAccountTitle" xml:space="preserve">
-    <value>Configura conto iFolder</value>
+    <value>Imposta account iFolder</value>
   </data>
   <data name="&gt;&gt;label3.Parent" xml:space="preserve">
     <value>$this</value>
@@ -383,7 +383,7 @@
     <value>Private</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>Sicur&amp;ezza:</value>
+    <value>S&amp;icurezza:</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
     <value>72, 16</value>
@@ -410,7 +410,7 @@
     <value />
   </data>
   <data name="EnterPPText" xml:space="preserve">
-    <value>Stringa di cifratura:</value>
+    <value>Immetti stringa di cifratura:</value>
   </data>
   <data name="verifyCertTitle" xml:space="preserve">
     <value>Impossibile verificare l'identità</value>
@@ -422,7 +422,7 @@
     <value />
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>Se&amp;rver:</value>
+    <value>&amp;Server:</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>67, 16</value>
@@ -440,7 +440,7 @@
     <value>L'ubicazione selezionata si trova su un'unità di rete o non fisica. Le cartelle iFolder devono trovarsi su un'unità fisica. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="RecoveryAgent" xml:space="preserve">
-    <value>Agente di recupero</value>
+    <value>Agente di recupero:</value>
   </data>
   <data name="cancel.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>Inherit</value>
@@ -656,7 +656,7 @@
     <value>NoControl</value>
   </data>
   <data name="browse.Text" xml:space="preserve">
-    <value>&amp;Sfoglia</value>
+    <value>S&amp;foglia</value>
   </data>
   <data name="browse.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
@@ -734,7 +734,7 @@
     <value>MiddleCenter</value>
   </data>
   <data name="RetypePP" xml:space="preserve">
-    <value>Ridigita la stringa di cifratura</value>
+    <value>Ridigita la stringa di cifratura:</value>
   </data>
   <data name="servers.MaxLength" type="System.Int32, mscorlib">
     <value>0</value>
@@ -869,7 +869,7 @@
     <value>-1</value>
   </data>
   <data name="createAccount" xml:space="preserve">
-    <value>Prima di cominciare a utilizzare iFolder, è necessario configurare un conto iFolder. Configurare un conto iFolder?</value>
+    <value>Prima di cominciare a utilizzare iFolder, è necessario configurare un account iFolder. Configurare un account iFolder?</value>
   </data>
   <data name="label2.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left</value>
@@ -911,7 +911,7 @@
     <value>True</value>
   </data>
   <data name="accessDenied" xml:space="preserve">
-    <value>Accesso all'ubicazione selezionata insufficiente. È possibile creare cartelle iFolder in cartelle per le quali si dispone dell'accesso in lettura e scrittura per i file. Selezionare un'altra ubicazione e riprovare.</value>
+    <value>Diritti di accesso all'ubicazione selezionata insufficienti. È possibile creare cartelle iFolder in cartelle per le quali si dispone dei diritti di accesso di lettura e scrittura per i file. Selezionare un'altra ubicazione e riprovare.</value>
   </data>
   <data name="cancel.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -1139,7 +1139,7 @@
     <value>4</value>
   </data>
   <data name="NoCertWarning" xml:space="preserve">
-    <value>Nessun agente di recupero selezionato. Se la stringa di cifratura viene perduta, non sarà in seguito possibile recuperare i dati cifrati. Continuare?</value>
+    <value>Nessun agente di recupero selezionato. Se la stringa di cifratura viene perduta, non sarà possibile in seguito recuperare i dati cifrati. Continuare?</value>
   </data>
   <data name="PPSDontMatch" xml:space="preserve">
     <value>La stringa di cifratura e la stringa di cifratura ridigitata non corrispondono</value>
@@ -1151,7 +1151,7 @@
     <value>Top, Left</value>
   </data>
   <data name="accessErrorTitle" xml:space="preserve">
-    <value>iFolder - Errore di accesso</value>
+    <value>Errore di accesso a iFolder</value>
   </data>
   <data name="cancel.DefaultModifiers" type="System.CodeDom.MemberAttributes, System">
     <value>Private</value>
@@ -1271,7 +1271,7 @@
     <value />
   </data>
   <data name="EnterPPTitle" xml:space="preserve">
-    <value>Immettere la stringa di cifratura</value>
+    <value>Immettere la stringa di cifratura:</value>
   </data>
   <data name="ifolderPath.Multiline" type="System.Boolean, mscorlib">
     <value>False</value>
