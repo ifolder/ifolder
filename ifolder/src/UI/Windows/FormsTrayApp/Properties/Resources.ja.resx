@@ -166,7 +166,7 @@
     <value>同期を開始しました: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>パスフレーズの再入力(&amp;C):</value>
+    <value>パスフレーズの再入力:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>使用済みディスク容量</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>削除(&amp;D)</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>メンバーシップの削除(&amp;B)</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>メンバーシップを {0} から削除する</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>ディスク割り当て量</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>サーバから削除(&amp;F)</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>秘密ファイルとそのパスワードがある(&amp;S)</value>
   </data>
@@ -304,7 +310,7 @@
     <value>iFolder {0} を開けません。</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>ヘルプ</value>
+    <value>ヘルプ(&amp;H)</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>同期待機中</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>iFolder同期エラー</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>同期が無効です</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>無効な場所です</value>
   </data>
@@ -385,13 +394,13 @@
     <value>パスフレーズをリセットする必要があるアカウントを選択してください。</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>参照</value>
+    <value>参照(&amp;R)</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>バイト</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>キャンセル</value>
+    <value>キャンセル(&amp;C)</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>競合あり</value>
@@ -457,7 +466,7 @@
     <value>おめでとうございます。パスフレーズは正常にリセットされました。新しいパスフレーズを使用して、データにアクセスできるようになりました。</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>戻る</value>
+    <value>戻る(&amp;B)</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>フォルダが存在しません</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>使用可能</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>削除の実行中</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>マージするには［OK］を、別の場所を選択するには［キャンセル］をクリックしてください</value>

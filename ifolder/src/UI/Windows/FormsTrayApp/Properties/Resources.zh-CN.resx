@@ -166,7 +166,7 @@
     <value>已开始同步：{0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>确认通行口令(&amp;C)：</value>
+    <value>确认通行口令：</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>已用的磁盘空间</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>删除(&amp;D)</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>去除我的成员资格(&amp;B)</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>从 {0} 去除您的成员资格</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>磁盘定额</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>从服务器删除(&amp;F)</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>我有机密文件及其口令(&amp;S)</value>
   </data>
@@ -304,7 +310,7 @@
     <value>无法打开 iFolder {0}。</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>帮助</value>
+    <value>帮助(&amp;H)</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>正在等待同步</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>iFolder 同步错误</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>已禁用同步</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>位置无效</value>
   </data>
@@ -385,13 +394,13 @@
     <value>选择需要重设置通行口令的帐户。</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>浏览</value>
+    <value>浏览(&amp;R)</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>字节</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>取消</value>
+    <value>取消(&amp;C)</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>存在冲突</value>
@@ -457,7 +466,7 @@
     <value>祝贺您！！您已成功重设置通行口令。现在，您可以使用新通行口令访问自己的数据。</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>返回</value>
+    <value>上一步(&amp;B)</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>文件夹不存在</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>可用</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>正在删除</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>选择“确定”进行合并，或选择“取消”以选定其他位置</value>

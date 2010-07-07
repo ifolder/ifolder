@@ -166,7 +166,7 @@
     <value>Szinkronizálás megkezdve: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Hozzáférési kód megerősítése:</value>
+    <value>Adja meg ismét a hozzáférési kódot:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Felhasznált lemezterület</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Törlés</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Saját tagság &amp;megszüntetése</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Tagság megszüntetése a következőben: {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Lemezkvóta</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>&amp;Törlés a kiszolgálóról</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Megvan &amp;a titkos fájl és a jelszava</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Nem sikerült megnyitni a(z) {0} iFolder mappát.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Súgó</value>
+    <value>&amp;Súgó</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Várakozás a szinkronizálásra</value>
@@ -378,20 +384,23 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>iFolder-szinkronizálási hiba</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Szinkronizálás letiltva</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Érvénytelen hely</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
-    <value>Jelölje ki azt a fiókot, amelynek az azonosítási kifejezését át kell állítani.</value>
+    <value>Jelölje ki azt a fiókot, amelynek a hozzáférési kódját át kell állítani.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Tallózás</value>
+    <value>&amp;Tallózás</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>bájt</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Mégse</value>
+    <value>&amp;Mégse</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Ütközéseket tartalmaz</value>
@@ -457,7 +466,7 @@
     <value>Gratulálunk! Sikeresen átállította a hozzáférési kódot. Most már ezzel az új kóddal férhet hozzá az adataihoz.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Vissza</value>
+    <value>&amp;Vissza</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>A mappa nem létezik</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Használható</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Törlés folyamatban</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Az összefésüléshez kattintson az OK gombra, másik hely kijelöléséhez pedig a Mégse gombra.</value>

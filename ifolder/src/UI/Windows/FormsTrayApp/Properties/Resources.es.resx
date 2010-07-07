@@ -166,7 +166,7 @@
     <value>Sincronización iniciada: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Confirmar contraseña codificada:</value>
+    <value>Confirmar contraseña codificada:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Espacio de disco utilizado</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Suprimir</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Eliminar mi per&amp;tenencia</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Eliminar mi pertenencia de {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Cuota de disco</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Suprimir &amp;del servidor</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Dispongo del archivo &amp;secreto y de la contraseña para acceder a él</value>
   </data>
@@ -304,7 +310,7 @@
     <value>No es posible abrir iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Ayuda</value>
+    <value>A&amp;yuda</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Esperando la sincronización</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Error de sincronización de iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Sincronización inhabilitada</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Ubicación no válida</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Seleccione la cuenta para la que desea restaurar la contraseña codificada.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Examinar</value>
+    <value>E&amp;xaminar</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Bytes</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>&amp;Cancelar</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Presenta conflictos</value>
@@ -457,7 +466,7 @@
     <value>¡Enhorabuena! Ha restaurado correctamente la contraseña codificada. Ahora puede utilizar la nueva contraseña codificada para acceder a sus datos.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Atrás</value>
+    <value>&amp;Atrás</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>La carpeta no existe</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Disponible</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Supresión en curso</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Seleccione Aceptar para fusionar o Cancelar para seleccionar una ubicación distinta</value>

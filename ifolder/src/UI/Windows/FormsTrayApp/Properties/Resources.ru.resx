@@ -166,7 +166,7 @@
     <value>Синхронизация запущена: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Подтверждение ключевой фразы:</value>
+    <value>Подтвердить ключевую фразу:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Используемое место на диске</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;Удалить</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Удалить мое &amp;членство</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Удалите членство из {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Дисковая квота</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Удалить &amp;c сервера</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>У меня есть файл &amp;секрета и пароль к нему</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Не удается открыть папку iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Справка</value>
+    <value>&amp;Справка</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Ожидание синхронизации</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Ошибка синхронизации iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Синхронизация отключена</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Недопустимое расположение</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Выберите учетную запись, для которой требуется сбросить ключевую фразу.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Просмотр</value>
+    <value>О&amp;бзор</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>байт</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Отмена</value>
+    <value>&amp;Отмена</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Конфликтует</value>
@@ -457,7 +466,7 @@
     <value>Поздравляем! Ключевая фраза сброшена. Теперь для доступа к данным можно использовать новую ключевую фразу.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Назад</value>
+    <value>&amp;Назад</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Папка не существует</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Доступно</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Выполняется удаление</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Щелкните "ОК", чтобы выполнить слияние, или "Отмена", чтобы выбрать другое расположение</value>

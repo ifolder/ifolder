@@ -166,7 +166,7 @@
     <value>Synchronizácia spustená: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Potvrdenie prístupového výrazu:</value>
+    <value>Potvrdiť prístupový výraz:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Použité miesto na disku</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Odstrániť</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Odstrániť &amp;moje členstvo</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Odstrániť členstvo v priečinku iFolder {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Kvóta priestoru na disku</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Odstrániť &amp;zo servera</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Mám &amp;tajný súbor a heslo tajného súboru</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Priečinok iFolder {0} sa nedá otvoriť.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Pomocník</value>
+    <value>P&amp;omocník</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Čaká sa na synchronizáciu</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Pri synchronizácii priečinka iFolder sa vyskytla chyba</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronizácia je zakázaná</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Neplatné umiestnenie</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Vyberte konto, pre ktoré chcete obnoviť prístupový výraz.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Prehľadávať</value>
+    <value>&amp;Prehľadávať</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>B</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Zrušiť</value>
+    <value>&amp;Zrušiť</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Obsahuje konflikty</value>
@@ -457,7 +466,7 @@
     <value>Gratulujeme! Prístupový výraz bol úspešne obnovený. Na prístup k údajom teraz môžete používať nový prístupový výraz.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Naspäť</value>
+    <value>&amp;Naspäť</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Priečinok neexistuje</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Dostupné</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Prebieha odstraňovanie</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Ak chcete vykonať zlúčenie, kliknite na tlačidlo OK. Ak chcete vybrať iné umiestnenie, kliknite na tlačidlo Zrušiť</value>

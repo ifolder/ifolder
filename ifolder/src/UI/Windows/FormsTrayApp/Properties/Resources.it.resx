@@ -166,13 +166,13 @@
     <value>Sincronizzazione avviata: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Conferma stringa di cifratura:</value>
+    <value>Conferma stringa di cifratura:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Spazio su disco utilizzato</value>
   </data>
   <data name="domainSelectionPageTitle" xml:space="preserve">
-    <value>Seleziona conto</value>
+    <value>Seleziona account</value>
   </data>
   <data name="exportPageName" xml:space="preserve">
     <value>EsportaPagina</value>
@@ -207,6 +207,9 @@
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Cancella</value>
   </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Rimuovi app&amp;artenenza</value>
+  </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Rimuovere appartenenza da {0}</value>
   </data>
@@ -238,7 +241,7 @@
     <value>Indirizzo e-mail:</value>
   </data>
   <data name="logEntriesCleared" xml:space="preserve">
-    <value>Voci di log deselezionate.</value>
+    <value>Voci di log cancellate.</value>
   </data>
   <data name="wizardText" xml:space="preserve">
     <value>Procedura guidata per il recupero della stringa di cifratura</value>
@@ -266,6 +269,9 @@
   </data>
   <data name="diskQuota" xml:space="preserve">
     <value>Quota disco</value>
+  </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Cancella &amp;dal server</value>
   </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>L'utente dispone del file &amp;segreto e della relativa password</value>
@@ -298,19 +304,19 @@
     <value>Nascondi cartelle iFolder disponibili</value>
   </data>
   <data name="availablefordownload" xml:space="preserve">
-    <value>Disponibile per il download</value>
+    <value>Disponibile per l'esecuzione del download</value>
   </data>
   <data name="iFolderOpenError" xml:space="preserve">
     <value>Impossibile aprire la cartella iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Guida</value>
+    <value>&amp;?</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>In attesa di sincronizzazione</value>
   </data>
   <data name="encryptionNotSetHeading" xml:space="preserve">
-    <value>Conto non cifrato</value>
+    <value>Account non cifrato</value>
   </data>
   <data name="oldDataFileNotSend" xml:space="preserve">
     <value>Impossibile inviare file di dati precedenti</value>
@@ -325,7 +331,7 @@
     <value>Questa operazione rimuove l'appartenenza da iFolder e la cartella iFolder dall'elenco </value>
   </data>
   <data name="importPageEncryCheck" xml:space="preserve">
-    <value>Il file &amp;è cifrato?</value>
+    <value>Il file &amp;sopra è cifrato?</value>
   </data>
   <data name="syncingDir" xml:space="preserve">
     <value>Sincronizzazione directory in corso: {0}</value>
@@ -358,10 +364,10 @@
     <value>Ubicazione file segreto non valida</value>
   </data>
   <data name="acceptDescription" xml:space="preserve">
-    <value>Download di "{0}" in ...</value>
+    <value>Esecuzione del download di "{0}" in ...</value>
   </data>
   <data name="iFolderAcc" xml:space="preserve">
-    <value>Conto &amp;iFolder:</value>
+    <value>Account &amp;iFolder:</value>
   </data>
   <data name="autoSync" xml:space="preserve">
     <value>Sincronizzazione automatica</value>
@@ -373,10 +379,13 @@
     <value>Controllo nuove cartelle iFolder in corso...</value>
   </data>
   <data name="downloadDir" xml:space="preserve">
-    <value>Download della directory in corso: {0}</value>
+    <value>Esecuzione del download della directory in corso: {0}</value>
   </data>
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Errore di sincronizzazione cartella iFolder</value>
+  </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Sincronizzazione disabilitata</value>
   </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Ubicazione non valida</value>
@@ -385,13 +394,13 @@
     <value>Selezionare il conto per cui si desidera reimpostare la stringa di cifratura.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Sfoglia</value>
+    <value>S&amp;foglia</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Byte</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Annulla</value>
+    <value>&amp;Annulla</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Con conflitti</value>
@@ -421,7 +430,7 @@
     <value>L'utente dispone del nuovo file di &amp;dati inviato dall'Amministratore.</value>
   </data>
   <data name="acceptError" xml:space="preserve">
-    <value>Si è verificata un'eccezione durante il tentativo di download della cartella iFolder.</value>
+    <value>Si è verificata un'eccezione durante il tentativo di esecuzione del download della cartella iFolder.</value>
   </data>
   <data name="usedQuota" xml:space="preserve">
     <value>Utilizzato</value>
@@ -439,7 +448,7 @@
     <value>Proprietario</value>
   </data>
   <data name="passphraseNotSet" xml:space="preserve">
-    <value>Stringa di cifratura non impostata per il conto.</value>
+    <value>Stringa di cifratura non impostata per l'account.</value>
   </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>File chiave cifrato esportato correttamente.</value>
@@ -457,7 +466,7 @@
     <value>La stringa di cifratura è stata correttamente reimpostata. È ora possibile utilizzare la nuova stringa di cifratura per accedere ai dati.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Indietro</value>
+    <value>&amp;Indietro</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Cartella inesistente</value>
@@ -466,7 +475,7 @@
     <value>PaginaFinale</value>
   </data>
   <data name="uploadDir" xml:space="preserve">
-    <value>Upload directory in corso: {0}</value>
+    <value>Esecuzione dell'upload della directory in corso: {0}</value>
   </data>
   <data name="noifolder" xml:space="preserve">
     <value>N. di cartelle iFolder</value>
@@ -490,10 +499,10 @@
     <value>Impossibile condividere la cartella iFolder</value>
   </data>
   <data name="uploadFile" xml:space="preserve">
-    <value>Upload file in corso: {0}</value>
+    <value>Esecuzione dell'upload del file in corso: {0}</value>
   </data>
   <data name="encryptionNotSet" xml:space="preserve">
-    <value>Cifratura non abilitata per il conto. Contattare l'amministratore del sistema per abilitare la cifratura.</value>
+    <value>Cifratura non abilitata per l'account. Contattare l'amministratore del sistema per abilitare la cifratura.</value>
   </data>
   <data name="thumbnails" xml:space="preserve">
     <value>Anteprime</value>
@@ -520,7 +529,7 @@
     <value>L'ubicazione selezionata è interna a un'altra cartella iFolder. Le cartelle iFolder non possono esistere in altre iFolder. Selezionare un'ubicazione differente e riprovare.</value>
   </data>
   <data name="AlsoRemoveMembership" xml:space="preserve">
-    <value>Rimuovere inoltre appartenenza</value>
+    <value>Rimuovere anche appartenenza</value>
   </data>
   <data name="delete" xml:space="preserve">
     <value>Cancella</value>
@@ -592,7 +601,7 @@
     <value>Esci dall'applicazione</value>
   </data>
   <data name="logEntriesCleared1" xml:space="preserve">
-    <value>Voci di log deselezionate.</value>
+    <value>Voci di log cancellate.</value>
   </data>
   <data name="infoPageSecond" xml:space="preserve">
     <value>Se non si dispone di tali parametri, è possibile utilizzare la procedura guidata per esportare i file di dati precedenti. È possibile inviare via e-mail tali file all'Amministratore, il quale eseguirà la decifratura e li invierà nuovamente all'utente. L'utente può quindi utilizzare il nuovo file di dati decifrato per reimpostare la stringa di cifratura.</value>
@@ -630,6 +639,9 @@
   <data name="availableText" xml:space="preserve">
     <value>Disponibile</value>
   </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Cancellazione in corso</value>
+  </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Selezionare OK per eseguire la fusione o Annulla per selezionare un'ubicazione diversa</value>
   </data>
@@ -658,7 +670,7 @@
     <value>Utente</value>
   </data>
   <data name="downloadFile" xml:space="preserve">
-    <value>Download file in corso: {0}</value>
+    <value>Esecuzione del download del file in corso: {0}</value>
   </data>
   <data name="remove" xml:space="preserve">
     <value>Rimuovi</value>

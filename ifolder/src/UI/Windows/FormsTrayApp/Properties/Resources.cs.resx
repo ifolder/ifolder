@@ -166,7 +166,7 @@
     <value>Spuštěná synchronizace: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Potvrzení hesla:</value>
+    <value>Potvrdit heslo:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Využité místo na disku</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Odstranit</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Ode&amp;brat moje členství</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Odebrat členství z {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Disková kvóta</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Odstranit ze &amp;serveru</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Mám &amp;tajný soubor a heslo k němu</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Nelze otevřít složku iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Nápověda</value>
+    <value>&amp;Nápověda</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Čekání na synchronizaci</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Chyba synchronizace složky iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronizace vypnuta</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Neplatné umístění</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Vyberte účet, pro který je nutné obnovit heslo.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Procházet</value>
+    <value>P&amp;rocházet</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Bajty</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Storno</value>
+    <value>&amp;Zrušit</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Má konflikty</value>
@@ -457,7 +466,7 @@
     <value>Gratulujeme!! Úspěšně jste obnovili heslo. Nyní můžete pro přístup ke svým datům používat nové heslo.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Zpět</value>
+    <value>&amp;Zpět</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Složka neexistuje.</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Dostupné</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Probíhá odstraňování</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Klepněte na tlačítko OK, chcete-li provést sloučení, nebo klepněte na tlačítko Storno a vyberte jiné umístění.</value>

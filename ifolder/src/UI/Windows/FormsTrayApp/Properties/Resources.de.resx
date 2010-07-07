@@ -166,7 +166,7 @@
     <value>Synchronisierung gestartet: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Passwortsatz bestätigen:</value>
+    <value>Passwortsatz bestätigen:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Belegter Speicherplatz</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Löschen</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Meine &amp;Mitgliedschaft entfernen</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Ihre Mitgliedschaft von {0} entfernen</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Datenträgerkontingent</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>&amp;Vom Server löschen</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Ich habe die &amp;geheime Datei und das Passwort für diese Datei</value>
   </data>
@@ -304,7 +310,7 @@
     <value>iFolder-Ordner {0} kann nicht geöffnet werden.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Hilfe</value>
+    <value>&amp;Hilfe</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Warten auf Synchronisierung</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Fehler bei der iFolder-Synchronisierung</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronisierung deaktiviert</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Ungültiger Standort</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Wählen Sie das Konto aus, für das der Passwortsatz zurückgesetzt werden muss.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Durchsuchen</value>
+    <value>&amp;Durchsuchen</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Byte</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Abbrechen</value>
+    <value>&amp;Abbrechen</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Weist Konflikte auf</value>
@@ -457,7 +466,7 @@
     <value>Herzlichen Glückwunsch!! Sie haben den Passwortsatz erfolgreich zurückgesetzt. Sie können nun den neuen Passwortsatz verwenden, um auf Ihre Daten zuzugreifen.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Zurück</value>
+    <value>&amp;Zurück</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Ordner ist nicht vorhanden</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Verfügbar</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Löschvorgang wird durchgeführt</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Wählen Sie zum Zusammenführen "OK" aus, oder "Abbrechen", um einen anderen Standort auszuwählen</value>

@@ -166,7 +166,7 @@
     <value>Synchronisation lancée : {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Confirmer la phrase secrète :</value>
+    <value>Confirmer la phrase secrète :</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Espace disque utilisé</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>Suppri&amp;amp:mer</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Supprimer mon a&amp;dhésion</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Supprimer votre adhésion à {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Quota de disque</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Supprimer &amp;du serveur</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Je dispose du fichier &amp;secret et de son mot de passe.</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Impossible d'ouvrir le dossier iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Aide</value>
+    <value>&amp;Aide</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>En attente de synchronisation</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Erreur de synchronisation du dossier iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronisation désactivée</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Emplacement non valide</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Sélectionnez le compte dont la phrase secrète doit être réinitialisée.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Parcourir</value>
+    <value>P&amp;arcourir</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Octets</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Annuler</value>
+    <value>&amp;Annuler</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Est conflictuel</value>
@@ -457,7 +466,7 @@
     <value>Félicitations ! Votre phrase secrète a été réinitialisée. Vous pouvez désormais utiliser la nouvelle phrase secrète pour accéder à vos données.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Précédent</value>
+    <value>&amp;Précédent</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Le dossier n'existe pas.</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Disponible</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Suppression en cours</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Cliquez sur OK pour fusionner ou sur Annuler pour sélectionner un autre emplacement.</value>

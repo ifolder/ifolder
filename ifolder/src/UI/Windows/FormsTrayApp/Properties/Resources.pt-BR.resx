@@ -166,7 +166,7 @@
     <value>Sincronização iniciada: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Confirmar frase secreta:</value>
+    <value>Confirme a frase secreta:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Espaço em disco usado</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Apagar</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>Remover minha Par&amp;ticipação</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Remover sua participação de {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Quota de disco</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>Apagar &amp;do servidor</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Tenho o &amp;arquivo secreto e a senha dele</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Não é possível abrir iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Ajuda</value>
+    <value>&amp;Ajuda</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Aguardando para sincronizar</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Erro ao Sincronizar iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Sincronização desabilitada</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Local Inválido</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Selecione a conta para a qual a frase secreta precisa ser redefinida.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Procurar</value>
+    <value>P&amp;rocurar</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>Bytes</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Cancelar</value>
+    <value>&amp;Cancelar</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Tem Conflitos</value>
@@ -457,7 +466,7 @@
     <value>Parabéns!! Você redefiniu a frase secreta com êxito. Agora você pode usar a nova frase secreta para acessar seus dados.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Voltar</value>
+    <value>&amp;Voltar</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>A pasta não existe</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Disponível</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Apagamento Em Andamento</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Selecione OK para fazer uma fusão ou Cancelar para selecionar um local diferente</value>

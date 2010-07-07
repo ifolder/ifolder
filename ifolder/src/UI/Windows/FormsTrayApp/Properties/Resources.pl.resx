@@ -166,7 +166,7 @@
     <value>Rozpoczęto synchronizację: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>&amp;Potwierdź zwrot hasłowy:</value>
+    <value>Potwierdź zwrot hasłowy:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Używane miejsce na dysku</value>
@@ -206,6 +206,9 @@
   </data>
   <data name="deleteAction" xml:space="preserve">
     <value>&amp;amp:Usuń</value>
+  </data>
+  <data name="RemoveMyMembershipText" xml:space="preserve">
+    <value>&amp;Usuń moje członkostwo</value>
   </data>
   <data name="RemoveMembershipTitle" xml:space="preserve">
     <value>Usuń swoje członkostwo w folderze {0}</value>
@@ -267,6 +270,9 @@
   <data name="diskQuota" xml:space="preserve">
     <value>Przydział dysku</value>
   </data>
+  <data name="menuRemoveText" xml:space="preserve">
+    <value>&amp;Usuń z serwera</value>
+  </data>
   <data name="selectionPageSecond" xml:space="preserve">
     <value>Mam &amp;tajny plik i hasło do niego</value>
   </data>
@@ -304,7 +310,7 @@
     <value>Nie można otworzyć folderu iFolder {0}.</value>
   </data>
   <data name="helpText" xml:space="preserve">
-    <value>Pomoc</value>
+    <value>Pomo&amp;c</value>
   </data>
   <data name="WaitSync" xml:space="preserve">
     <value>Oczekiwanie na zsynchronizowanie</value>
@@ -378,6 +384,9 @@
   <data name="syncErrorTitle" xml:space="preserve">
     <value>Błąd synchronizacji folderu iFolder</value>
   </data>
+  <data name="syncDisabled" xml:space="preserve">
+    <value>Synchronizacja wyłączona</value>
+  </data>
   <data name="pathInvalidErrorTitle" xml:space="preserve">
     <value>Nieprawidłowe położenie</value>
   </data>
@@ -385,13 +394,13 @@
     <value>Wybierz konto, dla którego należy zresetować zwrot hasłowy.</value>
   </data>
   <data name="browseText" xml:space="preserve">
-    <value>Przeglądaj</value>
+    <value>&amp;Przeglądaj</value>
   </data>
   <data name="b" xml:space="preserve">
     <value>bajtów</value>
   </data>
   <data name="cancelText" xml:space="preserve">
-    <value>Anuluj</value>
+    <value>&amp;Anuluj</value>
   </data>
   <data name="statusConflicts" xml:space="preserve">
     <value>Powoduje konflikt</value>
@@ -457,7 +466,7 @@
     <value>Gratulacje! Zwrot hasłowy został pomyślnie zresetowany. Teraz możesz uzyskiwać dostęp do danych za pomocą nowego zwrotu hasłowego.</value>
   </data>
   <data name="backText" xml:space="preserve">
-    <value>Wstecz</value>
+    <value>&amp;Wstecz</value>
   </data>
   <data name="FolderDoesNotExistErrorTitle" xml:space="preserve">
     <value>Folder nie istnieje</value>
@@ -629,6 +638,9 @@
   </data>
   <data name="availableText" xml:space="preserve">
     <value>Dostępny</value>
+  </data>
+  <data name="deletionInProgress" xml:space="preserve">
+    <value>Usuwanie w toku</value>
   </data>
   <data name="OkMergeCancel" xml:space="preserve">
     <value>Kliknij przycisk OK, aby scalić, lub przycisk Anuluj, aby wybrać inne położenie.</value>
