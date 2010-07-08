@@ -55,7 +55,7 @@ Provides the iFolder plugin interface to the Nautilus File Manager
 
 %prep
 export BUILDNUM=%{buildnum}
-%setup -n -q %{name}
+%setup -q -n %{name}
 #=============================================================================
 
 %build

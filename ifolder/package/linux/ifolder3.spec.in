@@ -119,7 +119,6 @@ rm $RPM_BUILD_ROOT/%{prefix}/%_lib/libtrayicon.la \
 if ! [ -d  $RPM_BUILD_ROOT/usr/bin ]; then
 	mkdir -p $RPM_BUILD_ROOT/usr/bin
 fi
-%find_lang %{name}
 %find_gconf_schemas
 %fdupes $RPM_BUILD_ROOT/%{prefix}/share/ifolder3
 #=============================================================================
@@ -134,10 +133,11 @@ echo "Restart the system before you start using iFolder"
 
 %posttrans -f %{name}.schemas_posttrans
 
-%postun -p /sbin/ldconfig
+%postun 
+/sbin/ldconfig
 #=============================================================================
 
-%files -f %{name}.schemas_list -f %{name}.lang
+%files -f %{name}.schemas_list 
 %defattr(644,root,root, 755)
 %doc COPYING
 %attr(755,root,root)  %{prefix}/bin/*
@@ -160,6 +160,22 @@ echo "Restart the system before you start using iFolder"
 %attr(755,root,root) %{prefix}/%_lib/simias/web/bin/*
 %attr(755,root,root) %{prefix}/%_lib/simias/web/*
 %{prefix}/share/applications/ifolder.desktop
+%{prefix}/share/locale/cs/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/de/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/en/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/es/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/fi/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/fr/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/hu/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/it/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/ja/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/pl/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/pt/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/pt_BR/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/ru/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/sk/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/zh_CN/LC_MESSAGES/ifolder3.mo
+%{prefix}/share/locale/zh_TW/LC_MESSAGES/ifolder3.mo
 
 %if 0%{suse_version} > 01120
 

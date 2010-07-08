@@ -53,8 +53,6 @@ Plugins adding additional capability to iFolder 3 client
 %prep
 export BUILDNUM=%{buildnum}
 %setup -n %{name} -q
-%patch
-%patch1
 #=============================================================================
 
 %build
