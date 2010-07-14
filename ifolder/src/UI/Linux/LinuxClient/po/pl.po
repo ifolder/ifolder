@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:53\n"
+"PO-Revision-Date: 2010-07-13 09:30\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -730,7 +730,7 @@ msgstr "Współużytkuj _z..."
 
 #: src/LinuxClient/library/iFolderWindow.cs:550
 msgid "Resolve conflic_ts"
-msgstr "Rozstrzygnij k_onflikty"
+msgstr "Rozstrzygnij kon_flikty"
 
 #: src/LinuxClient/library/iFolderWindow.cs:555
 msgid "S_ynchronize now"
