@@ -424,7 +424,7 @@
     <value>2</value>
   </data>
   <data name="Settings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>4, 22</value>
   </data>
   <data name="&gt;&gt;defaultInterval.Type" xml:space="preserve">
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -451,7 +451,7 @@
     <value>Settings</value>
   </data>
   <data name="notifyCheckbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>14, 17</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
     <value>Ak je porušená politika vylúčenia súboru.</value>
@@ -490,7 +490,7 @@
     <value>Nastavenie</value>
   </data>
   <data name="Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>426, 408</value>
   </data>
   <data name="apply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -511,7 +511,7 @@
     <value>Bottom, Right</value>
   </data>
   <data name="policylistbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>14, 40</value>
   </data>
   <data name="&gt;&gt;notifyShared.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -772,7 +772,7 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="policylistbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>376, 56</value>
   </data>
   <data name="hours" xml:space="preserve">
     <value>hod.</value>
@@ -925,10 +925,10 @@
     <value>Pri vytvorení priečinka iFolder zobraziť &amp;dialógové okno s potvrdením</value>
   </data>
   <data name="notifyCheckbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>114, 17</value>
   </data>
   <data name="notifyCheckbox.Text" xml:space="preserve">
-    <value>Zo&amp;braziť upozornenie</value>
+    <value>Zobraziť &amp;upozornenie</value>
   </data>
   <data name="&gt;&gt;groupBox1.Parent" xml:space="preserve">
     <value>tabGeneral</value>
