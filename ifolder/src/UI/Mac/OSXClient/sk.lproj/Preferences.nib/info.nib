@@ -9,7 +9,7 @@
 		<key>42</key>
 		<string>662 489 520 92 0 0 1440 878 </string>
 		<key>45</key>
-		<string>420 395 485 342 0 0 1440 878 </string>
+		<string>512 424 466 321 0 0 1440 878 </string>
 		<key>49</key>
 		<string>498 519 443 134 0 0 1440 878 </string>
 		<key>7</key>
@@ -23,10 +23,6 @@
 	<string>../iFolder.xcodeproj</string>
 	<key>IBOldestOS</key>
 	<integer>5</integer>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>45</integer>
-	</array>
 	<key>IBSystem Version</key>
 	<string>8S2167</string>
 	<key>targetFramework</key>
