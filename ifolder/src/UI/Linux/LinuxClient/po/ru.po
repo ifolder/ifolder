@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:53\n"
+"PO-Revision-Date: 2010-07-13 09:30\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -1559,10 +1559,10 @@ msgid "Enter the name of your iFolder Server (for example, \"ifolder.example.net
 msgstr "Введите имя сервера iFolder (например \"ifolder.example.net\")."
 
 msgid "Server _Address:"
-msgstr "Адрес_сервера:"
+msgstr "Адрес _сервера:"
 
 msgid "Server _address:"
-msgstr "Адрес _сервера:"
+msgstr "Адрес с_ервера:"
 
 msgid "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
 msgstr "Установка данного сервера iFolder в качестве сервера по умолчанию, чтобы разрешить iFolder автоматически выбирать данный сервер при добавлении новых папок."
@@ -1598,7 +1598,7 @@ msgid "_Remember my password"
 msgstr "_Запомнить пароль"
 
 msgid "_Remember password on this computer"
-msgstr "_Запомнить пароль на этом компьютере"
+msgstr "З_апомнить пароль на этом компьютере"
 
 msgid "Verify and Connect"
 msgstr "Проверка и подключение"
@@ -1643,7 +1643,7 @@ msgid "_Passphrase:"
 msgstr "_Контрольная фраза:"
 
 msgid "R_etype the Passphrase:"
-msgstr "В_ведите контрольную фразу еще раз:"
+msgstr "Вве_дите контрольную фразу еще раз:"
 
 msgid "_Remember the Passphrase"
 msgstr "_Запомнить контрольную фразу"
@@ -2354,7 +2354,7 @@ msgid "Convert to an iFolder..."
 msgstr "Преобразовать в папку iFolder..."
 
 msgid "_Browse"
-msgstr "Про_смотр"
+msgstr "Пр_осмотр"
 
 msgid "Synchronized: {0}"
 msgstr "Синхронизирован: {0}"
