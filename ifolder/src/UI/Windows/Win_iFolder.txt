@@ -253,6 +253,19 @@
 				SyncHandler.ashx
 				web.config
 		<plugins>
+			cs
+			de
+			es
+			fr
+			hu
+			it
+			ja
+			pl
+			pt-BR
+			ru
+			sk
+			zh-CN
+			zh-TW
 			AutoAccountCreator.dll
 			EnhancedConflictResolution.dll
 			EnhancedMenuItems.dll
