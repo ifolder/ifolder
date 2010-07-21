@@ -54,6 +54,7 @@ Requires:       xsp >= 1.2.5
 Version:        3.8.2.@@BUILDNUM@@.1
 Release:        1
 Summary:        File Sharing and Collaboration Tool
+Vendor:         Novell, Inc.
 Source:         ifolder3.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
