@@ -48,6 +48,7 @@ Requires:       xsp >= 1.2.5
 Version:        3.8.2.@@BUILDNUM@@.1
 Release:        1
 Summary:        Plugins adding additional capability to iFolder 3 client
+Vendor:         Novell, Inc.
 Source:         %{name}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
