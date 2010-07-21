@@ -57,6 +57,7 @@ Provides:     nautilus-ifolder
 Obsoletes:    nautilus-ifolder
 Release:      1
 Summary:      Nautilus plugin to add iFolder support
+Vendor:         Novell, Inc.
 Source:       nautilus-ifolder3.tar.gz
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
