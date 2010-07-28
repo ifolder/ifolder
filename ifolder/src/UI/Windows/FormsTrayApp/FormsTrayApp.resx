@@ -1081,13 +1081,13 @@
 	<value>None</value>
   </data>
   <data name="NoLoggedInDomainsText" >
-	<value>For changing passphrase the domain should be connected. Log on to the domain and try."</value>
+	<value>For changing passphrase the domain should be connected. Log on to the domain and try.</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText" >
     <value>For changing password the domain should be connected. Log on to the domain and try.</value>
   </data>  
   <data name="NoLoggedInDomainsTextForImport" >
-	<value>For importing the domain should be connected. Log on to the domain and try."</value>
+	<value>For importing the domain should be connected. Log on to the domain and try.</value>
   </data>
   <data name="ImportKeysError" >
 	<value>Error importing keys</value>

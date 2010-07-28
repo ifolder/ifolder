@@ -419,6 +419,14 @@ namespace Novell.FormsTrayApp
                     return;
                 }
 
+                if (status.statusCode == StatusCodes.ServerUnAvailable)
+                {
+                    Cursor.Current = Cursors.Default;
+                    MessageBox.Show(Resource.GetString("NoLoggedInDomainsText")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
+                    this.success = false;
+                    return;
+                }
+
                 if (this.recoveryAgentCombo.SelectedItem != null && (string)this.recoveryAgentCombo.SelectedItem != TrayApp.Properties.Resources.serverDefaultRA)
                 {
                     // Show the certificate.....
