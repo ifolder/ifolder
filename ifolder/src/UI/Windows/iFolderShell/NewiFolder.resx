@@ -581,7 +581,7 @@
     <value>Managing iFolders</value>
   </data>
   <data name="MigrationLabel.Text">
-	<value>There are some 2.x iFolders present on this computer. Do you want to migrate them to 3.7?</value>
+	<value>There are some 2.x iFolders present on this computer. Do you want to migrate them to {0}?</value>
   </data>
   <data name="OK">
 	<value>OK</value>

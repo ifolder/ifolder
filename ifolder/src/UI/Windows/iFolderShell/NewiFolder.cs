@@ -98,7 +98,9 @@ namespace Novell.iFolderCom
         /// </summary>
 		public void ShowMigrationPrompt()
 		{
-			this.iFolderOverview.Text = resourceManager.GetString("MigrationLabel.Text");
+            Version version = new Version(Application.ProductVersion);
+            Version strversion = new Version(version.Major,version.Minor);
+			this.iFolderOverview.Text = String.Format(resourceManager.GetString("MigrationLabel.Text"), strversion.ToString());
 			this.Text = resourceManager.GetString("MigrationTitle.Text");
 			this.button1.Visible = true;
 			this.close.Text = resourceManager.GetString("OK");
