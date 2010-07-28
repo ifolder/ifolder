@@ -502,13 +502,13 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>When Quota policy is voilated.</value>
+    <value>When Quota policy is violated.</value>
   </data>
   <data name="policylistbox.Items1" xml:space="preserve">
-    <value>When File size policy is voilated.</value>
+    <value>When File size policy is violated.</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
-    <value>When File exclusiong policy is voilated.</value>
+    <value>When File exclusiong policy is violated.</value>
   </data>
   <data name="policylistbox.Items3" xml:space="preserve">
     <value>When disk is full.</value>
@@ -517,7 +517,7 @@
     <value>When required permissions are unavailable.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>When file path exceeds optiomal limit.</value>
+    <value>When file path exceeds optimal limit.</value>
   </data>
   <data name="policylistbox.Location" type="System.Drawing.Point, System.Drawing">
     <value>14, 40</value>
