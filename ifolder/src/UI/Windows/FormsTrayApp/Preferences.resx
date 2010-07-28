@@ -508,7 +508,7 @@
     <value>When File size policy is violated.</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
-    <value>When File exclusiong policy is violated.</value>
+    <value>When File exclusion policy is violated.</value>
   </data>
   <data name="policylistbox.Items3" xml:space="preserve">
     <value>When disk is full.</value>
