@@ -182,9 +182,9 @@ namespace Novell.iFolder
                         null,
                         iFolderMsgDialog.DialogType.Question,
                         iFolderMsgDialog.ButtonSet.YesNo,
-                        Util.GS("Exit Novell iFolder"),
-                         Util.GS("If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked.\nThe next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application ?"),
-                        " ");
+                        Util.GS("Exit Novell iFolder"),"",
+                         Util.GS("If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked.\nThe next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application ?")
+                        );
                          quitDlg.Response += new ResponseHandler(YesNo_Clicked);
 
 			RunningPixbuf =
