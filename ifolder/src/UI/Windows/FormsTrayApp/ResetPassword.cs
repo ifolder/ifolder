@@ -141,6 +141,7 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ResetPassword));
+            System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 			this.panel = new System.Windows.Forms.Panel();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
@@ -649,6 +650,9 @@ namespace Novell.FormsTrayApp
                     break;
                 case 8:
                     message = resources.GetString("Usernotfoundinsimias");
+                    break;
+                case 9:
+                    message = Resource.GetString("NoLoggedInDomainsPasswordText");
                     break;
                 default:
                     message = resources.GetString("Errorchangingpassword");
