@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">Anmelden bei iFolder-Konten</entry>
  <entry leaf="true" id="accountdetails">Anzeigen und Bearbeiten von iFolder-Konto-Einstellungen</entry>
  <entry leaf="true" id="preferences">Konfigurieren von iFolder-Einstellungen für den Client</entry>
+ <entry leaf="true" id="settings">iFolder-Einstellungen</entry>
  <entry leaf="true" id="firewall">Konfigurieren von lokalen Firewall-Einstellungen für den iFolder-Verkehr</entry>
  <entry leaf="true" id="virusscan">Konfigurieren von lokalen Virenscanner-Einstellungen für den iFolder-Verkehr</entry>
  <entry leaf="true" id="delacct">Löschen von iFolder-Konten</entry>

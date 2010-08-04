@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">Bejelentkezés egy iFolder-fiókba</entry>
  <entry leaf="true" id="accountdetails">Az iFolder fiókbeállítások megtekintése és módosítása</entry>
  <entry leaf="true" id="preferences">Az ügyfél iFolder-beállításainak megadása</entry>
+ <entry leaf="true" id="settings">Az iFolder beállításai</entry>
  <entry leaf="true" id="firewall">A helyi tűzfal beállítása az iFolder-forgalomhoz</entry>
  <entry leaf="true" id="virusscan">A helyi vírusellenőrző beállítása az iFolder-forgalomhoz</entry>
  <entry leaf="true" id="delacct">iFolder-fiók törlése</entry>

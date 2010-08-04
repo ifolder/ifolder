@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:43" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 20:21" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> Configuration des paramètres du pare-feu local pour le trafic iFolder</h1>
 
-<p class="para">Si vous utilisez un pare-feu local, vous devez le configurer de manière à permettre à iFolder de choisir un port dynamique local ou bien configurer un port statique local pour que le client iFolder puisse communiquer localement (même ordinateur) avec le serveur Mono® XSP. iFolder utilise les services Web Mono XSP pour communiquer via HTTP avec les serveurs d'entreprise Novell iFolder où vous possédez des comptes iFolder. C'est l'administrateur iFolder qui configure les services iFolder qui déterminent si les communications utilisent le protocole HTTP dans votre environnement.</p>
+<p class="para">Si vous utilisez un pare-feu local, vous devez le configurer de manière à permettre à iFolder de choisir un port dynamique local ou bien configurer un port statique local pour que le client iFolder puisse communiquer localement (même ordinateur) avec le serveur Mono XSP. iFolder utilise les services Web Mono XSP pour communiquer via HTTP avec les serveurs d'entreprise Novell iFolder où vous possédez des comptes iFolder. C'est l'administrateur iFolder qui configure les services iFolder qui déterminent si les communications utilisent le protocole HTTP dans votre environnement.</p>
 <p class="para">Votre pare-feu ne bloque pas le trafic entre Mono XSP et le serveur d'entreprise Novell iFolder car Mono XSP utilise les ports HTTP standard pour le trafic. Toutefois, si vous bloquez le trafic entre le client et Mono XSP, le client n'a plus aucun moyen de communication avec le serveur. Il ne vous est alors plus possible de vous loguer à votre compte iFolder et de synchroniser les données iFolder.</p>
 <p class="para">A l'origine, la configuration iFolder ne spécifie pas de port particulier à utiliser pour les communications client-Mono XSP. À la première exécution de iFolder, celui-ci ouvre un port local disponible pour guetter les requêtes de Mono XSP et envoyer des données au serveur via Mono XSP. Il écrit le numéro de port dans un fichier de configuration et utilise ce port par la suite sauf s'il n'est pas disponible lorsque iFolder est lancé. Si le port est utilisé par une autre application, iFolder sélectionne un autre port disponible, reconfigure le port dans le fichier de configuration et utilise le nouveau port par la suite. Par exemple, si iFolder n'est pas exécuté et si une autre application utilise le port, iFolder doit sélectionner et configurer un autre port à utiliser lors de son redémarrage.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">Utilisation d'un port dynamique local</a>
+            <a href="firewall.html#bctnqjo" class="xref">Utilisation d'un port dynamique local</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">Utilisation d'un port statique local</a>
+            <a href="firewall.html#bctnqjp" class="xref">Utilisation d'un port statique local</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">Démarrez le client iFolder.</p>
-<p class="para">Pour plus d'informations, reportez-vous au <a href="startclient.html">Démarrage du client iFolder</a>.</p></li></ol>
+<p class="para">Pour plus d'informations, reportez-vous au <a href="startclient.html" class="xref">Démarrage du client iFolder</a>.</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> Pour plus d'informations, reportez-vous à la rubrique <a href="legal.html">Mentions légales</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>

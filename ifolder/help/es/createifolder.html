@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:54" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 20:07" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -51,36 +51,36 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="locguide.html">Directrices para la ubicación y utilización de carpetas iFolder</a>
+            <a href="locguide.html" class="xref">Directrices para la ubicación y utilización de carpetas iFolder</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="nameconv.html">Convenciones de denominación de una carpeta iFolder y de las carpetas y archivos que contiene</a>
+            <a href="nameconv.html" class="xref">Convenciones de denominación de una carpeta iFolder y de las carpetas y archivos que contiene</a>
           </p></li></ul></div>
 
 <p class="para">Si la carpeta no existe, puede examinar una ubicación y crear la carpeta nueva como parte del proceso. </p>
 <div class="important">
 <p class="para"><em class="title">IMPORTANTE:</em>Únicamente es posible compartir las carpetas iFolder normales. No es posible compartir las carpetas iFolder cifradas</p></div>
 
-<p class="para">En la carpeta iFolder, es posible configurar cualquier estructura de subdirectorios que se adecue a los hábitos de trabajo personales o de la empresa. La estructura de subdirectorios es constante en todas las carpetas iFolder miembro. Cada estación de trabajo puede especificar un directorio padre diferente para la carpeta iFolder compartida.</p>
+<p class="para">En la carpeta de iFolder, es posible configurar cualquier estructura de subdirectorios que se adecue a los hábitos de trabajo personales o de la empresa. La estructura de subdirectorios es constante en todas las carpetas iFolder miembro. Cada estación de trabajo puede especificar un directorio padre diferente para la carpeta iFolder compartida.</p>
 <p class="para">Cuando se supera el número límite de carpetas iFolder que un usuario puede crear, iFolder muestra un mensaje de error. Por ejemplo, si el administrador ha establecido la directiva de <span class="guimenu">Número de carpetas por usuario</span> en diez e intenta crear la carpeta iFolder número once, recibirá una notificación acerca de la infracción de la directiva.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#bbrkjhr">Linux</a>
+            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#bbrkjtk">Windows</a>
+            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#bctq91g">Macintosh</a>
+            <a href="createifolder.html#bctq91g" class="xref">Macintosh</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="createifolder.html#fat32mtpt">Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</a>
+            <a href="createifolder.html#fat32mtpt" class="xref">Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bbrkjhr">
@@ -92,11 +92,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkq96">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
+              <a href="createifolder.html#bbrkq96" class="xref">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkqnw">Creación de carpetas iFolder en un administrador de archivos</a>
+              <a href="createifolder.html#bbrkqnw" class="xref">Creación de carpetas iFolder en un administrador de archivos</a>
             </p></li></ul></div>
 
 <div class="sect3" id="bbrkq96">
@@ -213,11 +213,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkmqg">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
+              <a href="createifolder.html#bbrkmqg" class="xref">Creación de carpetas iFolder en el navegador de carpetas iFolder</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkln6">Creación de carpetas iFolder en un administrador de archivos</a>
+              <a href="createifolder.html#bbrkln6" class="xref">Creación de carpetas iFolder en un administrador de archivos</a>
             </p></li></ul></div>
 
 <div class="sect3" id="bbrkmqg">
@@ -404,7 +404,7 @@ mount -t vfat /dev/<span class="replaceable">hda1</span> /home/<span class="repl
 mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemszm">
-<p class="para">Añada el parámetro <span class="literal">uid=nombre_usuario</span> del usuario de la carpeta iFolder en la línea que define el punto de montaje FAT32 para editar el archivo <span class="filename">/etc/fstab</span>.</p><pre class="screen">
+<p class="para">Añada el parámetro <span class="literal">uid=username</span> del usuario de la carpeta iFolder en la línea que define el punto de montaje FAT32 para editar el archivo <span class="filename">/etc/fstab</span>.</p><pre class="screen">
 /dev/<span class="replaceable">hda1</span>  /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>  <span class="replaceable">vfat</span>  uid=<span class="replaceable">username</span>
 </pre>
 <p class="para">Para continuar con el ejemplo, añada <span class="literal">uid=jsmith</span> al punto de montaje para modificar el archivo <span class="filename">/etc/fstab</span>:</p><pre class="screen">
