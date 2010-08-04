@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">iFolderアカウントへのログイン</entry>
  <entry leaf="true" id="accountdetails">iFolderアカウント設定の表示と変更</entry>
  <entry leaf="true" id="preferences">クライアントのiFolder初期設定を行う</entry>
+ <entry leaf="true" id="settings">iFolderの設定</entry>
  <entry leaf="true" id="firewall">iFolderトラフィックに対するローカルファイアウォールの設定</entry>
  <entry leaf="true" id="virusscan">iFolderトラフィックに対するローカルウィルススキャナの設定</entry>
  <entry leaf="true" id="delacct">iFolderアカウントの削除</entry>
