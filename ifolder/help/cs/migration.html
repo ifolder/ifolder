@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 20:46" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6kho">Porozumění procesu migrace</a>
+            <a href="migration.html#bax6kho" class="xref">Porozumění procesu migrace</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6esx">Postup migrace</a>
+            <a href="migration.html#bax6esx" class="xref">Postup migrace</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bax6kho">
@@ -63,7 +63,7 @@
 <h2 class="title"> Porozumění procesu migrace</h2>
 
 <p class="para">Aplikace Novell iFolder poskytuje možnost jednoduché migrace z klienta verze iFolder 2.<span class="replaceable">x</span> na klienta verze iFolder 3.7 nebo novější. Průvodce migrací, který je k dispozici v klientovi iFolder, usnadňuje a urychluje migraci stávajících dat aplikace iFolder 2.<span class="replaceable">x</span>.</p>
-<p class="para">Během spouštění Průvodce migrací detekuje instalaci verze 2.<span class="replaceable">x</span> a vyzve vás k migraci dat. Během migrace dat vás znovu vyzve k převodu stávajících složek nebo k vytvoření kopie složky 2.<span class="replaceable">x</span> iFolder. Další informace o tomto tématu najdete v části <a href="migration.html#b8anh5z">krok 6</a>.</p>
+<p class="para">Během spouštění Průvodce migrací detekuje instalaci verze 2.<span class="replaceable">x</span> a vyzve vás k migraci dat. Během migrace dat vás znovu vyzve k převodu stávajících složek nebo k vytvoření kopie složky 2.<span class="replaceable">x</span> iFolder. Další informace o tomto tématu najdete v části <a href="migration.html#b8anh5z" class="xref">krok 6</a>.</p>
 <p class="para">Aplikace iFolder vás vyzve k opětovné synchronizaci souborů na server 3.7 nebo novější a dotáže se, zda chcete uchovat klienta verze 2.<span class="replaceable">x</span> do dokončení synchronizace. Během tohoto procesu jsou migrována pouze data a uživatel tedy musí nastavit předvolby pro nového klienta. </p>
 </div>
 
@@ -75,10 +75,10 @@
 <ol class="steps">
 <li class="step" id="b88immv">
 <p class="para">Nainstalujte klienta iFolder pro server verze iFolder 3.7 nebo novější, pak nastavte svůj účet pro podnikový server iFolder 3.7 nebo novější.</p>
-<p class="para">Informace o instalaci klienta a nastavení účtu najdete v části <a href="accountsprefs.html">Správa účtů a předvoleb aplikace iFolder</a>.</p></li>
+<p class="para">Informace o instalaci klienta a nastavení účtu najdete v části <a href="accountsprefs.html" class="xref">Správa účtů a předvoleb aplikace iFolder</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">V prohlížeči iFolder vytvořte jednu nebo několik složek iFolder ve svém počítači.</p>
-<p class="para">Pro složku iFolder můžete použít jakékoliv platné jméno. Nevytvářejte složku iFolder ve stejném umístění, jako je stávající adresář iFolder 2.<span class="replaceable">x</span>. Další informace naleznete v části <a href="createifolder.html">Vytvoření a vyslání složek iFolder</a>.</p></li>
+<p class="para">Pro složku iFolder můžete použít jakékoliv platné jméno. Nevytvářejte složku iFolder ve stejném umístění, jako je stávající adresář iFolder 2.<span class="replaceable">x</span>. Další informace naleznete v části <a href="createifolder.html" class="xref">Vytvoření a vyslání složek iFolder</a>.</p></li>
 <li class="step" id="bb0b2z9">
 <p class="para">Složka iFolder zobrazuje hlášení o existenci předchozí verze dat a požadavek migrace. </p>
 <p class="para">Klepnutím na tlačítko <span class="guimenu">OK</span> otevřete seznam dostupných složek iFolder verze2.<span class="replaceable">x</span>.</p></li>
@@ -94,15 +94,17 @@
 <li class="step" id="b8anh5z">
 <p class="para">Vyberte jednu z následujících možností:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migrovat složku iFolder a odpojit ji od domény 2.x</span>:</em>
-               Tuto možnost vyberte v případě, že chcete odpojit stávající složku z verze domény iFolder 2.<span class="replaceable">x</span> po její migraci na verzi 3.7 nebo novější.</p>
+              <p class="title"><em class="title">
+                <span class="guimenu">Migrovat složku iFolder a odpojit ji od domény 2.x</span>
+              </em>
+              Vyberte tuto možnost, chcete-li odpojit existující složku od domény iFolder 2.<span class="replaceable">x</span> po její migraci na verzi 3.7 nebo novější.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Vytvořit kopii složky iFolder a migrovat:</span>
               </em>
-               Tuto možnost vyberte v případě, že chcete vytvořit kopii souborů verze iFolder 2.<span class="replaceable">x</span> a převést je na verzi iFolder 3.7 nebo novější. Tímto nedojde k odebrání souborů z domény iFolder 2.<span class="replaceable">x</span> ani poté, co provedete migraci souborů na verzi iFolder 3.7 nebo novější.</p>
+              Vyberte tuto možnost, chcete-li vytvořit kopii verze iFolder 2.<span class="replaceable">x</span> a převést je na verzi iFolder 3.7 nebo novější. Tímto nedojde k odebrání souborů z domény iFolder 2.<span class="replaceable">x</span> ani poté, co provedete migraci souborů na verzi iFolder 3.7 nebo novější.</p>
             </div>
 
 <p class="para">Pokud vyberete tuto možnost, vyberete pouze možnost <span class="guimenu">Kopírovat nadřízenou složku</span>, pokud chcete kopírovat nejenom obsah složky 2.<span class="replaceable">x</span>, ale také nadřízené složky. Pokud tuto možnost ponecháte nevybranou, bude na doménu verze 3.7 nebo novější migrován pouze obsah vybrané složky. </p>

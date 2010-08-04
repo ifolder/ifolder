@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:45" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 20:53" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -51,11 +51,11 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6kho">Az áttelepítési folyamat – áttekintés</a>
+            <a href="migration.html#bax6kho" class="xref">Az áttelepítési folyamat – áttekintés</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="migration.html#bax6esx">Az áttelepítési eljárás</a>
+            <a href="migration.html#bax6esx" class="xref">Az áttelepítési eljárás</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bax6kho">
@@ -63,7 +63,7 @@
 <h2 class="title"> Az áttelepítési folyamat – áttekintés</h2>
 
 <p class="para">A Novell iFolder egyszerű áttérést biztosít az iFolder 2.<span class="replaceable">x</span> verziójú ügyfeléről a 3.7-es vagy újabb iFolder ügyfélre. Az iFolder ügyfél részét képező áttelepítési segéd megkönnyíti a meglévő iFolder 2.<span class="replaceable">x</span> verziójú adatok gyors és egyszerű áttelepítését.</p>
-<p class="para">Indításkor az áttelepítési segéd észleli a 2.<span class="replaceable">x</span> verziójú telepítést, és felkínálja az adatok áttelepítését. Az adatok áttelepítése során a segéd rákérdez, hogy a meglévő mappákat konvertálja-e, vagy készítsen másolatot a 2.<span class="replaceable">x</span> verziójú iFolder mappákról. Ezzel kapcsolatos további információk: <a href="migration.html#b8anh5z">Lépés 6</a>.</p>
+<p class="para">Indításkor az áttelepítési segéd észleli a 2.<span class="replaceable">x</span> verziójú telepítést, és felkínálja az adatok áttelepítését. Az adatok áttelepítése során a segéd rákérdez, hogy a meglévő mappákat konvertálja-e, vagy készítsen másolatot a 2.<span class="replaceable">x</span> verziójú iFolder mappákról. Ezzel kapcsolatos további információk: <a href="migration.html#b8anh5z" class="xref">Lépés 6</a>.</p>
 <p class="para">Az iFolder kéri a fájlok újraszinkronizálását a 3.7-es vagy újabb verziójú kiszolgálóval, és rákérdez, hogy meg kell-e tartani a 2.<span class="replaceable">x</span> verziójú ügyfelet a szinkronizálás befejeztéig. E folyamat során csak az adatokat helyezi át a rendszer, a felhasználónak tehát meg kell adnia a beállításokat az új ügyfélben. </p>
 </div>
 
@@ -75,10 +75,10 @@
 <ol class="steps">
 <li class="step" id="b88immv">
 <p class="para">Telepítse a 3.7-es vagy újabb verziójú iFolder kiszolgáló iFolder ügyfelét, majd konfigurálja a 3.7-es vagy újabb iFolder vállalati kiszolgálóhoz tartozó fiókját.</p>
-<p class="para">Az ügyfél telepítésével és a fiók beállításával kapcsolatos tudnivalók: <a href="accountsprefs.html">Az iFolder-fiókok és a beállítások kezelése</a>.</p></li>
+<p class="para">Az ügyfél telepítésével és a fiók beállításával kapcsolatos tudnivalók: <a href="accountsprefs.html" class="xref">Az iFolder-fiókok és a beállítások kezelése</a>.</p></li>
 <li class="step" id="b88immw">
 <p class="para">Az iFolder böngészőben hozzon létre a helyi számítógépen egy vagy több iFolder mappát.</p>
-<p class="para">Az iFolder mappákhoz bármilyen érvényes nevet használhat. Ne hozzon létre iFolder mappát ugyanazon az elérési úton, mint az aktuális iFolder 2.<span class="replaceable">x</span> könyvtár. További információkért lásd: <a href="createifolder.html">iFolder mappa létrehozása és feltöltése</a>.</p></li>
+<p class="para">Az iFolder mappákhoz bármilyen érvényes nevet használhat. Ne hozzon létre iFolder mappát ugyanazon az elérési úton, mint az aktuális iFolder 2.<span class="replaceable">x</span> könyvtár. További információkért lásd: <a href="createifolder.html" class="xref">iFolder mappa létrehozása és feltöltése</a>.</p></li>
 <li class="step" id="bb0b2z9">
 <p class="para">Az iFolder üzenetet jelenít meg a korábbi verzió adatainak meglétével kapcsolatban, és kéri az áttelepítést. </p>
 <p class="para">Kattintson az <span class="guimenu">OK</span> gombra a rendelkezésre álló 2.<span class="replaceable">x</span> verziójú iFolder mappák listájának megnyitásához.</p></li>
@@ -95,14 +95,14 @@
 <p class="para">Válassza az egyiket a következők közül:</p>
 <div class="formalpara" id="b8ydakq">
               <p class="title"><em class="title"><span class="guimenu">Az iFolder mappa áttelepítése és a 2.x tartományról való leválasztása</span>:</em>
-              Akkor válassza ezt a beállítást, ha a meglévő mappát le szeretné választani az iFolder 2.<span class="replaceable">x</span> verziójú tartományról, miután áthelyezte azt 3.7-es vagy újabb verziójúba.</p>
+              Ezzel a beállítással leválaszthatja a meglévő mappát az iFolder 2.<span class="replaceable">x</span> verziójú tartományról, miután áthelyezte azt 3.7-es vagy újabb verziójúba.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
-                <span class="guimenu">Az iFolder mappa másolatának készítése és áthelyezése:</span>
+                <span class="guimenu">Az iFolder mappa másolatának létrehozása és áttelepítése:</span>
               </em>
-              Ezzel a beállítással másolatot készít az iFolder 2.<span class="replaceable">x</span> verziójú fájlokról, és konvertálja azokat iFolder 3.7-es vagy újabb formátumba. Ez a művelet nem távolítja el a fájlokat a 2.<span class="replaceable">x</span> verziójú iFolder-tartományból még az után sem, hogy a fájlokat áthelyezte az iFolder 3.7-es vagy újabb verziójába.</p>
+              Ezzel a beállítással létrehozhat egy másolatot az iFolder 2.<span class="replaceable">x</span> verziójú fájlokról, és konvertálja azokat iFolder 3.7-es vagy újabb formátumba. Ez a művelet nem távolítja el a fájlokat a 2.<span class="replaceable">x</span> verziójú iFolder-tartományból még az után sem, hogy a fájlokat áthelyezte az iFolder 3.7-es vagy újabb verziójába.</p>
             </div>
 
 <p class="para">Ha ezt a beállítást választja, megadhatja <span class="guimenu">A szülőmappa másolása</span> beállítást is, így nem csupán a 2.<span class="replaceable">x</span> verziójú mappa tartalmát, hanem a szülőmappát is másolja. Ha nem adja meg ezt a beállítást, csupán a kijelölt mappa tartalmát helyezi át a segéd a 3.7-es vagy újabb verzióba. </p>

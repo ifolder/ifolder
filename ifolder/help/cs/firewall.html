@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 20:46" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> Konfigurování nastavení místní brány firewall pro provoz aplikace iFolder</h1>
 
-<p class="para">Pokud používáte místní bránu firewall, musíte jej nastavit tak, aby umožňoval aplikaci iFolder vybrat místní dynamický port nebo nakonfigurovat statický port pro klienta iFolder tak, aby komunikoval lokálně (stejný počítač) se serverem Mono® XSP Server. iFolder používá webové služby Mono XSP ke komunikaci prostřednictvím protokolu HTTP s podnikovými servery Novell iFolder, kde máte účet iFolder. Správce iFolder konfiguruje služby iFolder, které určují, zda komunikace bude používat ve vašem prostředí protokol HTTP.</p>
+<p class="para">Pokud používáte místní bránu firewall, musíte ji nastavit tak, aby umožňovala aplikaci iFolder vybrat místní dynamický port nebo nakonfigurovat statický port pro klienta iFolder tak, aby komunikoval lokálně (stejný počítač) se serverem Mono XSP Server. iFolder používá webové služby Mono XSP ke komunikaci prostřednictvím protokolu HTTP s podnikovými servery Novell iFolder, kde máte účet iFolder. Správce iFolder konfiguruje služby iFolder, které určují, zda komunikace bude používat ve vašem prostředí protokol HTTP.</p>
 <p class="para">Brána firewall neblokuje provoz mezi Mono XSP a podnikovým serverem Novell iFolder, protože Mono XSP používá pro přenos standardní porty HTTP. Pokud však blokujete provoz mezi klientem a Mono XSP, klient nemůže komunikovat se serverem. Nemůžete se přihlásit k účtu iFolder a synchronizovat data iFolder.</p>
 <p class="para">V počátku konfigurace iFolder neudává určitý port pro použití ke komunikaci klient-Mono XSP. Když je prvně spuštěna aplikace iFolder, otevře se místní dostupný port pro poslech požadavků od Mono XSP a pro odesílání dat na server prostřednictvím Mono XSP. Zapíše číslo port do konfiguračního souboru a použije poté tento, pokud nebude dostupný vždy, když se aplikace iFolder spustí Pokud je port používán jinou aplikací, iFolder vybere jiný dostupný port a překonfiguruje jej v konfiguračním souboru a poté použije nový port. Pokud je například aplikace iFolder vypnutá a další aplikace port převezme, musí iFolder vybrat a nakonfigurovat jiný port pro použití při restartu aplikace iFolder.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">Použití lokálního dynamického portu</a>
+            <a href="firewall.html#bctnqjo" class="xref">Použití lokálního dynamického portu</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">Použití lokálního statického portu</a>
+            <a href="firewall.html#bctnqjp" class="xref">Použití lokálního statického portu</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">Spusťte klienta iFolder.</p>
-<p class="para">Další informace naleznete v části <a href="startclient.html">Spuštění klienta iFolder</a>.</p></li></ol>
+<p class="para">Další informace naleznete v části <a href="startclient.html" class="xref">Spuštění klienta iFolder</a>.</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> Další informace získáte v části <a href="legal.html">Právní upozornění</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
