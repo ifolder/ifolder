@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">Logowanie do konta programu iFolder</entry>
  <entry leaf="true" id="accountdetails">Wyświetlanie i modyfikowanie ustawień konta iFolder</entry>
  <entry leaf="true" id="preferences">Konfigurowanie preferencji iFolderów dla klienta</entry>
+ <entry leaf="true" id="settings">Ustawienia programu iFolder</entry>
  <entry leaf="true" id="firewall">Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</entry>
  <entry leaf="true" id="virusscan">Konfigurowanie lokalnego skanera antywirusowego w celu umożliwienia komunikacji programu iFolder</entry>
  <entry leaf="true" id="delacct">Usuwanie konta iFolder</entry>

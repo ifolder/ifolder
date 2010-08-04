@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, August 12, 2009 12:54" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 21:11" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> iFolderトラフィックに対するローカルファイアウォールの設定</h1>
 
-<p class="para">ローカルファイアウォールを使用する場合、iFolderがローカルのダイナミックポートを選択できるようにファイアウォールを設定するか、またはiFolderクライアントにローカルのスタティックポートを設定してローカル(同じコンピュータ)でMono® XSP Serverと通信できるようにします。iFolderはMono XSP Webサービスを使用して、iFolderアカウントを保持するNovell iFolderエンタープライズサーバとHTTP経由で通信します。iFolderの管理者は、iFolderサービスを設定して、ユーザ環境でHTTPを使用して通信するかどうかを指定します。</p>
+<p class="para">ローカルファイアウォールを使用する場合、iFolderがローカルのダイナミックポートを選択できるようにファイアウォールを設定するか、またはiFolderクライアントにローカルのスタティックポートを設定してローカル(同じコンピュータ)でMono XSP Serverと通信できるようにします。iFolderはMono XSP Webサービスを使用して、iFolderアカウントを保持するNovell iFolderエンタープライズサーバとHTTP経由で通信します。iFolderの管理者は、iFolderサービスを設定して、ユーザ環境でHTTPを使用して通信するかどうかを指定します。</p>
 <p class="para">Mono XSPはトラフィックに対して標準的なHTTPポートを使用するので、お使いのファイアウォールが、Mono XSPとNovell iFolderエンタープライズサーバ間のトラフィックをブロックすることはありません。 ただし、クライアントとMono XSP間のトラフィックをブロックすると、クライアントはサーバと通信できません。ユーザはiFolderアカウントにログインして、iFolderデータを同期できなくなります。</p>
 <p class="para">最初は、iFolder環境設定でクライアントとMono XSPとの通信で使用する特定のポートを指定しません。 iFolderをはじめて実行すると、Mono XSPからの要求をリッスンして、データをMono XSP経由でサーバに送信するための、使用可能なローカルポートが開かれます。 そのポート番号が環境設定ファイルに書き込まれ、それ以降iFolderを開始するときは、ポートが使用不可でない限り、常にこのポートが使用されます。 そのポートが別のアプリケーションで使用されている場合、iFolderは使用可能な別のポートを選択し、環境設定ファイルにそのポートを再設定し、以降はその新しいポートを使用します。たとえば、iFolderが停止中に他のアプリケーションがそのポートを使用すると、iFolderは再起動時に別のポートを選択してこれを使用するように設定する必要があります。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">ローカルダイナミックポートの使用</a>
+            <a href="firewall.html#bctnqjo" class="xref">ローカルダイナミックポートの使用</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">ローカルスタティックポートの使用</a>
+            <a href="firewall.html#bctnqjp" class="xref">ローカルスタティックポートの使用</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">iFolderクライアントを起動します。</p>
-<p class="para">詳細については、<a href="startclient.html">iFolderクライアントの起動</a>を参照してください。</p></li></ol>
+<p class="para">詳細については、<a href="startclient.html" class="xref">iFolderクライアントの起動</a>を参照してください。</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> 詳細については、「 <a href="legal.html">保証と著作権</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>

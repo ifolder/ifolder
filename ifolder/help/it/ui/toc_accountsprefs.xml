@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">Login a un conto iFolder</entry>
  <entry leaf="true" id="accountdetails">Visualizzazione e modifica delle impostazioni del conto iFolder</entry>
  <entry leaf="true" id="preferences">Configurazione delle preferenze di iFolder per il client</entry>
+ <entry leaf="true" id="settings">Impostazioni di iFolder</entry>
  <entry leaf="true" id="firewall">Configurazione delle impostazioni del firewall locale per il traffico iFolder</entry>
  <entry leaf="true" id="virusscan">Configurazione delle impostazioni del software antivirus locale per il traffico iFolder</entry>
  <entry leaf="true" id="delacct">Cancellazione di un conto iFolder</entry>
