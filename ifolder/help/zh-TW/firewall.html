@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:36" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 21:37" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> 設定 iFolder 流量的本地防火牆設定</h1>
 
-<p class="para">如果您使用了本地防火牆，您必須設定防火牆允許 iFolder 本地動態連接埠或為 iFolder 用戶端設定本地靜態連接埠以便透過 Mono® XSP Server 在本地間通訊 (相同電腦)。 iFolder 使用 Mono XSP Web 服務透過 HTTP 與您在其中擁有 iFolder 帳戶的 Novell iFolder 企業伺服器通訊。iFolder 管理員會設定 iFolder 服務的組態，決定您環境中的何種通訊使用 HTTP。</p>
+<p class="para">如果您使用了本地防火牆，您必須設定防火牆允許 iFolder 選擇本地動態連接埠或為 iFolder 用戶端設定本地靜態連接埠，以便在本地 (相同電腦) 與 Mono XSP Server 進行通訊。iFolder 使用 Mono XSP Web 服務透過 HTTP 與您在其中擁有 iFolder 帳戶的 Novell iFolder 企業伺服器通訊。iFolder 管理員會設定 iFolder 服務的組態，決定您環境中的何種通訊使用 HTTP。</p>
 <p class="para">因為 Mono XSP 將標準 HTTP 連接埠用於流量，所以您的防火牆不會封鎖 Mono XSP 與 Novell iFolder 企業伺服器之間的流量。 不過，如果您封鎖用戶端與 Mono XSP 之間的流量，則用戶端將無法與伺服器通訊。您將無法登入 iFolder 帳戶並同步 iFolder 資料。</p>
 <p class="para">開始時，iFolder 組態並未指定要用於用戶端至 Mono XSP 通訊的特定連接埠。 當 iFolder 初次執行時，它會開啟一個可用的本地連接埠，以傾聽 Mono XSP 的要求並透過 Mono XSP 將資料傳送給伺服器。 它會將連接埠編號寫入組態檔案，並在此後一直使用此連接埠，直到啟動 iFolder 時無法使用該連接埠為止。 如果其他應用程式已經使用連接埠，iFolder 會選取其他可用的連接埠，在組態檔中重新設定連接埠，之後就會使用新的連接埠。例如，如果 iFolder 已關閉且連結埠正由另一應用程式使用，iFolder 必須在重新開啟 iFolder 時選取並設定其他的連接埠。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">使用本地動態連接埠</a>
+            <a href="firewall.html#bctnqjo" class="xref">使用本地動態連接埠</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">使用本地靜態連接埠</a>
+            <a href="firewall.html#bctnqjp" class="xref">使用本地靜態連接埠</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">啟動 iFolder 用戶端。</p>
-<p class="para">如需詳細資訊，請參閱<a href="startclient.html">啟動 iFolder 用戶端</a>。</p></li></ol>
+<p class="para">如需詳細資訊，請參閱<a href="startclient.html" class="xref">啟動 iFolder 用戶端</a>。</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> 有關更詳細的資訊，請參閱 <a href="legal.html">法律聲明</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="上一個" title="上一個" />上一個</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>

@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:02" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 21:18" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -51,25 +51,25 @@
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bctryt8">Автоматическое обновление до версии iFolder 3.7 или более поздней</a>
+            <a href="bctryt7.html#bctryt8" class="xref">Автоматическое обновление до версии iFolder 3.7 или более поздней</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="bctryt7.html#bbjs0lm">Обновление до iFolder 3.7 или более поздней версии вручную</a>
+            <a href="bctryt7.html#bbjs0lm" class="xref">Обновление до iFolder 3.7 или более поздней версии вручную</a>
           </p></li></ul></div>
 
 <div class="important">
-<p class="para"><em class="title">ВАЖНО.</em>Перед обновлением клиента 3.4.1 необходимо создать резервную копию локального хранилища Simias. Если резервное копирование не выполнено, вся конфигурационная информация компьютера будте утрачена, так как при сбое обновления харнилище Simias удаляется.</p></div>
+<p class="para"><em class="title">ВАЖНО.</em>Перед обновлением клиента 3.4.1 необходимо создать резервную копию локального хранилища Simias. Если резервное копирование не выполнено, вся конфигурационная информация компьютера будет утрачена, так как при сбое обновления харнилище Simias удаляется.</p></div>
 
 <div class="sect2" id="bctryt8">
 
 <h2 class="title"> Автоматическое обновление до версии iFolder 3.7 или более поздней</h2>
 
-<p class="para">Автоматическое обновление возможно только при наличии прав доступа "root", так как для обновления необходимо выполнить установку пакетов RPM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет обновлен, установить соединение с доменом iFolder 3.7 или более поздней версии с помощью клиента iFolder 3.<span class="replaceable">x</span> будет невозможно.</p>
+<p class="para">Автоматическое обновление возможно только при наличии прав доступа суперпользователя, так как для обновления необходимо выполнить установку пакетов PRM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/mtp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет обновлен, установить соединение с доменом iFolder 3.7 или более поздней версии с помощью клиента iFolder 3.<span class="replaceable">x</span> будет невозможно.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
-<p class="para">С помощью клиента iFolder 3.<span class="replaceable">x</span> более ранней версии, чем iFolder 3.7, попытайтесь установить соединение с сервером iFolder. Отображается запрос на выполнение обновления.</p></li>
+<p class="para">С помощью клиента iFolder 3.<span class="replaceable">x</span> более ранней версии, чем iFolder 3.7, попытайтесь установить соединение с сервером iFolder. Поступит запрос на обновление.</p></li>
 <li class="step" id="bctryta">
 <p class="para">Щелкните <span class="guimenu">Да</span> для автоматического обновления клиента iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
@@ -80,6 +80,16 @@
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title"> Обновление до iFolder 3.7 или более поздней версии вручную</h2>
+
+<div class="procedure">
+<ol class="steps">
+<li class="step" id="bpstn77">
+<p class="para">В меню "Справка" выберите пункт <span class="guimenu">Обновить</span> Поступит запрос на обновление. Чтобы обновить клиент iFolder 3.x, щелкните кнопку <span class="guimenu">Принять</span>.</p>
+<div class="note">
+<p class="para"><em class="title">ПРИМЕЧАНИЕ.</em>Если выбрать обновление, iFolder проверит наличие обновлений на всех подключенных серверах.</p></div>
+
+<p class="para">или </p></li></ol>
+</div>
 
 <div class="procedure">
 <ol class="steps">
