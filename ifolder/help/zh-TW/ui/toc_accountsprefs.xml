@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">登入 iFolder 帳戶</entry>
  <entry leaf="true" id="accountdetails">檢視和修改 iFolder 帳戶設定</entry>
  <entry leaf="true" id="preferences">設定用戶端的 iFolder 優先設定</entry>
+ <entry leaf="true" id="settings">iFolder 設定</entry>
  <entry leaf="true" id="firewall">設定 iFolder 流量的本地防火牆設定</entry>
  <entry leaf="true" id="virusscan">設定 iFolder 流量的本地病毒掃描器設定</entry>
  <entry leaf="true" id="delacct">刪除 iFolder 帳戶</entry>

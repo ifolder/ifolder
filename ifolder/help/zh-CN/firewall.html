@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:28" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 21:28" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> 为 iFolder 通讯配置本地防火墙设置</h1>
 
-<p class="para">如果您使用的是本地防火墙，则必须设置您的防火墙以允许 iFolder 选择本地动态端口，或为 iFolder 客户程序配置本地静态端口以与 Mono® XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 与您拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务以确定是否在您的环境中使用 HTTP。</p>
+<p class="para">如果您使用的是本地防火墙，则必须将您的防火墙设置为允许 iFolder 选择本地动态端口，或为 iFolder 客户端配置本地静态端口以与 Mono XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 与您拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务以确定是否在您的环境中使用 HTTP。</p>
 <p class="para">您的防火墙未阻止 Mono XSP 与 Novell iFolder Enterprise Server 之间的通讯，这是因为 Mono XSP 使用了标准的 HTTP 端口进行通讯。但是，如果您阻止客户端与 Mono XSP 之间的通讯，则客户端将无法与服务器进行通讯。您无法登录到您的 iFolder 帐户以及同步 iFolder 数据。</p>
 <p class="para">最初，iFolder 配置并未指定用于客户程序与 Mono XSP 通讯的特定端口。iFolder 首次运行时，将打开一个可用的本地端口以监听来自 Mono XSP 的请求，然后通过 Mono XSP 将数据发送到服务器上。iFolder 将端口号写入配置文件，除非此端口不可用，否则以后每当 iFolder 启动时都会使用此端口。如果有其他应用程序正在使用此端口，iFolder 会选择其他可用端口，并在配置文件中重新配置端口，之后使用新的端口。例如，如果 iFolder 关闭后由另一个应用程序使用该端口，则 iFolder 必须选择并配置重启动 iFolder 时要用的其他端口。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">使用本地动态端口</a>
+            <a href="firewall.html#bctnqjo" class="xref">使用本地动态端口</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">使用本地静态端口</a>
+            <a href="firewall.html#bctnqjp" class="xref">使用本地静态端口</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">启动 iFolder 客户程序。</p>
-<p class="para">有关更多信息，请参见<a href="startclient.html">启动 iFolder 客户程序</a>。</p></li></ol>
+<p class="para">有关更多信息，请参见<a href="startclient.html" class="xref">启动 iFolder 客户程序</a>。</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> 有关更多信息，请参见 <a href="legal.html">法律声明</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>

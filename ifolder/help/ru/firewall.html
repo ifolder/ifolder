@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:02" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Thursday, July 29, 2010 21:18" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,7 +36,7 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
@@ -46,18 +46,18 @@
 
 <h1 class="title"> Конфигурирование параметров локального брандмауэра для трафика iFolder</h1>
 
-<p class="para">При использовании локального брандмауэра Вы должны настроить брандмауэр так, чтобы iFolder мог выбрать локальный динамический порт, или сконфигурируйте локальный статический порт клиента iFolder для локального взаимодействия (на одном и том же компьютере) с сервером Mono® XSP. Клиент iFolder использует веб-сервисы Mono XSP для взаимодействия по протоколу HTTP с серверами Novell iFolder Enterprise Server, на которых у пользователя есть учетные записи. Администратор iFolder конфигурирует сервисы iFolder, определяя, используется ли при взаимодействиях протокол HTTP в Вашей среде.</p>
+<p class="para">При использовании локального брандмауэра Вы должны настроить брандмауэр так, чтобы разрешить iFolder выбрать локальный динамический порт, или настройте локальный статический порт клиента iFolder для локального взаимодействия (на одном и том же компьютере) с сервером Mono XSP. Клиент iFolder использует веб-сервисы Mono XSP для взаимодействия по протоколу HTTP с серверами Novell iFolder Enterprise Server, на которых у пользователя есть учетные записи. Администратор iFolder конфигурирует сервисы iFolder, определяя, используется ли при взаимодействиях протокол HTTP в Вашей среде.</p>
 <p class="para">Брандмауэр не блокирует трафик между сервером Mono XSP и сервером Novell iFolder Enterprise Server, поскольку Mono XSP использует для трафика стандартные порты HTTP. При этом, если обмен трафиком между клиентом и Mono XSP заблокирован, клиент не сможет обмениваться данными с сервером. Пользователь не сможет выполнить вход с помощью учетной записи iFolder и синхронизировать данные iFolder.</p>
 <p class="para">Изначально в конфигурации iFolder не указан отдельный порт, который следует использовать для соединения клиента с сервером Mono XSP. При первом запуске iFolder он открывает доступный локальный порт для прослушивания запросов с сервера Mono XSP и отправки данных на сервер с помощью Mono XSP. Номер порта записывается в конфигурационный файл, а затем этот порт всегда используется при запуске iFolder, за исключением тех случаев, когда он недоступен. Если порт используется другим приложением, iFolder выбирает следующий доступный порт, перенастраивает его в конфигурационном файле и затем использует новый порт. Например, если iFolder неактивен, а порт используется другим приложением, при перезагрузке iFolder должен выбрать и сконфигурировать другой порт для использования.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">Использование локального динамического порта</a>
+            <a href="firewall.html#bctnqjo" class="xref">Использование локального динамического порта</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">Использование локального статического порта</a>
+            <a href="firewall.html#bctnqjp" class="xref">Использование локального статического порта</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,7 +138,7 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">Запустите клиента iFolder.</p>
-<p class="para">См. дополнительные сведения: <a href="startclient.html">Запуск клиента iFolder</a>.</p></li></ol>
+<p class="para">См. дополнительные сведения: <a href="startclient.html" class="xref">Запуск клиента iFolder</a>.</p></li></ol>
 </div>
 
 </div>
@@ -148,7 +148,7 @@
 <p class="trademark"> Дополнительную информацию см. в <a href="legal.html">Юридическая информация</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>

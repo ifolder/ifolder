@@ -8,6 +8,7 @@
  <entry leaf="true" id="login">Prihlásenie sa na konto aplikácie iFolder</entry>
  <entry leaf="true" id="accountdetails">Zobrazenie a zmena nastavenia konta aplikácie iFolder</entry>
  <entry leaf="true" id="preferences">Konfigurácia preferencií aplikácie iFolder pre klienta</entry>
+ <entry leaf="true" id="settings">Nastavenia aplikácie iFolder</entry>
  <entry leaf="true" id="firewall">Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</entry>
  <entry leaf="true" id="virusscan">Konfigurácia lokálnych nastavení zisťovania vírusov pre prevádzku aplikácie iFolder</entry>
  <entry leaf="true" id="delacct">Odstránenie konta aplikácie iFolder</entry>

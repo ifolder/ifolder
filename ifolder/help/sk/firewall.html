@@ -7,9 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Tuesday, August 11, 2009 16:42" />
-<meta name="Content-Date" content="Mon, 06 Aug 2009 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2009" />
+<meta name="Generation-Date" content="Friday, July 30, 2010 13:23" />
+<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -36,9 +36,9 @@
 </noscript>
 
 <div class='nav' id='topnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="virusscan.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+  <a href="virusscan.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
 
@@ -46,18 +46,18 @@
 
 <h1 class="title"> Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</h1>
 
-<p class="para">Ak používate lokálnu bránu firewall, musíte ju nastaviť tak, aby ste povolili aplikácii iFolder vybrať lokálny dynamický port alebo nakonfigurovať lokálny statický port tak, aby mohol klient aplikácie iFolder komunikovať lokálne (na rovnakom počítači) so serverom Mono® XSP. Aplikácia iFolder používa služby servera Mono XSP Web na komunikáciu prostredníctvom protokolu HTTP s podnikovými servermi Novell iFolder, na ktorých máte kontá aplikácie iFolder. Správca aplikácie iFolder nakonfiguruje služby aplikácie iFolder, ktoré rozhodujú, či má komunikácia vo vašom prostredí prebiehať pomocou protokolu HTTP. </p>
+<p class="para">Ak používate lokálnu bránu firewall, musíte ju nastaviť tak, aby ste povolili aplikácii iFolder vybrať lokálny dynamický port alebo nakonfigurovať lokálny statický port tak, aby mohol klient aplikácie iFolder komunikovať lokálne (na rovnakom počítači) so serverom Mono XSP. Aplikácia iFolder používa služby servera Mono XSP Web na komunikáciu prostredníctvom protokolu HTTP s podnikovými servermi Novell iFolder, na ktorých máte kontá aplikácie iFolder. Správca aplikácie iFolder nakonfiguruje služby aplikácie iFolder, ktoré rozhodujú, či má komunikácia vo vašom prostredí prebiehať pomocou protokolu HTTP. </p>
 <p class="para">Brána firewall neblokuje komunikáciu medzi serverom Mono XSP a podnikovým serverom Novell iFolder, pretože server Mono XSP používa na prevádzku štandardné porty protokolov HTTP. Ak však zablokujete prevádzku medzi klientom a serverom Mono XSP, klient nebude schopný komunikovať so serverom. Nebudete schopní prihlásiť sa na konto aplikácie iFolder a synchronizovať údaje aplikácie iFolder.</p>
 <p class="para">Na začiatku konfigurácia aplikácie iFolder nešpecifikuje konkrétny port, ktorý sa použije na komunikáciu klienta a servera Mono XSP. Keď sa aplikácia iFolder prvýkrát spustí, otvorí dostupný miestny port na načúvanie žiadostiam servera Mono XSP a na odosielanie údajov na server prostredníctvom servera Mono XSP. Číslo portu sa zapíše do konfiguračného súboru. Tento port sa potom používa, až kým sa stane nedostupným kedykoľvek pri spustení aplikácie iFolder. Ak je port používaný inou aplikáciou, aplikácia iFolder vyberie iný dostupný port, opätovne ho nakonfiguruje v konfiguračnom súbore a potom používa tento nový port. Ak napríklad nie je aplikácia iFolder spustená a iná aplikácia medzitým zaberie port, keď aplikáciu iFolder znova spustíte, musí si vybrať a nakonfigurovať iný port, ktorý použije.</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjo">Použitie lokálneho dynamického portu</a>
+            <a href="firewall.html#bctnqjo" class="xref">Použitie lokálneho dynamického portu</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="firewall.html#bctnqjp">Použitie lokálneho statického portu</a>
+            <a href="firewall.html#bctnqjp" class="xref">Použitie lokálneho statického portu</a>
           </p></li></ul></div>
 
 <div class="sect2" id="bctnqjo">
@@ -138,19 +138,19 @@
 </li>
 <li class="step" id="bw4vbz4">
 <p class="para">Spustite klienta aplikácie iFolder.</p>
-<p class="para">Ďalšie informácie nájdete v časti <a href="startclient.html">Spustenie klienta aplikácie iFolder</a>.</p></li></ol>
+<p class="para">Ďalšie informácie nájdete v časti <a href="startclient.html" class="xref">Spustenie klienta aplikácie iFolder</a>.</p></li></ol>
 </div>
 
 </div>
 
 </div>
 
-<p class="trademark"> Ďalšie informácie získate v časti <a href="legal.html">Právne prehlásenia</a>.</p>
+<p class="trademark"> Informácie o ochranných známkach a autorských právach nájdete v časti <a href="legal.html">Právne prehlásenia</a>.</p>
 
 <div class='nav' id='bottomnav'>
-  <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="predchádzajúce" title="predchádzajúce" />predchádzajúce</a>
+  <a href="settings.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="virusscan.html" class="nav">&nbsp;nasledujúce<img src="ui/images/next.png" alt="nasledujúce" title="nasledujúce" /></a>
+  <a href="virusscan.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
 </body>
