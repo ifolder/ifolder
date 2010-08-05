@@ -677,7 +677,7 @@ is_ifolder (NautilusFileInfo *file)
 	
 	g_free (folder_path);
 	
-	DEBUG_IFOLDER (("is_ifolder() returning: %s", b_is_ifolder ? "TRUE" : "FALSE"));
+	DEBUG_IFOLDER (("is_ifolder() returning: %s \n", b_is_ifolder ? "TRUE" : "FALSE"));
 
 	return b_is_ifolder;
 }
@@ -821,9 +821,9 @@ can_be_ifolder (NautilusFileInfo *file)
 	}
 
 	if (b_can_be_ifolder)
-		DEBUG_IFOLDER (("can_be_ifolder returning TRUE"));
+		DEBUG_IFOLDER (("can_be_ifolder returning TRUE\n"));
 	else
-		DEBUG_IFOLDER (("can_be_ifolder returning FALSE"));
+		DEBUG_IFOLDER (("can_be_ifolder returning FALSE\n"));
 	
 	return b_can_be_ifolder;
 }
@@ -1707,6 +1707,54 @@ create_ifolder_thread (gpointer user_data)
 ///<param name="item">Pointer to nautilus menu item</param>
 ///<param name="user_data">Pointer to user data</param>
 static void
+create_ifolder_popen_callback (NautilusMenuItem *item, gpointer user_data)
+{
+	DEBUG_IFOLDER(("This uses the popen method\n"));
+	
+	gchar *ifolder_path;
+        iFolderHolder *holder;
+        GList *files;
+        NautilusFileInfo *file;
+        pthread_t thread;
+        char args [1024];
+        memset (args, '\0', sizeof (args));
+
+        files = g_object_get_data (G_OBJECT (item), "files");
+        file = NAUTILUS_FILE_INFO (files->data);
+        if (file == NULL)
+                return;
+
+        ifolder_path = get_file_path (file);	
+
+
+        if (ifolder_path != NULL) {
+			DEBUG_IFOLDER(("%s create %s", NAUTILUS_IFOLDER_SH_PATH, get_file_path (file)));
+		        sprintf (args, "%s create \"%s\"", NAUTILUS_IFOLDER_SH_PATH, get_file_path (file));
+                g_free (ifolder_path);
+        }
+
+        if (strlen (args) <= 0)
+                return;
+
+        g_object_set_data (G_OBJECT (item),
+                                "ifolder_args",
+                                strdup(args));
+
+        g_object_ref(item);
+        pthread_create (&thread,
+                                        NULL,
+                                        ifolder_dialog_thread,
+                                        item);
+
+}
+
+
+///<summary>
+/// Call back for iFolder create dialog
+///</summary>
+///<param name="item">Pointer to nautilus menu item</param>
+///<param name="user_data">Pointer to user data</param>
+static void
 create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 {
 	pthread_t thread;
@@ -1754,9 +1802,9 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	if (simias_get_domains(false, &domainsA) != SIMIAS_SUCCESS) {
 		/* FIXME: Display an error to the user that we couldn't get the list of domains */
+		DEBUG_IFOLDER(("Returning from here as we could not get list of domain\n"));
 		return;
 	}
-	
 	/**
 	 * If we made it this far, we have a list of domains and can fill the
 	 * GtkListStore with them so they're ready to be displayed in the dialog.
@@ -1958,7 +2006,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 						item);
 	}
 
-	gtk_widget_destroy(dialog);
+	gtk_widget_destroy(dialog); 
 }
 
 ///<summary>
@@ -2332,7 +2380,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 					IFOLDER_IMAGE_IFOLDER);
 //					"ifolder-folder");
 		g_signal_connect (item, "activate",
-					G_CALLBACK (create_ifolder_callback),
+					G_CALLBACK (create_ifolder_popen_callback),
 					provider);
 		g_object_set_data (G_OBJECT (item),
 					"files",
