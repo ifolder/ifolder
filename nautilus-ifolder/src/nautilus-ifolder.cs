@@ -77,7 +77,7 @@ namespace Novell.iFolder.Nautilus
 					return showHelp (args);
 				case "create":
 					StartSimias(args);
-					return showCreateDialog(args);
+					return ShowPassPhraseDialog(args[1], args[2], (args[3] == "true"));
 			}
 			
 			program.Run ();
@@ -302,38 +302,6 @@ namespace Novell.iFolder.Nautilus
 
 			return StopSimias();
 		}
-
-		///<summary>
-	        /// Creation of iFolder Dialog  
-        	///</summary>
-	        ///<param name="args">String array of arguments needed</param>
-		private static int showCreateDialog (string[] args)
-                {
-
-			DomainInformation[] domains = domainController.GetDomains();
-                        if (domains.Length <= 0) return 0;        
-                        string domainID = domains[0].ID;        
-                        DomainInformation defaultDomain = domainController.GetDefaultDomain();
-                        if (defaultDomain != null)
-                                domainID = defaultDomain.ID;
-
-			string path = args[1];
-                        DragCreateDialog cd = new DragCreateDialog(null, domains, domainID, path, ifws);
-			int rc = 0;
-                        do
-                        {
-                        	rc = cd.Run();
-				cd.Hide();
-
-                                if (rc == (int)ResponseType.Ok)
-                                {
-					ShowPassPhraseDialog(  path, cd.DomainID, cd.Encrypted);
-					break;
-				} 
-			}while(rc == (int)ResponseType.Ok); 
-		
-                        return 0;
-                }
 		
         ///<summary>
         /// Display Help

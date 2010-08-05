@@ -79,17 +79,6 @@ namespace Novell.iFolder
 			}
 		}
 
-	/// <summary>
-	/// Gets the selection of radiobutton - Encryption
-	/// </summary>
-		public bool Encrypted
-		{
-			get
-			{
-				return this.Encryption.Active;
-			}
-		}
-
         /// <summary>
         /// Gets the Domain ID
         /// </summary>
