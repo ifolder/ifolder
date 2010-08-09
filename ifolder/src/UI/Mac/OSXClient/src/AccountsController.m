@@ -218,7 +218,7 @@
 						[authStatus release];
 						authStatus = nil;
 					}
-					[[iFolderData sharedInstance] clientUpdates:[selectedDomain ID]]; //Check for new client available or not
+					[[iFolderData sharedInstance] clientUpdates:[selectedDomain ID]  showstatus:NO]; //Check for new client available or not
 					
 					[[iFolderData sharedInstance] checkForEncryption:[selectedDomain ID] atLogin:YES];
 					break;
@@ -498,7 +498,7 @@
 						[NSString stringWithFormat:NSLocalizedString(@"Your password has expired.  You have %d grace logins remaining.", 
 									@"Grace Login Warning Dialog message"), [[newDomain remainingGraceLogins] intValue] ]);
 					}
-					[[iFolderData sharedInstance] clientUpdates:[selectedDomain ID]]; //Check for new client available or not
+					[[iFolderData sharedInstance] clientUpdates:[selectedDomain ID] showstatus:NO]; //Check for new client available or not
 					
 					[[iFolderData sharedInstance] checkForEncryption:[newDomain ID] atLogin:YES];
 

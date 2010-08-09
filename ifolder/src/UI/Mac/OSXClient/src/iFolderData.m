@@ -1538,7 +1538,7 @@ static iFolderData *sharedInstance = nil;
 // This method will check for latest client updates.
 // Note: need to handle the download and run latest updates.
 //=====================================================================
--(void)clientUpdates:(NSString*)domID
+-(void)clientUpdates:(NSString*)domID showstatus:(BOOL)show
 {	
 	cliUpdate = nil;
 	//forceQuit = NO;
@@ -1550,7 +1550,7 @@ static iFolderData *sharedInstance = nil;
 	BOOL updateStatus;
 	
 	int answer;
-	
+	ifconlog2(@"clientupdate..%@",domID );
 	NSDictionary *infoDictionary;
 	infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString* currentVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
@@ -1593,6 +1593,7 @@ static iFolderData *sharedInstance = nil;
 	}
 	@catch(NSException* ex)
 	{
+		NSLog(@"Exception : show  server old ");
 		NSLog(@"Exception is name:%@ reason:%@",[ex name],[ex reason] );
 		NSRunAlertPanel(NSLocalizedString(@"Old Server",@"ServerOldTitle"),
 						NSLocalizedString(@"Server is old. Cannot connect to the server",@"ServerOldMessage"),
@@ -1603,6 +1604,11 @@ static iFolderData *sharedInstance = nil;
 	{
 		case  Latest:
 			NSLog(@"Client status is latest");
+			if(show) {
+				NSRunAlertPanel(NSLocalizedString(@"Client status",@"clientstatus"),
+									NSLocalizedString(@"Client status is latest",@"clientstatuslatestTitle"),
+									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+			}
 			//Client is latest and not necessary to handle
 			break;
 			
@@ -1693,6 +1699,7 @@ static iFolderData *sharedInstance = nil;
 			break;
 			
 		case ServerOld:
+			NSLog(@"case server old ");
 			//Server is old and cannot continue, so terminate the application
 			NSRunAlertPanel(NSLocalizedString(@"Old Server",@"ServerOldTitle"),
 							NSLocalizedString(@"Server is old. Cannot connect to the server",@"ServerOldMessage"),
@@ -1787,6 +1794,8 @@ static iFolderData *sharedInstance = nil;
 			break;
 	}
 }
+
+
 
 
 /* This method is to handle NSBeginAlertSheet to handle the upgrade client

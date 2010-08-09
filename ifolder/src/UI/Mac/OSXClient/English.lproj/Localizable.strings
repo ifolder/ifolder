@@ -867,6 +867,18 @@
 /*UpgradeAvailableTitle*/
 "Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation." = "Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.";
 
+/*clientstatuslatestTitle*/
+"Client status is latest" = "Client status is latest";
+
+/*clientstatus*/
+"Client status"= "Client status";
+
+/*notconnectedTitle*/
+"Not connected"="Not connected";
+
+/*notconnectedMessage*/
+"Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again"= "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again";
+
 /*Download latest client title*/
 "Browse the Location" = "Browse the Location";
 
