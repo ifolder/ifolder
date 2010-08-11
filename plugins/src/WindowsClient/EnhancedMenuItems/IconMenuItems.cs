@@ -141,6 +141,7 @@ namespace EnhancedMenuItems
         private IconMenuItem menuActionAccept;
         private IconMenuItem menuActionMerge;
         private IconMenuItem menuHelpHelp;
+        private IconMenuItem menuHelpUpgrade;
         private IconMenuItem menuHelpAbout;
         private IconMenuItem menuActionRemove;
         private MenuItem menuItem1;
@@ -306,19 +307,32 @@ namespace EnhancedMenuItems
                     this.menuHelpHelp.Enabled = tempMenuItem.Enabled;
                     this.menuHelpHelp.Text = tempMenuItem.Text;
                     this.menuHelpHelp.Visible = tempMenuItem.Visible;
-                    this.menuHelpHelp.Index = tempMenuItem.Index;
+                    //this.menuHelpHelp.Index = tempMenuItem.Index;
+                    this.menuHelpHelp.Index = 0;
                     this.menuHelpHelp.Shortcut = tempMenuItem.Shortcut;
                     this.menuHelpHelp.ShowShortcut = tempMenuItem.ShowShortcut;
                     this.menuHelpHelp.Name = "iMenuHelpHelp";
                     iFolderMenuItem.MenuItems.Add(menuHelpHelp);
-                    
+
+                    tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuHelpUpgrade", true)[0];
+                    menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\about16.png"));
+                    menuHelpUpgrade = new IconMenuItem(tempMenuItem.Text, menuImage);
+                    this.menuHelpUpgrade.Enabled = tempMenuItem.Enabled;
+                    this.menuHelpUpgrade.Text = tempMenuItem.Text;
+                    this.menuHelpUpgrade.Visible = tempMenuItem.Visible;
+                    this.menuHelpUpgrade.Index = 1;
+                    this.menuHelpUpgrade.Shortcut = tempMenuItem.Shortcut;
+                    this.menuHelpUpgrade.ShowShortcut = tempMenuItem.ShowShortcut;
+                    this.menuHelpUpgrade.Name = "iMenuHelpUpgrade";
+                    iFolderMenuItem.MenuItems.Add(menuHelpUpgrade);
+
                     tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuHelpAbout", true)[0];
                     menuImage = Image.FromFile(Path.Combine(Application.StartupPath, @"res\about16.png"));
                     menuHelpAbout = new IconMenuItem(tempMenuItem.Text, menuImage);
                     this.menuHelpAbout.Enabled = tempMenuItem.Enabled;
                     this.menuHelpAbout.Text = tempMenuItem.Text;
                     this.menuHelpAbout.Visible = tempMenuItem.Visible;
-                    this.menuHelpAbout.Index = tempMenuItem.Index;
+                    this.menuHelpAbout.Index = 2;
                     this.menuHelpAbout.Shortcut = tempMenuItem.Shortcut;
                     this.menuHelpAbout.ShowShortcut = tempMenuItem.ShowShortcut;
                     this.menuHelpAbout.Name = "iMenuHelpAbout";
