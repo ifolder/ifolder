@@ -4054,3 +4054,18 @@ msgid ""
 "Synchronization disabled" 
 msgstr ""
 "Synchronization disabled" 
+
+msgid ""
+"You are using the latest available version." 
+msgstr ""
+"You are using the latest available version." 
+
+msgid ""
+"Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again." 
+msgstr ""
+"Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again." 
+
+msgid ""
+"Unable to complete the operation. Try again." 
+msgstr ""
+"Unable to complete the operation. Try again." 
