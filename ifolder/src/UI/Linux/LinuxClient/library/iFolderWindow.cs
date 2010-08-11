@@ -3040,7 +3040,13 @@ namespace Novell.iFolder
 
 		private void OnUpgradeMenuItem(object o, EventArgs args)
 		{
+			bool serverAvailable = false;
+			bool oldClient = false;
+			string serverVersion = null;
+			UpgradeResult update = UpgradeResult.Unknown;
 			DomainInformation[] domains = null;
+			iFolderMsgDialog dialog = null;
+
 			try{	
 				if(domainController != null)	
 				{
@@ -3048,15 +3054,64 @@ namespace Novell.iFolder
 
 					foreach(DomainInformation domain in domains)
 					{
-						domainController.CheckForUpdate(domain.ID);
-						prefsWin.ShowClientUpgradeMessage();
+						if(domain.Authenticated)
+						{
+							serverAvailable = true;
+							update = (UpgradeResult)ifws.CheckForUpdate(domain.ID, out serverVersion);
+							if(update != UpgradeResult.Latest)
+							{
+								oldClient = true;
+								domainController.CheckForUpdate(domain.ID);
+								prefsWin.ShowClientUpgradeMessage();
+							}
+						}
 					}
+					
+					if (!serverAvailable)
+					{
+						dialog = new iFolderMsgDialog(
+                                                null,
+                                                iFolderMsgDialog.DialogType.Info,
+                                                iFolderMsgDialog.ButtonSet.Ok,
+                                                Util.GS("iFolder Client Upgrade"),
+                                                Util.GS("Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."),
+                                                Util.GS(""));
+						
+					}
+					else if (!oldClient)
+					{
+						dialog = new iFolderMsgDialog(
+                                                null,
+                                                iFolderMsgDialog.DialogType.Info,
+                                                iFolderMsgDialog.ButtonSet.Ok,
+                                                Util.GS("iFolder Client Upgrade"),
+                                                Util.GS("You are using the latest available version."),
+                                                Util.GS(""));
+
+					}
+
 				}
 			}
 			catch
 			{
+				dialog = new iFolderMsgDialog(
+						null,
+						iFolderMsgDialog.DialogType.Error,
+						iFolderMsgDialog.ButtonSet.Ok,
+						Util.GS("iFolder Client Upgrade"),
+						Util.GS("Unable to complete the operation. Try again."),
+						Util.GS(""));
+
 			}
-					
+
+			if(dialog != null)
+			{
+				dialog.Run();
+				dialog.Hide();
+				dialog.Destroy();
+				dialog = null;
+			}
+
 		}
 
 		private void OnRecoveryMenuItem(object o, EventArgs args)
