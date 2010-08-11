@@ -179,6 +179,48 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 
 
 
+//===================================================================
+// update
+// check for updates
+//===================================================================
+- (IBAction)update:(id)sender
+{
+        int counter;
+		ifconlog1(@"update..");
+		SimiasService *simiasService = [[SimiasService alloc] init];
+		
+		NSArray *domains = [simiasService GetDomains:NO];
+		BOOL connectPrompt=YES;
+		if(domains != nil )
+		{
+			for(counter=0;counter<[domains count];counter++)
+			{
+			iFolderDomain *dom = [domains objectAtIndex:counter];
+			ifconlog1(@"**update");
+			
+			if([dom authenticated]){
+			connectPrompt=NO;
+			[[iFolderData sharedInstance] clientUpdates:[dom ID] showstatus:YES]; 
+			}
+			}
+			if(connectPrompt){ //not logged in to any domain 
+				NSRunAlertPanel(NSLocalizedString(@"Not connected",@"notconnectedTitle"),
+				NSLocalizedString(@"You are not connected . Please connect to a domain To find updates ",@"notconnectedMessage"),
+									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+			}
+		}
+		else 
+		{  //no domain added yet 
+				NSRunAlertPanel(NSLocalizedString(@"Not connected",@"notconnectedTitle"),
+				NSLocalizedString(@"You are not connected . Please connect to a domain To find updates ",@"notconnectedMessage"),
+									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+		}
+			
+	
+	
+}
+
+
 
 
 //===================================================================

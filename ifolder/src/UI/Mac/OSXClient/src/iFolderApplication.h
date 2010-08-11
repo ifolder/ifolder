@@ -89,6 +89,7 @@
 - (IBAction)showPrefs:(id)sender;
 - (IBAction)showiFolderWindow:(id)sender;
 - (IBAction)showHelp:(id)sender;
+- (IBAction)update:(id)sender;
 
 
 
