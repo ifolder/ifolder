@@ -347,7 +347,7 @@
     <value>6, 3</value>
   </data>
   <data name="usedSpaceUnits.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
+    <value>True</value>
   </data>
   <data name="rememberPassword.Appearance" type="System.Windows.Forms.Appearance, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Normal</value>
@@ -416,7 +416,7 @@
     <value />
   </data>
   <data name="freeSpaceUnits.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>32, 16</value>
+    <value>21, 17</value>
   </data>
   <data name="serverNameLabel.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -665,7 +665,7 @@
     <value>True</value>
   </data>
   <data name="usedSpaceUnits.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>32, 16</value>
+    <value>21, 17</value>
   </data>
   <data name="serverAddressLabel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -755,7 +755,7 @@
     <value />
   </data>
   <data name="freeSpaceUnits.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Right</value>
+    <value>Right</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>112, 16</value>
@@ -1505,7 +1505,7 @@
     <value>None</value>
   </data>
   <data name="totalSpaceUnits.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>32, 16</value>
+    <value>21, 17</value>
   </data>
   <data name="tabPage1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1697,7 +1697,7 @@
     <value>TopLeft</value>
   </data>
   <data name="totalSpaceUnits.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
+    <value>True</value>
   </data>
   <data name="&gt;&gt;totalSpaceUnits.Name">
     <value>totalSpaceUnits</value>
@@ -1874,7 +1874,7 @@
     <value>False</value>
   </data>
   <data name="usedSpaceUnits.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Right</value>
+    <value>Right</value>
   </data>
   <data name="totalSpace.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Yes</value>
@@ -1928,7 +1928,7 @@
     <value>None</value>
   </data>
   <data name="freeSpaceUnits.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
+    <value>True</value>
   </data>
   <data name="address.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -2030,7 +2030,7 @@
     <value>MiddleLeft</value>
   </data>
   <data name="totalSpaceUnits.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Right</value>
+    <value>Right</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>7, 42</value>
