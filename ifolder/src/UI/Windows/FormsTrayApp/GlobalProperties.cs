@@ -250,6 +250,10 @@ namespace Novell.FormsTrayApp
                         this.menuHelpHelp = menuHelp.MenuItems.Find("iMenuHelpHelp", true)[0];
                         this.menuHelpHelp.Click += new System.EventHandler(this.menuHelpHelp_Click);
 
+                        this.menuHelpUpgrade.Visible = false;
+                        this.menuHelpUpgrade = menuHelp.MenuItems.Find("iMenuHelpUpgrade",true)[0];
+                        this.menuHelpUpgrade.Click += new System.EventHandler(this.menuHelpUpgrade_Click);
+
                         this.menuHelpAbout.Visible = false;
                         this.menuHelpAbout = menuHelp.MenuItems.Find("iMenuHelpAbout", true)[0];
                         this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
@@ -475,6 +479,7 @@ namespace Novell.FormsTrayApp
             this.ApplyResources1(resources, this.menuResetPassword, "menuResetPassword");
             this.ApplyResources1(resources, this.menuHelp, "menuHelp");
             this.ApplyResources1(resources, this.menuHelpHelp, "menuHelpHelp");
+            this.ApplyResources1(resources, this.menuHelpUpgrade, "menuHelpUpgrade");
             this.ApplyResources1(resources, this.menuHelpAbout, "menuHelpAbout");
             
         }
@@ -3745,18 +3750,66 @@ namespace Novell.FormsTrayApp
         private void menuHelpUpgrade_Click(object sender, EventArgs e)
         {
             bool upgradeAvailable = false;
+            bool serverAvailable = false;
+            bool oldClient = false;
+            string serverVersion = null;
+            Novell.FormsTrayApp.UpdateResult update = UpdateResult.Unknown;
+            
             DomainInformation[] domains;
+            Novell.iFolderCom.MyMessageBox mmb = null;
+            System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
+
             try
             {
                 domains = this.simiasWebService.GetDomains(false);
                 foreach (DomainInformation dw in domains)
                 {
-                    //Iterate over all the added domain
-                    FormsTrayApp.ClientUpdates(dw.ID, out upgradeAvailable);
-
+                    if (dw.Authenticated)
+                    {
+                        serverAvailable = true;
+                        update = (UpdateResult)ifWebService.CheckForUpdate(dw.ID, out serverVersion);
+                        if (update != UpdateResult.Latest)
+                        {
+                            oldClient = true;
+                            //Iterate over all the added domain
+                            FormsTrayApp.ClientUpdates(dw.ID, out upgradeAvailable);
+                        }
+                    }
                 }
+
+                
+                if (!serverAvailable)
+                {
+                    mmb = new MyMessageBox(Resource.GetString("upgradeServerUnavailable"),
+                        Resource.GetString("clientUpgradeTitle"),
+                        "",
+                        MyMessageBoxButtons.OK,
+                        MyMessageBoxIcon.Information);
+                    
+                }
+                else if (!oldClient)
+                {
+                    mmb = new MyMessageBox(Resource.GetString("upgradeUnavailable"),
+                        Resource.GetString("clientUpgradeTitle"),
+                        "",
+                        MyMessageBoxButtons.OK,
+                        MyMessageBoxIcon.Information);
+                }
+                
             }
-            catch { }
+            catch {
+                mmb = new MyMessageBox(Resource.GetString("operationIncomplete"),
+                        Resource.GetString("clientUpgradeTitle"),
+                        "",
+                        MyMessageBoxButtons.OK,
+                        MyMessageBoxIcon.Error);
+            }
+            
+            if (mmb != null)
+            {
+                mmb.ShowDialog();
+                mmb.Dispose();
+            }
         }
       }
 	}
