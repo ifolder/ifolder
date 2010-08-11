@@ -1145,4 +1145,13 @@ Are you sure you want to exit the Application ?</value>
   <data name="ioErrorWriteFailure">
     <value>Unable to write files in the folder. Verify permissions on your local folder.</value>
   </data>
+  <data name="upgradeUnavailable" xml:space="preserve">
+    <value>You are using the latest available version.</value>
+  </data>
+  <data name="upgradeServerUnavailable" xml:space="preserve">
+    <value>Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again.</value>
+  </data>
+  <data name="operationIncomplete" xml:space="preserve">
+    <value>Unable to complete the operation. Try again.</value>
+  </data>
 </root>

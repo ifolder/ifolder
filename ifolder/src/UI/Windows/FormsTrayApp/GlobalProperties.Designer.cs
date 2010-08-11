@@ -357,17 +357,18 @@ namespace Novell.FormsTrayApp
             resources.ApplyResources(this.menuHelpHelp, "menuHelpHelp");
             this.menuHelpHelp.Click += new System.EventHandler(this.menuHelpHelp_Click);
             // 
-            // menuHelpAbout
-            // 
-            this.menuHelpAbout.Index = 2;
-            resources.ApplyResources(this.menuHelpAbout, "menuHelpAbout");
-            this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
-            // 
             // menuHelpUpgrade
             // 
             this.menuHelpUpgrade.Index = 1;
             resources.ApplyResources(this.menuHelpUpgrade, "menuHelpUpgrade");
             this.menuHelpUpgrade.Click += new System.EventHandler(this.menuHelpUpgrade_Click);
+            // 
+            // menuHelpAbout
+            // 
+            this.menuHelpAbout.Index = 2;
+            resources.ApplyResources(this.menuHelpAbout, "menuHelpAbout");
+            this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
+            
             // 
             // progressBar1
             // 
