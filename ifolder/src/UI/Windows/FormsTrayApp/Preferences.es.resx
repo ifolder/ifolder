@@ -454,19 +454,19 @@
     <value>14, 17</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
-    <value>Cuando se infringe la directiva sobre exclusión de archivos.</value>
+    <value>Cuando se infringe la directiva de exclusión de archivos.</value>
   </data>
   <data name="policylistbox.Items3" xml:space="preserve">
     <value>Cuando el disco está lleno.</value>
   </data>
   <data name="policylistbox.Items1" xml:space="preserve">
-    <value>Cuando se infringe la directiva sobre tamaño de archivos.</value>
+    <value>Cuando se infringe la directiva de tamaño de archivo.</value>
   </data>
   <data name="policylistbox.Items4" xml:space="preserve">
     <value>Cuando no están disponibles los permisos necesarios.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Cuando la ruta del archivo supera el límite óptimo.</value>
+    <value>Cuando la vía al archivo excede el límite óptimo.</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>
@@ -907,7 +907,7 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>Cuando se infringe la directiva sobre cuotas.</value>
+    <value>Cuando se infringe la directiva de cuota.</value>
   </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>

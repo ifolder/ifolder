@@ -460,13 +460,13 @@
     <value>Když je disk plný.</value>
   </data>
   <data name="policylistbox.Items1" xml:space="preserve">
-    <value>Když jsou porušeny zásady velikosti souboru.</value>
+    <value>Když jsou porušeny zásady velikosti souborů.</value>
   </data>
   <data name="policylistbox.Items4" xml:space="preserve">
     <value>Když nejsou dostupná požadovaná oprávnění.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Když cesta souboru překračuje volitelný limit.</value>
+    <value>Když cesta souboru překračuje optimální limit.</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>

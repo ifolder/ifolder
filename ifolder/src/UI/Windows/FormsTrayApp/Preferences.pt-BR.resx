@@ -907,7 +907,7 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>Quando a política de Quotas for violada.</value>
+    <value>Quando a política de Quota for violada.</value>
   </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>

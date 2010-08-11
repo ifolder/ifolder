@@ -466,7 +466,7 @@
     <value>Ak nie sú k dispozícii požadované povolenia.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Ak cesta súboru presahuje optimálny limit.</value>
+    <value>Ak cesta k súboru presahuje optimálny limit.</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>

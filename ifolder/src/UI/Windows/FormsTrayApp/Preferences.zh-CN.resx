@@ -454,7 +454,7 @@
     <value>14, 17</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
-    <value>如果违反文件排除策略。</value>
+    <value>如果违反了文件排除策略。</value>
   </data>
   <data name="policylistbox.Items3" xml:space="preserve">
     <value>如果磁盘已满。</value>
@@ -907,7 +907,7 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>如果违反定额策略。</value>
+    <value>如果违反了定额策略。</value>
   </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
