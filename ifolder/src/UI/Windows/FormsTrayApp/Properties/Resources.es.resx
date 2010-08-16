@@ -325,7 +325,7 @@
     <value>SingleWizPage</value>
   </data>
   <data name="availableQuota" xml:space="preserve">
-    <value>Disponible:</value>
+    <value>Disponible</value>
   </data>
   <data name="RemoveMembershipMesg" xml:space="preserve">
     <value>Esta acción elimina la pertenencia de iFolder y también elimina la carpeta iFolder de la lista </value>
