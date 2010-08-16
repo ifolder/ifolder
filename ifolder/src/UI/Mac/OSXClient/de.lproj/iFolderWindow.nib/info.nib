@@ -17,6 +17,11 @@
 		<integer>258</integer>
 		<integer>321</integer>
 	</array>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>575</integer>
+		<integer>618</integer>
+	</array>
 	<key>IBSystem Version</key>
 	<string>8S2167</string>
 	<key>IBUserGuides</key>
