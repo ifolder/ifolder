@@ -454,13 +454,13 @@
     <value>14, 17</value>
   </data>
   <data name="policylistbox.Items2" xml:space="preserve">
-    <value>Wenn die Dateiausschlussrichtlinie verletzt wird.</value>
+    <value>Wenn gegen die Richtlinie für den Dateiausschluss verstoßen wird.</value>
   </data>
   <data name="policylistbox.Items3" xml:space="preserve">
     <value>Wenn der Datenträger voll ist.</value>
   </data>
   <data name="policylistbox.Items1" xml:space="preserve">
-    <value>Wenn die Dateigrößenrichtlinie verletzt wird.</value>
+    <value>Wenn gegen die Richtlinie für die Dateigröße verstoßen wird.</value>
   </data>
   <data name="policylistbox.Items4" xml:space="preserve">
     <value>Wenn erforderliche Berechtigungen nicht verfügbar sind.</value>
@@ -907,7 +907,7 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>Wenn die Kontingentrichtlinie verletzt wird.</value>
+    <value>Wenn gegen die Richtlinie für Quoten verstoßen wird.</value>
   </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>

@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>É necessário estar conectado ao domínio para mudar a frase secreta. Efetue login no domínio e tente."</value>
+    <value>É necessário estar conectado ao domínio para mudar a frase secreta. Efetue login no domínio e tente.</value>
   </data>
   <data name="AccWizardText">
     <value>Assistente de Criação da Conta do iFolder</value>
@@ -797,7 +797,7 @@ Tem certeza de que deseja sair do Aplicativo?</value>
     <value>Migrar o ifolder e desconectá-lo do domínio 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>É necessário estar conectado ao domínio para importar. Efetue login no domínio e tente."</value>
+    <value>É necessário estar conectado ao domínio para importar. Efetue login no domínio e tente.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

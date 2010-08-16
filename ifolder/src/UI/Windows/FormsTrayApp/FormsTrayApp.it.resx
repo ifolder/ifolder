@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Per la modifica della stringa di cifratura è necessario essere connessi al dominio. Accedere al dominio e provare."</value>
+    <value>Per la modifica della stringa di cifratura è necessario essere connessi al dominio. Effettuare il login al dominio e provare.</value>
   </data>
   <data name="AccWizardText">
     <value>Creazione guidata account iFolder</value>
@@ -797,7 +797,7 @@ Uscire dall'applicazione?</value>
     <value>Eseguire la migrazione della cartella iFolder e disconnetterla dal dominio 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Per l'importazione è necessario essere connessi al dominio. Accedere al dominio e provare."</value>
+    <value>Per l'importazione è necessario essere connessi al dominio. Effettuare il login al dominio e provare.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

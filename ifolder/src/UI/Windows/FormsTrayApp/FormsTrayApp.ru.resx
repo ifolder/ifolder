@@ -415,7 +415,7 @@
     <value>Проверка контрольной фразы</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>&amp;Адрес домена</value>
+    <value>Адре&amp;с домена</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Проверка и подключение</value>
@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Для изменения контрольной фразы требуется подключение к домену. Войдите в домен и попытайтесь выполнить это действие."</value>
+    <value>Для изменения контрольной фразы требуется подключение к домену. Войдите в домен и попытайтесь выполнить это действие еще раз."</value>
   </data>
   <data name="AccWizardText">
     <value>Мастер создания учетных записей iFolder</value>
@@ -797,7 +797,7 @@
     <value>Миграция iFolder с отключением от домена 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Для импорта требуется подключение к домену. Войдите в домен и попытайтесь выполнить это действие."</value>
+    <value>Для импорта требуется подключение к домену. Войдите в домен и попробуйте еще раз."</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

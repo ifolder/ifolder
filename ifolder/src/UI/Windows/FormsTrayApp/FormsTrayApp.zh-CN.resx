@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>要更改通行口令，应连接域。请登录域并进行尝试。”</value>
+    <value>要更改通行口令，应连接域。请登录域并进行尝试。</value>
   </data>
   <data name="AccWizardText">
     <value>iFolder 帐户创建向导</value>
@@ -797,7 +797,7 @@
     <value>迁移 ifolder 并断开它与 2.x 域的连接</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>要导入，应连接域。请登录域并进行尝试。”</value>
+    <value>要导入，应连接域。请登录域并进行尝试。</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Ke změně hesla musí být doména připojena. Přihlašte se k doméně a zkuste to znovu."</value>
+    <value>Ke změně hesla musí být doména připojena. Přihlaste se k doméně a zkuste to znovu.</value>
   </data>
   <data name="AccWizardText">
     <value>Průvodce vytvoření účtu iFolder</value>
@@ -797,7 +797,7 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Migrovat složku iFolder a odpojit ji od domény 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>K importování musí být doména připojena. Přihlašte se k doméně a zkuste to znovu."</value>
+    <value>K importování musí být doména připojena. Přihlaste se k doméně a zkuste to znovu.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

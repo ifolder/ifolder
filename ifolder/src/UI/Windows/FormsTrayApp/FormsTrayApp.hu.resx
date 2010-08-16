@@ -538,7 +538,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>A hozzáférési kód megváltoztatásához kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra."</value>
+    <value>A hozzáférési kód megváltoztatásához kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra.</value>
   </data>
   <data name="AccWizardText">
     <value>iFolder fiók-létrehozási varázsló</value>
@@ -797,7 +797,7 @@ Biztosan kilép az alkalmazásból?</value>
     <value>Az iFolder mappa áttelepítése és leválasztása a 2.x tartományról</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Az importáláshoz kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra."</value>
+    <value>Az importáláshoz kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

@@ -460,13 +460,13 @@
     <value>Если диск заполнен.</value>
   </data>
   <data name="policylistbox.Items1" xml:space="preserve">
-    <value>При нарушении политики для размера файлов.</value>
+    <value>При нарушении политики размеров файлов.</value>
   </data>
   <data name="policylistbox.Items4" xml:space="preserve">
     <value>При недоступности требуемых разрешений.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Если длина пути файла превышает оптимальное ограничение.</value>
+    <value>При превышении путем к файлу оптимального ограничения.</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>
@@ -907,7 +907,7 @@
     <value>0</value>
   </data>
   <data name="policylistbox.Items" xml:space="preserve">
-    <value>При нарушении политики для квот.</value>
+    <value>При нарушении политики квот.</value>
   </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
