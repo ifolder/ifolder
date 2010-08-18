@@ -92,7 +92,6 @@ NSMutableDictionary *notifyTableViewSource;
 
 -(void) dealloc
 {
-  [notifyTableViewSource release];
   [super dealloc];
 }
 
