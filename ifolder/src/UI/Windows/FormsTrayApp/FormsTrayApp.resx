@@ -1154,4 +1154,7 @@ Are you sure you want to exit the Application ?</value>
   <data name="operationIncomplete" xml:space="preserve">
     <value>Unable to complete the operation. Try again.</value>
   </data>
+  <data name="NotSupportedServerOld" xml:space="preserve">
+    <value>This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server.</value>
+  </data>
 </root>
