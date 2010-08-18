@@ -4069,3 +4069,8 @@ msgid ""
 "Unable to complete the operation. Try again." 
 msgstr ""
 "Unable to complete the operation. Try again." 
+
+msgid ""
+"This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr ""
+"This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
