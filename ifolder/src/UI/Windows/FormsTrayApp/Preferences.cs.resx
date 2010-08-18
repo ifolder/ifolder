@@ -466,7 +466,7 @@
     <value>Když nejsou dostupná požadovaná oprávnění.</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Když cesta souboru překračuje optimální limit.</value>
+    <value>Když cesta souboru překračuje optimální délku.</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>

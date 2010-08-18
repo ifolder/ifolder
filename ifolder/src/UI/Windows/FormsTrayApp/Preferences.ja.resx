@@ -466,7 +466,7 @@
     <value>必要なパーミッションを得ることができない場合。</value>
   </data>
   <data name="policylistbox.Items5" xml:space="preserve">
-    <value>ファイルパスが最適な制限を超えた場合。</value>
+    <value>ファイルパスが最適とされる制限を超えた場合。</value>
   </data>
   <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
     <value>notifyCollisions</value>
