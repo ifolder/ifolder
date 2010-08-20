@@ -34,10 +34,15 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Xml;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+
+using Syscert = System.Security.Cryptography.X509Certificates;
+using Mono.Security.X509;
+using Mono.Security.Cryptography;
 
 using Novell.Directory.Ldap;
 using Novell.Directory.Ldap.Utilclass;
@@ -81,6 +86,7 @@ namespace Simias.ADLdapProvider
 		private Store store = null;
 		private Simias.Storage.Domain domain = null;
 		private LdapSettings ldapSettings = null;
+		private bool CertFailure = false;
 
 		private static long timeDelta = new DateTime( 1601, 1, 1 ).Ticks - DateTime.MinValue.Ticks;
 
@@ -244,6 +250,27 @@ namespace Simias.ADLdapProvider
 			
 			return status;
 		}		
+
+		/// <summary>
+		/// SSLHandler: call back method to check certificate
+		/// </summary>
+		/// <param name="certificate">Actual certificate</param>
+		/// <param name="certificateErrors">certificateErrors errors</param>
+		/// <returns>certificate validity true or false.</returns>
+		public bool SSLHandler( Syscert.X509Certificate certificate, int[] certificateErrors)
+		{
+			bool retFlag=true;
+
+                        if (certificateErrors != null && certificateErrors.Length > 0)
+				if( !(certificateErrors.Length==1 && certificateErrors[0] == -2146762481))
+                                {
+       		                        for (int i = 0; i < certificateErrors.Length; i++)
+                                		log.Debug("Detected errors in the Server Certificate:{0}", certificateErrors[i]);
+					retFlag = false;
+                                	CertFailure = true;                                                                
+				}
+                        return retFlag;
+                }
 		
 		/// <summary>
 		/// Gets the login status for the specified user.
@@ -726,6 +753,7 @@ namespace Simias.ADLdapProvider
 			{
 				conn = new LdapConnection();
 				conn.SecureSocketLayer = ldapSettings.SSL;
+				conn.UserDefinedServerCertValidationDelegate += new CertificateValidationCallback( SSLHandler );
 				conn.Connect( ldapSettings.Host, ldapSettings.Port );
 				conn.Bind( status.DistinguishedUserName, Password );
 				if ( conn.AuthenticationDN == null )
@@ -747,6 +775,13 @@ namespace Simias.ADLdapProvider
 				{
 					case LdapException.INVALID_CREDENTIALS:
 						status.statusCode = SCodes.InvalidCredentials;
+						break;
+
+					case LdapException.SSL_HANDSHAKE_FAILED:
+					case LdapException.CONNECT_ERROR:
+						if(CertFailure == true)
+							status.statusCode = SCodes.InvalidCertificate;
+						CertFailure = false;
 						break;
 
 					default:
