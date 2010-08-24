@@ -2885,16 +2885,12 @@ namespace Novell.iFolder.Web
         	[SoapDocumentMethod]
 	        public int ChangePassword(string domainid, string oldpassword, string newpassword)
         	{
-	            int retval = -1;
-        	    try
-	            {
-        	        Simias.Storage.Store store = Simias.Storage.Store.GetStore();
-                	Domain domain = store.GetDomain(domainid);
-	                Member member = domain.GetCurrentMember();
-        	        retval = member.ChangePassword(oldpassword, newpassword);
-       		    }
-	            catch { }
-        	    return retval;
+                int retval = -1;
+                Simias.Storage.Store store = Simias.Storage.Store.GetStore();
+                Domain domain = store.GetDomain(domainid);
+                Member member = domain.GetCurrentMember();
+                retval = member.ChangePassword(oldpassword, newpassword);
+                return retval;
 	        }
 
 		/// <summary>

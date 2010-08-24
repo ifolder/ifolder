@@ -74,6 +74,20 @@ namespace Novell.FormsTrayApp
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
+        enum ResetPasswordStatus
+        {
+            IncorrectOldPassword =1,
+            FailedToResetPassword =2,
+            LoginDisabled=3,
+            UserAccountExpired=4,
+            UserCannotChangePassword=5,
+            UserPasswordExpired=6,
+            MinimumPasswordLengthExcceded=7,
+            UserNotFoundInSimias=8,
+            NoLoggedInDomainsPasswordText=9,
+            NotSupportedServerOld=10,
+        };
+
 		public SimiasWebService simiasWebservice
 		{
 			get
@@ -141,6 +155,7 @@ namespace Novell.FormsTrayApp
 		private void InitializeComponent()
 		{
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ResetPassword));
+            System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 			this.panel = new System.Windows.Forms.Panel();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.waterMark = new System.Windows.Forms.PictureBox();
@@ -594,7 +609,17 @@ namespace Novell.FormsTrayApp
             string title = null;
             string message = null;
             System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ResetPassword));
-            int result = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
+            int result =0;
+            try{
+                result = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
+            }
+            catch (System.Web.Services.Protocols.SoapHeaderException soapEx)
+            {
+                result = (int)ResetPasswordStatus.NotSupportedServerOld;
+            }
+            catch{}
+
+
             if (result == 0)
             {
                 try
@@ -626,29 +651,35 @@ namespace Novell.FormsTrayApp
             title = resources.GetString("Errorchangingpassword"); //"Error resetting Title";
             switch (result)
             {
-                case 1:
+                case (int)ResetPasswordStatus.IncorrectOldPassword:
                     message = resources.GetString("IncorrectOldPassword");
                     break;
-                case 2:
+                case (int)ResetPasswordStatus.FailedToResetPassword:
                     message = resources.GetString("Failedtoresetpassword");
                     break;
-                case 3:
+                case (int)ResetPasswordStatus.LoginDisabled:
                     message = resources.GetString("LoginDisabled");
                     break;
-                case 4:
+                case (int)ResetPasswordStatus.UserAccountExpired:
                     message = resources.GetString("Useraccountexpired");
                     break;
-                case 5:
+                case (int)ResetPasswordStatus.UserCannotChangePassword:
                     message = resources.GetString("Usercannotchangepassword");
                     break;
-                case 6:
+                case (int)ResetPasswordStatus.UserPasswordExpired:
                     message = resources.GetString("Userpasswordexpired");
                     break;
-                case 7:
+                case (int)ResetPasswordStatus.MinimumPasswordLengthExcceded:
                     message = resources.GetString("Minimumpasswordlengthrestrictionnotmet");
                     break;
-                case 8:
+                case (int)ResetPasswordStatus.UserNotFoundInSimias:
                     message = resources.GetString("Usernotfoundinsimias");
+                    break;
+                case (int)ResetPasswordStatus.NoLoggedInDomainsPasswordText:
+                    message = Resource.GetString("NoLoggedInDomainsPasswordText");
+                    break;
+                case (int)ResetPasswordStatus.NotSupportedServerOld:
+                    message = Resource.GetString("NotSupportedServerOld");
                     break;
                 default:
                     message = resources.GetString("Errorchangingpassword");

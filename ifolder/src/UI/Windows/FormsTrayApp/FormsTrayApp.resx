@@ -1081,13 +1081,13 @@
 	<value>None</value>
   </data>
   <data name="NoLoggedInDomainsText" >
-	<value>For changing passphrase the domain should be connected. Log on to the domain and try."</value>
+	<value>For changing passphrase the domain should be connected. Log on to the domain and try.</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText" >
     <value>For changing password the domain should be connected. Log on to the domain and try.</value>
   </data>  
   <data name="NoLoggedInDomainsTextForImport" >
-	<value>For importing the domain should be connected. Log on to the domain and try."</value>
+	<value>For importing the domain should be connected. Log on to the domain and try.</value>
   </data>
   <data name="ImportKeysError" >
 	<value>Error importing keys</value>
@@ -1153,5 +1153,8 @@ Are you sure you want to exit the Application ?</value>
   </data>
   <data name="operationIncomplete" xml:space="preserve">
     <value>Unable to complete the operation. Try again.</value>
+  </data>
+  <data name="NotSupportedServerOld" xml:space="preserve">
+    <value>This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server.</value>
   </data>
 </root>
