@@ -54,6 +54,23 @@ namespace Novell.iFolder
 		private bool status;
 		private int passwordChangeStatus;
 
+		enum ResetPasswordStatus
+		{
+			IncorrectOldPassword =1,
+			FailedToResetPassword =2,
+			LoginDisabled=3,
+			UserAccountExpired=4,
+			UserCannotChangePassword=5,
+			UserPasswordExpired=6,
+			MinimumPasswordLengthExcceded=7,
+			UserNotFoundInSimias=8,
+			NoLoggedInDomainsPasswordText=9,
+			NotSupportedServerOld=10,
+		};
+
+
+
+
 		public int PasswordChangeStatus
 		{
 			get
@@ -246,7 +263,18 @@ namespace Novell.iFolder
 
 		private void ResetPassword(string domainid, string oldpassword, string newpassword)
 		{
-			this.passwordChangeStatus = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
+			try{
+				this.passwordChangeStatus = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
+			}
+			catch(System.Web.Services.Protocols.SoapException ex)
+			{
+				if(ex.Message.IndexOf("Server did not recognize the value of HTTP header SOAPAction") != -1)
+				{
+					this.passwordChangeStatus = (int)ResetPasswordStatus.NotSupportedServerOld;
+				}
+			}
+			catch{ }
+
 			if( this.passwordChangeStatus == 0)
 			{
 				try
@@ -263,30 +291,36 @@ namespace Novell.iFolder
                                         string Message = Util.GS("Could not change password, ");
                                         switch(this.passwordChangeStatus)
                                         {
-                                                case 1:
+                                                case (int)ResetPasswordStatus.IncorrectOldPassword:
                                                         Message += Util.GS("Incorrect old password.");
                                                         break;
-                                                case 2:
+                                                case (int)ResetPasswordStatus.FailedToResetPassword:
                                                         Message += Util.GS("Failed to reset password.");
                                                         break;
-                                                case 3:
+                                                case (int)ResetPasswordStatus.LoginDisabled:
                                                         Message += Util.GS("Login disabled.");
                                                         break;
-                                                case 4:
+                                                case (int)ResetPasswordStatus.UserAccountExpired:
                                                         Message += Util.GS("User account expired.");
                                                         break;
-                                                case 5:
+                                                case (int)ResetPasswordStatus.UserCannotChangePassword:
                                                         Message += Util.GS("User can not change password.");
                                                         break;
-                                                case 6:
+                                                case (int)ResetPasswordStatus.UserPasswordExpired:
                                                         Message += Util.GS("User password expired.");
                                                         break;
-                                               case 7:
+                                               case (int)ResetPasswordStatus.MinimumPasswordLengthExcceded:
                                                         Message += Util.GS("Minimum password length restriction not met.");
                                                         break;
-                                                case 8:
+                                                case (int)ResetPasswordStatus.UserNotFoundInSimias:
                                                         Message += Util.GS("User not found in simias.");
                                                         break;
+						case (int)ResetPasswordStatus.NoLoggedInDomainsPasswordText:
+							Message += Util.GS("For changing password the domain should be connected. Log on to the domain and try.");
+							break;
+						case (int)ResetPasswordStatus.NotSupportedServerOld:
+							Message += Util.GS("This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server.");
+							break;
                                                 default:
                                                         Message = "Error while changing the password.";
                                                         break;

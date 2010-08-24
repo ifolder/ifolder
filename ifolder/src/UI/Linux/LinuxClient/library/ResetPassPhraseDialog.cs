@@ -332,21 +332,37 @@ namespace Novell.iFolder
 				Status passphraseStatus = simws.ValidatePassPhrase(this.Domain, this.OldPassphrase);
 				if( passphraseStatus != null)
 				{
+					iFolderMsgDialog dialog = null;
 					if( passphraseStatus.statusCode == StatusCodes.PassPhraseInvalid)  // check for invalid passphrase
 					{
-						iFolderMsgDialog dialog = new iFolderMsgDialog(
+						dialog = new iFolderMsgDialog(
 								null,
 								iFolderMsgDialog.DialogType.Error,
 								iFolderMsgDialog.ButtonSet.None,
 								Util.GS("Invalid Passphrase"),
 								Util.GS("The Current PassPhrase entered is not valid"),
 								Util.GS("Please enter the passphrase again"));
-						dialog.Run();
-						dialog.Hide();
-						dialog.Destroy();
-						dialog = null;
-						return;
 					}
+					else if (passphraseStatus.statusCode == StatusCodes.ServerUnAvailable)
+					{
+						dialog = new iFolderMsgDialog(
+                                                                null,
+                                                                iFolderMsgDialog.DialogType.Info,
+                                                                iFolderMsgDialog.ButtonSet.None,
+                                                                Util.GS("No Logged-In domains"),
+                                                                Util.GS("There are no logged-in domains for changing the passphrase."),
+                                                                Util.GS("For changing passphrase the domain should be connected. Log on to the domain and try."));
+					}
+					
+					if(dialog != null)
+					{
+						dialog.Run();
+                                                dialog.Hide();
+                                                dialog.Destroy();
+                                                dialog = null;
+						return;
+					}	
+
 				}
 				if( this.RAName != "DEFAULT")
 				{
