@@ -191,30 +191,58 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		
 		NSArray *domains = [simiasService GetDomains:NO];
 		BOOL connectPrompt=YES;
+		BOOL latestClient= YES;
+		clientUpdate   *cliUpdate= Nil;
+	//	NSString status;
 		if(domains != nil )
 		{
+			NSDictionary *infoDictionary;
+			infoDictionary = [[NSBundle mainBundle] infoDictionary];
+			NSString* currentVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+			NSLog(@"currentVersion%@", currentVersion);
+			iFolderService *ifService = [[iFolderService alloc] init];
+			
 			for(counter=0;counter<[domains count];counter++)
 			{
-			iFolderDomain *dom = [domains objectAtIndex:counter];
-			ifconlog1(@"**update");
-			
-			if([dom authenticated]){
-			connectPrompt=NO;
-			[[iFolderData sharedInstance] clientUpdates:[dom ID] showstatus:YES]; 
-			}
+				iFolderDomain *dom = [domains objectAtIndex:counter];
+				NSLog(@"domain ID %@", [dom ID]);
+				if([dom authenticated]){
+					connectPrompt=NO;
+					@try
+					{
+						cliUpdate = [ ifService CheckForMacUpdate:[dom ID] forCurrentVersion:currentVersion];
+						if([cliUpdate Status] != Latest){
+							cliUpdate=Nil;
+							[[iFolderData sharedInstance] clientUpdates:[dom ID] ];
+							latestClient= NO; //atleast one of the domain has update
+						}	
+					}@catch(NSException* ex){
+						ifexconlog(@"Upgrade :Exception ", ex);
+						NSRunAlertPanel(NSLocalizedString(@"iFolder client upgarde",@"iFolderClientUpgradeTitle"),
+									NSLocalizedString(@"Unable to complete the operation .Try again",@"Unable to complete the operation message"),
+									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
 		
+					} @finally {
+						[iFolderService dealloc];
+					}
+					}
 			}
 			if(connectPrompt){ //not logged in to any domain 
-				NSRunAlertPanel(NSLocalizedString(@"Not connected",@"notconnectedTitle"),
-				NSLocalizedString(@"You are not connected . Please connect to a domain To find updates ",@"notconnectedMessage"),
-									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+			NSRunAlertPanel(NSLocalizedString(@"iFolder client upgarde",@"iFolderClientUpgradeTitle"),
+							NSLocalizedString(@"Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again",@"notconnectedMessage"),
+							NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+			} else if(latestClient){
+			NSRunAlertPanel(NSLocalizedString(@"iFolder client upgarde",@"iFolderClientUpgradeTitle"),
+							NSLocalizedString(@"You are using the latest available version",@"clientstatus"),
+							NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+
 			}
 		}
 		else 
-		{  //no domain added yet 
-				NSRunAlertPanel(NSLocalizedString(@"Not connected",@"notconnectedTitle"),
-				NSLocalizedString(@"You are not connected . Please connect to a domain To find updates ",@"notconnectedMessage"),
-									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
+		{  //no domain/account added yet 
+			NSRunAlertPanel(NSLocalizedString(@"iFolder client upgarde",@"iFolderClientUpgradeTitle"),
+							NSLocalizedString(@"Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again",@"notconnectedMessage"),
+							NSLocalizedString(@"OK",@"OK Button"), nil,nil);
 		}
 			
 	
@@ -816,7 +844,6 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 					//Check for encryption & passphrase
 					iFolderService *ifService = [[iFolderService alloc] init];
 					
-					[[iFolderData sharedInstance] clientUpdates:[dom ID]]; //Check for new client available or not
 					int secPolicy = 0;
 					
 					secPolicy = [ifService GetSecurityPolicy:[smne message]];

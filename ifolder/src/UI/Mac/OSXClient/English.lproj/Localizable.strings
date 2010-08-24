@@ -867,17 +867,17 @@
 /*UpgradeAvailableTitle*/
 "Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation." = "Would you like to upgrade your client to %@? If you click Yes, the latest DMG is downloaded to your system and client is closed automatically.\nYou must then click the downloaded DMG to proceed with the installation.";
 
-/*clientstatuslatestTitle*/
-"Client status is latest" = "Client status is latest";
+/*iFolderClientUpgradeTitle */
+"iFolder client upgarde" = "iFolder client upgarde";
 
 /*clientstatus*/
-"Client status"= "Client status";
-
-/*notconnectedTitle*/
-"Not connected"="Not connected";
+"You are using the latest available version"= "You are using the latest available version";
 
 /*notconnectedMessage*/
 "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again"= "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again";
+
+/*Unable to complete the operation message*/
+"Unable to complete the operation .Try again"= "Unable to complete the operation .Try again";
 
 /*Download latest client title*/
 "Browse the Location" = "Browse the Location";
@@ -887,6 +887,7 @@
 
 /*Stop upgrade message*/
 "Cannot upgrade to the latest client" = "Cannot upgrade to the latest client";
+
 
 /*Upgrade exception title*/
 "Upgrade Failed" = "Upgrade Failed";

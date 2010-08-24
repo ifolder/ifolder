@@ -1538,7 +1538,7 @@ static iFolderData *sharedInstance = nil;
 // This method will check for latest client updates.
 // Note: need to handle the download and run latest updates.
 //=====================================================================
--(void)clientUpdates:(NSString*)domID showstatus:(BOOL)show
+-(void)clientUpdates:(NSString*)domID
 {	
 	cliUpdate = nil;
 	//forceQuit = NO;
@@ -1604,11 +1604,7 @@ static iFolderData *sharedInstance = nil;
 	{
 		case  Latest:
 			NSLog(@"Client status is latest");
-			if(show) {
-				NSRunAlertPanel(NSLocalizedString(@"Client status",@"clientstatus"),
-									NSLocalizedString(@"Client status is latest",@"clientstatuslatestTitle"),
-									NSLocalizedString(@"OK",@"OK Button"), nil,nil);
-			}
+			
 			//Client is latest and not necessary to handle
 			break;
 			
