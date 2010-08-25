@@ -1092,7 +1092,7 @@ cgBlAGwAZQBhAHMAZQABAHcAZQBiAA==
 		<col key="yes" def="s72">ModuleID</col>
 		<col key="yes" def="i2">Language</col>
 		<col def="s32">Version</col>
-		<row><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td><td>3.8.1</td></row>
+		<row><td>ifolder3clientplugins.C469D568_F87A_47B0_8297_26D6DB946DCD</td><td>0</td><td>3.8.2</td></row>
 	</table>
 
 	<table name="ModuleSubstitution">
