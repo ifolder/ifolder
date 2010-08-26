@@ -628,6 +628,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 //===================================================================
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	NSLog(@"applicationWillTerminate");
 	if(simiasIsLoaded)
 	{
 		// Remove the monitor for proxy settings from the run loop and
@@ -696,44 +697,27 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 {
 	int counter;
 	int answer; 
-	
-	/*if( ![[iFolderData sharedInstance] ForceQuit] )
-	{
-		answer = NSRunAlertPanel(NSLocalizedString(@"Exit Application",@"Quit Application Title"),
-								 NSLocalizedString(@"If you exit the Novell iFolder application, changes in your iFolder will no longer be tracked. The next time you login, Novell iFolder will reconcile any differences between your iFolder and Server.\n\nAre you sure you want to exit the Application?",@"Quit Application Message"),
-								 NSLocalizedString(@"Quit",@"Quit Application Quit button"),
-								 NSLocalizedString(@"Cancel",@"Quit Application Cancel button"),
-								 nil);								 								 								 							
-	}
-											
-	if(answer == NSAlertDefaultReturn || [[iFolderData sharedInstance] ForceQuit] )
-	{*/
+	NSLog(@"applicationShouldTerminate");
+	SimiasService *simiasService=nil;
+	@try{	
 		SimiasService *simiasService = [[SimiasService alloc] init];
-		
 		NSArray* availableDomains  = [simiasService GetDomains:NO];
 		for(counter = 0;counter < [availableDomains count]; counter++)
 		{
 			iFolderDomain *dom = [availableDomains objectAtIndex:counter];
-			@try
-			{
+			
 				if(![simiasService GetRememberPassPhraseOption:[dom ID]])
 				{
 					[simiasService StorePassPhrase:[dom ID] PassPhrase:@"" Type:None andRememberPP:NO];				
 				}
 			}
-			@catch(NSException* ex)
-			{
-				ifexconlog(@"Exception in StorePassPhrase:iFolderApplication::applicationShouldTerminate",ex);
-			}
-
 		}
-		[simiasService release];
-		
+		@catch(NSException* ex)
+			{
+				ifexconlog(@"Exception :iFolderApplication::applicationShouldTerminate",ex);
+			}
+		[simiasService release]; 	
 		return NSTerminateNow;
-//}
-		
-		
-	return NSTerminateCancel;
 }
 
 //===================================================================
