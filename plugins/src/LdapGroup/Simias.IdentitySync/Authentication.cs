@@ -43,6 +43,7 @@ using Simias.Authentication;
 using Simias.Client;
 using Simias.Service;
 using Simias.Storage;
+using Simias.Sync;
 
 using SCodes = Simias.Authentication.StatusCodes;
 
@@ -601,11 +602,11 @@ namespace Simias.Identity
                                                                                         {
 												log.Debug( "System Sync Status : " + Domain.SystemSyncStatus.ToString() );
                                                                                                 if((Domain.SystemSyncStatus &
-                                                                                                 (ulong) Simias.Sync.CollectionSyncClient.StateMap.CatalogSyncOnce) ==
-                                                                                                 (ulong) Simias.Sync.CollectionSyncClient.StateMap.CatalogSyncOnce ||
-													(Simias.Sync.CollectionSyncClient.SyncStateMap &
-													Simias.Sync.CollectionSyncClient.StateMap.CatalogSyncOnce) ==
-													Simias.Sync.CollectionSyncClient.StateMap.CatalogSyncOnce )
+                                                                                                 (ulong) CollectionSyncClient.StateMap.CatalogSyncOnce) ==
+                                                                                                 (ulong) CollectionSyncClient.StateMap.CatalogSyncOnce ||
+													(CollectionSyncClient.ServerSyncStatus &
+													CollectionSyncClient.StateMap.CatalogSyncOnce) ==
+													CollectionSyncClient.StateMap.CatalogSyncOnce )
                                                                                                         break;
                                                                                                 else
                                                                                                 {
