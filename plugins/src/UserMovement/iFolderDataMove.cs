@@ -276,7 +276,7 @@ namespace Simias.UserMovement
 						{
 							currentiFolderID = ifDataMove.iFolderID;
 							member.iFolderMoveState(domain.ID, true, ifDataMove.iFolderID, (int)iFolderMoveState.Started, 0);
-							if(!Collection.DownloadCollectionLocally(ifDataMove.iFolderID, ifDataMove.iFolderName, ifDataMove.DomainID, ifDataMove.HostID, ifDataMove.DirNodeID, ifDataMove.MemberUserID, ifDataMove.colMemberNodeID, ifDataMove.iFolderLocalPath))
+							if(!Collection.DownloadCollectionLocally(ifDataMove.iFolderID, ifDataMove.iFolderName, ifDataMove.DomainID, ifDataMove.HostID, ifDataMove.DirNodeID, ifDataMove.MemberUserID, ifDataMove.colMemberNodeID, ifDataMove.iFolderLocalPath, ifDataMove.sourceFileCount, ifDataMove.sourceDirCount))
 							{
 								currentiFolderID = "";	
 								log.Debug( "downloadifolder returned false for {0} ",ifDataMove.iFolderID );

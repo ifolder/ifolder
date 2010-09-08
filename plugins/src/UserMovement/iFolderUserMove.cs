@@ -222,7 +222,7 @@ namespace Simias.UserMovement
 								{
 									Thread.Sleep(1000);
 									smConn.ClearConnection();
-									smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
+									smConn = new SimiasConnection(domain.ID, ifUserMove.member.UserID, SimiasConnection.AuthType.PPK, ifUserMove.MasterHomeServer);
 									svc = new SimiasWebService();
 									svc.Url = ifUserMove.MasterHomeServer.PublicUrl;
 									smConn.Authenticate ();
@@ -233,7 +233,6 @@ namespace Simias.UserMovement
 						}
 						break;
 					}
-					smConn.ClearConnection();
 					if( !result )
 					{
 						log.Debug("MoveUserObject: User disable failed id {0} ", ifUserMove.member.UserID);
@@ -344,7 +343,6 @@ namespace Simias.UserMovement
                                                 }
                                                 break;
 					}
-					smConn.ClearConnection();
 					if( !result )
 					{
 						log.Debug("Home server update failed for user id {0} ", ifUserMove.member.UserID);
@@ -508,7 +506,6 @@ namespace Simias.UserMovement
                                          }
                                          break;
 				}
-				smConn.ClearConnection();
 				if( !result )
 				{
 					log.Debug("UpdateUserMoveState: Failed for user {0} ", member.UserID);
@@ -590,7 +587,6 @@ namespace Simias.UserMovement
 				}
 				break;
 			}
-			smConn.ClearConnection();
 			if( !result )
 			{
 				log.Debug("UpdateLocalProperties failed for User id {0} ", member.UserID);
@@ -742,6 +738,18 @@ namespace Simias.UserMovement
                                 log.Debug("MoveiFolderData: Collection member node is null. {0} Cannot be moved.", col.ID);
 				return false;
 			}
+
+			int sourcefilecount=0;
+			int sourcedircount=0;
+			DirNode dirNode = col.GetRootDirectory();
+			if (dirNode != null)
+			{
+				string UnManagedPath = dirNode.GetFullPath(col);
+				DirectoryInfo d = new DirectoryInfo(UnManagedPath);
+				GetDirAndFileCount(d, ref sourcefilecount, ref sourcedircount);
+				sourcedircount++;
+			}
+
                         string MemberUserID = userID;
                         string UserID = store.GetUserIDFromDomainID(domainID);
                         SimiasConnection smConn = new SimiasConnection(domainID, UserID, SimiasConnection.AuthType.PPK, NewServer);
@@ -755,7 +763,7 @@ namespace Simias.UserMovement
 				// In successful condition , this loop must be executed only once.
                         	try
                         	{
-	                                status = svc.DownloadiFolder(iFolderID, col.Name, col.Domain, UserID, DirNodeID, MemberUserID, member.ID, null);
+	                                status = svc.DownloadiFolder(iFolderID, col.Name, col.Domain, UserID, DirNodeID, MemberUserID, member.ID, null, sourcefilecount, sourcedircount);
         	                }
                 	        catch(Exception ex)
                         	{
@@ -765,7 +773,7 @@ namespace Simias.UserMovement
 						{
 							Thread.Sleep(1000);
 							smConn.ClearConnection();
-							smConn = new SimiasConnection(domain.ID, userID, SimiasConnection.AuthType.PPK, NewServer);
+							smConn = new SimiasConnection(domainID, UserID, SimiasConnection.AuthType.PPK, NewServer);
 							svc = new SimiasWebService();
 							svc.Url = NewServer.PublicUrl;
 							smConn.Authenticate ();
@@ -783,7 +791,6 @@ namespace Simias.UserMovement
 				}
 				break;
 			}
-                        smConn.ClearConnection();
                         if( status == true )
                         {
                                 col.Commit(col.Delete());
@@ -799,6 +806,21 @@ namespace Simias.UserMovement
                         }
                         return true;
                 }
+
+		// count total no of files and dirs in this collection (goto actual storage and count)
+		public static void GetDirAndFileCount(DirectoryInfo d, ref int filecount, ref int dircount)
+		{
+			FileInfo[] fis = d.GetFiles();
+			filecount += fis.Length;
+
+			DirectoryInfo[] dis = d.GetDirectories();
+			foreach (DirectoryInfo di in dis)
+			{
+				dircount++;
+				GetDirAndFileCount(di, ref filecount, ref dircount);
+			}
+		}
+
 
                 /// <summary>
                 /// ProcessSlaveRemoval, processes the Slave server removal request based on the user move state.
@@ -949,6 +971,9 @@ namespace Simias.UserMovement
                 /// </summary>
 		public string iFolderLocalPath;
 
+		public int sourceFileCount;
+
+		public int sourceDirCount;
 
                 /// <summary>
                 /// Starting point API for user reprovision, Entry point to the UserMove DLL. 
@@ -963,7 +988,7 @@ namespace Simias.UserMovement
                 /// <param name="colMemberNodeID"> Collection Member Node ID</param>
                 /// <param name="iFolderLocalPath"> iFolder Local Path </param>
                 /// <returns> true if already moved, false if put in queue or not in queue</returns>
-		public static bool MoveiFolder(string iFolderID, string iFolderName, string DomainID, string HostID, string DirNodeID, string MemberUserID, string colMemberNodeID, string iFolderLocalPath)
+		public static bool MoveiFolder(string iFolderID, string iFolderName, string DomainID, string HostID, string DirNodeID, string MemberUserID, string colMemberNodeID, string iFolderLocalPath, int sourceFileCount, int sourceDirCount)
 		{
 			bool Status = false;
 			log.Debug("MoveiFolder: Date move request received for id {0} {1} {2} {3} {4} {5} {6} {7}", iFolderID, iFolderName, DomainID, HostID, DirNodeID, MemberUserID, colMemberNodeID, iFolderLocalPath);
@@ -978,6 +1003,8 @@ namespace Simias.UserMovement
 				ifDataMove.MemberUserID = MemberUserID;
 				ifDataMove.colMemberNodeID = colMemberNodeID;
 				ifDataMove.iFolderLocalPath = iFolderLocalPath;
+				ifDataMove.sourceFileCount = sourceFileCount;
+				ifDataMove.sourceDirCount = sourceDirCount;
 				
 				if(Simias.UserMovement.DataMove.IsiFolderAlreadyInQueueOrMoved(ifDataMove) == true)
 					return true;
