@@ -82,6 +82,13 @@ namespace Simias.ADLdapProvider
 		
 		static private string missingDomainMessage = "Enterprise domain does not exist!";
 
+		/// <summary>
+		/// Default value for number of days left for password expiry. 
+		/// This comes into picture only when, ifolder fails to calculate the number of days left based on information
+		/// received from AD.
+		/// </summary>
+		static private readonly int defaultdaysUntilExpired = 5;
+
 		// Frequently used Simias types
 		private Store store = null;
 		private Simias.Storage.Domain domain = null;
@@ -587,8 +594,19 @@ namespace Simias.ADLdapProvider
 							}
 							else
 							{
-								TimeSpan pwdExpiresIn = pwdExpires - DateTime.Now;
-								daysUntilExpired = pwdExpiresIn.Days;
+								try
+								{
+									TimeSpan pwdExpiresIn = pwdExpires - DateTime.Now;
+									daysUntilExpired = pwdExpiresIn.Days;
+								}
+								catch(Exception ex)
+								{
+									// In some scenarios "pwdExpires - DateTime.Now" result is too big 
+									// to fit into TimeSpan variable. In this case exception is logged and
+									// default value is set for daysUntilExpired
+									log.Debug("Exception occured {0}:{1} while calculating daysUntilExpired", ex.Message, ex.StackTrace);
+									daysUntilExpired = defaultdaysUntilExpired;
+								}
 							}
 						}
 					}
