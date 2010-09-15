@@ -639,17 +639,46 @@ namespace Novell.FormsTrayApp
 			//this.waterMark.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder48.png"));
 			this.pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
 			this.pictureBox.Image = Image.FromFile(System.IO.Path.Combine(Application.StartupPath, @"res\ifolder-banner-scaler.png"));
-			string[] rAgents= this.simws.GetRAListOnClient(DomainID);
-            this.RecoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
-			foreach( string rAgent in rAgents)
-			{
-				this.RecoveryAgentCombo.Items.Add( rAgent ); 
-				//MessageBox.Show(String.Format("Adding {0}", rAgent));
-			}
-
-            this.RecoveryAgentCombo.SelectedIndex = 0;
-			// Needs to be changed
-			//string[] ralist = this.simws.GetRAList(this.DomainID);
+            string[] rAgents =null;
+            try
+            {
+                if (DomainID != null)
+                    rAgents = this.simws.GetRAListOnClient(DomainID);
+                else
+                    FormsTrayApp.log.Info("DomainID is null");
+            }           
+            catch (Exception ex)
+            {                
+             	FormsTrayApp.log.Info("EnterPassphrasedialog_load, Exception at GetRAListOnClient and stack is :{0}",ex.StackTrace);
+            }                        
+			//TODO: Indroduce API to identify server version.
+            //Passing old password and new password as NULL, as this function is used to identitfy 
+            //wheather server which client is connected is latest or older then OES2SP2            
+			//In case of latest server, call will go through and fail and authentication will fail, as current password is passed as NULL             
+			//and in case of OLD server, server return as un-supported functioanlity.            
+			try
+            {
+				if(DomainID != null)
+				{
+                	this.ifws.ChangePassword(DomainID, null, null);
+                	this.RecoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
+				}	
+            }
+            catch (System.Web.Services.Protocols.SoapHeaderException soapEx)
+            {                
+					FormsTrayApp.log.Info("Server is older, not adding ServerDefaultRA and exception is:{0}",soapEx.StackTrace);
+            }
+            if (rAgents != null)
+            {
+                foreach (string rAgent in rAgents)
+                {                    
+					this.RecoveryAgentCombo.Items.Add(rAgent);                
+				}
+            }            
+				if(this.RecoveryAgentCombo.Items.Count > 0)                
+					this.RecoveryAgentCombo.SelectedIndex = 0;			
+				// Needs to be changed
+				//string[] ralist = this.simws.GetRAList(this.DomainID);
 		}
 
         /// <summary>

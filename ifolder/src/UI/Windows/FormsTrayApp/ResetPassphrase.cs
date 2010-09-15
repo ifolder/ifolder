@@ -563,7 +563,22 @@ namespace Novell.FormsTrayApp
 			this.recoveryAgentCombo.Items.Clear();
 			try
 			{
-                this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
+                //TODO: Indroduce API to identify server version.
+
+                //Passing old password and new password as NULL, as this function is used to identitfy 
+                //wheather server which client is connected is latest or older then OES2SP2
+                //In case of latest server, call will go through and fail and authentication will fail, as current password is passed as NULL 
+                //and in case of OLD server, server return as un-supported functioanlity.
+                try
+                {
+                    this.ifws.ChangePassword(DomainID, null, null);
+                    this.recoveryAgentCombo.Items.Add(TrayApp.Properties.Resources.serverDefaultRA);
+                }
+                catch (System.Web.Services.Protocols.SoapHeaderException soapEx)
+                {
+                    FormsTrayApp.log.Info("Function:PopulateRecoveryAgentList, Server is older, not adding ServerDefaultRA and exception is:{0}", soapEx.StackTrace);
+                }
+                
                 string[] rAgents= this.simws.GetRAListOnClient(this.DomainID);
                 if (rAgents != null)
                 {
@@ -572,7 +587,8 @@ namespace Novell.FormsTrayApp
                         this.recoveryAgentCombo.Items.Add(rAgent);
                     }
                 }
-                this.recoveryAgentCombo.SelectedIndex = 0;
+                if(this.recoveryAgentCombo.Items.Count > 0)
+                    this.recoveryAgentCombo.SelectedIndex = 0;
 			}
 			catch(Exception)
 			{
