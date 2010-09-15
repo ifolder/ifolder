@@ -19,12 +19,12 @@
 Name:           novell-ifolder-client-plugins
 
 %if %suse_version < 1110
-BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf glitz-devel novell-ifolder-libflaim novell-ifolder-libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 e2fsprogs-devel
+BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ glitz-devel novell-ifolder-libflaim novell-ifolder-libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 e2fsprogs-devel
 %else
 %ifarch         x86_64
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
 %else
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gdk-pixbuf glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33 glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
 %endif
 %endif
 

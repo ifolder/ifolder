@@ -20,12 +20,12 @@
 Name:           ifolder3
 
 %if %suse_version < 1110
-BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ gdk-pixbuf novell-ifolder-libflaim novell-ifolder-libflaim-devel glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ 
+BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ novell-ifolder-libflaim novell-ifolder-libflaim-devel glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ 
 %else
 %ifarch         x86_64
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
 %else
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gdk-pixbuf glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33 glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
 %endif
 %endif
 

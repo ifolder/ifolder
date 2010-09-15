@@ -17,12 +17,12 @@
 # norootforbuild
 
 %if %suse_version < 1030
-BuildRequires: aspell-en compat-libstdc++ gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
+BuildRequires: aspell-en compat-libstdc++ gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
 %else
 %ifarch         x86_64
-BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
+BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
 %else
-BuildRequires: aspell-en libstdc++33 libstdc++33-devel gdk-pixbuf gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
+BuildRequires: aspell-en libstdc++33 libstdc++33-devel gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
 %endif
 %endif
 
