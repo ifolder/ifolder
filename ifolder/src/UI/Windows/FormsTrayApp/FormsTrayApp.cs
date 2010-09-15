@@ -1754,7 +1754,8 @@ namespace Novell.FormsTrayApp
                     case SyncStatus.UpdateConflict:
                     case SyncStatus.FileNameConflict:
                         message = string.Format(resourceManager.GetString("conflictFailure"), syncEventArgs.Name);
-                        errorSyncingCurrentCollection = true;
+                        if (!Preferences.NotifyCollisionEnabled)
+                            errorSyncingCurrentCollection = true;
 			            infolog.AddMessageToLog(syncEventArgs.TimeStamp, message);
                         break;
                     case SyncStatus.Policy:
