@@ -1068,10 +1068,16 @@ namespace Novell.iFolder
 			{
 				if ( domainController.IsPassPhraseSet (ConnectedDomain.ID) == false)
 				{
-					PassPhraseSet = false;
+				       PassPhraseSet = false;
 				       string[] list = domainController.GetRAList (ConnectedDomain.ID);
-					
-					 RATreeStore.AppendValues( Util.GS("Server_Default"));
+				
+				       try{
+						iFolderWebService ifws = DomainController.GetiFolderService();
+				      		ifws.ChangePassword(ConnectedDomain.ID, null, null);
+				       		RATreeStore.AppendValues( Util.GS("Server_Default"));
+				       }
+				       catch{ }
+
 				       foreach (string raagent in list )
 					       RATreeStore.AppendValues (raagent);
 

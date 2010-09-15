@@ -5214,18 +5214,18 @@ namespace Novell.iFolder
 	public static bool ShowEnterPassPhraseDialog(string DomainID, SimiasWebService simws)
 	{
 		bool status = false;
-	    EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID, simws);
+	    	EnterPassPhraseDialog epd = new EnterPassPhraseDialog(DomainID, simws);
 		if (!Util.RegisterModalWindow(epd))
-    	{
-	    	epd.Destroy();
+    		{
+	    		epd.Destroy();
 			epd = null;
 			return false;
 		}
 		try
 		{
-            status = PassphraseHelper( epd, DomainID, simws);
-            if( !status )
-                return status;
+            		status = PassphraseHelper( epd, DomainID, simws);
+		        if( !status )
+                		return status;
 		}	
 		catch(Exception ex)
 		{

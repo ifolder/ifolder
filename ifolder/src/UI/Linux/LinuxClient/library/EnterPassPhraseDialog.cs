@@ -53,7 +53,7 @@ namespace Novell.iFolder
 		private Image				 iFolderBanner;
 		private Image				 iFolderScaledBanner;
 		private Gdk.Pixbuf			 ScaledPixbuf;
-        private SimiasWebService simws;
+        	private SimiasWebService simws;
 
         /// <summary>
         /// Gets he Passphrase
@@ -120,7 +120,7 @@ namespace Novell.iFolder
 		public EnterPassPhraseDialog(string domainID, SimiasWebService simiasws) : base()
  		{
 			this.DomainID = domainID;
-            this.simws = simiasws;
+		        this.simws = simiasws;
 			SetupDialog();
 		}
 
@@ -233,7 +233,13 @@ namespace Novell.iFolder
 			RATreeStore = new ListStore(typeof(string));
 			RATreeView.Model = RATreeStore;
                         RAList = domainController.GetRAList(DomainID);
-			 RATreeStore.AppendValues(Util.GS("Server_Default"));
+			iFolderWebService ifws = DomainController.GetiFolderService();
+			try{
+				ifws.ChangePassword(DomainID, null, null);
+			 	RATreeStore.AppendValues(Util.GS("Server_Default"));
+			}
+			catch{ }
+
 			if( RAList == null)
 			{
 				Debug.PrintLine(" no recovery agent present:");

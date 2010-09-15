@@ -517,8 +517,8 @@ namespace Novell.iFolder
         /// </summary>
 		private void DisplayRAList()
 		{
-			
-		try	
+			bool IsComboBoxEmpty = true;	
+			try	
 			{string domainID = this.Domain;
 			if( RAList != null)
 				for( int i=RAList.Length; i>=0; i--)
@@ -526,19 +526,29 @@ namespace Novell.iFolder
 			DomainController domController = DomainController.GetDomainController();
 			Debug.PrintLine(string.Format("domain id is: {0}", domainID));
 			RAList = domController.GetRAList(domainID);
-			recoveryAgentCombo.AppendText(Util.GS("Server_Default"));
+			try{
+				this.ifws.ChangePassword(domainID, null, null);
+				recoveryAgentCombo.AppendText(Util.GS("Server_Default"));
+				IsComboBoxEmpty = false;
+			}
+			catch{ }
+
 			if( RAList != null)
 			{
 	            		foreach (string raagent in RAList )
 	            		{
         	    			recoveryAgentCombo.AppendText(raagent);
+					IsComboBoxEmpty = false;
         	    		}	
 			}
 			else
 			{
 				Debug.PrintLine("No recovery agent present");
 			}
-			recoveryAgentCombo.Active = 0;
+			
+			if(!IsComboBoxEmpty)
+				recoveryAgentCombo.Active = 0;
+				
 			}
 			catch(Exception e)
                         {
