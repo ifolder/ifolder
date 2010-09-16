@@ -175,10 +175,10 @@
 							NSLocalizedString(@"OK", nil), nil, nil);
 					}
 				
-					[[iFolderData sharedInstance] clientUpdates:authDomainID showstatus:NO]; //Check for new client available or not
+					[[iFolderData sharedInstance] clientUpdates:authDomainID ]; //Check for new client available or not
 
 					//Check for Encryption
-					
+				
 					BOOL passPhraseStatus = NO;
 					int securityPolicy = 0;
 	
