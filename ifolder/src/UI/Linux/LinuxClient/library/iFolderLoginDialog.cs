@@ -235,7 +235,7 @@ namespace Novell.iFolder
 			}
 			else
 			{
-				Label domainLabel = new Label(Util.GS("iFolder Server:"));
+				Label domainLabel = new Label(Util.GS("iFolder Account:"));
 				domainLabel.Xalign = 1;
 				loginTable.Attach(domainLabel, 0,1,0,1,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);

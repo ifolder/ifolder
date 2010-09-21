@@ -220,7 +220,7 @@ namespace Novell.iFolder
 
 			// Server Column
 			TreeViewColumn serverColumn = new TreeViewColumn();
-			serverColumn.Title = Util.GS("Server Name");
+			serverColumn.Title = Util.GS("Account Name");
 			CellRendererText servercr = new CellRendererText();
 			servercr.Xpad = 5;
 			serverColumn.PackStart(servercr, false);

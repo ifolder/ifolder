@@ -232,6 +232,9 @@ msgstr "More options"
 msgid "iFolder Server:"
 msgstr "iFolder Server:"
 
+msgid "iFolder Account:"
+msgstr "iFolder Account:"
+
 #: src/LinuxClient/library/FileRenameDialog.cs:57 
 msgid "Rename file"
 msgstr "Rename file"
@@ -1426,6 +1429,9 @@ msgstr "Username"
 msgid "Server Name"
 msgstr "Server Name"
 
+msgid "Account Name"
+msgstr "Account Name"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226 
 msgid "_Details"
 msgstr "_Details"
@@ -1597,6 +1603,9 @@ msgstr "Notify when conflic_ts arise"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Notify when a _user joins the iFolder domain"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Notify when a _user joins the iFolder server"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219 
 msgid "Automatically S_ynchronize iFolders"
 msgstr "Automatically S_ynchronize iFolders"
@@ -1646,6 +1655,9 @@ msgstr "System Name:"
 
 msgid "iFolder server name:"
 msgstr "iFolder server name:"
+
+msgid "iFolder account name:"
+msgstr "iFolder account name:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121 
 msgid "_Remove my iFolders and files from the server"
@@ -2801,6 +2813,11 @@ msgstr ""
 "Migrate the iFolder and disconnect it from 2.x domain"
 
 msgid ""
+"Migrate the iFolder and disconnect it from 2.x server"
+msgstr ""
+"Migrate the iFolder and disconnect it from 2.x server"
+
+msgid ""
 "Create a copy of the iFolder and migrate"
 msgstr ""
 "Create a copy of the iFolder and migrate"
@@ -2894,6 +2911,11 @@ msgid ""
 "For creating an encrypted iFolder you should be connected to the domain."
 msgstr ""
 "For creating an encrypted iFolder you should be connected to the domain."
+
+msgid ""
+"To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
 
 msgid ""
 "Delete from iFolder2.X server"
@@ -3152,9 +3174,19 @@ msgstr ""
 "No Logged-In domains"
 
 msgid ""
+"No Logged-In accounts"
+msgstr ""
+"No Logged-In accounts"
+
+msgid ""
 "There are no logged-in domains for importing keys."
 msgstr ""
 "There are no logged-in domains for importing keys."
+
+msgid ""
+"There are no logged-in accounts for importing keys."
+msgstr ""
+"There are no logged-in accounts for importing keys."
 
 msgid ""
 "There are no logged-in domains for resetting keys."
@@ -3162,14 +3194,34 @@ msgstr ""
 "There are no logged-in domains for resetting keys."
 
 msgid ""
+"There are no logged-in accounts for resetting keys."
+msgstr ""
+"There are no logged-in accounts for resetting keys."
+
+msgid ""
 "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr ""
 "For resetting keys the domain should be connected. Log on to the domain and try."
 
 msgid ""
+"To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To reset the keys, you must be logged in to an account. Log in and try again."
+
+msgid ""
 "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr ""
 "For resetting the passphrase the domain should be connected. Log on to the domain and try."
+
+msgid ""
+"To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To reset the passphrase, you must be logged in to an account. Log in and try again."
+
+msgid ""
+"To import, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To import, you must be logged in to an account. Log in and try again."
 
 msgid ""
 "Successfully imported the keys and changed the passphrase"
@@ -3187,9 +3239,19 @@ msgstr ""
 "There are no logged-in domains for changing the passphrase."
 
 msgid ""
+"There are no logged-in accounts for changing the passphrase."
+msgstr ""
+"There are no logged-in accounts for changing the passphrase."
+
+msgid ""
 "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr ""
 "For changing passphrase the domain should be connected. Log on to the domain and try."
+
+msgid ""
+"To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To change the passphrase, you must be logged in to an account. Log in and try again."
 
 msgid ""
 "Successfully exported the keys."
@@ -3542,6 +3604,11 @@ msgstr ""
 "Successfully changed the password. Log on to the domain with new password."
 
 msgid ""
+"Successfully changed the password. Log on to the account with new password."
+msgstr ""
+"Successfully changed the password. Log on to the account with new password."
+
+msgid ""
 "_Current password"
 msgstr ""
 "_Current password"
@@ -3577,9 +3644,19 @@ msgstr ""
 "There are no logged-in domains for changing the password."
 
 msgid ""
+"There are no logged-in accounts for changing the password."
+msgstr ""
+"There are no logged-in accounts for changing the password."
+
+msgid ""
 "For changing password the domain should be connected. Log on to the domain and try."
 msgstr ""
 "For changing password the domain should be connected. Log on to the domain and try."
+
+msgid ""
+"To change the password, you must be logged in to an account. Log in and try again."
+msgstr ""
+"To change the password, you must be logged in to an account. Log in and try again."
 
 msgid ""
 "Old password and new password should not be same."
@@ -3662,6 +3739,11 @@ msgstr ""
 "Server: {0}"
 
 msgid ""
+"Account: {0}"
+msgstr ""
+"Account: {0}"
+
+msgid ""
 "Last Successful Sync time: {0}"
 msgstr ""
 "Last Successful Sync time: {0}"
@@ -3685,6 +3767,11 @@ msgid ""
 "Domain List"
 msgstr ""
 "Domain List"
+
+msgid ""
+"Account List"
+msgstr ""
+"Account List"
 
 msgid ""
 "User: {0}"
@@ -4064,6 +4151,11 @@ msgid ""
 "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again." 
 msgstr ""
 "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again." 
+
+msgid ""
+"Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again." 
+msgstr ""
+"Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again." 
 
 msgid ""
 "Unable to complete the operation. Try again." 

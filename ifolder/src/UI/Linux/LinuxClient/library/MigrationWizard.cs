@@ -251,7 +251,7 @@ namespace Novell.iFolder
 			// Row 2
 			table.Attach(new Label(""), 0,1, 1,2,
 				AttachOptions.Fill, 0,12,0); // spacer
-			deleteFromServer = new RadioButton(Util.GS("Migrate the iFolder and disconnect it from 2.x domain"));
+			deleteFromServer = new RadioButton(Util.GS("Migrate the iFolder and disconnect it from 2.x server"));
 			deleteFromServer.Active = true;
 			deleteFromServer.Sensitive = true;
 			deleteFromServer.Toggled += new EventHandler(OndeleteCheckButtonChanged);
@@ -928,8 +928,8 @@ namespace Novell.iFolder
 												iFolderMsgDialog.DialogType.Info,
 												iFolderMsgDialog.ButtonSet.Ok,
 												Util.GS("Migration"),
-												Util.GS("User not Logged-in to the domain"), 
-												string.Format(Util.GS("For creating an encrypted iFolder you should be connected to the domain.")));
+												Util.GS("No Logged-In accounts"), 
+												string.Format(Util.GS("To create an encrypted iFolder, you must be logged in to an account. Log in and try again.")));
 				errorMsg.Run();
 				errorMsg.Destroy();
 				AccountDruid.Page = MigrationOptionsPage;

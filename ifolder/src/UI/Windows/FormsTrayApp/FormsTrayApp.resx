@@ -869,13 +869,13 @@
         <value>&amp;Remember password on this computer</value>
     </data>
 	<data name="ServerNameText">
-		<value>Domain address</value>
+		<value>Server address</value>
 	</data>
     <data name="ServerNameTextbox">
-        <value>&amp;Domain address</value>
+        <value>&amp;Server address</value>
     </data>
 	<data name="ServerPagelbl2txt">
-		<value>Enter the name of your iFolder domain (for example, "ifolder.example.net").</value>
+		<value>Enter the name of your iFolder server (for example, "ifolder.example.net").</value>
 	</data>
 	<data name="ServerPageDesc">
 		<value>Setting this iFolder server as your default server will enable iFolder to automatically select this server when adding new iFolders.</value>
@@ -949,7 +949,7 @@
 		<value>&amp;Location:</value>
 	</data>
 	<data name="MigrateNRemove">
-		<value>Migrate the ifolder and disconnect it from 2.x domain</value>
+		<value>Migrate the ifolder and disconnect it from 2.x server</value>
 	</data>
 	<data name="MigrateNCopy">
 		<value>Create a copy and connect it to 3.x server</value>
@@ -1003,7 +1003,7 @@
 		<value>Encrypted</value>
 	</data>
 	<data name="AccountName">
-		<value>Domain Name</value>
+		<value>Account Name</value>
 	</data>
 	<data name="SyncErrorPrompt">
 		<value>Synchronization log contains the information regarding the files that are not synchronized.</value>
@@ -1081,13 +1081,13 @@
 	<value>None</value>
   </data>
   <data name="NoLoggedInDomainsText" >
-	<value>For changing passphrase the domain should be connected. Log on to the domain and try.</value>
+	<value>To change the passphrase, you must be logged in to an account. Log in and try again.</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText" >
-    <value>For changing password the domain should be connected. Log on to the domain and try.</value>
+    <value>To change the password, you must be logged in to an account. Log in and try again.</value>
   </data>  
   <data name="NoLoggedInDomainsTextForImport" >
-	<value>For importing the domain should be connected. Log on to the domain and try.</value>
+	<value>To import, you must be logged in to an account. Log in and try again.</value>
   </data>
   <data name="ImportKeysError" >
 	<value>Error importing keys</value>
@@ -1149,7 +1149,7 @@ Are you sure you want to exit the Application ?</value>
     <value>You are using the latest available version.</value>
   </data>
   <data name="upgradeServerUnavailable" xml:space="preserve">
-    <value>Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again.</value>
+    <value>Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again.</value>
   </data>
   <data name="operationIncomplete" xml:space="preserve">
     <value>Unable to complete the operation. Try again.</value>

@@ -166,7 +166,7 @@ namespace Novell.iFolder
 		private Widget CreateNotebook()
 		{
 			Notebook notebook = new Notebook();
-			notebook.AppendPage(CreateServerPage(), new Label(Util.GS("Server")));
+			notebook.AppendPage(CreateServerPage(), new Label(Util.GS("Account")));
 			notebook.AppendPage(CreateIdentityPage(), new Label(Util.GS("Identity")));
 			notebook.AppendPage(CreateDiskSpacePage(), new Label(Util.GS("Disk Space")));
 		   	

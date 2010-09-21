@@ -1138,7 +1138,7 @@ namespace Novell.iFolder
             //####################### ADD LABEL
 			//Display the server/domain this ifolder belongs to
 			lable = Util.GS("N/A");
-			lable = string.Format(Util.GS("Server: {0}"),lable); 
+			lable = string.Format(Util.GS("Account: {0}"),lable); 
 		    labeliFolderServer = new Label( string.Format( "<span size=\"medium\">{0}</span>",lable ));
 
 		   	userInfo.PackStart(labeliFolderServer, false, false, 0);
@@ -1433,7 +1433,7 @@ namespace Novell.iFolder
                         tv.AppendColumn ("", new CellRendererPixbuf(), "pixbuf", 0);
                         tv.AppendColumn (Util.GS("iFolder"), new CellRendererText (), "text", 1);
 			tv.AppendColumn (Util.GS("Size"), new CellRendererText(), "text", 2);
-			tv.AppendColumn (Util.GS("Server"), new CellRendererText(), "text", 3);
+			tv.AppendColumn (Util.GS("Account"), new CellRendererText(), "text", 3);
 			tv.AppendColumn (Util.GS("Status"), new CellRendererText(), "text", 4);
 			ifolderlistview.Add(tv);
                         ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
@@ -1484,7 +1484,7 @@ namespace Novell.iFolder
 			l = new Label(
 				string.Format(
 					"<span size=\"large\">{0}</span>",
-					Util.GS("Domain List")));
+					Util.GS("Account List")));
 			actionsVBox.PackStart(l, false, false, 0);
 			l.UseMarkup = true;
 			l.ModifyFg(StateType.Normal, this.Style.Base(StateType.Selected));
@@ -1780,9 +1780,8 @@ namespace Novell.iFolder
 	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), GetFriendlySize(holder.iFolder.iFolderSize));
 
 
-				DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
-			     UriBuilder serverUri = new UriBuilder(domain.HostUrl);	
-	     		labeliFolderServer.Text = string.Format(Util.GS("Server: {0}"),serverUri.Host);
+			DomainInformation domain = domainController.GetDomain(holder.iFolder.DomainID);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Account: {0}"),domain.Name);
 			
 				string iftype = null;	
 				if( (null == holder.iFolder.encryptionAlgorithm) || ("" == holder.iFolder.encryptionAlgorithm) )
@@ -1855,7 +1854,7 @@ namespace Novell.iFolder
 	     		labelFolderToSync.Text = string.Format(Util.GS("File/Folder to synchronize: {0}"), label);
 	     		labelLastSyncTime.Text = string.Format(Util.GS("Last Successful Sync time: {0}"), label);
 	     		labeliFolderSize.Text = string.Format(Util.GS("iFolder Size: {0}"), label);
-	     		labeliFolderServer.Text = string.Format(Util.GS("Server: {0}"), label);
+	     		labeliFolderServer.Text = string.Format(Util.GS("Account: {0}"), label);
 			   	labeliFolderType.Text= string.Format(Util.GS("iFolder Type: {0}"), label);
 
 		}
@@ -2313,9 +2312,9 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Error,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("No Logged-In domains"),
-                                                                                                                Util.GS("There are no logged-in domains for importing keys."),
-                                                                                                                Util.GS("For importing keys the domain should be connected. Log on to the domain and try."));
+                                                                                                                Util.GS("No Logged-In accounts"),
+                                                                                                                Util.GS("There are no logged-in accounts for importing keys."),
+                                                                                                                Util.GS("To import, you must be logged in to an account. Log in and try again."));
 					dialog.Run();
 	                                dialog.Hide();
         	                        dialog.Destroy();
@@ -3074,7 +3073,7 @@ namespace Novell.iFolder
                                                 iFolderMsgDialog.DialogType.Info,
                                                 iFolderMsgDialog.ButtonSet.Ok,
                                                 Util.GS("iFolder Client Upgrade"),
-                                                Util.GS("Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."),
+                                                Util.GS("Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."),
                                                 Util.GS(""));
 						
 					}
@@ -3125,9 +3124,9 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Error,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("No Logged-In domains"),
-                                                                                                                Util.GS("There are no logged-in domains for resetting keys."),
-                                                                                                                Util.GS("For resetting the passphrase the domain should be connected. Log on to the domain and try."));
+                                                                                                                Util.GS("No Logged-In accounts"),
+                                                                                                                Util.GS("There are no logged-in accounts for resetting keys."),
+                                                                                                                Util.GS("To reset the passphrase, you must be logged in to an account. Log in and try again."));
                                         dialog.Run();
                                         dialog.Hide();
                                         dialog.Destroy();
@@ -3167,9 +3166,9 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Error,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("No Logged-In domains"),
-                                                                                                                Util.GS("There are no logged-in domains for changing the password."),
-                                                                                                                Util.GS("For changing password the domain should be connected. Log on to the domain and try."));
+                                                                                                                Util.GS("No Logged-In accounts"),
+                                                                                                                Util.GS("There are no logged-in accounts for changing the password."),
+                                                                                                                Util.GS("To change the password, you must be logged in to an account. Log in and try again."));
 					dialog.Run();
 	                                dialog.Hide();
         	                        dialog.Destroy();
@@ -3230,9 +3229,9 @@ namespace Novell.iFolder
                                                                                                                 null,
                                                                                                                 iFolderMsgDialog.DialogType.Error,
                                                                                                                 iFolderMsgDialog.ButtonSet.None,
-                                                                                                                Util.GS("No Logged-In domains"),
-                                                                                                                Util.GS("There are no logged-in domains for changing the passphrase."),
-                                                                                                                Util.GS("For changing passphrase the domain should be connected. Log on to the domain and try."));
+                                                                                                                Util.GS("No Logged-In accounts"),
+                                                                                                                Util.GS("There are no logged-in accounts for changing the passphrase."),
+                                                                                                                Util.GS("To change the passphrase, you must be logged in to an account. Log in and try again."));
 					dialog.Run();
 	                                dialog.Hide();
         	                        dialog.Destroy();
@@ -4969,7 +4968,7 @@ namespace Novell.iFolder
 		{
 			iFolderMsgDialog dlg = new iFolderMsgDialog(null, iFolderMsgDialog.DialogType.Error, iFolderMsgDialog.ButtonSet.Ok,
 									Util.GS("iFolder Error"), Util.GS("Error creating iFolder"), 
-									Util.GS("You should be logged-in to the domain for creating encrypted iFolders."));
+									Util.GS("To create an encrypted iFolder, you must be logged in to an account. Log in and try again."));
 			dlg.Run();
 			dlg.Hide();
 			dlg.Destroy();

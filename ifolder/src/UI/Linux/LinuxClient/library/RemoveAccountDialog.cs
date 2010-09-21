@@ -93,7 +93,7 @@ namespace Novell.iFolder
 			//
 			// Row: Server
 			//
-			l = new Label(Util.GS("iFolder server name:"));
+			l = new Label(Util.GS("iFolder account name:"));
 			l.Xalign = 1;
 			table.Attach(l, 0,1, 0,1,
 						 AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);

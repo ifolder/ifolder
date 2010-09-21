@@ -357,6 +357,9 @@
   <data name="access" xml:space="preserve">
     <value>Access</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>Account</value>
+  </data>
   <data name="autoSync" xml:space="preserve">
     <value>Automatic sync</value>
   </data>

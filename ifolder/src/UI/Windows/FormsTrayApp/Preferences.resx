@@ -751,7 +751,7 @@
     <value>2</value>
   </data>
   <data name="notifyJoins.Text" xml:space="preserve">
-    <value>Notify &amp;when a user joins the iFolder domain</value>
+    <value>Notify &amp;when a user joins the iFolder server</value>
   </data>
   <data name="&gt;&gt;notifyJoins.Name" xml:space="preserve">
     <value>notifyJoins</value>
@@ -1045,7 +1045,7 @@
     <value>0</value>
   </data>
   <data name="columnHeader2.Text" xml:space="preserve">
-    <value>Server Name</value>
+    <value>Account Name</value>
   </data>
   <data name="columnHeader2.Width" type="System.Int32, mscorlib">
     <value>187</value>

@@ -850,7 +850,7 @@
     <value>14</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>iFolder Domains</value>
+    <value>iFolder Accounts</value>
   </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
@@ -1201,7 +1201,7 @@
     <value>3</value>
   </data>
   <data name="titleServerorSize.Text" xml:space="preserve">
-    <value>Server</value>
+    <value>Account</value>
   </data>
   <data name="titleServerorSize.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1507,7 +1507,7 @@
     <value>77</value>
   </data>
   <data name="Server.Text" xml:space="preserve">
-    <value>Server</value>
+    <value>Account</value>
   </data>
   <data name="Server.Width" type="System.Int32, mscorlib">
     <value>198</value>

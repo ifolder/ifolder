@@ -205,7 +205,7 @@ namespace Novell.iFolder
 						new EventHandler(OnHideMainWindowButton);
 			
 			NotifyUsersButton =
-				new CheckButton(Util.GS("Notify when a _user joins the iFolder domain")); 
+				new CheckButton(Util.GS("Notify when a _user joins the iFolder server")); 
 			notifyWidgetBox.PackStart(NotifyUsersButton, false, true, 0);
 
 			NotifyUsersButton.Toggled += 

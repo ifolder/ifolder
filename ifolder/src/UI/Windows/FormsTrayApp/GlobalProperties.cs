@@ -2094,7 +2094,7 @@ namespace Novell.FormsTrayApp
             this.titleAccess.Text = Resources.access + ":  " + Resources.na;
             this.titleEncrypted.Text = Resources.type + ":  "  +Resources.na;
             this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  "  +Resources.na;
-            this.titleServerorSize.Text = Resources.server + ":  "  +Resources.na;
+            this.titleServerorSize.Text = Resources.account + ":  "  +Resources.na;
         }
         private void populateLocaliFolderInfo(iFolderWeb ifolderWeb)
         {
@@ -2115,8 +2115,8 @@ namespace Novell.FormsTrayApp
                 this.titleEncrypted.Text = Resources.type + ":  " + Resources.regular;
 
             this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + ifolderWeb.LastSyncTime;
-            this.titleServerorSize.Text = Resources.server + ":  " +
-                    simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Host;
+            this.titleServerorSize.Text = Resources.account + ":  " +
+                    simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Name;
         }
 
         private void populateServeriFolderInfo(iFolderWeb ifolderWeb)
@@ -2140,8 +2140,8 @@ namespace Novell.FormsTrayApp
                 }
             }
             catch { } //TODO: Getting incorrect ID at times needs to be fixed.
-            this.titleServerorSize.Text = Resources.server + ":  " + 
-                simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Host;
+            this.titleServerorSize.Text = Resources.account + ":  " + 
+                simiasWebService.GetDomainInformation(ifolderWeb.DomainID).Name;
             this.titleLastSyncTime.Text = Resources.lastSyncTime + ":  " + Resources.na;
         } 
 
@@ -3570,7 +3570,7 @@ namespace Novell.FormsTrayApp
                     new string[] { 
                     ifObj.iFolderWeb.Name,
                     FormatSize(ifObj.iFolderWeb.iFolderSize),
-                    (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Host,
+                    (simiasWebService.GetDomainInformation(ifObj.iFolderWeb.DomainID)).Name,
                     state,
                     ifObj.iFolderWeb.ID},
                     imageIndex,

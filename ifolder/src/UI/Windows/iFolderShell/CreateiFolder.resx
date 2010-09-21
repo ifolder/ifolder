@@ -1187,7 +1187,7 @@
     <value>Passphrase should be supplied for encrypting the iFolder</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>You have to be logged-in to the domain for creating an encrypted iFolder.</value>
+    <value>To create an encrypted iFolder, you must be logged in to an account. Log in and try again.</value>
   </data>
   <data name="verifyCert" xml:space="preserve">
     <value>iFolder cannot verify the identity of the iFolder Server {0}.  The certificate for this iFolder Server was signed by an unknown certifying authority.  You might be connecting to a server that is pretending to be {0} which could put your confidential information at risk.  Before accepting this certificate, you should check with your system administrator.  Do you want to accept this certificate permanently and continue to connect?</value>

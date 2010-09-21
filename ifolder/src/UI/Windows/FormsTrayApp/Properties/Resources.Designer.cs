@@ -86,6 +86,15 @@ namespace TrayApp.Properties {
                 return ResourceManager.GetString("access", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Account.
+        /// </summary>
+        internal static string account {
+            get {
+                return ResourceManager.GetString("account", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to You do not have the sufficient access to the selected location. iFodler can only be created in folder where you have access to read and write files. Please select a different location and try again..
