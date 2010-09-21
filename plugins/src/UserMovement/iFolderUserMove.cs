@@ -43,6 +43,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Collections;
 
 using Simias;
+using Simias.Client;
 using Simias.Event;
 using Simias.Server;
 using Simias.POBox;
@@ -155,6 +156,8 @@ namespace Simias.UserMovement
 				ifUserMove.logger = new SimiasAccessLogger(UserName, null);
 				if(ifUserMove.CurrentHomeServer.UserID == ifUserMove.NewHomeServer.UserID ||								Simias.UserMovement.UserMove.IsUserAlreadyInQueue(ifUserMove) == true)
 					return currentServer;
+				if ( UpdateUserMoveState( domain.GetMemberByID(userID), masterServer, (int)Member.userMoveStates.PreProcessing) == false )
+					return null;
 				if(MoveUserObject(ifUserMove) == false)
 					return null;
 				if(Simias.UserMovement.UserMove.Add(ifUserMove) == false)
@@ -263,16 +266,26 @@ namespace Simias.UserMovement
 				Store store = Store.GetStore();
 				Domain domain = store.GetDomain(DomainID);
 				Simias.Storage.Member member = domain.GetMemberByID(UserID);
-				member.UserMoveState = (int)Member.userMoveStates.Initialized;
-				domain.Commit( member );
-				member.NewHomeServer = NewHomeServerID;
-				if(domain.IsLoginDisabledForUser(member))
+				bool preprocessing = false;
+
+				if( member.UserMoveState <= (int)Member.userMoveStates.PreProcessing)
 				{
-					member.LoginAlreadyDisabled = true;
+					preprocessing = true;
 				}
 				else
-					domain.SetLoginDisabled(member.UserID, true);
-				member.UserMoveState = (int)Member.userMoveStates.UserDisabled;
+					member.UserMoveState = (int)Member.userMoveStates.Initialized;
+
+				member.NewHomeServer = NewHomeServerID;
+				if( ! preprocessing)
+				{
+					if(domain.IsLoginDisabledForUser(member))
+					{
+						member.LoginAlreadyDisabled = true;
+					}
+					else
+						domain.SetLoginDisabled(member.UserID, true);
+					member.UserMoveState = (int)Member.userMoveStates.UserDisabled;
+				}
 				domain.Commit( member );
 			}
 			catch( Exception ex)
@@ -424,6 +437,7 @@ namespace Simias.UserMovement
                         Domain domain = store.GetDomain(store.DefaultDomain);
 			ICSList members = domain.Search(PropertyTags.UserMoveState, 0, SearchOp.Exists);	
 			log.Debug("UpdateUserMoveQueue: Updating user Reprovision queue, There are {0} users to be Reprovisioned", members.Count);
+
 			foreach(ShallowNode sn in members)
 			{
 				Member member = new Member(domain, sn);
@@ -485,7 +499,11 @@ namespace Simias.UserMovement
 					// In successful condition , this loop must be executed only once.
 					try
 					{
-
+						if( userMoveStatus == (int)Member.userMoveStates.PreProcessing)
+						{
+							member.UserMoveState = (int)Member.userMoveStates.PreProcessing;
+							domain.Commit(member);
+						}
 		               			result = svc.UpdateUserMoveState(domain.ID, member.UserID, userMoveStatus);
 					}catch(Exception ex)
 					{	
@@ -616,6 +634,16 @@ namespace Simias.UserMovement
 					else
 						return true;
 					break;
+				case (int)Member.userMoveStates.PreProcessing:
+					log.Debug("ProcessMovement: state  PreProcessing file entries before initializing user move");
+					// user is put into queue, now test whether file entries and node entries match or not...
+					if( !PreProcessReprovisioning( member, MasterHomeServer ) )
+						return false;
+					log.Debug("passed preprocessing .. going for disabling user");
+					goto case (int)Member.userMoveStates.Initialized;
+				case (int)Member.userMoveStates.PreProcessingFailed:
+					log.Debug("ProcessMovement: state  PreProcessing of files before usermove failed {0}", member.FN);
+					return false;
 				case (int)Member.userMoveStates.Nousermove:
 					log.Debug("ProcessMovement: state  Nousermove {0}", member.FN);
 					return false;
@@ -705,6 +733,92 @@ namespace Simias.UserMovement
 					break;
 			}
 			return true;
+		}
+
+		public static bool PreProcessReprovisioning( Member member, HostNode masterHomeServer)
+		{
+			int NumOwnerMisMatches = 0;
+			// Match catalog entries by owner for this user with collection node's owner entry
+			Store store = Store.GetStore();
+			
+			try
+			{
+				CatalogEntry[] catalogEntries = Catalog.GetAllEntriesByOwnerID (member.UserID);
+				foreach(CatalogEntry ce in catalogEntries)
+				{
+					Collection col = store.GetCollectionByID(ce.CollectionID);
+					if( col == null)
+						continue;
+					// check if the owner for collection matches to current UserID, if not this is error
+					if( String.Compare(col.Owner.UserID, member.UserID) != 0)
+					{
+						log.Debug("Owner entry mismatch for iFolder :{0}",col.Name);
+							NumOwnerMisMatches++;
+					}
+				}
+				if( NumOwnerMisMatches > 0 )
+				{
+					UpdateUserMoveState(member,masterHomeServer,(int)Member.userMoveStates.PreProcessingFailed);
+					log.Debug("Error: UserMove: For {0} iFolders, owner entry in catalog and collection node does not match, so putting notStarted flag for usermove",NumOwnerMisMatches);
+					return false;
+				}	
+
+
+				ICSList ColList = store.GetCollectionsByOwner( member.UserID );
+				// Now match the total number of files and dirs in the node and that on physical filesystem.
+				string UnManagedPath = null;
+				long missingFile = 0;
+				foreach( ShallowNode sn in ColList)
+				{
+					
+					Collection c = store.GetCollectionByID( sn.ID );
+					if( c != null )
+					{
+						DirNode rootNode = c.GetRootDirectory();
+						if (rootNode != null)
+						{
+							Property localPath = rootNode.Properties.GetSingleProperty( PropertyTags.Root );
+							if( localPath != null)
+							{
+								UnManagedPath = localPath.Value as string;
+								ICSList FileList = c.GetNodesByType(NodeTypes.FileNodeType);
+								foreach (ShallowNode sn2 in FileList)
+								{
+									Node fileNode = c.GetNodeByID(sn2.ID);
+									Property property = fileNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+									if (property != null)
+									{
+										string filePath = property.Value.ToString();
+										string fullPath = Path.Combine(UnManagedPath, filePath);;
+										if( !File.Exists( fullPath) )
+										{
+											// File entry in nodelist is not present in actual path so this user cannot be moved.
+											log.Debug("Error: UserMove: {0} missing from filesystem, so usermove cannot be initatied for the user",fullPath);
+											missingFile++;
+										}
+									}
+								}	
+							}
+						}
+					}
+				}
+				if( missingFile > 0 )
+				{
+					UpdateUserMoveState(member,masterHomeServer,(int)Member.userMoveStates.PreProcessingFailed);
+					log.Debug("UserMove: {0} number of files were missing from filesystem, so putting notStarted flag for usermove",missingFile);
+					return false;
+				}
+			}
+			catch( Exception ex)
+			{
+					UpdateUserMoveState(member,masterHomeServer,(int)Member.userMoveStates.PreProcessingFailed);
+					log.Debug("UserMove: Preprocessing of files failed because of exception :{0}",ex.Message);
+					return false;
+			}	
+
+			UpdateUserMoveState(member,masterHomeServer,(int)Member.userMoveStates.Initialized);
+			return true;
+
 		}
 
 
