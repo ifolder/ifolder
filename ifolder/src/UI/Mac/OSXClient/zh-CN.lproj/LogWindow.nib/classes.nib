@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {clearLog = id; saveLog = id; }; 
+            CLASS = SyncLogWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {logColumn = NSTableColumn; window = NSWindow; }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

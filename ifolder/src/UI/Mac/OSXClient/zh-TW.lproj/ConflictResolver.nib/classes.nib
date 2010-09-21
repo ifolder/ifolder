@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {renameFile = id; saveLocal = id; saveServer = id; }; 
+            CLASS = ConflictWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                ifolderName = NSTextField; 
+                ifolderPath = NSTextField; 
+                ifoldersController = NSArrayController; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

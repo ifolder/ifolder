@@ -1,0 +1,116 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                addAccount = id; 
+                loginoutClicked = id; 
+                removeAccount = id; 
+                toggleActive = id; 
+                toggleDefault = id; 
+                toggleSavePassword = id; 
+            }; 
+            CLASS = AccountsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accounts = NSTableView; 
+                addAccount = NSButton; 
+                defaultAccount = NSButton; 
+                defaultiFolderController = DefaultiFolderSheetController; 
+                domainDescription = NSTextView; 
+                enableAccount = NSButton; 
+                freeSpace = NSTextField; 
+                host = NSTextField; 
+                leaveDomainController = LeaveDomainSheetController; 
+                loginout = NSButton; 
+                name = NSTextField; 
+                parentWindow = NSWindow; 
+                password = NSSecureTextField; 
+                progressIndicator = NSProgressIndicator; 
+                rememberPassword = NSButton; 
+                removeAccount = NSButton; 
+                state = NSTextField; 
+                totalSpace = NSTextField; 
+                usedSpace = NSTextField; 
+                userName = NSTextField; 
+                vertBar = VerticalBarView; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {onBrowse = id; onCancel = id; onCreate = id; onCreateDefaultiFolder = id; }; 
+            CLASS = DefaultiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browseButton = NSButton; 
+                createButton = NSButton; 
+                createDefaultiFolder = NSButton; 
+                defaultSecureSync = NSButton; 
+                defaultiFolderWindow = id; 
+                ifolderPath = NSTextField; 
+                mainWindow = id; 
+                security = NSMatrix; 
+                securityText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {cancelLeaveDomain = id; leaveDomain = id; showWindow = id; }; 
+            CLASS = LeaveDomainSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountsController = AccountsController; 
+                leaveAll = NSButton; 
+                leaveDomainSheet = NSWindow; 
+                prefsWindow = NSWindow; 
+                server = NSTextField; 
+                systemName = NSTextField; 
+                userName = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }, 
+        {
+            CLASS = NotificationPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                notificationDescriptionColumn = NSTableColumn; 
+                notificationEnabledColumn = NSTableColumn; 
+                notificationPrefsTable = NSTableView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = VerticalBarView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {
+            ACTIONS = {
+                changeSyncUnits = id; 
+                playSound = id; 
+                showHideToolbar = id; 
+                toggleSyncEnabled = id; 
+                updateSyncValue = id; 
+            }; 
+            CLASS = iFolderPrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accountsController = AccountsController; 
+                accountsView = NSView; 
+                blankView = NSView; 
+                enableSync = NSButton; 
+                generalView = NSView; 
+                notifyView = NSView; 
+                syncLabel = NSTextField; 
+                syncUnits = NSPopUpButton; 
+                syncValue = NSTextField; 
+                syncView = NSView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

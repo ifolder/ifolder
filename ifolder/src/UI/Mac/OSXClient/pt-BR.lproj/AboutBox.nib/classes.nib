@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {showPanel = id; }; 
+            CLASS = AboutBoxController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {copyrightField = id; creditsField = id; versionField = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

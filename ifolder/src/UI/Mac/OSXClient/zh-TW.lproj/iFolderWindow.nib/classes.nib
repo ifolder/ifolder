@@ -1,0 +1,258 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                browsePath = id; 
+                closePanel = id; 
+                conflictBinMatrixClicked = id; 
+                enableConflictBin = id; 
+                ifolderMatrixClicked = id; 
+                localFileOpen = id; 
+                saveFile = id; 
+                serverFileOpen = id; 
+                showWindow = id; 
+            }; 
+            CLASS = AdvConflictController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browseButton = NSButton; 
+                conflictBinPath = NSTextField; 
+                conflictController = NSArrayController; 
+                conflictMatrix = NSMatrix; 
+                conflictName = NSTextField; 
+                conflictTableView = NSTableView; 
+                conflictTypeColumn = NSTableColumn; 
+                enableButton = NSButton; 
+                folderColumn = NSTableColumn; 
+                hidenLocalFilePath = NSTextField; 
+                hidenServerFilePath = NSTextField; 
+                ifolderMatrix = NSMatrix; 
+                localFileDate = NSTextField; 
+                localFileName = NSTextField; 
+                localFileSize = NSTextField; 
+                locationName = NSTextField; 
+                mainWindow = id; 
+                nameColumn = NSTableColumn; 
+                serverFileDate = NSTextField; 
+                serverFileName = NSTextField; 
+                serverFileSize = NSTextField; 
+                setupSheet = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {onCancel = id; onChange = id; }; 
+            CLASS = ChangePasswordSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                changeButton = NSButton; 
+                changePasswordSheet = id; 
+                domainID = NSTextField; 
+                enterNewPassword = NSSecureTextField; 
+                enterOldPassword = NSSecureTextField; 
+                iFolderWindowController = iFolderWindowController; 
+                ifolderAccount = NSPopUpButton; 
+                mainWindow = id; 
+                rememberPassword = NSButton; 
+                retypePassword = NSSecureTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                browseForPath = id; 
+                cancelCreating = id; 
+                createiFolder = id; 
+                domainSelectionChanges = id; 
+                showWindow = id; 
+            }; 
+            CLASS = CreateiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                createSheet = id; 
+                domainIDField = NSTextField; 
+                domainSelector = NSPopUpButton; 
+                ifolderWindowController = iFolderWindowController; 
+                mainWindow = id; 
+                okButton = NSButton; 
+                pathField = NSTextField; 
+                secureSync = NSButton; 
+                securityMode = NSMatrix; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                onAccountChange = id; 
+                onBrowse = id; 
+                onCancel = id; 
+                onExport = id; 
+                showWindow = id; 
+            }; 
+            CLASS = ExportKeysSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browseButton = NSButton; 
+                domainID = NSTextField; 
+                emailID = NSTextField; 
+                exportButton = NSButton; 
+                exportSheet = id; 
+                filePath = NSTextField; 
+                ifolderAccount = NSPopUpButton; 
+                ifolderWindowController = iFolderWindowController; 
+                mainWindow = id; 
+                recoveryAgent = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                deleteiFolder = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
+                showProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {onAccountChange = id; onCancel = id; setNewPP = id; }; 
+            CLASS = ForgotPassphraseSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                domainID = NSTextField; 
+                enterNewPP = NSSecureTextField; 
+                forgotPPSheet = id; 
+                iFolderWindowController = iFolderWindowController; 
+                ifolderAccount = NSPopUpButton; 
+                mainWindow = id; 
+                password = NSTextField; 
+                rememberPP = NSButton; 
+                resetButton = NSButton; 
+                retypePP = NSSecureTextField; 
+                userName = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                onAccountChange = id; 
+                onBrowse = id; 
+                onCancel = id; 
+                onImport = id; 
+                showWindow = id; 
+            }; 
+            CLASS = ImportKeysSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                browseButton = NSButton; 
+                domainID = NSTextField; 
+                filePath = NSTextField; 
+                iFolderWindowController = iFolderWindowController; 
+                ifolderAccount = NSPopUpButton; 
+                importButton = NSButton; 
+                importSheet = id; 
+                mainWindow = id; 
+                newPassphrase = NSSecureTextField; 
+                onetimePassphrase = NSSecureTextField; 
+                retypePassphrase = NSSecureTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = MCTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {
+            ACTIONS = {onAccountChange = id; onCancel = id; onReset = id; showWindow = id; }; 
+            CLASS = ResetPPKeySheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                domainID = NSTextField; 
+                enterPassphrase = NSTextField; 
+                iFolderWindowController = iFolderWindowController; 
+                ifolderAccount = NSPopUpButton; 
+                mainWindow = id; 
+                newPassphrase = NSTextField; 
+                recoveryAgent = NSComboBox; 
+                rememberPassphrase = NSButton; 
+                resetButton = NSButton; 
+                resetPPSheet = id; 
+                retypePassphrase = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {cancelRevert = id; revertiFolder = id; showWindow = id; }; 
+            CLASS = RevertiFolderController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {deleteFromServer = NSButton; mainWindow = id; setupSheet = id; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {browseForPath = id; cancelSetup = id; setupiFolder = id; showWindow = id; }; 
+            CLASS = SetupiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                Rights = NSTextField; 
+                SharedBy = NSTextField; 
+                domainID = NSTextField; 
+                iFolderID = NSTextField; 
+                iFolderName = NSTextField; 
+                ifolderWindowController = iFolderWindowController; 
+                mainWindow = id; 
+                pathField = NSTextField; 
+                setupSheet = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                changePassword = id; 
+                customizeToolbar = id; 
+                deleteiFolder = id; 
+                doubleClickedTable = id; 
+                exportKeys = id; 
+                forgotPassphrase = id; 
+                importKeys = id; 
+                mergeiFolder = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                resetPassPhrase = id; 
+                resolveConflicts = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
+                showProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = iFolderWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                advConflictSheetController = AdvConflictController; 
+                changePasswordSheetController = ChangePasswordSheetController; 
+                createSheetController = CreateiFolderSheetController; 
+                exportKeysSheetController = ExportKeysSheetController; 
+                forgotPPSheetController = ForgotPassphraseSheetController; 
+                iFolderTable = NSTableView; 
+                iconColumn = NSTableColumn; 
+                importKeysSheetController = ImportKeysSheetController; 
+                locationColumn = NSTableColumn; 
+                nameColumn = NSTableColumn; 
+                resetPPKeySheetController = ResetPPKeySheetController; 
+                revertiFolderController = RevertiFolderController; 
+                serverColumn = NSTableColumn; 
+                setupSheetController = SetupiFolderSheetController; 
+                statusColumn = NSTableColumn; 
+                statusProgress = NSProgressIndicator; 
+                statusText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}

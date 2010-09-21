@@ -1,0 +1,149 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                browseForPath = id; 
+                cancelCreating = id; 
+                createiFolder = id; 
+                showWindow = id; 
+            }; 
+            CLASS = CreateiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                createSheet = id; 
+                domainIDField = NSTextField; 
+                domainSelector = NSPopUpButton; 
+                mainWindow = id; 
+                pathField = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                changePassword = id; 
+                deleteiFolder = id; 
+                exportKeys = id; 
+                forgotPassphrase = id; 
+                importKeys = id; 
+                mergeiFolder = id; 
+                myAction = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                resetPassPhrase = id; 
+                resolveConflicts = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
+                showProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                customizeToolbar = id; 
+                deleteiFolder = id; 
+                doubleClickedTable = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                showGeneralProperties = id; 
+                showHideToolbar = id; 
+                showSharingProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = MainWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                createSheetController = CreateiFolderSheetController; 
+                domainsController = NSArrayController; 
+                iFolderTable = NSTableView; 
+                ifoldersController = NSArrayController; 
+                setupiFolderController = SetupiFolderSheetController; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {browseForPath = id; cancelSetup = id; setupiFolder = id; showWindow = id; }; 
+            CLASS = SetupiFolderSheetController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                Rights = NSTextField; 
+                SharedBy = NSTextField; 
+                domainID = NSTextField; 
+                iFolderID = NSTextField; 
+                iFolderName = NSTextField; 
+                mainWindow = id; 
+                pathField = NSTextField; 
+                setupSheet = id; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {clearLog = id; saveLog = id; }; 
+            CLASS = SyncLogWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {logController = NSArrayController; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {
+                showAboutBox = id; 
+                showHelp = id; 
+                showPrefs = id; 
+                showSyncLog = id; 
+                showiFolderWindow = id; 
+            }; 
+            CLASS = iFolderApplication; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {logController = NSArrayController; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                changePassword = id; 
+                customizeToolbar = id; 
+                deleteiFolder = id; 
+                doubleClickedTable = id; 
+                exportKeys = id; 
+                importKeys = id; 
+                mergeiFolder = id; 
+                newiFolder = id; 
+                openiFolder = id; 
+                refreshWindow = id; 
+                resetPassPhrase = id; 
+                resolveConflicts = id; 
+                revertiFolder = id; 
+                setupiFolder = id; 
+                shareiFolder = id; 
+                showProperties = id; 
+                synciFolder = id; 
+            }; 
+            CLASS = iFolderWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                advConflictSheetController = AdvConflictController; 
+                createSheetController = CreateiFolderSheetController; 
+                exportKeysSheetController = ExportKeysSheetController; 
+                iFolderTable = NSTableView; 
+                iconColumn = NSTableColumn; 
+                importKeysSheetController = ImportKeysSheetController; 
+                locationColumn = NSTableColumn; 
+                nameColumn = NSTableColumn; 
+                resetPPKeySheetController = ResetPPKeySheetController; 
+                revertiFolderController = RevertiFolderController; 
+                setupSheetController = SetupiFolderSheetController; 
+                statusColumn = NSTableColumn; 
+                statusProgress = NSProgressIndicator; 
+                statusText = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }
+    ); 
+    IBVersion = 1; 
+}
