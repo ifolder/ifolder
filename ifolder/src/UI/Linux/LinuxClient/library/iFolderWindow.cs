@@ -1404,7 +1404,9 @@ namespace Novell.iFolder
 							ifstate = Util.GS("Deletion in progress");
 						else
 							ifstate = holder.iFolder.IsSubscription ? Util.GS("Available for download") :  holder.StateString;
-						viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
+						TreeIter listiter = viewstore.AppendValues(GetImage(holder),displayName,GetFriendlySize(holder.iFolder.iFolderSize),(domainController.GetDomain(holder.iFolder.DomainID)).Name, ifstate , holder);
+						if( iFolderIconView.SelectedFolder == holder )
+							tv.Selection.SelectIter(listiter);
                                 	}
 				}
 				catch(Exception)
