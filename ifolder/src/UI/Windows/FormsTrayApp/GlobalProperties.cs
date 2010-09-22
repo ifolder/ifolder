@@ -2001,7 +2001,11 @@ namespace Novell.FormsTrayApp
 				}
 				else //local folders
 				{
-                    populateLocaliFolderInfo(ifolderWeb);
+                    //fetch ifolder information only once ifolder is synced.
+                    if (ifolderObject.iFolderState != iFolderState.Initial)
+                        populateLocaliFolderInfo(ifolderWeb);
+                    else
+                        FormsTrayApp.log.Info("Funtion:UpdateMenus, unable to fetch ifolder information as iFolder state is Initial");
 
 					// Disable the available iFolder related menu items.
                     this.menuActionRemove.Enabled = this.menuActionAccept.Enabled = this.menuActionMerge.Enabled = false;
