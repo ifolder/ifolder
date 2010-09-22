@@ -125,7 +125,12 @@ namespace EnhancedMenuItems
         {
             /*TODO: Verify if this size is acceptable.*/
             e.ItemHeight = 20 ;
-            e.ItemWidth = 150 ;
+            StringFormat myFormat = new StringFormat();
+            myFormat.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show;
+            int width = Convert.ToInt32(e.Graphics.MeasureString(this.Text, new Font("Courier", 8), 1000, myFormat).Width) + 5;
+            if (this.m_icon != null)
+                width += this.m_icon.Width;
+            e.ItemWidth = width;
         }
     }
     public class IconMenuItems
@@ -176,6 +181,7 @@ namespace EnhancedMenuItems
                     this.menuActionCreate.Visible = tempMenuItem.Visible;
                     this.menuActionCreate.Name = "iMenuActionCreate"; //Associate a new name.
                     iFolderMenuItem.MenuItems.Add(menuActionCreate);
+                    
                     
                     tempMenuItem = iFolderMenuItem.MenuItems.Find("MenuActionAccept", true)[0];
                     menuImage = Image.FromFile(Path.Combine(Application.StartupPath,@"res\ifolder-download16.png"));
