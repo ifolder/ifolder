@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, May 26, 2010 06:30" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Wednesday, September 22, 2010 10:28" />
+<meta name="Content-Date" content="Mon, 22 Sep 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">Select one of the following:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migrate the iFolder and disconnect it from 2.x domain</span>:</em>
-              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> domain after migrating it to 3.7 or later.</p>
+              <p class="title"><em class="title"><span class="guimenu">Migrate the iFolder and disconnect it from 2.x server</span>:</em>
+              Select this option to disconnect the existing folder from the iFolder 2.<span class="replaceable">x</span> server after migrating it to 3.7 or later.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Create a copy of the iFolder and migrate:</span>
               </em>
-              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to iFolder 3.7 or later. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> domain even after you migrate the files to iFolder 3.7 or later.</p>
+              Select this option to create a copy of the iFolder 2.<span class="replaceable">x</span> files and convert them to iFolder 3.7 or later. This does not remove the files from the ifolder 2.<span class="replaceable">x</span> server even after you migrate the files to iFolder 3.7 or later.</p>
             </div>
 
 <p class="para">If you select this option, you can also select<span class="guimenu"> Copy the parent folder</span> if you want to copy not only the contents of the 2.<span class="replaceable">x</span> folder, but the parent folder as well. If you leave this option deselected, only the contents of the selected folder will be migrated to 3.7 or later. </p>
 <p class="para">Click <span class="guimenu">Browse</span> to find the location to save the migrated folder.</p>
 <p class="para">For example, <span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> is a 2.<span class="replaceable">x</span> iFolder and <span class="filename">dir1</span> and <span class="filename">dir2</span> are the directories under <span class="filename">ifolder2dir</span>. When you select the option <span class="guimenu">Copy the parent directory</span>, it create the <span class="filename">ifolder2dir </span>in the new location and the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are copied to it. If the option remains deselected, only the directories <span class="filename">dir1</span> and <span class="filename">dir2</span> are moved to the specified location.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Click <span class="guimenu">Forward</span> to select the domain and Security options as follows:</p>
+<p class="para">Click <span class="guimenu">Forward</span> to select the server and Security options as follows:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Select the domain from the drop-down list.</p></li>
+<p class="para">Select the server from the drop-down list.</p></li>
 <li class="step" id="b8ao481">
 <p class="para">Select the desired security option:</p>
 <div class="itemizedlist">
@@ -121,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">Select <span class="guimenu">Encrypted</span> to encrypt the selected iFolder.</p>
 <p class="listitem">If you did not set your passphrase during login, iFolder prompts you to enter the passphrase. You can skip this option and set the passphrase later.</p>
-<p class="listitem">If you are not currently connected to the iFolder domain, it prompts you to connect to the domain.</p></li>
+<p class="listitem">If you are not currently connected to the iFolder server, it prompts you to connect to the server.</p></li>
 <li class="listitem">
-<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder domain.</p>
+<p class="listitem">Select <span class="guimenu">Shared </span>to share the iFolder with other members in the iFolder server.</p>
 <p class="listitem">You can migrate an encrypted 2.<span class="guimenu">x</span> iFolder to shared folder. When you attempt to migrate an encrypted 2.<span class="replaceable">x</span> iFolder to a shared folder, it prompts you to verify the action.</p>
 <p class="listitem">Click <span class="guimenu">OK</span> to confirm your action.</p></li></ul></div>
 </li></ol>
