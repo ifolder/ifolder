@@ -562,7 +562,7 @@ namespace Novell.iFolder
 			Menu EditMenu = new Menu();
 
 			AccountsMenuItem =
-				new ImageMenuItem (Util.GS("_Account Settings..."));
+				new ImageMenuItem (Util.GS("_Account Settings"));
 			AccountsMenuItem.Image = new Image(new Gdk.Pixbuf(Util.ImagesPath("accountSettings16.png")));
 			EditMenu.Append(AccountsMenuItem);
 			AccountsMenuItem.Activated += new EventHandler(AccountsMenuItemHandler);

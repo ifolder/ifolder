@@ -339,7 +339,7 @@ namespace Novell.iFolder
 								null,
 								iFolderMsgDialog.DialogType.Error,
 								iFolderMsgDialog.ButtonSet.None,
-								Util.GS("Invalid Passphrase"),
+								Util.GS("Invalid PassPhrase"),
 								Util.GS("The Current PassPhrase entered is not valid"),
 								Util.GS("Please enter the passphrase again"));
 					}

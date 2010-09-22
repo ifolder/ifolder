@@ -2514,9 +2514,9 @@ msgstr ""
 "Migrate from 2.x"
 
 msgid ""
-"_Account Settings..."
+"_Account Settings"
 msgstr ""
-"_Account Settings..."
+"_Account Settings"
 
 msgid ""
 "View _available iFolders"
