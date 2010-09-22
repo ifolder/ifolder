@@ -1441,6 +1441,29 @@ namespace Novell.iFolder
 			tv.AppendColumn (Util.GS("Status"), new CellRendererText(), "text", 4);
 			ifolderlistview.Add(tv);
                         ifolderlistview.ShadowType = Gtk.ShadowType.EtchedIn;
+
+			TargetEntry[] targets =
+				new TargetEntry[]
+				{
+	                new TargetEntry ("text/uri-list", 0, (uint) DragTargetType.UriList),
+	                new TargetEntry ("application/x-root-window-drop", 0, (uint) DragTargetType.RootWindow),
+	                new TargetEntry ("text/ifolder-id", 0, (uint) DragTargetType.iFolderID)
+				};
+
+			Drag.DestSet(ifolderlistview,
+						 DestDefaults.All,
+						 targets,
+						 Gdk.DragAction.Copy | Gdk.DragAction.Move);
+
+			ifolderlistview.DragMotion +=
+				new DragMotionHandler(OnIconViewDragMotion);
+				
+			ifolderlistview.DragDrop +=
+				new DragDropHandler(OnIconViewDragDrop);
+			
+			ifolderlistview.DragDataReceived +=
+				new DragDataReceivedHandler(OnIconViewDragDataReceived);
+
 		        //Initilizing it to false	
 			ifolderlistview.Visible = false;
                         ifolderlistview.Show();
