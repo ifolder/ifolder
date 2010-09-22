@@ -271,7 +271,7 @@ static iFolderWindowController *sharedInstance = nil;
 {
 	if([[iFolderData sharedInstance] getDomainCount] < 1)
 	{
-		NSBeginAlertSheet(NSLocalizedString(@"Set Up iFolder Account", @"Error dialog Title new iFolder"), NSLocalizedString(@"OK", @"Error dialog button new iFolder"), nil, nil,
+		NSBeginAlertSheet(NSLocalizedString(@"Set up an iFolder account", @"Set Up an iFolder Account message"), NSLocalizedString(@"OK", @"Error dialog button new iFolder"), nil, nil,
 			[self window], self, nil, nil, NULL, 
 			NSLocalizedString(@"To begin using iFolder, you must first set up an iFolder account.", @"Error dialog message new iFolder"));
 	}

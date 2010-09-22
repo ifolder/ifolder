@@ -581,11 +581,8 @@
 /* iFolder Status Message */
 "Server unavailable" = "Server unavailable";
 
-/* Initial Setup Dialog Title */
-"Set Up an iFolder Account" = "Set Up an iFolder Account";
-
-/* Error dialog Title new iFolder */
-"Set Up an iFolder Account" = "Set Up an iFolder Account";
+/* Set Up an iFolder Account message */
+"Set up an iFolder account" = "Set up an iFolder account";
 
 /* iFolderWin Toolbar Share Selector Button */
 "Share" = "Share";

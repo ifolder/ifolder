@@ -512,7 +512,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 	{
 		int rc;
 		
-		rc = NSRunAlertPanel(NSLocalizedString(@"Set Up iFolder Account", @"Initial Setup Dialog Title"), 
+		rc = NSRunAlertPanel(NSLocalizedString(@"Set up an iFolder account", @"Set Up an iFolder Account message"), 
 							NSLocalizedString(@"To begin using iFolder, you must first set up an iFolder account.", @"Initial Setup Dialog Message"),
  							NSLocalizedString(@"Yes", @"Initial Setup Dialog Button"), 
  							NSLocalizedString(@"No", @"Initial Setup Dialog Button"),
