@@ -156,7 +156,7 @@ namespace Novell.Wizard
 			this.defaultDescription.TabIndex = 7;
 			this.defaultDescription.Text = Resource.GetString("DefaultServer");//"Make default account:";
             this.strSize = graphics.MeasureString(this.defaultDescription.Text, this.defaultDescription.Font);
-			this.defaultDescription.Size = new System.Drawing.Size( this.defaultTextWidth, ((int)this.strSize.Width/this.defaultTextWidth+1)*16 );
+			this.defaultDescription.Size = new System.Drawing.Size( this.defaultTextWidth, ((int)this.strSize.Width/this.defaultTextWidth+1)*16+10 );
 			// 
 			// serverAddress
 			// 
