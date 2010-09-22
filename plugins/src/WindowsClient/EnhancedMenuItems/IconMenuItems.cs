@@ -97,7 +97,7 @@ namespace EnhancedMenuItems
             }
 
             /*TODO: Verify the choice of font for menu item text*/
-            Font menuFont = new Font("Courier", 8);
+            Font menuFont = new Font("Microsoft Sans Serif", 8);
             StringFormat myFormat = new StringFormat();
             myFormat.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show; // Show the mnemonic underline under the hotkey.
                 
@@ -105,14 +105,14 @@ namespace EnhancedMenuItems
             {
                 /*Draw the colored image if enabled.*/
                 e.Graphics.DrawImage(m_icon, e.Bounds.Left + 5, e.Bounds.Top + 5, 16, 16);
-                e.Graphics.DrawString(menuitem.Text, new Font("Courier", 8), menuBrush, (float)(e.Bounds.Left + this.m_icon.Width + 5), (float)(e.Bounds.Top + 5),myFormat);                
+                e.Graphics.DrawString(menuitem.Text, new Font("Microsoft Sans Serif", 8), menuBrush, (float)(e.Bounds.Left + this.m_icon.Width + 5), (float)(e.Bounds.Top + 5),myFormat);                
                 
             }
             else if(menuitem.Enabled==false)
             {
                 /*Make the images transparent(grayscale) when disabled.*/
                 ControlPaint.DrawImageDisabled(e.Graphics, m_icon,e.Bounds.Left+5,e.Bounds.Top+5, Color.Transparent);
-                e.Graphics.DrawString(menuitem.Text, new Font("Courier", 8), menuBrush, (float)(e.Bounds.Left + this.m_icon.Width + 5), (float)(e.Bounds.Top + 5),myFormat);
+                e.Graphics.DrawString(menuitem.Text, new Font("Microsoft Sans Serif", 8), menuBrush, (float)(e.Bounds.Left + this.m_icon.Width + 5), (float)(e.Bounds.Top + 5), myFormat);
             }
         }
 
@@ -125,12 +125,13 @@ namespace EnhancedMenuItems
         {
             /*TODO: Verify if this size is acceptable.*/
             e.ItemHeight = 20 ;
-            StringFormat myFormat = new StringFormat();
+            StringFormat myFormat = new StringFormat(); 
             myFormat.HotkeyPrefix = System.Drawing.Text.HotkeyPrefix.Show;
-            int width = Convert.ToInt32(e.Graphics.MeasureString(this.Text, new Font("Courier", 8), 1000, myFormat).Width) + 5;
-            if (this.m_icon != null)
-                width += this.m_icon.Width;
-            e.ItemWidth = width;
+            int width = Convert.ToInt32(e.Graphics.MeasureString(this.Text, new Font("Microsoft Sans Serif", 8), 1000, myFormat).Width) + 5; 
+            if (this.m_icon != null) 
+                width += this.m_icon.Width; 
+            e.ItemWidth = width; 
+
         }
     }
     public class IconMenuItems
