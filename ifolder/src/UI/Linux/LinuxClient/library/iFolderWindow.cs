@@ -1539,6 +1539,7 @@ namespace Novell.iFolder
 			lable = Util.GS("N/A");
 			lable = string.Format(Util.GS("Server: {0}"),lable); 
 		    labelServer = new Label( string.Format( "<span size=\"medium\">{0}</span>", lable));
+			labelServer.Ellipsize = Pango.EllipsizeMode.End;
 
             actionsVBox.PackStart(labelServer, false, false, 0);
 		    labelServer.UseMarkup = true;
