@@ -65,7 +65,7 @@ namespace Novell.Wizard
             this.newPassphrase.Name = "newPassphrase";
             this.newPassphrase.PasswordChar = '*';
             this.newPassphrase.Size = new System.Drawing.Size(209, 20);
-            this.newPassphrase.TabIndex = 5;
+            this.newPassphrase.TabIndex = 6;
             this.newPassphrase.TextChanged += new System.EventHandler(this.newPassphrase_TextChanged);
             // 
             // confirmPassphrase
@@ -74,7 +74,7 @@ namespace Novell.Wizard
             this.confirmPassphrase.Name = "confirmPassphrase";
             this.confirmPassphrase.PasswordChar = '*';
             this.confirmPassphrase.Size = new System.Drawing.Size(211, 20);
-            this.confirmPassphrase.TabIndex = 6;
+            this.confirmPassphrase.TabIndex = 8;
             this.confirmPassphrase.TextChanged += new System.EventHandler(this.confirmPassphrase_TextChanged);
             // 
             // label3
@@ -92,7 +92,7 @@ namespace Novell.Wizard
             this.iFolderAcc.Name = "iFolderAcc";
             this.iFolderAcc.ReadOnly = true;
             this.iFolderAcc.Size = new System.Drawing.Size(211, 20);
-            this.iFolderAcc.TabIndex = 8;
+            this.iFolderAcc.TabIndex = 5;
             // 
             // loginErrorLabel
             // 

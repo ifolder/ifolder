@@ -530,7 +530,7 @@
     <value>Unable to authenticate to the domain.You have been logged out of the account. Please login and try again.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;New passphrase:</value>
+    <value>N&amp;ew passphrase:</value>
   </data>
   <data name="next" xml:space="preserve">
     <value>next</value>
