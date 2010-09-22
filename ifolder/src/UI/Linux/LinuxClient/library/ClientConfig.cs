@@ -85,6 +85,7 @@ namespace Novell.iFolder
 		public const string KEY_IFOLDER_WINDOW_VISIBLE	    = "/apps/ifolder3/ui/main_window/visible";
 		public const string KEY_IFOLDER_WINDOW_HIDE	        = "/apps/ifolder3/ui/main_window/hide";
 		public const string KEY_SHOW_SERVER_IFOLDERS		= "/apps/ifolder3/ui/main_window/show_available_ifolders";
+		public const string KEY_SHOW_ICON_VIEW		= "/apps/ifolder3/ui/main_window/show_icon_view";
 		
 		///
 		/// /apps/ifolder3/account

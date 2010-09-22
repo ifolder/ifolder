@@ -353,6 +353,8 @@ namespace Novell.iFolder
 
 			this.Add(CreateContentArea());
 
+			ShowIconView((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_ICON_VIEW));
+
 			// Set up an event to refresh when the window is
 			// being drawn
 			this.Realized += new EventHandler(OnRealizeWidget);
@@ -1689,6 +1691,7 @@ namespace Novell.iFolder
 					{
 						iFoldersScrolledWindow.Visible = true;	
 						ifolderlistview.Visible = false;
+						ClientConfig.Set(ClientConfig.KEY_SHOW_ICON_VIEW, true);
 						GLib.Idle.Add(UpdateLocalViewItemsMainThread);
 					}
 						break;	
@@ -1698,6 +1701,7 @@ namespace Novell.iFolder
 					{
 						ifolderlistview.Visible = true;
 						iFoldersScrolledWindow.Visible = false;
+						ClientConfig.Set(ClientConfig.KEY_SHOW_ICON_VIEW, false);
 						GLib.Idle.Add(UpdateListViewItemsMainThread);
 					}
 						break;	
@@ -5522,10 +5526,10 @@ namespace Novell.iFolder
                         domainController = DomainController.GetDomainController();
                         DomainInformation[] domains = domainController.GetDomains();
 			if( (domains.Length <= 0)
-			 || (!ifolderlistview.Visible && !iFoldersScrolledWindow.Visible)
+			    || (!ifolderlistview.Visible && !iFoldersScrolledWindow.Visible)
 			 || (ifolderlistview.Visible && iFoldersScrolledWindow.Visible)   )
 			 {
-                               	ShowIconView(false);
+				 ShowIconView((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_ICON_VIEW));
                          }
                 }
 

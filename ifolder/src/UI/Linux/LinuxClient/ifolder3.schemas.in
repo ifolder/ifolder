@@ -180,6 +180,20 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/ifolder3/ui/main_window/show_icon_view</key>
+      <applyto>/apps/ifolder3/ui/main_window/show_icon_view</applyto>
+      <owner>ifolder</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+         <short>Show Icon view</short>
+         <long>
+       If true, Icon view would be shown.
+         </long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/ifolder3/account/prefill</key>
       <applyto>/apps/ifolder3/account/prefill</applyto>
       <owner>ifolder</owner>
