@@ -128,6 +128,7 @@ namespace Novell.Wizard
 			this.CreateDefault.Text = this.resManager.GetString("CreateDefaultiFolder");//"Create Default iFolder";
 			this.CreateDefault.TabIndex = 1;
 			this.CreateDefault.CheckedChanged += new EventHandler(CreateDefault_CheckedChanged);
+            this.CreateDefault.AutoSize = true;
             
 			// row2
 			// locationentry, location label, browse button
@@ -151,7 +152,16 @@ namespace Novell.Wizard
             this.BrowseButton.Text = this.resManager.GetString("BrowseText"); //"Browse";			
             this.BrowseButton.TabIndex = 3;
             this.BrowseButton.Click += new EventHandler(BrowseButton_Click);
-
+            Graphics graphics = this.BrowseButton.CreateGraphics();
+            int width = Convert.ToInt32(graphics.MeasureString(this.BrowseButton.Text, this.BrowseButton.Font).Width) + 3;
+            if (width > this.BrowseButton.Width)
+            {
+                /// Adjusting the length of the location text box based on the size of the browse button...
+                this.LocationEntry.Width -= width - this.BrowseButton.Width;
+                this.BrowseButton.Location = new Point(this.defaultValuePos + this.LocationEntry.Width + 4, this.label1.Location.Y - 4);
+                this.BrowseButton.Width = width;
+            }
+            graphics.Dispose();
 			// row 3
 			// encryptioncheckbutton, ssl checkbutton
 			//
@@ -162,18 +172,15 @@ namespace Novell.Wizard
             this.encryptionCheckButton.Location = new Point(this.defaultValuePos + 2, this.label2.Location.Y);
 			this.encryptionCheckButton.Text = this.resManager.GetString("EncryptedText");//"Encrypted";
             this.encryptionCheckButton.TabIndex = 4;
-            this.encryptionCheckButton.AutoSize = true;
             
             this.sslCheckButton.Location = new Point(this.defaultValuePos + this.encryptionCheckButton.Width + 10, this.label2.Location.Y);
             this.sslCheckButton.Text = this.resManager.GetString("SharableText");//"Shared";
             this.sslCheckButton.TabIndex = 5;
-            this.sslCheckButton.AutoSize = true;
 
             this.SecureSync.Location = new Point(this.sslCheckButton.Location.X + this.sslCheckButton.Width + 10, this.label2.Location.Y - 3);
             this.SecureSync.Text = this.resManager.GetString("SecureSync"); //Secure Sync
             this.SecureSync.TabIndex = 6;
-            this.SecureSync.AutoSize = true;
-                     
+
             this.Controls.Add(this.CreateDefault);
 			this.Controls.Add(this.LocationEntry);
 			this.Controls.Add(this.label1);
@@ -620,25 +627,37 @@ namespace Novell.Wizard
             Graphics graphics = CreateGraphics();
 
             this.strSize = graphics.MeasureString(this.CreateDefault.Text, this.CreateDefault.Font);
-            this.CreateDefault.Size = new Size(this.maxTextWidth, ((int)this.strSize.Width / this.maxTextWidth + 1) * 16);
-
+            this.CreateDefault.Size = new Size(this.maxTextWidth, ((int)this.strSize.Width / this.maxTextWidth + 1) * 20);
             this.strSize = graphics.MeasureString(this.label1.Text, this.label1.Font);
             this.label1.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
 
             this.strSize = graphics.MeasureString(this.BrowseButton.Text, this.BrowseButton.Font);
-            this.BrowseButton.Size = new Size(80, ((int)this.strSize.Width / 80 + 1) * 16 + 10);
+            //this.BrowseButton.Size = new Size(80, ((int)this.strSize.Width / 80 + 1) * 16 + 10);
 
+            int maxheight = 0;
             this.strSize = graphics.MeasureString(this.label2.Text, this.label2.Font);
-            this.label2.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
+            maxheight = Math.Max(maxheight, ((int)this.strSize.Width / this.defaultTextWidth + 1));
 
             this.strSize = graphics.MeasureString(this.encryptionCheckButton.Text, this.encryptionCheckButton.Font);
-            this.encryptionCheckButton.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
-			
+            maxheight = Math.Max(maxheight, ((int)this.strSize.Width / this.defaultTextWidth + 1));
+
             this.strSize = graphics.MeasureString(this.sslCheckButton.Text, this.sslCheckButton.Font);
-            this.sslCheckButton.Size = new Size(this.defaultTextWidth, ((int)this.strSize.Width / this.defaultTextWidth + 1) * 16);
+            maxheight = Math.Max(maxheight, ((int)this.strSize.Width / this.defaultTextWidth + 1));
 
+            this.strSize = graphics.MeasureString(this.SecureSync.Text, this.SecureSync.Font);
+            maxheight = Math.Max(maxheight, ((int)this.SecureSync.Width / this.defaultTextWidth + 1));
+            maxheight *= 18;
+
+            this.encryptionCheckButton.Size = new Size(this.defaultTextWidth, maxheight);
+            this.sslCheckButton.Size = new Size(this.defaultTextWidth, maxheight);
+            this.SecureSync.Size = new Size(this.SecureSync.Width, maxheight);
+            this.label2.Size = new Size(this.defaultTextWidth, maxheight);
+
+            this.label2.TextAlign = ContentAlignment.MiddleLeft;
+            this.SecureSync.TextAlign = ContentAlignment.MiddleLeft;
+            this.encryptionCheckButton.TextAlign = ContentAlignment.MiddleLeft;
+            this.sslCheckButton.TextAlign = ContentAlignment.MiddleLeft;
             graphics.Dispose();
-
 			this.CreateDefault.Checked = true;
 			string str = "";
 			str = this.simws.GetDefaultiFolder( this.domainInfo.ID);
