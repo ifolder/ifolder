@@ -2916,8 +2916,9 @@ namespace Novell.iFolder.Web
 		public bool CheckFileName(string name)
 		{
 			// check for invalid characters
-			return (!String.IsNullOrEmpty (name) && (name != ".") && (name != "..")
-				&& SyncFile.IsNameValid(name));
+			return ( name != null &&  string.Empty != name && 
+					!string.Equals(name, ".") && !string.Equals(name, "..") && 
+						SyncFile.IsNameValid(name));
 		}
 	}
 }
