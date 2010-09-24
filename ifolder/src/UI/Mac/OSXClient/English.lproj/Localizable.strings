@@ -1077,3 +1077,9 @@
 
 /* Log message for iFolder whose synchronization is disabled */
 "Synchronization disabled for %@" = "Synchronization disabled for %@";
+
+/*Primary message when filename contains invalid characters */
+"The specified name contains invalid characters" = "The specified name contains invalid characters"
+
+/*Secondary message when filename contains invalid characters */
+"Ensure that the name does not contain these characters : '\\', ':', '*', '?', '\"', '<', '>', '|'" = "Ensure that the name does not contain these characters : '\\', ':', '*', '?', '\"', '<', '>', '|'"

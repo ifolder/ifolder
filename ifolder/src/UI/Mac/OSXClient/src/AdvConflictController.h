@@ -55,12 +55,18 @@
     IBOutlet NSTextField *serverFileDate;
     IBOutlet NSTextField *serverFileName;
     IBOutlet NSTextField *serverFileSize;
+    IBOutlet NSTextField *renameNewFileName;
+    IBOutlet NSBox *renameBox;
+    IBOutlet NSBox *serverVersionBox;
+    IBOutlet NSBox *localVersionBox;
     IBOutlet id setupSheet;
 	
 	iFolder				*ifolder;
 	BOOL localOnly;
 	NSString* tempPath;
+	NSArray* conflictFiles;
 }
+
 - (IBAction)browsePath:(id)sender;
 - (IBAction)closePanel:(id)sender;
 - (IBAction)conflictBinMatrixClicked:(id)sender;
@@ -70,6 +76,7 @@
 - (void)openConflictFile:(BOOL)local;
 - (void)prepareToShow;
 - (IBAction)saveFile:(id)sender;
+- (IBAction)renameFile:(id)sender;
 - (IBAction)serverFileOpen:(id)sender;
 - (IBAction)showWindow:(id)sender;
 - (void)showFile:(NSString*)pathOfFile;

@@ -2906,5 +2906,18 @@ namespace Novell.iFolder.Web
 		{
 			return SharedCollection.GetDefaultPublicKey(DomainID, UserID);
 		}
+
+		/// <summary>
+		/// Check for a valid name.
+		/// </summary>
+		/// <param name="name"></param>
+		[WebMethod(EnableSession = true, Description = "Checks whether a file name is valid")]
+		[SoapDocumentMethod]
+		public bool CheckFileName(string name)
+		{
+			// check for invalid characters
+			return (!String.IsNullOrEmpty (name) && (name != ".") && (name != "..")
+				&& SyncFile.IsNameValid(name));
+		}
 	}
 }

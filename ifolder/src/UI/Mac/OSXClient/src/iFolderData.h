@@ -141,8 +141,11 @@
 -(void)storePassPhrase: (NSString*)domainID	PassPhrase:(NSString*)passPhrase andRememberPP:(BOOL)rememberPassPhrase;
 -(NSArray *) getiFolderConflicts:(NSString *)ifolderID;
 -(void)resolveEnhancedFileConflict:(NSString*)ifolderID havingConflictID:(NSString*)conflictID hasLocalChange:(BOOL)localOnly withConflictBinPath:(NSString*)conflictBinPath;
+-(void)renameAndResolveConflict:(NSString*)iFolderID withID:(NSString*)serverID usingFileName:(NSString*)newName;
+-(void)resolveNameConflict:(NSString*)iFolderID withID:(NSString*)serverID usingName:(NSString*)serverName;
 -(BOOL)createDirectoriesRecurssively:(NSString*)path;
 -(void)checkForEncryption:(NSString*)domID atLogin:(BOOL)loginFlag;
+-(BOOL)checkFileName:(NSString*)name;
 -(NSString*)getDefaultiFolder:(NSString*)domID;
 -(BOOL)defaultAccountInDomainID:(NSString*)domainID foriFolderID:(NSString*)ifolderID;
 -(void)clearPassPhrase:(NSString*)domainID;

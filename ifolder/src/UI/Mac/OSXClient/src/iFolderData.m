@@ -1371,6 +1371,16 @@ static iFolderData *sharedInstance = nil;
 	return [ifolderService GetiFolderConflicts:ifolderID];
 }
 
+-(void)resolveNameConflict:(NSString*)iFolderID withID:(NSString*)serverID usingName:(NSString*)serverName
+{
+	[ifolderService ResolveNameConflict:iFolderID withID:serverID usingName:serverName];
+}
+
+-(void)renameAndResolveConflict:(NSString*)iFolderID withID:(NSString*)serverID usingFileName:(NSString*)newName
+{
+	[ifolderService RenameAndResolveConflict:iFolderID withID:serverID usingFileName:newName];
+}
+
 -(void)resolveEnhancedFileConflict:(NSString*)ifolderID havingConflictID:(NSString*)conflictID hasLocalChange:(BOOL)localOnly withConflictBinPath:(NSString*)conflictBinPath
 {
 	[ifolderService ResolveEnhancedFileConflict:ifolderID havingConflictID:conflictID hasLocalChange:localOnly withConflictBinPath:conflictBinPath];		
@@ -1856,6 +1866,11 @@ static iFolderData *sharedInstance = nil;
 -(NSNumber*)changeUserPassword:(NSString*)domainID changePassword:(NSString*)oldPasswd withNewPassword:(NSString*)newPasswd
 {
 	return [ifolderService ChangePassword:domainID changePassword:oldPasswd withNewPassword:newPasswd];
+}
+
+-(BOOL)checkFileName:(NSString*)name
+{
+	return [ifolderService CheckFileName:name];
 }
 
 -(void)setDomainPassword:(NSString*)domainID withPassword:(NSString*)newPasswd

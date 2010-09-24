@@ -1606,6 +1606,38 @@ NSDictionary *getConflictProperties(struct ns1__Conflict *conflict);
 }
 
 //----------------------------------------------------------------------------
+// IsiFolder
+// Check whether it is iFolder or not
+//----------------------------------------------------------------------------
+-(BOOL)CheckFileName:(NSString*)name
+{
+	struct soap *pSoap = lockSoap(soapData);
+	if ((name != nil))
+		return NO;
+	
+	struct _ns1__CheckFileName          checkFileNameInput;
+	struct _ns1__CheckFileNameResponse  checkFileNameResponse;
+	
+	checkFileNameInput.name = (char*)[name UTF8String];
+	
+	int err_code = soap_call___ns1__CheckFileName(
+				  pSoap,
+				  [simiasURL UTF8String], //http://127.0.0.1:8086/simias10/Simias.asmx
+				  NULL,
+				  &checkFileNameInput,
+				  &checkFileNameResponse);
+	
+	handle_soap_error(soapData,@"iFolderService.CheckfileName");
+	
+	BOOL valid = (BOOL)checkFileNameResponse.CheckFileNameResult;
+	
+	unlockSoap(soapData);
+
+	return valid;
+}
+
+
+//----------------------------------------------------------------------------
 // ResolveEnhancedFileConflict:havingConflictID:hasLocalChange:withConflictBinPath
 // Resolve the file conflict with conflictID, accept local or server changes in the path
 //----------------------------------------------------------------------------

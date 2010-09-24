@@ -231,6 +231,102 @@
 	[self enableConflictBin:nil];
 }
 
+//====================================================================
+// renameFile
+// Renames the file to avoid conflict
+//====================================================================
+- (IBAction)renameFile:(id)sender
+{
+	if([conflictController selectionIndex] == NSNotFound)
+		return;
+
+	iFolderConflict *conflict = [[conflictController arrangedObjects] objectAtIndex:[conflictController selectionIndex]];
+	NSString *iFolderID = [[conflict properties] objectForKey:@"iFolderID"];
+	NSString *newName = [renameNewFileName stringValue];
+	NSString *localName = [[conflict properties] objectForKey:@"LocalName"];
+	NSString *serverName = [[conflict properties] objectForKey:@"ServerName"];
+	NSString *localID = [[conflict properties] objectForKey:@"LocalConflictID"];
+	NSString *serverID = [[conflict properties] objectForKey:@"ServerConflictID"];
+
+	NSString *fileDirectory = [[[conflict properties] objectForKey:@"Location"] stringByDeletingLastPathComponent];
+	NSString *newPath = [fileDirectory stringByAppendingPathComponent:newName];
+
+	if(![[iFolderData sharedInstance] checkFileName:newName]) {
+		NSBeginAlertSheet(NSLocalizedString(@"The specified name contains invalid characters", @"New name has invalid characters"), 
+				  NSLocalizedString(@"OK", @"Resolve has duplicate name error button"), nil, nil,
+				  [self window], self, nil, nil, NULL, 
+				  NSLocalizedString(@"Ensure that the name does not contain these characters : '\\', ':', '*', '?', '\"', '<', '>', '|'", @"List of invalid characters displayed."));
+		return;
+	}
+
+	if([[NSFileManager defaultManager] fileExistsAtPath:newPath])
+	{
+		NSBeginAlertSheet(NSLocalizedString(@"The specified name already exists", @"Resolve has duplicate name error message"), 
+				  NSLocalizedString(@"OK", @"Resolve has duplicate name error button"), nil, nil,
+				  [self window], self, nil, nil, NULL, 
+				  NSLocalizedString(@"Please choose a different name.", @"Resolve has duplicate name error details"));
+		return;
+	}
+
+	if(serverID != nil)
+	{
+		if([[ifolder CurrentUserRights] compare:@"ReadOnly"] == 0)
+		{
+			@try
+			{
+				[[iFolderData sharedInstance] renameAndResolveConflict:iFolderID withID:serverID usingFileName:newName];
+				[conflictController removeObjectAtArrangedObjectIndex:[conflictController selectionIndex]];
+			}
+			@catch(NSException *ex)
+			{
+				NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+						  NSLocalizedString(@"OK", nil), nil, nil,
+						  [self window], self, nil, nil, NULL, 
+						  [ex name]);
+			}
+		}
+		else
+		{
+			@try
+			{
+				[[iFolderData sharedInstance] resolveNameConflict:iFolderID withID:localID usingName:newName];
+
+				// If this is because of an illegal character which is supported on Mac, there may not
+				// be a server conflict so check here
+				[[iFolderData sharedInstance] resolveNameConflict:iFolderID withID:serverID usingName:serverName];
+
+				[conflictController removeObjectAtArrangedObjectIndex:[conflictController selectionIndex]];
+			}
+			@catch(NSException *ex)
+			{
+				NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+						  NSLocalizedString(@"OK", nil), nil, nil,
+						  [self window], self, nil, nil, NULL, 
+						  [ex name]);
+			}
+		}
+	}
+	else
+	{
+		@try
+		{
+			[[iFolderData sharedInstance] resolveNameConflict:iFolderID withID:localID usingName:newName];
+			[conflictController removeObjectAtArrangedObjectIndex:[conflictController selectionIndex]];
+		}
+		@catch(NSException *ex)
+		{
+			NSBeginAlertSheet(NSLocalizedString(@"Error resolving conflict", nil), 
+					  NSLocalizedString(@"OK", nil), nil, nil,
+					  [self window], self, nil, nil, NULL, 
+					  [ex name]);
+		}
+	}
+
+	//Hack : Hide Rename NSBox if conflictController has nothing in it.
+	if ([[conflictController arrangedObjects] count] == 0)
+		[renameBox setHidden:TRUE];
+}
+
 //=======================================================================
 // saveFile
 // Method that will decide to save the file whether local or server version
@@ -287,6 +383,10 @@
 						NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 	}
 	
+	//Hack : Hide Rename NSBox if conflictController has nothing in it.
+	if ([[conflictController arrangedObjects] count] == 0)
+		[renameBox setHidden:TRUE];
+
 	/*
 	 @try
 	 {
@@ -330,7 +430,6 @@
 		
 		if([ifolder HasConflicts])
 		{
-			NSArray* conflictFiles = nil;
 			@try
 			{
 				conflictFiles = [[iFolderData sharedInstance] getiFolderConflicts:[ifolder ID]];
@@ -343,13 +442,23 @@
 			if(conflictFiles != nil)
 			{
 				 int objCount;
-				 
+				 NSMutableDictionary *nameConflicts = [[NSMutableDictionary alloc] init];
+
 				 for(objCount = 0; objCount < [conflictFiles count]; objCount++)
 				 {
 					 iFolderConflict *conflict = [conflictFiles objectAtIndex:objCount];
 					 if( [[[conflict properties] objectForKey:@"IsNameConflict"] boolValue] == YES)
 					 {
-						 [[conflict properties] setValue:[NSString stringWithString:@"Name"] forKey:@"ConflictType"];
+						[[conflict properties] setValue:[NSString stringWithString:@"Name"] forKey:@"ConflictType"];
+						NSString *curKey = [[[conflict properties] objectForKey:@"Location"] lowercaseString];
+						iFolderConflict *oldConflict = [nameConflicts objectForKey:curKey];
+						if(oldConflict != nil)
+						{
+							[oldConflict mergeNameConflicts:conflict];
+							continue;
+						}
+						else
+							[nameConflicts setObject:conflict forKey:curKey];
 					}
 					 else
 					 {
@@ -379,5 +488,4 @@
 						  NSLocalizedString(@"Your ability to resolve conflicts is limited because you have read-only access to this iFolder.  Name conflicts must be renamed locally.  File conflicts will be overwritten by the version of the file on the server.", @"Read Only Access Warning details"));
 	}
 }
-
 @end
