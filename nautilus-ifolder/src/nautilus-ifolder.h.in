@@ -13,4 +13,4 @@
 #define NAUTILUS_IFOLDER_SH_PATH	"@libdir@/nautilus-ifolder"
 #define IFOLDER_IMAGE_IFOLDER		"@pixmaps_dir@/ifolder-folder.png"
 #define IFOLDER_IMAGE_BIG_IFOLDER	"@pixmaps_dir@/ifolder-folder.png"
- 
+#define IFOLDER_IMAGE_SHARE             "@pixmaps_dir@/shareWith16.png"

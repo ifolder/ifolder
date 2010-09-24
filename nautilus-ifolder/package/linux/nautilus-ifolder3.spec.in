@@ -96,6 +96,7 @@ echo "Restart the system before you start using iFolder"
 %attr(644,root,root) %{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
 %attr(644,root,root) %{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.png
 %attr(644,root,root) %{gnome_root}/share/nautilus-ifolder3/pixmaps/ifolder-folder.png
+%attr(644,root,root) %{gnome_root}/share/nautilus-ifolder3/pixmaps/shareWith16.png
 
 %changelog -n nautilus-ifolder3
 * Thu Mar 02 2006 - btimothy@novell.com

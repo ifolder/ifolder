@@ -15,9 +15,9 @@ INCLUDES =						\
 	$(DISABLE_DEPRECATED_CFLAGS)			\
 	$(NAUTILUS_CFLAGS)						\
 	$(SIMIAS_CLIENT_C_CFLAGS)	\
-	$(IFOLDER_C_CFLAGS)
+	$(IFOLDER_C_CFLAGS)	
 
-EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png AssemblyInfo.cs.in
+EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png shareWith16.png AssemblyInfo.cs.in
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile 
 	sed -e 's,@_VERSION_@,@VERSION@,g' $<  > $@
@@ -52,6 +52,7 @@ install-exec-local: libnautilus-ifolder.la
 	$(INSTALL_PROGRAM) emblem-ifolder.png $(INSTALL_EMBLEM_PATH) -m 644
 	$(mkinstalldirs) $(INSTALL_ICONS_PATH)
 	$(INSTALL_PROGRAM) ifolder-folder.png $(INSTALL_ICONS_PATH)  -m 644
+	$(INSTALL_PROGRAM) shareWith16.png $(INSTALL_ICONS_PATH)  -m 644
 	$(mkinstalldirs) $(INSTALL_EXE_PATH)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder.exe $(INSTALL_EXE_PATH)
 	$(INSTALL_PROGRAM) $(INSTALL_BIN_OPTS) nautilus-ifolder $(INSTALL_EXE_PATH)
@@ -60,6 +61,7 @@ uninstall-local:
 	cd $(INSTALL_EXTENSION_PATH); rm -f libnautilus-ifolder*
 	cd $(INSTALL_EMBLEM_PATH); rm -f emblem-ifolder.icon; rm -f emblem-ifolder.png
 	cd $(INSTALL_ICONS_PATH); rm -f ifolder-folder.png
+	cd $(INSTALL_ICONS_PATH); rm -f shareWith16.png
 	cd $(INSTALL_EXE_PATH); rm -f nautilus-ifolder*
 
 clean-local:

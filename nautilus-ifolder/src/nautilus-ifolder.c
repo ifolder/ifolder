@@ -58,10 +58,9 @@
 #include "nautilus-ifolder-holder.h"
 #include "../config.h"
 
-
-/* Turn this on to see debug messages */
+/* Turn this on to see debug messages*/ 
 #if DEBUG
-#define DEBUG_IFOLDER(args) do {g_print("nautilus-ifolder: "); g_printf args} while (0)
+#define DEBUG_IFOLDER(args) do {g_print("nautilus-ifolder: "); g_printf args;} while (0)
 #else
 #define DEBUG_IFOLDER(args) do {} while (0)
 #endif
@@ -2325,7 +2324,7 @@ ifolder_nautilus_get_file_items (NautilusMenuProvider *provider,
 		item = nautilus_menu_item_new ("NautilusiFolder::share_ifolder",
 					_("Share iFolder with..."),
 					_("Share the selected iFolder with another user"),
-					NULL);
+					IFOLDER_IMAGE_SHARE);
 		g_signal_connect (item, "activate",
 					G_CALLBACK (share_ifolder_callback),
 					provider);
