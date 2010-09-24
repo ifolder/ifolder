@@ -172,9 +172,9 @@ static id encryptInstance = nil;
 				[simiasServiceHolder StorePassPhrase:domainIDHolder PassPhrase:[enterPassPhrase stringValue] Type:Basic andRememberPP:[rememberPassPhrase state]];
 				if( [simiasServiceHolder IsPassPhraseSet:domainIDHolder] == YES )
 				{
-					NSRunAlertPanel(NSLocalizedString(@"Enter Passphrase",@"Passphrase success title"),
+					NSRunAlertPanel(NSLocalizedString(@"Passphrase set",@"Passphrase set"),
 									NSLocalizedString(@"Successfully set the passphrase.",@"Passphrase success message"),
-									NSLocalizedString(@"Yes",@"Passphrase successfully set button"),
+									NSLocalizedString(@"OK",@"OKButton Text"),
 									nil,nil);
 				}
 				

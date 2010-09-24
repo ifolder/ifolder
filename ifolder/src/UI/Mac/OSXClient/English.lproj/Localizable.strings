@@ -169,6 +169,9 @@
 /* Passphrase success title */
 "Enter Passphrase" = "Enter Passphrase";
 
+/* Passphrase set */
+"Passphrase set" = "Passphrase set";
+
 /* ResetPP Failure Message */
 "Error changing the Passphrase" = "Error changing the Passphrase";
 
