@@ -44,7 +44,7 @@ namespace Novell.Wizard
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 97);
+            this.label1.Location = new System.Drawing.Point(48, 90);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 2;
@@ -53,7 +53,7 @@ namespace Novell.Wizard
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(48, 131);
+            this.label2.Location = new System.Drawing.Point(48, 124);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 13);
             this.label2.TabIndex = 4;
@@ -79,10 +79,9 @@ namespace Novell.Wizard
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(48, 166);
+            this.label3.Location = new System.Drawing.Point(48, 159);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(102, 13);
+            this.label3.Size = new System.Drawing.Size(114, 30);
             this.label3.TabIndex = 7;
             this.label3.Text = TrayApp.Properties.Resources.confirmPassphrase;// "Confirm passphrase:";
             // 
@@ -105,7 +104,7 @@ namespace Novell.Wizard
             // userNameLabel
             // 
             this.userNameLabel.AutoSize = true;
-            this.userNameLabel.Location = new System.Drawing.Point(48, 201);
+            this.userNameLabel.Location = new System.Drawing.Point(48, 194);
             this.userNameLabel.Name = "userNameLabel";
             this.userNameLabel.Size = new System.Drawing.Size(61, 13);
             this.userNameLabel.TabIndex = 10;
