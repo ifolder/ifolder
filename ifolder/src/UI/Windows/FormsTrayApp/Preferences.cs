@@ -2315,6 +2315,7 @@ namespace Novell.FormsTrayApp
                 RemoveAccount removeAccount = new RemoveAccount(domain.DomainInfo);
                 if (removeAccount.ShowDialog() == DialogResult.Yes)
                 {
+                    Cursor = Cursors.WaitCursor;
                     try
                     {
                         simiasWebService.LeaveDomain(domain.ID, !removeAccount.RemoveAll);
@@ -2356,16 +2357,23 @@ namespace Novell.FormsTrayApp
                         mmb.Dispose();
                     }
                 }
-                DomainInformation[] domains;
-                System.Threading.Thread.Sleep(2000);
-                domains = this.simiasWebService.GetDomains(false);
-                if (domains.Length.Equals(0))
+                try
                 {
-                    if (((GlobalProperties)FormsTrayApp.globalProp()).Visible)
-                        ((GlobalProperties)FormsTrayApp.globalProp()).Hide();
+                    DomainInformation[] domains;
+                    System.Threading.Thread.Sleep(2000);
+                    domains = this.simiasWebService.GetDomains(false);
+                    if (domains.Length.Equals(0))
+                    {
+                        if (((GlobalProperties)FormsTrayApp.globalProp()).Visible)
+                            ((GlobalProperties)FormsTrayApp.globalProp()).Hide();
+                    }
                 }
-
-                removeAccount.Dispose();
+                finally
+                {
+                    Cursor = Cursors.Default;
+                }
+                if (removeAccount != null)
+                    removeAccount.Dispose(); 
             }
             
         }
