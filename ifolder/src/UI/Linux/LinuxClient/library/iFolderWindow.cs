@@ -4386,6 +4386,22 @@ namespace Novell.iFolder
 				{
     				ifws.SynciFolderNow(holder.iFolder.ID);
 				}
+                                catch(System.Web.Services.Protocols.SoapException se)
+                                {
+                                        if(se.Message.IndexOf("SimiasException: Cannot locate configuration file") != -1)
+                                        {
+                                                iFolderMsgDialog dg = new iFolderMsgDialog(
+                                                                this,
+                                                                iFolderMsgDialog.DialogType.Warning,
+                                                                iFolderMsgDialog.ButtonSet.Ok,
+                                                                "",
+                                                                Util.GS("iFolder server unable to service"),
+                                                                Util.GS("Please contact your network administrator for assistance."));
+                                                dg.Run();
+                                                dg.Hide();
+                                                dg.Destroy();
+                                        }
+                                }
 				catch(Exception e)
 				{
 					iFolderExceptionDialog ied =
