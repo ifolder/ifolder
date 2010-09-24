@@ -1074,7 +1074,8 @@ namespace Novell.iFolder
 				       try{
 						iFolderWebService ifws = DomainController.GetiFolderService();
 				      		ifws.ChangePassword(ConnectedDomain.ID, null, null);
-				       		RATreeStore.AppendValues( Util.GS("Server_Default"));
+				       		TreeIter listiter = RATreeStore.AppendValues( Util.GS("Server_Default"));
+						RATreeView.Selection.SelectIter(listiter);
 				       }
 				       catch{ }
 

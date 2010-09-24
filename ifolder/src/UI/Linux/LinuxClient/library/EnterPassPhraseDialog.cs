@@ -234,9 +234,12 @@ namespace Novell.iFolder
 			RATreeView.Model = RATreeStore;
                         RAList = domainController.GetRAList(DomainID);
 			iFolderWebService ifws = DomainController.GetiFolderService();
+			TreeIter listiter = TreeIter.Zero;
+			bool selected = false;
 			try{
 				ifws.ChangePassword(DomainID, null, null);
-			 	RATreeStore.AppendValues(Util.GS("Server_Default"));
+			 	listiter = RATreeStore.AppendValues(Util.GS("Server_Default"));
+				selected = true;
 			}
 			catch{ }
 
@@ -271,7 +274,9 @@ namespace Novell.iFolder
 
 
 			this.VBox.ShowAll();
-		
+	
+			if( selected)
+				RATreeView.Selection.SelectIter(listiter);	
 
 			this.AddButton(Stock.Cancel, ResponseType.Cancel);
 			this.AddButton(Stock.Ok, ResponseType.Ok);
