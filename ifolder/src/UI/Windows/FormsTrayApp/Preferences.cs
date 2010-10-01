@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 *
 * Copyright (c) [2009] Novell, Inc.
@@ -67,9 +68,6 @@ namespace Novell.FormsTrayApp
         private const decimal minmumSecondsAllowed = 5;
         private const string startiFolderinTray = "StartiFolderinTray";
         private const string iFolderRun = "DisableAutoStart";
-        private const string notifyShareDisabled = "NotifyShareDisable";
-        private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
-        private const string notifyJoinDisabled = "NotifyJoinDisabled";
 
         private const string hideSyncWindowPopup = "hideSyncWindowPopup";
         private const string hidePolicynotification = "hidePolicynotification";
@@ -77,6 +75,8 @@ namespace Novell.FormsTrayApp
         public static readonly string iFolderKey = @"SOFTWARE\Novell\iFolder";
         private const string preferencesX = "PreferencesX";
         private const string preferencesY = "PreferencesY";
+
+	//Registry keys for notification preferences
         private const string notifyPolicyQuotaVoilation = "PolicyQuotaVoilation";
         private const string notifyFilePermissionVoilation = "FilePermissionVoilation";
         private const string notifyDiskFullFailure = "DiskFullFailure";
@@ -84,6 +84,10 @@ namespace Novell.FormsTrayApp
         private const string notifyPolicySizeVoilation = "PolicySizeVoilation";
         private const string notifyIOPermissionFailure = "IOPermissionFailure";
         private const string notifyPathLongFailure = "PathLongFailure";
+        private const string notifyShareDisabled = "NotifyShareDisable";
+        private const string notifyCollisionDisabled = "NotifyCollisionDisabled";
+        private const string notifyJoinDisabled = "NotifyJoinDisabled";
+
         private decimal minimumSyncInterval;
         private decimal minimumSeconds;
         private iFolderWebService ifWebService;
@@ -98,35 +102,12 @@ namespace Novell.FormsTrayApp
         private bool updateEnabled = false;
         private bool updateHost = false;
         private bool initialPositionSet = false;
-        private System.Windows.Forms.NumericUpDown defaultInterval;
-        private System.Windows.Forms.CheckBox displayConfirmation;
-        private System.Windows.Forms.CheckBox displayTrayIcon;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox autoSync;
-        private System.Windows.Forms.CheckBox autoStart;
         private System.Windows.Forms.Button apply;
         private System.Windows.Forms.Button cancel;
-        private System.Windows.Forms.CheckBox notifyShared;
-        private System.Windows.Forms.CheckBox notifyCollisions;
-        private System.Windows.Forms.CheckBox notifyJoins;
-        private System.Windows.Forms.Button addAccount;
-        private System.Windows.Forms.Button removeAccount;
-        private System.Windows.Forms.Button details;
-        private System.Windows.Forms.ListView accounts;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.Button ok;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.TabPage tabGeneral;
-        private System.Windows.Forms.TabPage tabAccounts;
         private System.Windows.Forms.TabPage tabMigrate;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.HelpProvider helpProvider1;
-        private System.Windows.Forms.ComboBox timeUnit;
-        private System.Windows.Forms.Label label1;
         private System.ComponentModel.IContainer components;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -135,13 +116,30 @@ namespace Novell.FormsTrayApp
         private Manager simiasManager;
         private System.Windows.Forms.Button btnHelp;
         public Novell.FormsTrayApp.GlobalProperties parent;
+        private TabPage tabAccounts;
+        private ListView accounts;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader1;
+        private Button details;
+        private Button removeAccount;
+        private Button addAccount;
+        private TabPage tabGeneral;
+        private GroupBox groupBox4;
+        private CheckedListBox notificationsPreferencesList;
+        private GroupBox groupBox1;
+        private Label label1;
+        private ComboBox timeUnit;
+        private NumericUpDown defaultInterval;
+        private CheckBox autoSync;
+        private GroupBox groupBox3;
+        private CheckBox autoStart;
+        private CheckBox displayConfirmation;
+        private CheckBox displayTrayIcon;
+        private CheckBox startInTrayIcon;
+        private CheckBox hideSyncLog;
+        private TabControl tabControl1;
         public string str;
-        private System.Windows.Forms.CheckBox startInTrayIcon;
-        private System.Windows.Forms.CheckBox hideSyncLog;
-        private TabPage Settings;
-        private ListBox policylistbox;
-        private CheckBox notifyCheckbox;
-        private System.Windows.Forms.CheckBox hidenotification;
 
 
         enum policyVoilation
@@ -151,7 +149,9 @@ namespace Novell.FormsTrayApp
             FileTypeVoilation,
             DiskFullVoilation,
             PremissionUnavailable,
-            LongPath
+	    LongPath,
+	    iFolderShared,
+	    Collisions
         };
 
         enum preferenceTab
@@ -224,35 +224,6 @@ namespace Novell.FormsTrayApp
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Preferences));
-            this.defaultInterval = new System.Windows.Forms.NumericUpDown();
-            this.displayConfirmation = new System.Windows.Forms.CheckBox();
-            this.displayTrayIcon = new System.Windows.Forms.CheckBox();
-            this.startInTrayIcon = new System.Windows.Forms.CheckBox();
-            this.hideSyncLog = new System.Windows.Forms.CheckBox();
-            this.hidenotification = new System.Windows.Forms.CheckBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabGeneral = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.notifyCollisions = new System.Windows.Forms.CheckBox();
-            this.notifyShared = new System.Windows.Forms.CheckBox();
-            this.notifyJoins = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.timeUnit = new System.Windows.Forms.ComboBox();
-            this.autoSync = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.autoStart = new System.Windows.Forms.CheckBox();
-            this.tabAccounts = new System.Windows.Forms.TabPage();
-            this.accounts = new System.Windows.Forms.ListView();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.details = new System.Windows.Forms.Button();
-            this.removeAccount = new System.Windows.Forms.Button();
-            this.addAccount = new System.Windows.Forms.Button();
-            this.Settings = new System.Windows.Forms.TabPage();
-            this.notifyCheckbox = new System.Windows.Forms.CheckBox();
-            this.policylistbox = new System.Windows.Forms.ListBox();
             this.tabMigrate = new System.Windows.Forms.TabPage();
             this.btnMigrate = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -264,289 +235,38 @@ namespace Novell.FormsTrayApp
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.btnHelp = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.tabAccounts = new System.Windows.Forms.TabPage();
+            this.accounts = new System.Windows.Forms.ListView();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.details = new System.Windows.Forms.Button();
+            this.removeAccount = new System.Windows.Forms.Button();
+            this.addAccount = new System.Windows.Forms.Button();
+            this.tabGeneral = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.notificationsPreferencesList = new System.Windows.Forms.CheckedListBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.timeUnit = new System.Windows.Forms.ComboBox();
+            this.defaultInterval = new System.Windows.Forms.NumericUpDown();
+            this.autoSync = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.autoStart = new System.Windows.Forms.CheckBox();
+            this.displayConfirmation = new System.Windows.Forms.CheckBox();
+            this.displayTrayIcon = new System.Windows.Forms.CheckBox();
+            this.startInTrayIcon = new System.Windows.Forms.CheckBox();
+            this.hideSyncLog = new System.Windows.Forms.CheckBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabMigrate.SuspendLayout();
+            this.tabAccounts.SuspendLayout();
             this.tabGeneral.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.tabAccounts.SuspendLayout();
-            this.Settings.SuspendLayout();
-            this.tabMigrate.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // defaultInterval
-            // 
-            resources.ApplyResources(this.defaultInterval, "defaultInterval");
-            this.helpProvider1.SetHelpString(this.defaultInterval, resources.GetString("defaultInterval.HelpString"));
-            this.defaultInterval.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.defaultInterval.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.defaultInterval.Name = "defaultInterval";
-            this.helpProvider1.SetShowHelp(this.defaultInterval, ((bool)(resources.GetObject("defaultInterval.ShowHelp"))));
-            this.defaultInterval.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.defaultInterval.KeyDown += new System.Windows.Forms.KeyEventHandler(this.defaultInterval_KeyDown);
-            // 
-            // displayConfirmation
-            // 
-            resources.ApplyResources(this.displayConfirmation, "displayConfirmation");
-            this.helpProvider1.SetHelpString(this.displayConfirmation, resources.GetString("displayConfirmation.HelpString"));
-            this.displayConfirmation.Name = "displayConfirmation";
-            this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("displayConfirmation.ShowHelp"))));
-            this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
-            // 
-            // displayTrayIcon
-            // 
-            resources.ApplyResources(this.displayTrayIcon, "displayTrayIcon");
-            this.helpProvider1.SetHelpString(this.displayTrayIcon, resources.GetString("displayTrayIcon.HelpString"));
-            this.displayTrayIcon.Name = "displayTrayIcon";
-            this.helpProvider1.SetShowHelp(this.displayTrayIcon, ((bool)(resources.GetObject("displayTrayIcon.ShowHelp"))));
-            this.displayTrayIcon.CheckedChanged += new System.EventHandler(this.displayTrayIcon_CheckedChanged);
-            // 
-            // startInTrayIcon
-            // 
-            resources.ApplyResources(this.startInTrayIcon, "startInTrayIcon");
-            this.helpProvider1.SetHelpString(this.startInTrayIcon, resources.GetString("startInTrayIcon.HelpString"));
-            this.startInTrayIcon.Name = "startInTrayIcon";
-            this.helpProvider1.SetShowHelp(this.startInTrayIcon, ((bool)(resources.GetObject("startInTrayIcon.ShowHelp"))));
-            this.startInTrayIcon.CheckedChanged += new System.EventHandler(this.startInTrayIcon_CheckedChanged);
-            // 
-            // hideSyncLog
-            // 
-            resources.ApplyResources(this.hideSyncLog, "hideSyncLog");
-            this.helpProvider1.SetHelpString(this.hideSyncLog, resources.GetString("hideSyncLog.HelpString"));
-            this.hideSyncLog.Name = "hideSyncLog";
-            this.helpProvider1.SetShowHelp(this.hideSyncLog, ((bool)(resources.GetObject("hideSyncLog.ShowHelp"))));
-            this.hideSyncLog.CheckedChanged += new System.EventHandler(this.hideSyncLog_CheckedChanged);
-            // 
-            // hidenotification
-            // 
-            resources.ApplyResources(this.hidenotification, "hidenotification");
-            this.helpProvider1.SetHelpString(this.hidenotification, resources.GetString("hidenotification.HelpString"));
-            this.hidenotification.Name = "hidenotification";
-            this.helpProvider1.SetShowHelp(this.hidenotification, ((bool)(resources.GetObject("hidenotification.ShowHelp"))));
-            this.hidenotification.CheckedChanged += new System.EventHandler(this.hidenotification_CheckedChanged);
-            // 
-            // tabControl1
-            // 
-            resources.ApplyResources(this.tabControl1, "tabControl1");
-            this.tabControl1.Controls.Add(this.tabGeneral);
-            this.tabControl1.Controls.Add(this.tabAccounts);
-            this.tabControl1.Controls.Add(this.Settings);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.helpProvider1.SetShowHelp(this.tabControl1, ((bool)(resources.GetObject("tabControl1.ShowHelp"))));
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tabGeneral
-            // 
-            this.tabGeneral.Controls.Add(this.groupBox4);
-            this.tabGeneral.Controls.Add(this.groupBox1);
-            this.tabGeneral.Controls.Add(this.groupBox3);
-            resources.ApplyResources(this.tabGeneral, "tabGeneral");
-            this.tabGeneral.Name = "tabGeneral";
-            this.helpProvider1.SetShowHelp(this.tabGeneral, ((bool)(resources.GetObject("tabGeneral.ShowHelp"))));
-            this.tabGeneral.UseVisualStyleBackColor = true;
-            // 
-            // groupBox4
-            // 
-            resources.ApplyResources(this.groupBox4, "groupBox4");
-            this.groupBox4.Controls.Add(this.notifyCollisions);
-            this.groupBox4.Controls.Add(this.notifyShared);
-            this.groupBox4.Controls.Add(this.notifyJoins);
-            this.groupBox4.Controls.Add(this.hidenotification);
-            this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox4.Name = "groupBox4";
-            this.helpProvider1.SetShowHelp(this.groupBox4, ((bool)(resources.GetObject("groupBox4.ShowHelp"))));
-            this.groupBox4.TabStop = false;
-            // 
-            // notifyCollisions
-            // 
-            resources.ApplyResources(this.notifyCollisions, "notifyCollisions");
-            this.helpProvider1.SetHelpString(this.notifyCollisions, resources.GetString("notifyCollisions.HelpString"));
-            this.notifyCollisions.Name = "notifyCollisions";
-            this.helpProvider1.SetShowHelp(this.notifyCollisions, ((bool)(resources.GetObject("notifyCollisions.ShowHelp"))));
-            this.notifyCollisions.CheckedChanged += new System.EventHandler(this.notifyCollisions_CheckedChanged);
-            // 
-            // notifyShared
-            // 
-            resources.ApplyResources(this.notifyShared, "notifyShared");
-            this.helpProvider1.SetHelpString(this.notifyShared, resources.GetString("notifyShared.HelpString"));
-            this.notifyShared.Name = "notifyShared";
-            this.helpProvider1.SetShowHelp(this.notifyShared, ((bool)(resources.GetObject("notifyShared.ShowHelp"))));
-            this.notifyShared.CheckedChanged += new System.EventHandler(this.notifyShared_CheckedChanged);
-            // 
-            // notifyJoins
-            // 
-            resources.ApplyResources(this.notifyJoins, "notifyJoins");
-            this.helpProvider1.SetHelpString(this.notifyJoins, resources.GetString("notifyJoins.HelpString"));
-            this.notifyJoins.Name = "notifyJoins";
-            this.helpProvider1.SetShowHelp(this.notifyJoins, ((bool)(resources.GetObject("notifyJoins.ShowHelp"))));
-            this.notifyJoins.CheckedChanged += new System.EventHandler(this.notifyJoins_CheckedChanged);
-            // 
-            // groupBox1
-            // 
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.timeUnit);
-            this.groupBox1.Controls.Add(this.defaultInterval);
-            this.groupBox1.Controls.Add(this.autoSync);
-            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox1.Name = "groupBox1";
-            this.helpProvider1.SetShowHelp(this.groupBox1, ((bool)(resources.GetObject("groupBox1.ShowHelp"))));
-            this.groupBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            this.helpProvider1.SetShowHelp(this.label1, ((bool)(resources.GetObject("label1.ShowHelp"))));
-            // 
-            // timeUnit
-            // 
-            resources.ApplyResources(this.timeUnit, "timeUnit");
-            this.timeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.timeUnit.Name = "timeUnit";
-            this.helpProvider1.SetShowHelp(this.timeUnit, ((bool)(resources.GetObject("timeUnit.ShowHelp"))));
-            this.timeUnit.SelectedIndexChanged += new System.EventHandler(this.timeUnit_SelectedIndexChanged);
-            // 
-            // autoSync
-            // 
-            this.autoSync.Checked = true;
-            this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
-            resources.ApplyResources(this.autoSync, "autoSync");
-            this.helpProvider1.SetHelpString(this.autoSync, resources.GetString("autoSync.HelpString"));
-            this.autoSync.Name = "autoSync";
-            this.helpProvider1.SetShowHelp(this.autoSync, ((bool)(resources.GetObject("autoSync.ShowHelp"))));
-            this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
-            // 
-            // groupBox3
-            // 
-            resources.ApplyResources(this.groupBox3, "groupBox3");
-            this.groupBox3.Controls.Add(this.autoStart);
-            this.groupBox3.Controls.Add(this.displayConfirmation);
-            this.groupBox3.Controls.Add(this.displayTrayIcon);
-            this.groupBox3.Controls.Add(this.startInTrayIcon);
-            this.groupBox3.Controls.Add(this.hideSyncLog);
-            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox3.Name = "groupBox3";
-            this.helpProvider1.SetShowHelp(this.groupBox3, ((bool)(resources.GetObject("groupBox3.ShowHelp"))));
-            this.groupBox3.TabStop = false;
-            // 
-            // autoStart
-            // 
-            resources.ApplyResources(this.autoStart, "autoStart");
-            this.helpProvider1.SetHelpString(this.autoStart, resources.GetString("autoStart.HelpString"));
-            this.autoStart.Name = "autoStart";
-            this.helpProvider1.SetShowHelp(this.autoStart, ((bool)(resources.GetObject("autoStart.ShowHelp"))));
-            this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
-            // 
-            // tabAccounts
-            // 
-            this.tabAccounts.Controls.Add(this.accounts);
-            this.tabAccounts.Controls.Add(this.details);
-            this.tabAccounts.Controls.Add(this.removeAccount);
-            this.tabAccounts.Controls.Add(this.addAccount);
-            resources.ApplyResources(this.tabAccounts, "tabAccounts");
-            this.tabAccounts.Name = "tabAccounts";
-            this.helpProvider1.SetShowHelp(this.tabAccounts, ((bool)(resources.GetObject("tabAccounts.ShowHelp"))));
-            this.tabAccounts.UseVisualStyleBackColor = true;
-            // 
-            // accounts
-            // 
-            resources.ApplyResources(this.accounts, "accounts");
-            this.accounts.CheckBoxes = true;
-            this.accounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader3,
-            this.columnHeader2,
-            this.columnHeader1});
-            this.accounts.FullRowSelect = true;
-            this.helpProvider1.SetHelpString(this.accounts, resources.GetString("accounts.HelpString"));
-            this.accounts.HideSelection = false;
-            this.accounts.MultiSelect = false;
-            this.accounts.Name = "accounts";
-            this.helpProvider1.SetShowHelp(this.accounts, ((bool)(resources.GetObject("accounts.ShowHelp"))));
-            this.accounts.UseCompatibleStateImageBehavior = false;
-            this.accounts.View = System.Windows.Forms.View.Details;
-            this.accounts.SelectedIndexChanged += new System.EventHandler(this.accounts_SelectedIndexChanged);
-            this.accounts.DoubleClick += new System.EventHandler(this.details_Click);
-            this.accounts.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.accounts_ItemCheck);
-            // 
-            // columnHeader3
-            // 
-            resources.ApplyResources(this.columnHeader3, "columnHeader3");
-            // 
-            // columnHeader2
-            // 
-            resources.ApplyResources(this.columnHeader2, "columnHeader2");
-            // 
-            // columnHeader1
-            // 
-            resources.ApplyResources(this.columnHeader1, "columnHeader1");
-            // 
-            // details
-            // 
-            resources.ApplyResources(this.details, "details");
-            this.helpProvider1.SetHelpString(this.details, resources.GetString("details.HelpString"));
-            this.details.Name = "details";
-            this.helpProvider1.SetShowHelp(this.details, ((bool)(resources.GetObject("details.ShowHelp"))));
-            this.details.Click += new System.EventHandler(this.details_Click);
-            // 
-            // removeAccount
-            // 
-            resources.ApplyResources(this.removeAccount, "removeAccount");
-            this.helpProvider1.SetHelpString(this.removeAccount, resources.GetString("removeAccount.HelpString"));
-            this.removeAccount.Name = "removeAccount";
-            this.helpProvider1.SetShowHelp(this.removeAccount, ((bool)(resources.GetObject("removeAccount.ShowHelp"))));
-            this.removeAccount.Click += new System.EventHandler(this.removeAccount_Click);
-            // 
-            // addAccount
-            // 
-            resources.ApplyResources(this.addAccount, "addAccount");
-            this.helpProvider1.SetHelpString(this.addAccount, resources.GetString("addAccount.HelpString"));
-            this.addAccount.Name = "addAccount";
-            this.helpProvider1.SetShowHelp(this.addAccount, ((bool)(resources.GetObject("addAccount.ShowHelp"))));
-            this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
-            // 
-            // Settings
-            // 
-            this.Settings.BackColor = System.Drawing.SystemColors.Control;
-            this.Settings.Controls.Add(this.notifyCheckbox);
-            this.Settings.Controls.Add(this.policylistbox);
-            resources.ApplyResources(this.Settings, "Settings");
-            this.Settings.Name = "Settings";
-            // 
-            // notifyCheckbox
-            // 
-            resources.ApplyResources(this.notifyCheckbox, "notifyCheckbox");
-            this.notifyCheckbox.Name = "notifyCheckbox";
-            this.notifyCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // policylistbox
-            // 
-            this.policylistbox.FormattingEnabled = true;
-            this.policylistbox.Items.AddRange(new object[] {
-            resources.GetString("policylistbox.Items"),
-            resources.GetString("policylistbox.Items1"),
-            resources.GetString("policylistbox.Items2"),
-            resources.GetString("policylistbox.Items3"),
-            resources.GetString("policylistbox.Items4"),
-            resources.GetString("policylistbox.Items5")});
-            resources.ApplyResources(this.policylistbox, "policylistbox");
-            this.policylistbox.Name = "policylistbox";
-            this.policylistbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.policylistbox.SelectedIndexChanged += new System.EventHandler(this.policylistbox_SelectedIndexChanged);
             // 
             // tabMigrate
             // 
@@ -619,6 +339,231 @@ namespace Novell.FormsTrayApp
             this.helpProvider1.SetShowHelp(this.btnHelp, ((bool)(resources.GetObject("btnHelp.ShowHelp"))));
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
+            // tabAccounts
+            // 
+            this.tabAccounts.Controls.Add(this.accounts);
+            this.tabAccounts.Controls.Add(this.details);
+            this.tabAccounts.Controls.Add(this.removeAccount);
+            this.tabAccounts.Controls.Add(this.addAccount);
+            resources.ApplyResources(this.tabAccounts, "tabAccounts");
+            this.tabAccounts.Name = "tabAccounts";
+            this.helpProvider1.SetShowHelp(this.tabAccounts, ((bool)(resources.GetObject("tabAccounts.ShowHelp"))));
+            this.tabAccounts.UseVisualStyleBackColor = true;
+            // 
+            // accounts
+            // 
+            resources.ApplyResources(this.accounts, "accounts");
+            this.accounts.CheckBoxes = true;
+            this.accounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader3,
+            this.columnHeader2,
+            this.columnHeader1});
+            this.accounts.FullRowSelect = true;
+            this.helpProvider1.SetHelpString(this.accounts, resources.GetString("accounts.HelpString"));
+            this.accounts.HideSelection = false;
+            this.accounts.MultiSelect = false;
+            this.accounts.Name = "accounts";
+            this.helpProvider1.SetShowHelp(this.accounts, ((bool)(resources.GetObject("accounts.ShowHelp"))));
+            this.accounts.UseCompatibleStateImageBehavior = false;
+            this.accounts.View = System.Windows.Forms.View.Details;
+            this.accounts.SelectedIndexChanged += new System.EventHandler(this.accounts_SelectedIndexChanged);
+            this.accounts.DoubleClick += new System.EventHandler(this.details_Click);
+            this.accounts.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.accounts_ItemCheck);
+            // 
+            // columnHeader3
+            // 
+            resources.ApplyResources(this.columnHeader3, "columnHeader3");
+            // 
+            // columnHeader2
+            // 
+            resources.ApplyResources(this.columnHeader2, "columnHeader2");
+            // 
+            // columnHeader1
+            // 
+            resources.ApplyResources(this.columnHeader1, "columnHeader1");
+            // 
+            // details
+            // 
+            resources.ApplyResources(this.details, "details");
+            this.helpProvider1.SetHelpString(this.details, resources.GetString("details.HelpString"));
+            this.details.Name = "details";
+            this.helpProvider1.SetShowHelp(this.details, ((bool)(resources.GetObject("details.ShowHelp"))));
+            this.details.Click += new System.EventHandler(this.details_Click);
+            // 
+            // removeAccount
+            // 
+            resources.ApplyResources(this.removeAccount, "removeAccount");
+            this.helpProvider1.SetHelpString(this.removeAccount, resources.GetString("removeAccount.HelpString"));
+            this.removeAccount.Name = "removeAccount";
+            this.helpProvider1.SetShowHelp(this.removeAccount, ((bool)(resources.GetObject("removeAccount.ShowHelp"))));
+            this.removeAccount.Click += new System.EventHandler(this.removeAccount_Click);
+            // 
+            // addAccount
+            // 
+            resources.ApplyResources(this.addAccount, "addAccount");
+            this.helpProvider1.SetHelpString(this.addAccount, resources.GetString("addAccount.HelpString"));
+            this.addAccount.Name = "addAccount";
+            this.helpProvider1.SetShowHelp(this.addAccount, ((bool)(resources.GetObject("addAccount.ShowHelp"))));
+            this.addAccount.Click += new System.EventHandler(this.addAccount_Click);
+            // 
+            // tabGeneral
+            // 
+            this.tabGeneral.Controls.Add(this.groupBox4);
+            this.tabGeneral.Controls.Add(this.groupBox1);
+            this.tabGeneral.Controls.Add(this.groupBox3);
+            resources.ApplyResources(this.tabGeneral, "tabGeneral");
+            this.tabGeneral.Name = "tabGeneral";
+            this.helpProvider1.SetShowHelp(this.tabGeneral, ((bool)(resources.GetObject("tabGeneral.ShowHelp"))));
+            this.tabGeneral.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            resources.ApplyResources(this.groupBox4, "groupBox4");
+            this.groupBox4.Controls.Add(this.notificationsPreferencesList);
+            this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.groupBox4.Name = "groupBox4";
+            this.helpProvider1.SetShowHelp(this.groupBox4, ((bool)(resources.GetObject("groupBox4.ShowHelp"))));
+            this.groupBox4.TabStop = false;
+            // 
+            // notificationsPreferencesList
+            // 
+            this.notificationsPreferencesList.FormattingEnabled = true;
+            this.notificationsPreferencesList.Items.AddRange(new object[] {
+            resources.GetString("notificationsPreferencesList.Items"),
+            resources.GetString("notificationsPreferencesList.Items1"),
+            resources.GetString("notificationsPreferencesList.Items2"),
+            resources.GetString("notificationsPreferencesList.Items3"),
+            resources.GetString("notificationsPreferencesList.Items4"),
+            resources.GetString("notificationsPreferencesList.Items5"),
+            resources.GetString("notificationsPreferencesList.Items6"),
+            resources.GetString("notificationsPreferencesList.Items7")});
+            resources.ApplyResources(this.notificationsPreferencesList, "notificationsPreferencesList");
+            this.notificationsPreferencesList.Name = "notificationsPreferencesList";
+            this.helpProvider1.SetShowHelp(this.notificationsPreferencesList, ((bool)(resources.GetObject("notificationsPreferencesList.ShowHelp"))));
+            this.notificationsPreferencesList.SelectedIndexChanged += new System.EventHandler(this.notificationsPreferencesList_SelectedIndexChanged);
+            // 
+            // groupBox1
+            // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.timeUnit);
+            this.groupBox1.Controls.Add(this.defaultInterval);
+            this.groupBox1.Controls.Add(this.autoSync);
+            this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.groupBox1.Name = "groupBox1";
+            this.helpProvider1.SetShowHelp(this.groupBox1, ((bool)(resources.GetObject("groupBox1.ShowHelp"))));
+            this.groupBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            this.helpProvider1.SetShowHelp(this.label1, ((bool)(resources.GetObject("label1.ShowHelp"))));
+            // 
+            // timeUnit
+            // 
+            resources.ApplyResources(this.timeUnit, "timeUnit");
+            this.timeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.timeUnit.Name = "timeUnit";
+            this.helpProvider1.SetShowHelp(this.timeUnit, ((bool)(resources.GetObject("timeUnit.ShowHelp"))));
+            this.timeUnit.SelectedIndexChanged += new System.EventHandler(this.timeUnit_SelectedIndexChanged);
+            // 
+            // defaultInterval
+            // 
+            resources.ApplyResources(this.defaultInterval, "defaultInterval");
+            this.helpProvider1.SetHelpString(this.defaultInterval, resources.GetString("defaultInterval.HelpString"));
+            this.defaultInterval.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.defaultInterval.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.defaultInterval.Name = "defaultInterval";
+            this.helpProvider1.SetShowHelp(this.defaultInterval, ((bool)(resources.GetObject("defaultInterval.ShowHelp"))));
+            this.defaultInterval.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.defaultInterval.KeyDown += new System.Windows.Forms.KeyEventHandler(this.defaultInterval_KeyDown);
+            // 
+            // autoSync
+            // 
+            this.autoSync.Checked = true;
+            this.autoSync.CheckState = System.Windows.Forms.CheckState.Checked;
+            resources.ApplyResources(this.autoSync, "autoSync");
+            this.helpProvider1.SetHelpString(this.autoSync, resources.GetString("autoSync.HelpString"));
+            this.autoSync.Name = "autoSync";
+            this.helpProvider1.SetShowHelp(this.autoSync, ((bool)(resources.GetObject("autoSync.ShowHelp"))));
+            this.autoSync.CheckedChanged += new System.EventHandler(this.autoSync_CheckedChanged);
+            // 
+            // groupBox3
+            // 
+            resources.ApplyResources(this.groupBox3, "groupBox3");
+            this.groupBox3.Controls.Add(this.autoStart);
+            this.groupBox3.Controls.Add(this.displayConfirmation);
+            this.groupBox3.Controls.Add(this.displayTrayIcon);
+            this.groupBox3.Controls.Add(this.startInTrayIcon);
+            this.groupBox3.Controls.Add(this.hideSyncLog);
+            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.groupBox3.Name = "groupBox3";
+            this.helpProvider1.SetShowHelp(this.groupBox3, ((bool)(resources.GetObject("groupBox3.ShowHelp"))));
+            this.groupBox3.TabStop = false;
+            // 
+            // autoStart
+            // 
+            resources.ApplyResources(this.autoStart, "autoStart");
+            this.helpProvider1.SetHelpString(this.autoStart, resources.GetString("autoStart.HelpString"));
+            this.autoStart.Name = "autoStart";
+            this.helpProvider1.SetShowHelp(this.autoStart, ((bool)(resources.GetObject("autoStart.ShowHelp"))));
+            this.autoStart.CheckedChanged += new System.EventHandler(this.autoStart_CheckedChanged);
+            // 
+            // displayConfirmation
+            // 
+            resources.ApplyResources(this.displayConfirmation, "displayConfirmation");
+            this.helpProvider1.SetHelpString(this.displayConfirmation, resources.GetString("displayConfirmation.HelpString"));
+            this.displayConfirmation.Name = "displayConfirmation";
+            this.helpProvider1.SetShowHelp(this.displayConfirmation, ((bool)(resources.GetObject("displayConfirmation.ShowHelp"))));
+            this.displayConfirmation.CheckedChanged += new System.EventHandler(this.displayConfirmation_CheckedChanged);
+            // 
+            // displayTrayIcon
+            // 
+            resources.ApplyResources(this.displayTrayIcon, "displayTrayIcon");
+            this.helpProvider1.SetHelpString(this.displayTrayIcon, resources.GetString("displayTrayIcon.HelpString"));
+            this.displayTrayIcon.Name = "displayTrayIcon";
+            this.helpProvider1.SetShowHelp(this.displayTrayIcon, ((bool)(resources.GetObject("displayTrayIcon.ShowHelp"))));
+            this.displayTrayIcon.CheckedChanged += new System.EventHandler(this.displayTrayIcon_CheckedChanged);
+            // 
+            // startInTrayIcon
+            // 
+            resources.ApplyResources(this.startInTrayIcon, "startInTrayIcon");
+            this.helpProvider1.SetHelpString(this.startInTrayIcon, resources.GetString("startInTrayIcon.HelpString"));
+            this.startInTrayIcon.Name = "startInTrayIcon";
+            this.helpProvider1.SetShowHelp(this.startInTrayIcon, ((bool)(resources.GetObject("startInTrayIcon.ShowHelp"))));
+            this.startInTrayIcon.CheckedChanged += new System.EventHandler(this.startInTrayIcon_CheckedChanged);
+            // 
+            // hideSyncLog
+            // 
+            resources.ApplyResources(this.hideSyncLog, "hideSyncLog");
+            this.helpProvider1.SetHelpString(this.hideSyncLog, resources.GetString("hideSyncLog.HelpString"));
+            this.hideSyncLog.Name = "hideSyncLog";
+            this.helpProvider1.SetShowHelp(this.hideSyncLog, ((bool)(resources.GetObject("hideSyncLog.ShowHelp"))));
+            this.hideSyncLog.CheckedChanged += new System.EventHandler(this.hideSyncLog_CheckedChanged);
+            // 
+            // tabControl1
+            // 
+            resources.ApplyResources(this.tabControl1, "tabControl1");
+            this.tabControl1.Controls.Add(this.tabGeneral);
+            this.tabControl1.Controls.Add(this.tabAccounts);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.helpProvider1.SetShowHelp(this.tabControl1, ((bool)(resources.GetObject("tabControl1.ShowHelp"))));
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            // 
             // Preferences
             // 
             this.AcceptButton = this.ok;
@@ -641,16 +586,14 @@ namespace Novell.FormsTrayApp
             this.VisibleChanged += new System.EventHandler(this.Preferences_VisibleChanged);
             this.Closing += new System.ComponentModel.CancelEventHandler(this.Preferences_Closing);
             this.Move += new System.EventHandler(this.Preferences_Move);
-            ((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            this.tabMigrate.ResumeLayout(false);
+            this.tabAccounts.ResumeLayout(false);
             this.tabGeneral.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.defaultInterval)).EndInit();
             this.groupBox3.ResumeLayout(false);
-            this.tabAccounts.ResumeLayout(false);
-            this.Settings.ResumeLayout(false);
-            this.Settings.PerformLayout();
-            this.tabMigrate.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1707,14 +1650,20 @@ namespace Novell.FormsTrayApp
                 setAutoRunValue(!autoStart.Checked);
             }
 
-            NotifyShareEnabled = notifyShared.Checked;
-            NotifyCollisionEnabled = notifyCollisions.Checked;
-            NotifyJoinEnabled = notifyJoins.Checked;
-            HideiFolderInTray = startInTrayIcon.Checked;
+                NotifyPolicyQouta = notificationsPreferencesList.GetItemChecked((int)policyVoilation.QuotaVoliation);
+                NotifyPolicySize = notificationsPreferencesList.GetItemChecked((int)policyVoilation.FileSizeVoilation);
+                NotifyPolicyType = notificationsPreferencesList.GetItemChecked((int)policyVoilation.FileTypeVoilation);
+                NotifyPathLong = notificationsPreferencesList.GetItemChecked((int)policyVoilation.LongPath);
+                NotifyIOPermission = notificationsPreferencesList.GetItemChecked((int)policyVoilation.PremissionUnavailable);
+                NotifyDiskFull = notificationsPreferencesList.GetItemChecked((int)policyVoilation.DiskFullVoilation);
+                NotifyShareEnabled = notificationsPreferencesList.GetItemChecked((int)policyVoilation.iFolderShared);
+                NotifyCollisionEnabled = notificationsPreferencesList.GetItemChecked((int)policyVoilation.Collisions);
 
-            
+            NotifyShareEnabled = notificationsPreferencesList.GetItemChecked((int)policyVoilation.iFolderShared);
+
+            HideiFolderInTray = startInTrayIcon.Checked;
             HideSyncLogWindow = hideSyncLog.Checked;
-            HidePolicyVoilationNotification = hidenotification.Checked;
+
 
             // Check and update display confirmation setting.
             iFolderComponent.DisplayConfirmationEnabled = displayConfirmation.Checked;
@@ -1727,52 +1676,6 @@ namespace Novell.FormsTrayApp
 
             try
             {
-                //setting registry entry for each selected index
-                ListBox.SelectedIndexCollection selectedIndex = policylistbox.SelectedIndices;
-
-                if (notifyCheckbox.Checked)
-                {
-                    //initilizing registry entry to false and based on selection setting it to true
-                    NotifyPolicyQouta = false;
-                    NotifyPolicySize = false;
-                    NotifyPolicyType = false;
-                    NotifyDiskFull = false;
-                    NotifyIOPermission = false;
-                    NotifyPathLong = false;
-
-
-                    foreach (int index in selectedIndex)
-                    {
-
-                        switch (index)
-                        {
-                            case (int)policyVoilation.QuotaVoliation:
-                                NotifyPolicyQouta = true;
-                                break;
-                            case (int)policyVoilation.FileSizeVoilation:
-                                NotifyPolicySize = true;
-                                break;
-                            case (int)policyVoilation.FileTypeVoilation:
-                                NotifyPolicyType = true;
-                                break;
-                            case (int)policyVoilation.DiskFullVoilation:
-                                NotifyDiskFull = true;
-                                break;
-                            case (int)policyVoilation.PremissionUnavailable:
-                                NotifyIOPermission = true;
-                                break;
-                            case (int)policyVoilation.LongPath:
-                                NotifyPathLong = true;
-                                break;
-                            default:
-                                FormsTrayApp.log.Debug("invalid index");
-                                break;
-
-                        }
-
-                    }
-                }
-
                 // Check and update default sync interval.
                 decimal syncValueInSeconds;
 
@@ -2019,37 +1922,23 @@ namespace Novell.FormsTrayApp
 
                 // Update the auto start setting.
                 autoStart.Checked = IsRunEnabled();
-
-                notifyShared.Checked = NotifyShareEnabled;
-                notifyCollisions.Checked = NotifyCollisionEnabled;
-                notifyJoins.Checked = NotifyJoinEnabled;
                 startInTrayIcon.Checked = HideiFolderInTray;
 
                 
                 hideSyncLog.Checked = HideSyncLogWindow;
-                hidenotification.Checked = HidePolicyVoilationNotification;
 
                 // Update the display confirmation setting.
                 displayConfirmation.Checked = iFolderComponent.DisplayConfirmationEnabled;
                 displayTrayIcon.Checked = !(iFolderComponent.DisplayTrayIconEnabled);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.QuotaVoliation, NotifyPolicyQouta);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.FileSizeVoilation, NotifyPolicySize);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.FileTypeVoilation, NotifyPolicyType);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.LongPath, NotifyPathLong);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.PremissionUnavailable, NotifyIOPermission);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.DiskFullVoilation, NotifyDiskFull);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.iFolderShared, NotifyShareEnabled);
+            notificationsPreferencesList.SetItemChecked((int)policyVoilation.Collisions, NotifyCollisionEnabled);
 
-                //clear and initilize the checkbox
-                notifyCheckbox.Checked = false;    
-                policylistbox.ClearSelected();
-
-                if (NotifyPolicyQouta)
-                    policylistbox.SelectedIndex = (int)policyVoilation.QuotaVoliation;
-                if (NotifyPolicySize)
-                    policylistbox.SelectedIndex = (int)policyVoilation.FileSizeVoilation;
-                if (NotifyPolicyType)
-                    policylistbox.SelectedIndex = (int)policyVoilation.FileTypeVoilation;
-                if (NotifyPathLong)
-                    policylistbox.SelectedIndex = (int)policyVoilation.LongPath;
-                if (NotifyIOPermission)
-                    policylistbox.SelectedIndex = (int)policyVoilation.PremissionUnavailable;
-                if (NotifyDiskFull)
-                    policylistbox.SelectedIndex = (int)policyVoilation.DiskFullVoilation;
-                
                 try
                 {
                     // Update the default sync interval setting.
@@ -2118,16 +2007,6 @@ namespace Novell.FormsTrayApp
             }
         }
 
-
-        private void hidenotification_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (hidenotification.Focused)
-            {
-                apply.Enabled = true;
-            }
-        }
-
-
         private void hideSyncLog_CheckedChanged(object sender, System.EventArgs e)
         {
             if (hideSyncLog.Focused)
@@ -2175,30 +2054,6 @@ namespace Novell.FormsTrayApp
             }
 
             defaultInterval.Enabled = timeUnit.Enabled = label1.Enabled = autoSync.Checked;
-        }
-
-        private void notifyShared_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (notifyShared.Focused)
-            {
-                apply.Enabled = true;
-            }
-        }
-
-        private void notifyCollisions_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (notifyCollisions.Focused)
-            {
-                apply.Enabled = true;
-            }
-        }
-
-        private void notifyJoins_CheckedChanged(object sender, System.EventArgs e)
-        {
-            if (notifyJoins.Focused)
-            {
-                apply.Enabled = true;
-            }
         }
 
         private void defaultInterval_ValueChanged(object sender, System.EventArgs e)
@@ -2671,16 +2526,12 @@ namespace Novell.FormsTrayApp
 
         }
 
-        private void policylistbox_SelectedIndexChanged(object sender, EventArgs e)
+        private void notificationsPreferencesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-            //this IF condition can be removed
             if (!displayTrayIcon.Focused)
             {
                 apply.Enabled = true;
             }
-            
         }
-
     }
 }
