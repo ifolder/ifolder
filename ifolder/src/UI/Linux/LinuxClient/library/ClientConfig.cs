@@ -53,7 +53,7 @@ namespace Novell.iFolder
 		///
 		public const string KEY_SHOW_CREATION = "/apps/ifolder3/notification/show_created_dialog";
 		public const string KEY_NOTIFY_IFOLDERS = "/apps/ifolder3/notification/new_ifolders";
-		public const string KEY_NOTIFY_POLICY_VOILATION = "/apps/ifolder3/notification/policy_violation";
+		public const string KEY_NOTIFY_POLICY_VIOLATION = "/apps/ifolder3/notification/policy_violation";
 		public const string KEY_NOTIFY_COLLISIONS = "/apps/ifolder3/notification/collisions";
 		public const string KEY_NOTIFY_USERS = "/apps/ifolder3/notification/new_users";
 //		public static string KEY_NOTIFY_SYNC_ERRORS = "/apps/ifolder3/notification/sync_errors";
@@ -158,7 +158,7 @@ namespace Novell.iFolder
 
 				case KEY_IFOLDER_WINDOW_HIDE:
 				case KEY_SHOW_SYNC_LOG:
-				case KEY_NOTIFY_POLICY_VOILATION:		
+				case KEY_NOTIFY_POLICY_VIOLATION:		
 				case KEY_SHOW_QUOTA_VIOLATION:
 				case KEY_SHOW_FILE_SIZE_VOILATION:
 				case KEY_SHOW_EXCLUSION_VOILATION:	

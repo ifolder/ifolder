@@ -18,6 +18,7 @@ src/UI/Linux/LinuxClient/library/iFolderUserSelector.cs
 src/UI/Linux/LinuxClient/library/iFolderWindow.cs
 src/UI/Linux/LinuxClient/library/LogWindow.cs
 src/UI/Linux/LinuxClient/library/NotifyWindow.cs
+src/UI/Linux/LinuxClient/library/NoticiationPreference.cs
 src/UI/Linux/LinuxClient/library/PreferencesWindow.cs
 src/UI/Linux/LinuxClient/library/PrefsAccountsPage.cs
 src/UI/Linux/LinuxClient/library/PrefsGeneralPage.cs

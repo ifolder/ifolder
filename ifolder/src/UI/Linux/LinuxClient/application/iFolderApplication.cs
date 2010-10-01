@@ -844,10 +844,6 @@ namespace Novell.iFolder
 					case SyncStatus.FileNameConflict:
 						// Conflicts are handled in the OniFolderChangedEvent method
 						break;
-					case SyncStatus.Policy:
-						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  )
-							message = Util.GS("A policy prevented complete synchronization.");
-						break;
 					case SyncStatus.Access:
 						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_PERMISSION_UNAVAILABLE)  )
 							message = Util.GS("Insuficient rights prevented complete synchronization.");
@@ -863,11 +859,11 @@ namespace Novell.iFolder
 						}
 						break;
 					case SyncStatus.PolicySize:
-						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  ||  (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_FILE_SIZE_VOILATION)   )
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_FILE_SIZE_VOILATION)   )
 							message = Util.GS("A size restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.PolicyType:
-						if( (bool)ClientConfig.Get(ClientConfig.KEY_NOTIFY_POLICY_VOILATION)  || (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_EXCLUSION_VOILATION))
+						if( (bool)ClientConfig.Get(ClientConfig.KEY_SHOW_EXCLUSION_VOILATION))
 							message = Util.GS("A file type restriction policy prevented complete synchronization.");
 						break;
 					case SyncStatus.DiskFull:

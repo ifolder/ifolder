@@ -4134,6 +4134,26 @@ msgstr ""
 "When file path exceeds optimal limit"
 
 msgid ""
+"When iFolders are shared"
+msgstr ""
+"When iFolders are shared"
+
+msgid ""
+"When conflicts arise"
+msgstr ""
+"When conflicts arise"
+
+msgid ""
+"When a user joins the iFolder domain"
+msgstr ""
+"When a user joins the iFolder domain"
+
+msgid ""
+"When a policy is violated"
+msgstr ""
+"When a policy is violated"
+
+msgid ""
 "_Upgrade"
 msgstr ""
 "_Upgrade"
