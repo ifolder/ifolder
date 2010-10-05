@@ -944,10 +944,10 @@
 "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared" = "It is not possible to share an Encrypted iFolder. Only regular iFolders can be shared.";
 
 /*Client is unable to write files to the local filesystem because of no permission*/
-"Unable to write files in the folder. Verify the permissions on your local folder." = "Unable to write files in the folder. Verify the permissions on your local folder."
+"Unable to write files in the folder. Verify the permissions on your local folder." = "Unable to write files in the folder. Verify the permissions on your local folder.";
 
 /*Client is unable to read files from local filesystem because of no permission*/
-"Unable to read files from the folder. Verify the permissions on your local folder." = "Unable to read files from the folder. Verify the permissions on your local folder."
+"Unable to read files from the folder. Verify the permissions on your local folder." = "Unable to read files from the folder. Verify the permissions on your local folder.";
 
 /* iFolder Window Status Message */
 "Path is too long for the file \"%@\" to be downloaded" = "Path is too long for the file \"%@\" to be downloaded";
