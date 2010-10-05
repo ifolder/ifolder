@@ -8,7 +8,6 @@
  <entry leaf="true" id="login">Logging In to an iFolder Account</entry>
  <entry leaf="true" id="accountdetails">Viewing and Modifying iFolder Account Settings</entry>
  <entry leaf="true" id="preferences">Configuring iFolder Preferences for the Client</entry>
- <entry leaf="true" id="settings">iFolder Settings</entry>
  <entry leaf="true" id="firewall">Configuring Local Firewall Settings for iFolder Traffic</entry>
  <entry leaf="true" id="virusscan">Configuring Local Virus Scanner Settings for iFolder Traffic</entry>
  <entry leaf="true" id="delacct">Deleting an iFolder Account</entry>

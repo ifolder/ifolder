@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, September 22, 2010 10:28" />
-<meta name="Content-Date" content="Mon, 22 Sep 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Monday, October 04, 2010 20:55" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -38,7 +38,7 @@
 <div class='nav' id='topnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+  <a href="firewall.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
 </div>
 
 
@@ -65,8 +65,8 @@
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
 <p class="para">Start iFolder when logging in to the desktop (Available only in windows client)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this option to launch iFolder whenever you log in with the local username where you set up the iFolder account. For those accounts where you have enabled Remember My Password, synchronization occurs in the background at the specified synchronization interval.</p>
-<p class="para">Deselect this option to start iFolder manually.</p></td>
+<p class="para">Select this check box to launch iFolder whenever you log in with the local username where you set up the iFolder account. For those accounts where you have enabled <span class="guimenu">Remember My Password</span>, you will not be prompted to specify your password when you log in.</p>
+<p class="para">Deselect this check box to start iFolder manually.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
 <p class="para">Display confirmation dialog on successful creation of iFolder</p></td>
@@ -74,45 +74,78 @@
 <p class="para">Select this check box to receive a confirmation message each time you create an iFolder, in addition to the normal visual cues such as the iFolder appearing in the list of iFolders.</p>
 <p class="para">Deselect this check box to stop receiving the confirmation message.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro2ibx"></a>
+<p class="para">Hide iFolder Tray Icon (Available only in windows client)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to hide the iFolder icon displayed in system tray.</p>
+<p class="para">Deselect this check box to display the iFolder icon in the system tray.</p>
+<div class="warning">
+<p class="para"><em class="title">WARNING:</em>If you select this check box, ensure that the <span class="guimenu">Hide iFolder main window at startup</span> check box is deselected. Otherwise, the visual cues that indicate a running iFolder application will be unavailable.</p></div>
+</td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
 <p class="para">Hide iFolder main window at startup </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Deselect this check box to display the iFolder window on startup.</p>
-<p class="para">Select this check box if you want the iFolder window to remain hidden on startup.</p></td>
+<p class="para">Select this check box if you want the iFolder window to remain hidden on startup.</p>
+<p class="para">Deselect this check box to display the iFolder window on startup.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
 <p class="para">Display synchronization logs </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Select this check box if you want to display synchronization logs on startup.</p>
 <p class="para">Deselect this check box if you want to hide synchronization logs on startup.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
-<p class="para">Display notifications for policy violations </p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1nmt"></a>
+<p class="para">When quota policy is violated</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this check box to display a pop-up message in the notification area whenever a policy is violated. </p></td>
+<p class="para">Select this check box to display a pop-up message in the notification area whenever a disk quota policy is violated.</p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1qri"></a>
+<p class="para">When file size policy is violated</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to display a pop-up message in the notification area whenever a file size policy is violated.</p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1s19"></a>
+<p class="para">When file exclusion policy is violated</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to display a pop-up message in the notification area whenever a file exclusion policy is violated.</p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1v4q"></a>
+<p class="para">When disk is full</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to display a pop-up message in the notification area whenever disk is full in the local system.</p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1vny"></a>
+<p class="para">When required permissions are unavailable</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to display a pop-up message in the notification area whenever the required permissions to perform an operation on a file or folder is unavailable. For example, you will be unable to download a file if you have only read rights.</p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1wan"></a>
+<p class="para">When file path exceeds optimal limit</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Select this check box to display a pop-up message in the notification area whenever a file path exceeds the system-defined maximum length. For example, on Windows-based platforms, the number of characters in a path must be less than 248. </p>
+<p class="para">Deselect this check box to disable this notification.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">Notify when iFolders are shared </p></td>
+<p class="para">When iFolders are shared </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Select this check box to display a pop-up message in the notification area whenever you receive a new invitation to share an iFolder. </p>
-<p class="para">To view a list of iFolders that are available for download on your current computer, select <span class="guimenu">Show Available iFolders</span> in the iFolder browser whenever iFolder is running.</p></td>
+<p class="para">Deselect this check box to disable this notification.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">Notify when conflicts arise</p></td>
+<p class="para">When conflicts arise</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Select this check box to display a pop-up message in the notification area whenever a conflict occurs on synchronizing files. </p>
 <p class="para">Deselect this check box to disable the pop-up messages for synchronization conflicts.</p>
-<p class="para">Whenever conflicts occur, the<span class="guimenu"> iFolder Error </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> icon is displayed on the iFolder when iFolder is running.
+<p class="para">Whenever conflicts occur, the<span class="guimenu"> iFolder Error </span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> icon is displayed on the iFolder.
          </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">Notify when a user joins the iFolder server</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Select this check box to display a pop-up message in the notification area whenever a user accepts an invitation to share an iFolder. </p>
-<p class="para">Deselect this check box to disable the pop-up messages.</p>
-<p class="para">You can view a complete list of iFolder users whenever iFolder is running by selecting the iFolder, then clicking <span class="guimenu">Share with</span> to open the iFolder Properties dialog box to the <span class="guimenu">Sharing</span> tab.</p></td>
-</tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
 <p class="para">Synchronization</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
@@ -149,7 +182,7 @@
 <div class='nav' id='bottomnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="previous" title="previous" />previous</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
+  <a href="firewall.html" class="nav">&nbsp;next<img src="ui/images/next.png" alt="next" title="next" /></a>
 </div>
 
 </body>
