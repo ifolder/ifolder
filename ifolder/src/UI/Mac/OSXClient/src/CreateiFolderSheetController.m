@@ -32,6 +32,7 @@
 #import "iFolderWindowController.h"
 #import "iFolderData.h"
 #import "iFolderApplication.h"
+#include "applog.h"
 
 @implementation CreateiFolderSheetController
 
@@ -99,10 +100,73 @@
 	
 	if (([fileManager fileExistsAtPath:[pathField stringValue] isDirectory:&isDir] == NO) || !isDir)
 	{
-		NSRunAlertPanel(NSLocalizedString(@"Select Directory",@"Select directory title"),NSLocalizedString(@"Either the selected item is not a directory or the selected path does not exist.  Select an available directory to upload",@"Select directory message"),NSLocalizedString(@"OK",@"OK"),nil,nil);
-		return;
-	}
+		int selection= NSRunAlertPanel(NSLocalizedString(@"Select Directory",@"Select directory title"),NSLocalizedString(@"The specified location does not exists .Do you want to create it?",@"Select directory message"),NSLocalizedString(@"OK",@"OK"),NSLocalizedString(@"CANCEL",@"CANCEL"),nil);
+		if(1 != selection) //selected cancel
+			return;
+	    else{ //create dir  
 		
+				if(![[pathField stringValue] isAbsolutePath]){
+				NSRunAlertPanel(NSLocalizedString(@"Exception in Create iFolder",@"Create iFolder Exception Title"), 
+							NSLocalizedString(@"Path is invalid. Please check the path that you entered",@"Create iFolder Exception Message"), 
+							NSLocalizedString(@"OK",@"OK Button"),nil,nil);
+				return ;
+				}
+			
+				//find exsitng ifolder in path 
+				NSString* parent=[[pathField stringValue] stringByDeletingLastPathComponent];
+				while (parent!= NULL)
+				{
+					if (([fileManager fileExistsAtPath: parent isDirectory:&isDir] == NO) || !isDir)
+					{
+						parent=[parent stringByDeletingLastPathComponent];
+					}
+					else
+					{
+						//parent exists
+						break;
+					}
+				}
+			
+			NSString* temp =parent;
+				//check if its already a iFolder or inside a iFolder
+			while(temp != NULL &&  ![temp isEqualToString:@"/"]){
+				if([[iFolderData sharedInstance] isiFolderByPath:temp]){
+					NSRunAlertPanel(NSLocalizedString(@"Exception in Create iFolder",@"Create iFolder Exception Title"), 
+									[NSString stringWithFormat:NSLocalizedString(@"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders.please select a different location and try again",@"Create iFolder Exception Message"), temp],
+									NSLocalizedString(@"OK",@"OK Button"),nil,nil);   
+					return ;
+				}
+				
+				temp=[temp stringByDeletingLastPathComponent];
+			}
+		
+			NSArray* pathComponents=[[pathField stringValue] pathComponents];
+			NSArray* parentComponents=[parent  pathComponents];
+			int i=[parentComponents count];
+			//recursivly create directories
+			while( i< [pathComponents count] &&	[pathComponents objectAtIndex:i]!= NULL )
+			{
+				parent=[parent stringByAppendingPathComponent: [pathComponents objectAtIndex:i] ];
+				
+				if([fileManager createDirectoryAtPath: parent  attributes: nil ])
+				{     //directory created
+					i++;
+				}	
+				else{
+					ifconlog2(@"error creating path %@",parent); 
+					NSRunAlertPanel(NSLocalizedString(@"Exception in Create iFolder",@"Create iFolder Exception Title"), 
+							NSLocalizedString(@"Path is invalid. Please check the path that you entered",@"Create iFolder Exception Message"), 
+							NSLocalizedString(@"OK",@"OK Button"),nil,nil);
+							return;
+				}
+			}
+			ifconlog2(@"created path %@",parent);
+		}
+
+		//	[fileManager createDirectoryAtPath: [pathField stringValue] withIntermediateDirectories:YES attributes: nil error:NULL];// higher versions may use this instead of recursive creation 
+		
+	}
+	
 	if(	( [ [domainIDField stringValue] length] > 0 ) &&
 		( [ [pathField stringValue] length] > 0 ) )
 	{

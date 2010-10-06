@@ -357,7 +357,10 @@
 "Invalid PassPhrase Status" = "Invalid PassPhrase Status";
 
 /* Create iFolder Exception Message */
-"Invalid Path. Please check the path that you entered" = "Invalid Path. Please check the path that you entered";
+"Path is invalid. Please check the path that you entered" = "Invalid Path. Please check the path that you entered";
+
+/* Create iFolder Exception Message */
+"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders.please select a different location and try again"="The selected location is inside another iFolder, iFolder cannot exist inside other iFolders. Select a different location and try again.";
 
 /* iFolder Member Status */
 "Invited User" = "Invited User";
@@ -935,7 +938,7 @@
 "Select Directory" = "Select Directory";
 
 /*Select directory message*/
-"Either the selected item is not a directory or the selected path does not exist.  Select an available directory to upload" = "Either the selected item is not a directory or the selected path does not exist. Select an available directory to upload";
+"The specified location does not exists. Do you want t o create it?" = "The specified location does not exists. Do you want t o create it?";
 
 /*Cannot share iFolder title*/
 "Cannot share iFolder" = "Cannot share iFolder";
