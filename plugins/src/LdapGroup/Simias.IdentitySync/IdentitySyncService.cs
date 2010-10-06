@@ -389,6 +389,15 @@ namespace Simias.IdentitySynchronization
 			try
 			{
 				member = domain.GetMemberByName( Username );
+				if (member == null && !String.IsNullOrEmpty(UserGuid)){
+					//Note: In case of renamed users teh user name will be different and the GUID will be same.
+					//Search if the user already exist with the GUID. 
+					member = domain.GetMemberByID(UserGuid);
+					if (member != null){
+						//TBD:iFolder needs to handle the renamed users properly.
+						log.Info("This user is renamed on the LDAP server. Old Username = {0}, new Username= {1}", member.Name, Username);
+					}
+				}
 			}
 			catch{}
 
@@ -680,6 +689,7 @@ namespace Simias.IdentitySynchronization
 				}
 				catch( Exception ex )
 				{
+					log.Debug("Failed Creating member: "+Username + ex.Message);
 					this.ReportError( "Failed creating member: " + Username + ex.Message );
 					return;
 				}
@@ -949,6 +959,12 @@ namespace Simias.IdentitySynchronization
 		public void ReportError( string ErrorMsg )
 		{
 			reportedErrors++;
+			log.Debug( "Error occured in Sync");
+			log.Debug(
+				String.Format(
+					"ERROR:{0} - {1}",
+					DateTime.Now.ToString(),
+					ErrorMsg ) );
 			syncMessages.Add(
 				String.Format(
 					"ERROR:{0} - {1}",
@@ -1796,6 +1812,10 @@ namespace Simias.IdentitySynchronization
 					if ( state.Errors == 0 )
 					{
 						ProcessDeletedMembers( state );
+					}
+					else 
+					{
+						log.Error("Errors occured during Identity Sync, skipping processing of user deletion");
 					}
 					// moving this call after ProcessDeletedMembers() because in ProcessDeletedMembers(), disabling of users will
 					// take place which will be used by ProcessMembersAndGroupsLocally..
