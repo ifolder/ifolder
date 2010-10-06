@@ -352,7 +352,6 @@ namespace Novell.iFolder
 			this.WindowPosition = Gtk.WindowPosition.Center;
 
 			this.Add(CreateContentArea());
-
 			ShowIconView((bool)ClientConfig.Get(ClientConfig.KEY_SHOW_ICON_VIEW));
 
 			// Set up an event to refresh when the window is
@@ -361,7 +360,7 @@ namespace Novell.iFolder
 			
 			this.RefreshAvailableiFolderTimer = new Timer(new TimerCallback(RefreshAvailableiFolderTimer_click), null , 300000, 300000 );   //  5 mins default
 		}
-
+		
 		private void UpdateRowInListView(string id)
                 {
                         TreeIter iters;
@@ -4628,6 +4627,7 @@ namespace Novell.iFolder
 
 				
 			int rc = 0;
+			string folderPath =null;
 			do
 			{
 				rc = cd.Run();
@@ -4706,6 +4706,31 @@ namespace Novell.iFolder
 						}
 	
 						selectedFolder = ParseAndReplaceTildeInPath(selectedFolder);
+						iFolderMsgDialog dialog = null;
+			                        int response = -1;
+						if(!System.IO.Directory.Exists(selectedFolder))
+						{
+							dialog = new iFolderMsgDialog(                                                                this,
+									iFolderMsgDialog.DialogType.Question,
+									iFolderMsgDialog.ButtonSet.YesNo,
+									Util.GS("Invalid folder specified"),
+									Util.GS("Create Location"),
+									Util.GS("The specified location does not exist. Do you want to create it?"));
+
+							response = dialog.Run();
+							dialog.Hide();
+							dialog.Destroy();
+							if( (ResponseType)response == ResponseType.Yes )
+							{
+								folderPath = selectedFolder;
+								try{
+									Directory.CreateDirectory(selectedFolder);
+								}
+								catch{}
+							}
+							else
+								return;
+						}
 	
 						iFolderHolder ifHolder = null;
 						try
