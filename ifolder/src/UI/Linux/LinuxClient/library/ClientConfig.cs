@@ -165,6 +165,7 @@ namespace Novell.iFolder
 				case KEY_SHOW_DISK_FULL:
 				case KEY_SHOW_PERMISSION_UNAVAILABLE:
 				case KEY_SHOW_EXCEEDS_PATH_SIZE:
+				case KEY_SHOW_ICON_VIEW:
 					return false;
 
 				case KEY_SYNC_UNIT:
