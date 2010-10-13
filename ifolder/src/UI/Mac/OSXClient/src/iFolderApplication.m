@@ -579,45 +579,15 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 -(void)killSimias
 {
 	NSLog(@"Killing previous simias process if any");
-	//[NSTask launchedTaskWithLaunchPath:@"/usr/bin/killall" arguments:[NSArray arrayWithObjects:@"mono", nil]];	
 	NSTask *task = [[NSTask alloc] init];
 	[task setLaunchPath: @"/bin/sh"];
 	NSArray* arguments;
-	arguments = [NSArray arrayWithObjects:@"-c",@"ps -e | grep -v grep | grep simias | awk '{print $1}' | xargs kill -9",nil];	
+	arguments = [NSArray arrayWithObjects:@"-c",@"ps -Ax -o \"tt pid command\" | tr -s ' ' | grep -v grep | grep -i simias | cut -d' ' -f3 | xargs kill -9",nil]; 
+
 	[task setArguments:arguments];
 
-    [task launch];
+	[task launch];
 	[task release];
-/*
-	NSBundle *bundle = [NSBundle mainBundle];	
-	 NSString *stripperPath;
-     stripperPath = [bundle pathForAuxiliaryExecutable: @"killsimias.sh"];
-
-    NSTask *task = [[NSTask alloc] init];
-    [task setLaunchPath: @"/bin/sh"];
-	NSArray* arguments;
-	arguments = [NSArray arrayWithObjects:stripperPath,nil];	
-	[task setArguments:arguments];
-
-	NSPipe *readPipe = [NSPipe pipe];
-    NSFileHandle *readHandle = [readPipe fileHandleForReading];
-	[task setStandardOutput: readPipe];
-	
-    [task launch];
-	
-	NSData *data;
-	data = [readHandle readDataToEndOfFile];
-	
-	if(data)
-	{
-		NSString *strippedString = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-		NSLog(@"%@",strippedString);
-		[strippedString release];
-	}
-	
-    [task release];
-	[NSThread sleepUntilDate:[[NSDate date] addTimeInterval:1]];
-	*/
 }
 
 
@@ -660,8 +630,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 			ifconlog1(@"Simias has NOT been stopped and so forcing to quit simias");			
 			[self killSimias];
 		}
-		
-		[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
+	[self addLog:NSLocalizedString(@"Simias is shut down", @"Sync Log Message")];
 
 	
 	}
@@ -706,7 +675,7 @@ void dynStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, void *inf
 		{
 			iFolderDomain *dom = [availableDomains objectAtIndex:counter];
 			
-				if(![simiasService GetRememberPassPhraseOption:[dom ID]])
+			if(![simiasService GetRememberPassPhraseOption:[dom ID]])
 				{
 					[simiasService StorePassPhrase:[dom ID] PassPhrase:@"" Type:None andRememberPP:NO];				
 				}
