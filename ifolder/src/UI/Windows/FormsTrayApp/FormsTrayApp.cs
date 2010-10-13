@@ -119,6 +119,7 @@ namespace Novell.FormsTrayApp
         private bool simiasStarting = false;
 		private bool wizardRunning = false;
         private bool exitFlag = true;
+        private bool simiasStopNeeded = true;
 		private Icon trayIcon;
 		private Icon startupIcon;
 		private Icon shutdownIcon;
@@ -863,8 +864,32 @@ namespace Novell.FormsTrayApp
                 ifWebService.Url = simiasManager.WebServiceUri + "/iFolder.asmx";
                 simiasWebService = new SimiasWebService();
                 simiasWebService.Url = simiasManager.WebServiceUri + "/Simias.asmx";
-                LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
-                LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+                try
+                {
+                    LocalService.Start(simiasWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+                    LocalService.Start(ifWebService, simiasManager.WebServiceUri, simiasManager.DataPath);
+                }
+                catch(Exception e1)
+                {
+                    /// Unable to start simias web services. Kill simias process, in case running and then quit the application...
+                    this.simiasStopNeeded = false;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Process[] processArray = Process.GetProcessesByName("simias");
+                        foreach (Process proc in processArray)
+                        {
+                            try
+                            {
+                                if (proc != null)
+                                {
+                                    proc.Kill();
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    this.ShutdownTrayApp(e1);
+                }
                 eventClient.Register();
                 if (!eventError)
                 {
@@ -2041,7 +2066,7 @@ namespace Novell.FormsTrayApp
 				}
 
 				// Shut down the web server.
-				if(this.MachineShutdown() == false && globalProperties.MachineShutdown() == false && preferences.MachineShutdown() == false && syncLog.MachineShutdown() == false)
+				if(this.MachineShutdown() == false && globalProperties.MachineShutdown() == false && preferences.MachineShutdown() == false && syncLog.MachineShutdown() == false && this.simiasStopNeeded)
 				{
 					simiasManager.Stop();
 				}
