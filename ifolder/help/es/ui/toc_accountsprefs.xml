@@ -8,7 +8,6 @@
  <entry leaf="true" id="login">Entrada a una cuenta de iFolder</entry>
  <entry leaf="true" id="accountdetails">Visualización y modificación de los valores de la cuenta de iFolder</entry>
  <entry leaf="true" id="preferences">Configuración de las preferencias de iFolder del cliente</entry>
- <entry leaf="true" id="settings">Ajustes de iFolder</entry>
  <entry leaf="true" id="firewall">Configuración de los valores del cortafuegos local para el tráfico de iFolder</entry>
  <entry leaf="true" id="virusscan">Configuración de los valores de exploración de virus local para el tráfico de iFolder</entry>
  <entry leaf="true" id="delacct">Supresión de una cuenta de iFolder</entry>

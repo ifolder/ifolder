@@ -33,7 +33,6 @@ tIdMap['accounts'] = 'accounts.html';
 tIdMap['login'] = 'login.html';
 tIdMap['accountdetails'] = 'accountdetails.html';
 tIdMap['preferences'] = 'preferences.html';
-tIdMap['settings'] = 'settings.html';
 tIdMap['firewall'] = 'firewall.html';
 tIdMap['bctnqjo'] = 'firewall.html#bctnqjo';
 tIdMap['bctnqjp'] = 'firewall.html#bctnqjp';

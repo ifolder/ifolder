@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 20:21" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 11:58" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -38,7 +38,7 @@
 <div class='nav' id='topnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="firewall.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>
 
 
@@ -65,8 +65,8 @@
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
 <p class="para">Démarrer iFolder lors du login au bureau (uniquement disponible pour le client Windows)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Sélectionnez cette option pour lancer iFolder lorsque vous vous connectez avec le nom d'utilisateur local que vous avez défini lors de la création du compte iFolder. Pour les comptes pour lesquels vous avez activé Mémoriser mon mot de passe, la synchronisation s'effectue en arrière-plan à l'intervalle que vous avez spécifié.</p>
-<p class="para">Désélectionnez cette option pour démarrer iFolder manuellement.</p></td>
+<p class="para">Cochez cette case pour lancer iFolder lorsque vous vous loguez avec le nom d'utilisateur local que vous avez défini lors de la création du compte iFolder. Lorsque vous vous loguez aux comptes pour lesquels vous avez activé l'option <span class="guimenu">Mémoriser mon mot de passe</span>, vous n'êtes pas invité à spécifier votre mot de passe.</p>
+<p class="para">Décochez cette case pour démarrer iFolder manuellement.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
 <p class="para">Afficher la boîte de dialogue de confirmation de la création d'un dossier iFolder</p></td>
@@ -74,45 +74,78 @@
 <p class="para">Cochez cette case pour recevoir un message de confirmation à chaque fois que vous créez un dossier iFolder, en plus des indicateurs visuels habituels comme l'apparition du dossier iFolder dans la liste correspondante.</p>
 <p class="para">Désélectionnez cette case pour ne plus recevoir le message de confirmation.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro2ibx"></a>
+<p class="para">Masquer l'icône d'iFolder dans la barre système (disponible uniquement avec le client Windows)</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour masquer l'icône iFolder affichée dans la barre système.</p>
+<p class="para">Décochez cette case pour afficher l'icône iFolder dans la barre système.</p>
+<div class="warning">
+<p class="para"><em class="title">AVERTISSEMENT :</em>Si vous cochez cette case, veillez à décocher la case <span class="guimenu">Masquer la fenêtre principale de iFolder au démarrage</span>, sinon les indicateurs visuels signalant qu'une application iFolder est en cours d'exécution ne sont pas disponibles.</p></div>
+</td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
 <p class="para">Masquer la fenêtre principale du dossier iFolder au démarrage </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Désélectionnez cette case à cocher pour afficher la fenêtre iFolder au démarrage.</p>
-<p class="para">Cochez cette case si vous souhaitez que la fenêtre iFolder reste masquée au démarrage.</p></td>
+<p class="para">Cochez cette case si vous souhaitez que la fenêtre iFolder reste masquée au démarrage.</p>
+<p class="para">Désélectionnez cette case à cocher pour afficher la fenêtre iFolder au démarrage.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
 <p class="para">Afficher les journaux de synchronisation </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Cochez cette case si vous souhaitez afficher les journaux de synchronisation au démarrage.</p>
 <p class="para">Désélectionnez cette case à cocher si vous souhaitez masquer les journaux de synchronisation au démarrage.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
-<p class="para">Afficher des notifications en cas de violations des stratégies </p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1nmt"></a>
+<p class="para">Lorsqu'une stratégie de quota est violée</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'une stratégie est violée. </p></td>
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'une stratégie de quota de disque est violée.</p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1qri"></a>
+<p class="para">Lorsqu'une stratégie de taille de fichier est violée</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'une stratégie de taille de fichier est violée.</p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1s19"></a>
+<p class="para">Lorsqu'une stratégie d'exclusion de fichier est violée</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'une stratégie d'exclusion de fichier est violée.</p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1v4q"></a>
+<p class="para">Lorsque le disque est plein</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsque le disque est plein sur le système local.</p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1vny"></a>
+<p class="para">Lorsque les autorisations requises sont indisponibles</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsque les autorisations requises pour effectuer une opération sur un fichier ou un dossier ne sont pas disponibles. Par exemple, vous ne pouvez pas télécharger un fichier si vous ne disposez que de droits de lecture.</p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1wan"></a>
+<p class="para">Lorsque le chemin du fichier dépasse la taille optimale</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'un chemin de fichier dépasse la longueur maximale définie par le système. Par exemple, sur les plates-formes Windows, le nombre de caractères compris dans un chemin doit être inférieur à 248. </p>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">M'avertir lorsque des dossiers iFolder sont partagés </p></td>
+<p class="para">Lorsque des dossiers iFolder sont partagés </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsque vous recevez une nouvelle invitation à partager un dossier iFolder.  </p>
-<p class="para">Pour afficher une liste des dossiers iFolder pouvant être téléchargés sur votre ordinateur actuel, sélectionnez <span class="guimenu">Afficher les dossiers iFolder disponibles</span> dans le navigateur iFolder lorsque iFolder est en cours d'exécution.</p></td>
+<p class="para">Décochez cette case pour désactiver cette notification.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">M'avertir en cas de conflits</p></td>
+<p class="para">Lorsque des conflits surviennent</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'un conflit se produit lors de la synchronisation des fichiers. </p>
 <p class="para">Désélectionnez-la pour désactiver les messages contextuels en cas de conflits de synchronisation.</p>
-<p class="para">En cas de conflits, l'icône<span class="guimenu"> iFolder Erreur </span> <img src="images/ifolder-error_16.png" alt="" class="inline" />s'affiche sur le dossier iFolder lorsque iFolder est en cours d'exécution.
+<p class="para">En cas de conflits, l'icône <span class="guimenu">Erreur iFolder</span> <img src="images/ifolder-error_16.png" alt="" class="inline" /> s'affiche sur le dossier iFolder.
          </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">M'avertir lorsqu'un utilisateur rejoint le domaine iFolder</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Cochez cette case pour afficher un message contextuel dans la zone de notification lorsqu'un utilisateur accepte une invitation à partager un dossier iFolder. </p>
-<p class="para">Désélectionnez-la pour désactiver les messages contextuels.</p>
-<p class="para">Vous pouvez afficher une liste complète des utilisateurs iFolder lorsque iFolder est en cours d'exécution, en sélectionnant le dossier iFolder, puis en cliquant sur <span class="guimenu">Partager avec</span> pour ouvrir la boîte de dialogue Propriétés iFolder sous l'onglet <span class="guimenu">Partage</span>.</p></td>
-</tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
 <p class="para">Synchronisation</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
@@ -149,7 +182,7 @@
 <div class='nav' id='bottomnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="firewall.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>
 
 </body>

@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 21:18" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 12:44" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">Выберите одно из следующих действий:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Перенесите папку iFolder и отключите ее от домена 2.х</span>:</em>
-              Выберите этот параметр для отключения существующей папки от iFolder 2.<span class="replaceable">x</span> после миграции на версию 3.7 или более позднюю.</p>
+              <p class="title"><em class="title"><span class="guimenu">Выполните миграцию папки iFolder и отключите ее от сервера 2.х</span>:</em>
+              Выберите этот параметр для отключения существующей папки от iFolder 2.<span class="replaceable">x</span> сервер после миграции на версию 3.7 или более позднюю.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Создайте копию папки iFolder и перенесите ее:</span>
               </em>
-              Выберите этот параметр для создания копии iFolder 2.<span class="replaceable">x</span> и преобразования их в формат iFolder 3.7 или более поздней версии. При этом файлы, находящиеся в домене iFolder 2.<span class="replaceable">x</span>, не удаляются даже после миграции в домен iFolder 3.7 или более поздней версии.</p>
+              Выберите этот параметр для создания копии iFolder 2.<span class="replaceable">x</span> и преобразования их в формат iFolder 3.7 или более поздней версии. При этом файлы, находящиеся в домене iFolder 2.<span class="replaceable">x</span> сервер, даже после миграции файлов на сервер iFolder 3.7 или более поздней версии.</p>
             </div>
 
 <p class="para">При выборе этой опции необходимо также выбрать функцию <span class="guimenu">Копировать родительскую папку</span>, если необходимо скопировать не только содержимое папки 2.<span class="replaceable">x</span>, но и родительскую папку. Если эта опция не выбрана, в версию 3.7 или более позднюю будет перенесено только содержимое выбранной папки. </p>
 <p class="para">Щелкните <span class="guimenu">Просмотр</span>, чтобы определить местоположение для хранения мигрированной папки.</p>
 <p class="para">Например каталог <span class="filename">c:/Documents and Settings/&lt;имя_пользователя&gt;/ifolder2dir</span> является папкой iFolder 2.<span class="replaceable">x</span>, а <span class="filename">dir1</span> и <span class="filename">dir2</span> - каталоги в папке <span class="filename">ifolder2dir</span>. При выборе опции <span class="guimenu">Копировать родительскую папку</span> в новом местоположении создается каталог <span class="filename">ifolder2dir </span> и каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span> копируются в него. Если эта опция не выбрана, в указанное местоположение перемещаются только каталоги <span class="filename">dir1</span> и <span class="filename">dir2</span>.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Щелкните <span class="guimenu">Далее</span>, чтобы выбрать домен и опции защиты, как указано ниже:</p>
+<p class="para">Щелкните кнопку <span class="guimenu">Далее</span>, чтобы выбрать домен и параметры безопасности, как указано ниже:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Выберите домен в раскрывающемся списке.</p></li>
+<p class="para">В раскрывающемся списке выберите сервер.</p></li>
 <li class="step" id="b8ao481">
 <p class="para">Выберите необходимые опции защиты:</p>
 <div class="itemizedlist">
@@ -121,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">Выберите <span class="guimenu">Шифрование</span> для шифрования выбранной папки iFolder.</p>
 <p class="listitem">Если контрольная фраза не была указана при входе, iFolder выдаст запрос на ввод контрольной фразы. Можно пропустить это действие и настроить контрольную фразу позднее.</p>
-<p class="listitem">Если соединение с доменом iFolder еще не установлено, появится запрос на подключение к домену.</p></li>
+<p class="listitem">Если соединение с сервером iFolder еще не установлено, появится запрос на подключение к нему.</p></li>
 <li class="listitem">
-<p class="listitem">Выберите опцию <span class="guimenu">Совместное использование</span> для совместного использования папки iFolder с другими пользователями в домене iFolder </p>
+<p class="listitem">Выберите параметр <span class="guimenu">Совместное использование</span> для совместного использования папки iFolder с другими участниками на сервере iFolder.</p>
 <p class="listitem">Можно выполнить миграцию зашифрованной папки iFolder 2.<span class="guimenu">x</span> в совместно используемую папку. При попытке выполнить миграцию зашифрованной папки iFolder 2.<span class="replaceable">x</span> в совместно используемую папку появляется запрос на подтверждение выполнения действия.</p>
 <p class="listitem">Для подтверждения действия щелкните <span class="guimenu">ОК</span>.</p></li></ul></div>
 </li></ol>

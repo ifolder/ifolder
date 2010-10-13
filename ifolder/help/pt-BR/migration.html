@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 20:26" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Friday, October 08, 2010 12:03" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">Selecione um dos seguintes itens:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migrar o iFolder e desconectá-lo do domínio 2.x</span>:</em>
-              Selecione esta opção para desconectar a pasta existente do iFolder 2.<span class="replaceable">x</span> depois de migrá-la para o 3.7 ou posterior.</p>
+              <p class="title"><em class="title"><span class="guimenu">Migrar o iFolder e desconectá-lo do servidor 2.x</span>:</em>
+              Selecione esta opção para desconectar a pasta existente do servidor iFolder 2.<span class="replaceable">x</span> depois de migrá-lo para o 3.7 ou posterior.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Criar uma cópia do iFolder e migrar:</span>
               </em>
-              Selecione esta opção para criar uma cópia do iFolder 2.<span class="replaceable">x</span> e convertê-los em arquivos do iFolder 3.7 ou posterior. Isso não fará com que os arquivos do domínio iFolder 2.<span class="replaceable">x</span> sejam removidos, mesmo depois que você migrá-los para o iFolder 3.7 ou posterior.</p>
+              Selecione esta opção para criar uma cópia dos arquivos do iFolder 2.<span class="replaceable">x</span> e convertê-los em arquivos do iFolder 3.7 ou posterior. Essa ação não remove os arquivos do servidor iFolder 2.<span class="replaceable">x</span> mesmo depois que você migra os arquivos para o iFolder 3.7 ou posterior.</p>
             </div>
 
 <p class="para">Se você selecionar essa opção, também poderá selecionar<span class="guimenu"> Copiar a pasta pai</span> se quiser copiar não apenas o conteúdo da pasta do 2.<span class="replaceable">x</span>, mas também da pasta pai. Se você deixar essa opção desmarcada, somente o conteúdo da pasta selecionada será migrado para o 3.7 ou posterior. </p>
 <p class="para">Clique em <span class="guimenu">Procurar</span> para encontrar a localização para gravar a pasta migrada.</p>
-<p class="para">Por exemplo, <span class="filename">c:/Documents and Settings/&lt;nome_do_usuário&gt;/ifolder2dir</span> é um iFolder 2.<span class="replaceable">x</span> iFolder e <span class="filename">dir1</span> e <span class="filename">dir2</span> são diretórios sob <span class="filename">ifolder2dir</span>. Quando você seleciona a opção <span class="guimenu">Copiar o diretório pai</span>, ela cria o <span class="filename">ifolder2dir </span>na nova localização e os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> são copiados para ela. Se a opção permanecer desmarcada, somente os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> serão movidos para o local especificado.</p></li>
+<p class="para">Por exemplo, <span class="filename">c:/Documents and Settings/&lt;nome_do_usuário&gt;/ifolder2dir</span> é um iFolder 2.<span class="replaceable">x</span> e <span class="filename">dir1</span> e <span class="filename">dir2</span> são diretórios sob <span class="filename">ifolder2dir</span>. Quando você seleciona a opção <span class="guimenu">Copiar o diretório pai</span>, ela cria o <span class="filename">ifolder2dir </span>na nova localização e os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> são copiados para ela. Se a opção permanecer desmarcada, somente os diretórios <span class="filename">dir1</span> e <span class="filename">dir2</span> serão movidos para o local especificado.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Clique em <span class="guimenu">Avançar</span> para selecionar o domínio e as Opções de Segurança da seguinte maneira:</p>
+<p class="para">Clique em <span class="guimenu">Avançar</span> para selecionar o servidor e as opções de Segurança da seguinte maneira:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Selecione o domínio na lista suspensa:</p></li>
+<p class="para">Selecione o servidor na lista suspensa.</p></li>
 <li class="step" id="b8ao481">
 <p class="para">Selecione a opção de segurança desejada:</p>
 <div class="itemizedlist">
@@ -121,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">Selecione <span class="guimenu">Criptografado</span> para criptografar a pasta do iFolder selecionada.</p>
 <p class="listitem">Se você não tiver definido uma frase secreta durante o login, o iFolder solicitará que você a digite. Você pode ignorar essa opção e definir a frase secreta posteriormente.</p>
-<p class="listitem">Se você não estiver conectado ao domínio iFolder, terá de se conectar ao domínio.</p></li>
+<p class="listitem">Se não estiver conectado ao servidor iFolder, você será solicitado a se conectar.</p></li>
 <li class="listitem">
-<p class="listitem">Selecione <span class="guimenu">Compartilhado </span>para compartilhar a pasta do iFolder com outros membros do domínio do iFolder </p>
+<p class="listitem">Selecione <span class="guimenu">Compartilhado </span>para compartilhar o iFolder com outros membros do servidor iFolder.</p>
 <p class="listitem">Você pode migrar um iFolder 2.<span class="guimenu">X</span> para a pasta compartilhada. Quando você tentar migrar uma pasta criptografada do iFolder 2.<span class="replaceable">x</span> para uma pasta compartilhada, será solicitado que você confirme a ação.</p>
 <p class="listitem">Clique em <span class="guimenu">OK</span> para confirmar sua ação.</p></li></ul></div>
 </li></ol>

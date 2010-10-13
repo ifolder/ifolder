@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 21:11" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 12:36" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">次のいずれか1つを選択します。</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">iFolderを移行し、2.xドメインから接続解除する</span>: </em>
-              このオプションは、iFolder 3.7以降に移行後、iFolder 2.<span class="replaceable">x</span>ドメインから既存のフォルダを接続解除する場合に選択します。</p>
+              <p class="title"><em class="title"><span class="guimenu">iFolderを移行し、2.xサーバから接続解除する</span>: </em>
+              既存のフォルダをiFolder 3.7以降のサーバに移行した後、2.<span class="replaceable">x</span>サーバから接続解除します。</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">iFolderのコピーを作成して移行する:</span>
               </em>
-              このオプションは、iFolder 2.<span class="replaceable">x</span>ファイルのコピーを作成し、それらをiFolder 3.7以降に変換する場合に選択します。これにより、ファイルをiFolder 3.7以降に移行した後でも、iFolder 2.<span class="replaceable">x</span>ドメインからファイルが削除されることはありません。</p>
+              このオプションは、iFolder 2.<span class="replaceable">x</span>ファイルのコピーを作成し、それらをiFolder 3.7以降に変換する場合に選択します。ファイルをiFolder 3.7以降に移行した後も、iFolder 2.<span class="replaceable">x</span>サーバからファイルは削除されません。</p>
             </div>
 
 <p class="para">このオプションを選択すると、バージョン2.<span class="replaceable">x</span>のコンテンツだけでなく親フォルダもコピーしたい場合に［<span class="guimenu">親フォルダをコピーする</span>］も選択できます。このオプションを選択解除したままにすると、選択されたフォルダのコンテンツのみが 3.7以降に移行されます。 </p>
 <p class="para">［参照<span class="guimenu"></span>］をクリックし、移行するフォルダの保存先を探します。</p>
 <p class="para">たとえば、<span class="filename">c:/Documents and Settings/&lt;ユーザ名&gt;/ifolder2dir</span>がバージョン2.<span class="replaceable">x</span>iFolderで、<span class="filename">dir1</span>および<span class="filename">dir2</span>が<span class="filename">ifolder2dir</span>の中にあるディレクトリだとします。［<span class="guimenu"></span>親フォルダをコピーする］を選択すると、新しい場所に<span class="filename">ifolder2dir </span>が作成され、ここにディレクトリ<span class="filename">dir1</span>と<span class="filename">dir2</span>がコピーされます。このオプションを選択しない場合、<span class="filename">dir1</span>ディレクトリと<span class="filename">dir2</span>ディレクトリのみが、指定された場所に移動します。</p></li>
 <li class="step" id="b8ann46">
-<p class="para">［<span class="guimenu">転送</span>］をクリックして、次のようにドメインとセキュリティのオプションを選択します。</p>
+<p class="para">［<span class="guimenu"></span>転送］をクリックして、次のようにサーバとセキュリティのオプションを選択します。</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">ドメインをドロップダウンリストから選択します。</p></li>
+<p class="para">ドロップダウンリストからサーバを選択します。</p></li>
 <li class="step" id="b8ao481">
 <p class="para">目的のセキュリティオプションを選択します。</p>
 <div class="itemizedlist">
@@ -121,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">選択されたiFolderを暗号化するには、［<span class="guimenu"></span>暗号化］を選択します。</p>
 <p class="listitem">ログイン時にパスフレーズを設定しなかった場合、パスフレーズを入力するためのプロンプトが表示されます。このオプションはスキップして、後で設定することもできます。</p>
-<p class="listitem">現在、iFolderドメインに接続されていない場合は、ドメインに接続するためのプロンプトが表示されます。</p></li>
+<p class="listitem">現在、iFolderサーバに接続されていない場合は、サーバに接続するためのプロンプトが表示されます。</p></li>
 <li class="listitem">
-<p class="listitem">iFolderをiFolder ドメイン内の他のメンバーと共有するには、［<span class="guimenu"></span>共有］を選択します。</p>
+<p class="listitem">iFolderをiFolder サーバ内の他のメンバーと共有するには、［<span class="guimenu"></span>共有］を選択します。</p>
 <p class="listitem">暗号化された 2.<span class="guimenu">x</span> iFolderを共有フォルダに移行できます。暗号化された2.<span class="replaceable">x</span> iFolderを共有フォルダに移行しようとすると、操作を確認するよう求めるプロンプトが表示されます。</p>
 <p class="listitem">［<span class="guimenu"></span>OK］をクリックして、操作を確認します。</p></li></ul></div>
 </li></ol>

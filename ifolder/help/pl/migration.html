@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 20:55" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 12:22" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,28 @@
 <li class="step" id="b8anh5z">
 <p class="para">Wybierz jedną z poniższych opcji:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">Migruj iFolder i odłącz go od wersji 2.x domeny</span>:</em>
-              Zaznacz tę opcję, aby odłączyć istniejący folder od domeny w wersji iFolder 2.<span class="replaceable">x</span> po przeprowadzeniu jego migracji do wersji 3.7 lub nowszej.</p>
+              <p class="title"><em class="title">
+                <span class="guimenu">Migruj folder iFolder i odłącz go od serwera w wersji 2.x</span>
+              </em>
+              Zaznacz tę opcję, aby odłączyć istniejący folder od serwera programu iFolder w wersji 2.<span class="replaceable">x</span> po przeprowadzeniu jego migracji do wersji 3.7 lub nowszej.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Utwórz kopię iFolderu i przeprowadź migrację:</span>
               </em>
-              Zaznacz tę opcję, aby utworzyć kopię plików w wersji iFolder 2.<span class="replaceable">x</span> i przekształcić je na pliki programu iFolder w wersji 3.7 lub nowszej. Nie powoduje to usunięcia plików z domeny iFolder 2.<span class="replaceable">x</span> nawet po zakończeniu migracji plików do domeny iFolder w wersji 3.7 lub nowszej.</p>
+              Zaznacz tę opcję, aby utworzyć kopię plików programu iFolder w wersji 2.<span class="replaceable">x</span> i przekształcić je na pliki programu iFolder w wersji 3.7 lub nowszej. Nie powoduje to usunięcia plików z serwera programu iFolder w wersji 2.<span class="replaceable">x</span> nawet po zakończeniu migracji plików do programu iFolder w wersji 3.7 lub nowszej.</p>
             </div>
 
 <p class="para">Jeśli została wybrana ta opcja, można zaznaczyć również opcję <span class="guimenu">Kopiuj folder nadrzędny</span>, jeśli ma być kopiowana nie tylko zawartość folderu wersji 2.<span class="replaceable">x</span> ma zostać skopiowana, ale także folderu nadrzędnego. Jeśli ta opcja nie zostanie wybrana, do domeny w wersji 3.7 lub nowszej zostanie zmigrowana tylko zawartość wybranego folderu. </p>
 <p class="para">Kliknij przycisk <span class="guimenu">Przeglądaj</span>, aby znaleźć lokalizację, w której zmigrowany folder ma zostać zapisany.</p>
 <p class="para">Na przykład, <span class="filename">c:/Documents and Settings/&lt;nazwa_użytkownika&gt;/ifolder2dir</span> to iFolder wersji 2.<span class="replaceable">x</span>, a <span class="filename">dir1</span> i <span class="filename">dir2</span> są podkatalogami katalogu<span class="filename">ifolder2dir</span>. W przypadku wyboru opcji <span class="guimenu">Kopiuj katalog nadrzędny</span> katalog <span class="filename">ifolder2dir </span>zostanie utworzony w nowej lokalizacji i zostaną do niego skopiowane katalogi <span class="filename">dir1</span> i <span class="filename">dir2</span>. Jeśli ta opcja pozostanie niewybrana, jedynie katalogi <span class="filename">dir1</span> i <span class="filename">dir2</span> zostaną przeniesione do podanego położenia.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Kliknij przycisk <span class="guimenu">Dalej</span>, aby dokonać wyboru domeny i opcji zabezpieczeń, zgodnie z poniższym opisem:</p>
+<p class="para">Kliknij przycisk <span class="guimenu">Dalej</span>, aby wybrać serwer i opcje zabezpieczeń, zgodnie z poniższym opisem:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">Wybierz domenę z listy rozwijanej.</p></li>
+<p class="para">Wybierz serwer z listy rozwijanej.</p></li>
 <li class="step" id="b8ao481">
 <p class="para">Wybierz wymaganą opcję zabezpieczeń:</p>
 <div class="itemizedlist">
@@ -121,9 +123,9 @@
 <li class="listitem">
 <p class="listitem">Wybierz opcję <span class="guimenu">Szyfrowanie</span>, aby zaszyfrować wybrany iFolder.</p>
 <p class="listitem">Jeśli zwrot szyfrowania nie został podany w chwili logowania, program iFolder wyświetli monit o wprowadzenie zwrotu szyfrowania. Można tę opcję ominąć i później ustawić zwrot szyfrowania.</p>
-<p class="listitem">Jeśli aktualnie nie ma połączenia z domeną iFolder, zostanie wyświetlony monit o połączenie z domeną.</p></li>
+<p class="listitem">Jeśli obecnie nie ma połączenia z serwerem programu iFolder, zostanie wyświetlony monit o połączenie z serwerem.</p></li>
 <li class="listitem">
-<p class="listitem">Zaznacz opcję <span class="guimenu">Współużytkowanie</span>, aby współużytkować iFolder z innymi członkami domeny iFolder </p>
+<p class="listitem">Zaznacz opcję <span class="guimenu">Współużytkowane</span>, aby współużytkować folder iFolder z innymi członkami serwera programu iFolder </p>
 <p class="listitem">Użytkownik może przeprowadzić migrację zaszyfrowanego iFolderu 2.<span class="guimenu">x</span> do folderu współużytkowanego. W przypadku próby migrowania zaszyfrowanego iFolderu 2.<span class="replaceable">x</span> do iFolderu współużytkowanego, zostanie wyświetlony monit o sprawdzenie działania.</p>
 <p class="listitem">Kliknij przycisk <span class="guimenu">OK</span>, aby potwierdzić operację.</p></li></ul></div>
 </li></ol>

@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 21:28" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Friday, October 08, 2010 14:06" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,26 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">请选中以下选项之一：</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title"><span class="guimenu">迁移 iFolder 并断开它与 2.x 域的连接</span>：</em>
-              选择此选项可以将现有文件夹与 iFolder 2 断开连接。<span class="replaceable">x</span> 域的连接。</p>
+              <p class="title"><em class="title"><span class="guimenu">迁移 iFolder 并断开它与 2.x 服务器的连接</span>：</em>
+              选择此选项可以在 iFolder 2.<span class="replaceable">x</span> 服务器迁移到 3.7 或更高版本之后断开现有文件夹与它的连接。</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">创建 iFolder 的副本并迁移 iFolder：</span>
               </em>
-              选择此选项可以创建 iFolder 2 的副本。<span class="replaceable">x</span> 文件的副本并将其转换为 iFolder 3.7 或更高版本。此操作不会从 iFolder 2.<span class="replaceable">x</span> 域去除这些文件，即使将这些文件迁移到 iFolder 3.7 或更高版本后。</p>
+              选择此选项可以创建 iFolder 2 的副本。<span class="replaceable">x</span> 文件的副本并将其转换为 iFolder 3.7 或更高版本。此操作不会从 iFolder 2.<span class="replaceable">x</span> 服务器中去除这些文件，即使将这些文件迁移到 iFolder 3.7 或更高版本也是如此。</p>
             </div>
 
 <p class="para">选中此选项后，您还可以选中<span class="guimenu">“复制父文件夹”</span>，前提是您不仅要复制 2.<span class="replaceable">x</span> 文件夹的内容，而且还要复制父文件夹的内容。如果未选中此选项，则只将选定文件夹的内容迁移到 3.7 或更高版本。 </p>
 <p class="para">单击<span class="guimenu">“浏览”</span>查找保存迁移的文件夹的位置。</p>
 <p class="para">例如，<span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> 是一个 2.<span class="replaceable">x</span> iFolder，<span class="filename">dir1</span> 和 <span class="filename">dir2</span> 是 <span class="filename">ifolder2dir</span> 下的目录。选中选项<span class="guimenu">“复制父目录”</span>后，系统将在新位置创建 <span class="filename">ifolder2dir</span> 并将目录 <span class="filename">dir1</span> 和 <span class="filename">dir2</span> 复制到其中。如果未选中此选项，则只将目录<span class="filename">“dir1”</span>和<span class="filename">“dir2”</span>移动到指定位置。</p></li>
 <li class="step" id="b8ann46">
-<p class="para">单击<span class="guimenu">“转发”</span>可选择域和安全性选项，如下所示：</p>
+<p class="para">单击<span class="guimenu">“向前”</span>可选择服务器和安全性选项，如下所示：</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">从下拉列表中选择域。</p></li>
+<p class="para">从下拉列表中选择服务器。</p></li>
 <li class="step" id="b8ao481">
 <p class="para">选中所需的安全性选项：</p>
 <div class="itemizedlist">
@@ -121,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">选中<span class="guimenu">“加密”</span>以加密所选的 iFolder。</p>
 <p class="listitem">如果登录过程中未设置通行口令，则 iFolder 会提示您输入通行口令。可以跳过此选项，以后再设置通行口令。</p>
-<p class="listitem">如果当前未连接到 iFolder 域，系统会提示您连接到该域。</p></li>
+<p class="listitem">如果当前未连接到 iFolder 服务器，系统会提示您连接到该服务器。</p></li>
 <li class="listitem">
-<p class="listitem">选中<span class="guimenu">“共享”</span>可与 iFolder 域中的其他成员共享该 iFolder。</p>
+<p class="listitem">选择<span class="guimenu">“共享”</span>可与 iFolder 服务器中的其他成员共享该 iFolder。</p>
 <p class="listitem">您可将加密的 2.<span class="guimenu">x</span> iFolder 迁移到共享文件夹。当您尝试将加密的 2.<span class="replaceable">x</span> iFolder 迁移到一个共享文件夹时，系统将提示您检验该操作。</p>
 <p class="listitem">单击<span class="guimenu">“确定”</span>确认操作。</p></li></ul></div>
 </li></ol>

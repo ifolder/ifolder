@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, July 29, 2010 20:46" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 12:16" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -94,28 +94,26 @@
 <li class="step" id="b8anh5z">
 <p class="para">Vyberte jednu z následujících možností:</p>
 <div class="formalpara" id="b8ydakq">
-              <p class="title"><em class="title">
-                <span class="guimenu">Migrovat složku iFolder a odpojit ji od domény 2.x</span>
-              </em>
-              Vyberte tuto možnost, chcete-li odpojit existující složku od domény iFolder 2.<span class="replaceable">x</span> po její migraci na verzi 3.7 nebo novější.</p>
+              <p class="title"><em class="title"><span class="guimenu">Migrovat složku iFolder a odpojit ji od serveru 2.x</span>:</em>
+              Vyberte tuto možnost, chcete-li odpojit existující složku od serveru iFolder 2.<span class="replaceable">x</span> po její migraci na verzi 3.7 nebo novější.</p>
             </div>
 
 <div class="formalpara" id="b8ydbqu">
               <p class="title"><em class="title">
                 <span class="guimenu">Vytvořit kopii složky iFolder a migrovat:</span>
               </em>
-              Vyberte tuto možnost, chcete-li vytvořit kopii verze iFolder 2.<span class="replaceable">x</span> a převést je na verzi iFolder 3.7 nebo novější. Tímto nedojde k odebrání souborů z domény iFolder 2.<span class="replaceable">x</span> ani poté, co provedete migraci souborů na verzi iFolder 3.7 nebo novější.</p>
+              Vyberte tuto možnost, chcete-li vytvořit kopii verze iFolder 2.<span class="replaceable">x</span> a převést je na verzi iFolder 3.7 nebo novější. Tímto nedojde k odebrání souborů ze serveru iFolder 2.<span class="replaceable">x</span> ani poté, co provedete migraci souborů na verzi iFolder 3.7 nebo novější.</p>
             </div>
 
 <p class="para">Pokud vyberete tuto možnost, vyberete pouze možnost <span class="guimenu">Kopírovat nadřízenou složku</span>, pokud chcete kopírovat nejenom obsah složky 2.<span class="replaceable">x</span>, ale také nadřízené složky. Pokud tuto možnost ponecháte nevybranou, bude na doménu verze 3.7 nebo novější migrován pouze obsah vybrané složky. </p>
 <p class="para">Klepněte na tlačítko <span class="guimenu">Procházet</span> a vyhledejte umístění pro uložení migrované složky.</p>
 <p class="para">Například <span class="filename">c:/Documents and Settings/&lt;user name&gt;/ifolder2dir</span> představuje složku verze 2.<span class="replaceable">x</span> iFolder a <span class="filename">dir1</span> a <span class="filename">dir2</span> jsou adresáře ve složce <span class="filename">ifolder2dir</span>. Když vyberete možnost <span class="guimenu">Kopírovat nadřízený adresář</span>, vytvoří se adresář <span class="filename">ifolder2dir </span>v novém umístění a do něj jsou umístěny adresáře <span class="filename">dir1</span> a <span class="filename">dir2</span>. Pokud možnost zůstane nevybraná, jsou do specifikovaného umístění přesunuty pouze adresáře <span class="filename">dir1</span> a <span class="filename">dir2</span>.</p></li>
 <li class="step" id="b8ann46">
-<p class="para">Klepněte na tlačítko <span class="guimenu">Vpřed</span> a vyberte doménu a možnosti zabezpečení následujícím způsobem:</p>
+<p class="para">Klepněte na tlačítko <span class="guimenu">Vpřed</span> a vyberte server a možnosti zabezpečení následujícím způsobem:</p>
 <div class="substeps">
 <ol class="steps">
 <li class="step" id="b8ao41w">
-<p class="para">V rozevíracím seznamu vyberte doménu.</p></li>
+<p class="para">Vyberte server v rozevíracím seznamu.</p></li>
 <li class="step" id="b8ao481">
 <p class="para">Vyberte požadovanou možnost zabezpečení:</p>
 <div class="itemizedlist">
@@ -123,9 +121,9 @@
 <li class="listitem">
 <p class="listitem">Vyberte možnost <span class="guimenu">Zašifrovat</span> a zašifrujte vybranou složku iFolder.</p>
 <p class="listitem">Pokud heslo nezadáte během přihlášení, aplikace iFolder vás vyzve k zadání hesla. Tuto možnost můžete vynechat a nastavit heslo později.</p>
-<p class="listitem">Pokud nejste právě připojeni k doméně iFolder, vyzve vás k připojení k doméně.</p></li>
+<p class="listitem">Pokud nejste právě připojeni k serveru iFolder, vyzve vás k připojení k doméně.</p></li>
 <li class="listitem">
-<p class="listitem">Vyberte možnost <span class="guimenu">Sdílet</span>, chcete-li sdílet složku iFolder s jinými členy domény iFolder. </p>
+<p class="listitem">Vyberte volbu <span class="guimenu">Sdíleno</span>, abyste složku iFolder sdíleli s ostatními členy serveru iFolder.</p>
 <p class="listitem">Migrovat můžete zašifrovanou složku 2.<span class="guimenu">x</span> iFolder do sdílené složky. Když se pokusíte provést migraci zašifrované složky 2.<span class="replaceable">x</span> iFolder do sdílené složky, v takovém případě budete vyzváni k ověření operace.</p>
 <p class="listitem">Klepněte na tlačítko <span class="guimenu">OK</span> a volbu potvrďte.</p></li></ul></div>
 </li></ol>

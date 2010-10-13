@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="sk" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Friday, July 30, 2010 13:23" />
-<meta name="Content-Date" content="Mon, 26 May 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Thursday, October 07, 2010 12:19" />
+<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -38,7 +38,7 @@
 <div class='nav' id='topnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
+  <a href="firewall.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
 
@@ -65,8 +65,8 @@
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bko2w91"></a>
 <p class="para">Spustiť aplikáciu iFolder pri prihlásení sa na počítač (k dispozícii iba v klientovi pre systém Windows)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Vyberte túto možnosť, ak chcete, aby sa aplikácia iFolder spustila vždy, keď sa prihlásite s lokálnym menom používateľa, s ktorým ste nastavili konto aplikácie iFolder. V prípade, že ste pre konto nastavili možnosť Zapamätať heslo, bude v pozadí prebiehať synchronizácia v určenom intervale synchronizácie.</p>
-<p class="para">Zrušte výber tejto možnosti, ak chcete spúšťať aplikáciu iFolder ručne.</p></td>
+<p class="para">Toto políčko začiarknite v prípade, ak chcete, aby sa aplikácia iFolder spustila vždy, keď sa prihlásite s lokálnym menom používateľa, s ktorým ste nastavili konto aplikácie iFolder. V prípade kont s povolenou možnosťou <span class="guimenu">Zapamätať heslo</span> sa nezobrazí výzva na zadanie hesla po prihlásení.</p>
+<p class="para">Zrušte začiarknutie tohto políčka, ak chcete spúšťať aplikáciu iFolder ručne.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="btvqywo"></a>
 <p class="para">Pri vytvorení priečinka iFolder zobraziť dialógové okno s potvrdením</p></td>
@@ -74,45 +74,78 @@
 <p class="para">Toto políčko začiarknite, ak chcete, aby sa vždy po vytvorení nového priečinka iFolder okrem bežných vizuálnych znakov (nový priečinok iFolder sa zobrazí v zozname priečinkov iFolder) zobrazila aj správa s potvrdením.</p>
 <p class="para">Zrušte začiarknutie tohto políčka, ak nechcete, aby sa správa s potvrdením zobrazovala.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
-<p class="para">Skryť hlavné okno aplikácie iFolder pri spustení </p></td>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro2ibx"></a>
+<p class="para">Skryť ikonu panela iFolder (dostupné iba v klientovi pre systém Windows)</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ak chcete, aby sa okno aplikácie iFolder zobrazovalo pri spustení, zrušte začiarknutie tohto políčka.</p>
-<p class="para">Ak chcete, aby okno aplikácie iFolder ostávalo pri spustení skryté, začiarknite toto políčko.</p></td>
+<p class="para">Začiarknutím tohto políčka skryjete ikonu priečinka iFolder zobrazovanú na paneli úloh.</p>
+<p class="para">Zrušením začiarknutia tohto políčka zobrazíte ikonu priečinka iFolder na paneli úloh.</p>
+<div class="warning">
+<p class="para"><em class="title">VAROVANIE:</em>Ak políčko začiarknete, skontrolujte, či je zrušené začiarknutie políčka <span class="guimenu">Skryť hlavné okno priečinka iFolder pri spustení</span>. V opačnom prípade nebudú k dispozícii vizuálne pomôcky, ktoré signalizujú spustenú aplikáciu iFolder.</p></div>
+</td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bcx6btb"></a>
+<p class="para">Skryť hlavné okno priečinka iFolder pri spustení </p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby okno aplikácie iFolder ostávalo pri spustení skryté, začiarknite toto políčko.</p>
+<p class="para">Ak chcete, aby sa okno aplikácie iFolder zobrazovalo pri spustení, zrušte začiarknutie tohto políčka.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqnz44"></a>
 <p class="para">Zobraziť denníky synchronizácie </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Ak chcete, aby sa pri spustení zobrazovali denníky synchronizácie, začiarknite toto políčko.</p>
 <p class="para">Ak chcete, aby denníky synchronizácie ostali pri spustení skryté, zrušte začiarknutie tohto políčka.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bkqo0rl"></a>
-<p class="para">Zobraziť upozornenia pri porušení politiky </p></td>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1nmt"></a>
+<p class="para">Ak je porušená politika kvóty</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď sa poruší politika, začiarknite toto políčko. </p></td>
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď sa poruší politika kvóty disku, začiarknite toto políčko.</p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1qri"></a>
+<p class="para">Ak je porušená politika veľkosti súboru</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď sa poruší politika veľkosti súboru, začiarknite toto políčko.</p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1s19"></a>
+<p class="para">Ak je porušená politika vylúčenia súboru</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď sa poruší politika vylúčenia súboru, začiarknite toto políčko.</p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1v4q"></a>
+<p class="para">Ak je disk plný</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď sa zaplní disk lokálneho systému, začiarknite toto políčko.</p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
+</tr>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1vny"></a>
+<p class="para">Ak nie sú k dispozícii požadované povolenia</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď nie sú k dispozícii požadované povolenia na vykonanie operácie so súborom alebo priečinkom, začiarknite toto políčko. Ak máte napríklad iba práva na čítanie, nebudete môcť súbor prevziať.</p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
+</tr>
+<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bro1wan"></a>
+<p class="para">Ak cesta k súboru presahuje optimálny limit</p></td>
+<td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Ak chcete, aby sa zobrazila kontextová správa v oblasti upozornení vždy, keď cesta k súboru presahuje maximálnu dĺžku definovanú systémom, začiarknite toto políčko. Napríklad na platformách so systémom Windows musí cesta obsahovať menej ako 248 znakov. </p>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
 </tr>
 <tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf7"></a>
-<p class="para">Upozorniť na zdieľané priečinky iFolder </p></td>
+<p class="para">Ak sa zdieľajú priečinky iFolder </p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Ak chcete, aby sa zobrazovala kontextová správa v oblasti upozornení vždy, keď prijmete nové pozvanie na zdieľanie priečinka iFolder, začiarknite toto políčko. </p>
-<p class="para">Ak chcete zobraziť zoznam priečinkov iFolder, ktoré sú k dispozícii na prevzatie do aktuálneho počítača, vyberte pri spustenej aplikácii iFolder v prehľadávači aplikácie iFolder možnosť <span class="guimenu">Zobraziť dostupné priečinky iFolder</span>.</p></td>
+<p class="para">Zrušením začiarknutia políčka vypnete toto oznámenie.</p></td>
 </tr>
 <tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bvhdvf8"></a>
-<p class="para">Upozorniť na konflikty</p></td>
+<p class="para">Ak vzniknú konflikty</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Ak chcete, aby sa zobrazovala kontextová správa v oblasti upozornení vždy, keď nastane pri synchronizovaní súborov konflikt, začiarknite toto políčko. </p>
 <p class="para">Ak chcete zakázať zobrazovanie kontextových správ pri konfliktoch synchronizácie, zrušte začiarknutie tohto políčka.</p>
-<p class="para">Keď nastanú konflikty a aplikácia iFolder je spustená, na priečinku iFolder sa zobrazí ikona <span class="guimenu">chyby aplikácie iFolder</span><img src="images/ifolder-error_16.png" alt="" class="inline" />.
+<p class="para">Keď nastanú konflikty, na priečinku iFolder sa zobrazí ikona <span class="guimenu">chyby aplikácie iFolder</span> <img src="images/ifolder-error_16.png" alt="" class="inline" />.
          </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxn9"></a>
-<p class="para">Upozorniť na pripojenie používateľa</p></td>
-<td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ak chcete, aby sa zobrazovala kontextová správa v oblasti upozornení vždy, keď používateľ prijme pozvanie na zdieľanie priečinka iFolder, začiarknite toto políčko. </p>
-<p class="para">Ak chcete zakázať zobrazovanie kontextových správ, zrušte začiarknutie tohto políčka.</p>
-<p class="para">Ak chcete zobraziť úplný zoznam používateľov priečinka iFolder a je spustená aplikácia iFolder, vyberte daný priečinok, kliknutím na položku <span class="guimenu">Zdieľať s</span> otvorte dialógové okno Vlastnosti priečinka iFolder a zobrazte kartu <span class="guimenu">Zdieľanie</span>. </p></td>
-</tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
+<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bviaxna"></a>
 <p class="para">Synchronizácia</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <div class="formalpara" id="byktvwf">
@@ -149,7 +182,7 @@
 <div class='nav' id='bottomnav'>
   <a href="accountdetails.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
   <img src="ui/images/virt_dot-line.gif" alt="" />
-  <a href="settings.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
+  <a href="firewall.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
 </body>

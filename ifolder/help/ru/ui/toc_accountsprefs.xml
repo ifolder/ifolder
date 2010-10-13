@@ -8,7 +8,6 @@
  <entry leaf="true" id="login">Вход с помощью учетной записи iFolder</entry>
  <entry leaf="true" id="accountdetails">Просмотр и изменение настроек учетной записи iFolder</entry>
  <entry leaf="true" id="preferences">Конфигурирование настроек iFolder для клиента</entry>
- <entry leaf="true" id="settings">Параметры iFolder</entry>
  <entry leaf="true" id="firewall">Конфигурирование параметров локального брандмауэра для трафика iFolder</entry>
  <entry leaf="true" id="virusscan">Конфигурирование параметров локальной антивирусной программы для трафика iFolder</entry>
  <entry leaf="true" id="delacct">Удаление учетной записи iFolder</entry>
