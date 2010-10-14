@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>您必须登录到域才能创建加密 iFolder。</value>
+    <value>要创建加密的 iFolder，您必须登录帐户。请登录，然后重试。</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

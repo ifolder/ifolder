@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Vous devez être logué au domaine pour créer un dossier iFolder codé.</value>
+    <value>Pour créer un dossier iFolder codé, vous devez être logué à un compte. Loguez-vous et réessayez.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

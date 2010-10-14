@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Para crear una carpeta iFolder cifrada es necesario haber entrado en el dominio.</value>
+    <value>Debe estar conectado a una cuenta para crear una carpeta iFolder cifrada. Inicie sesión en la cuenta y vuelva a intentarlo.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

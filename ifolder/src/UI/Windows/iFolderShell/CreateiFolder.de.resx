@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Sie müssen bei der Domäne angemeldet sein, um einen verschlüsselten iFolder-Ordner zu erstellen.</value>
+    <value>Zum Erstellen eines verschlüsselten iFolder-Ordners müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

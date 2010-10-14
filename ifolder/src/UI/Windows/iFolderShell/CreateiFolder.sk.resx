@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Ak chcete vytvoriť šifrovaný priečinok iFolder, musíte sa prihlásiť na doménu.</value>
+    <value>Ak chcete vytvoriť šifrovaný priečinok iFolder, musíte byť prihlásení v konte. Prihláste sa a skúste to znova.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

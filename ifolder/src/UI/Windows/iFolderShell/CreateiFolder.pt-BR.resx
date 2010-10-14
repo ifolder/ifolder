@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>É necessário efetuar login no domínio para criar uma pasta do iFolder criptografada.</value>
+    <value>Para criar um iFolder criptografado, você precisa estar conectado a uma conta. Efetue login e tente novamente.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

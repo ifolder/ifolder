@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Для создания зашифрованной папки iFolder необходимо войти в домен.</value>
+    <value>Для создания зашифрованной папки iFolder необходимо войти в учетную запись. Выполните вход и попробуйте еще раз.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

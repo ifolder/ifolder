@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Aby utworzyć zaszyfrowany iFolder, należy zalogować się do domeny.</value>
+    <value>Aby utworzyć zaszyfrowany folder iFolder, musisz być użytkownikiem zalogowanym do konta. Zaloguj się i spróbuj ponownie.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Pro vytvoření šifrované složky iFolder musíte být přihlášeni k doméně.</value>
+    <value>Chcete-li vytvořit šifrovanou složku iFolder, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>

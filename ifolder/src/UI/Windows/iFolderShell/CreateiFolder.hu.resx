@@ -917,7 +917,7 @@
     <value>6</value>
   </data>
   <data name="LoginToDomain" xml:space="preserve">
-    <value>Titkosított iFolder mappa létrehozásához be kell lennie jelentkezve a tartományba.</value>
+    <value>Titkosított iFolder mappát csak úgy hozhat létre, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra.</value>
   </data>
   <data name="cancel.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
