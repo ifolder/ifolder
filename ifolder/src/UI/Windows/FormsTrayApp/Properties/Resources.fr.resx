@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>finalPage</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>Compte</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>Répertoire de téléchargement : {0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>Cliquez sur OK pour fusionner ou sur Annuler pour sélectionner un autre emplacement.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;Nouvelle phrase secrète :</value>
+    <value>Nouv&amp;elle phrase secrète :</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>précédent</value>

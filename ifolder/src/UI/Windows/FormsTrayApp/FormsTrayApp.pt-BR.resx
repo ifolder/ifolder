@@ -415,7 +415,7 @@
     <value>Verificar Frase Secreta</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>Endereço de &amp;domínio</value>
+    <value>&amp;Endereço do servidor</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Verificar Informações sobre a Conta do iFolder</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>Não é possível ler os arquivos na pasta. Verifique as permissões da pasta local.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Não é possível pesquisar atualizações porque você não está conectado a um servidor. Conecte-se a um servidor e tente novamente.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>É necessário estar conectado ao domínio para mudar a frase secreta. Efetue login no domínio e tente.</value>
+    <value>Para mudar a frase secreta, você precisa estar conectado a uma conta. Efetue login e tente novamente.</value>
   </data>
   <data name="AccWizardText">
     <value>Assistente de Criação da Conta do iFolder</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Bem-vindo ao Assistente de Criação da Conta do iFolder</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Upgrade do iFolder Client disponível.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Erro na criação do diretório</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>O iFolder selecionado para download é um iFolder migrado. Há pastas do iFolder 2.x na sua máquina local. Deseja fundir esse iFolder com alguma das pastas do iFolder 2.x?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Para continuar, clique em Avançar.</value>
@@ -604,7 +611,7 @@
     <value>Antigo Servidor do iFolder</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Para mudar a senha, o domínio deve estar conectado. Efetue login e tente realizar a operação.</value>
+    <value>Para mudar a senha, você precisa estar conectado a uma conta. Efetue login e tente novamente.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>Criar iFolder &amp;Padrão</value>
@@ -640,7 +647,10 @@
     <value>Selecionar Agente de Recuperação:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Digite o nome do seu domínio iFolder (ex.: ifolder.exemplo.net).</value>
+    <value>Digite o nome do servidor iFolder (por exemplo, "ifolder.exemplo.net").</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Você está usando a versão mais recente disponível.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ Tem certeza de que deseja sair do Aplicativo?</value>
   <data name="SelectSecurityOptions">
     <value>Selecionar opções de segurança</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Digitar Frase Secreta:</value>
+  <data name="operationIncomplete">
+    <value>Não é possível concluir a operação. Tente novamente.</value>
   </data>
   <data name="YourFiles">
     <value>Seus Arquivos</value>
@@ -780,12 +790,14 @@ Tem certeza de que deseja sair do Aplicativo?</value>
   <data name="CopyParent">
     <value>Copiar pasta pai</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>O iFolder selecionado para download é um iFolder migrado. Há pastas do iFolder 2.x na sua máquina local. Deseja fundir esse iFolder com alguma das pastas do iFolder 2.x?
-    </value>
+  <data name="alreadyexists">
+    <value>Já existe uma pasta com o nome especificado. . .</value>
   </data>
   <data name="ClickConnect">
     <value>Clique em Conectar para validar a sua conexão com o domínio.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Erro na criação do diretório</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ Tem certeza de que deseja sair do Aplicativo?</value>
     <value>Selecionar Domínio</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Migrar o ifolder e desconectá-lo do domínio 2.x</value>
+    <value>Migrar o ifolder e desconectá-lo do servidor 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>É necessário estar conectado ao domínio para importar. Efetue login no domínio e tente.</value>
+    <value>Para importar, você precisa estar conectado a uma conta. Efetue login e tente novamente.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ Tem certeza de que deseja sair do Aplicativo?</value>
   <data name="MigrationTitle">
     <value>Assistente de Migração do iFolder</value>
   </data>
-  <data name="alreadyexists">
-    <value>Já existe uma pasta com o nome especificado. . .</value>
+  <data name="NotSupportedServerOld">
+    <value>Não há suporte para essa operação na versão atual do servidor iFolder. Para executar a operação, faça upgrade para a versão mais recente do servidor iFolder.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ Tem certeza de que deseja sair do Aplicativo?</value>
   <data name="EncryptedText">
     <value>&amp;Criptografado</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Digitar Frase Secreta:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Concluindo o Assistente de Convite do iFolder</value>

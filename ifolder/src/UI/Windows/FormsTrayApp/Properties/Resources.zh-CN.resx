@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>finalPage</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>帐户</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>正在上载目录：{0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>选择“确定”进行合并，或选择“取消”以选定其他位置</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>新通行口令(&amp;N)：</value>
+    <value>新通行口令(&amp;E)：</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>返回</value>

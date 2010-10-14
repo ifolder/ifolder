@@ -415,7 +415,7 @@
     <value>Проверка контрольной фразы</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>Адре&amp;с домена</value>
+    <value>Адре&amp;с сервера</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Проверка и подключение</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>Не удается прочитать файлы в папке. Проверьте разрешения на локальную папку.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Выполнить поиск невозможно из-за отсутствия подключения к серверу. Проверьте подключение к серверу и повторите попытку.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Для изменения контрольной фразы требуется подключение к домену. Войдите в домен и попытайтесь выполнить это действие еще раз."</value>
+    <value>Для изменения ключевой фразы необходимо войти в учетную запись. Выполните вход и повторите попытку.</value>
   </data>
   <data name="AccWizardText">
     <value>Мастер создания учетных записей iFolder</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Добро пожаловать в мастер создания учетных записей iFolder</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Доступно обновление клиента iFolder.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Ошибка при создании каталога</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>Выбранная для загрузки папка iFolder была мигрирована. На локальном компьютере есть папки iFolder 2.x. Выполнить слияние этой папки iFolder с одной из папок iFolder 2.x?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Для продолжения щелкните "Далее".</value>
@@ -604,7 +611,7 @@
     <value>Старая версия сервера iFolder</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Для смены пароля необходимо подключение к домену. Войдите в систему домена и повторите попытку.</value>
+    <value>Для смены пароля необходимо войти в учетную запись. Войдите в систему и повторите попытку.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>&amp;Создание папки iFolder по умолчанию</value>
@@ -640,7 +647,10 @@
     <value>Выберите агент восстановления:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Введите имя домена iFolder (например iFolder.example.net).</value>
+    <value>Введите имя сервера iFolder (например "iFolder.example.net").</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Вы используете последнюю доступную версию.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@
   <data name="SelectSecurityOptions">
     <value>Выберите параметры защиты</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Контрольная фраза:</value>
+  <data name="operationIncomplete">
+    <value>Невозможно выполнить операцию. Повторите попытку.</value>
   </data>
   <data name="YourFiles">
     <value>Ваши файлы</value>
@@ -780,12 +790,14 @@
   <data name="CopyParent">
     <value>Копировать родительскую папку</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>Выбранная для загрузки папка iFolder была мигрирована. На локальном компьютере есть папки iFolder 2.x. Выполнить слияние этой папки iFolder с одной из папок iFolder 2.x?
-    </value>
+  <data name="alreadyexists">
+    <value>Папка с указанным именем уже существует...</value>
   </data>
   <data name="ClickConnect">
     <value>Щелкните "Подключить" для проверки соединения с доменом.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Ошибка при создании каталога</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@
     <value>Выберите домен</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Миграция iFolder с отключением от домена 2.x</value>
+    <value>Миграция iFolder с отключением от сервера 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Для импорта требуется подключение к домену. Войдите в домен и попробуйте еще раз."</value>
+    <value>Для импорта необходимо войти в учетную запись. Войдите в домен и повторите попытку.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@
   <data name="MigrationTitle">
     <value>Помощник по миграции iFolder</value>
   </data>
-  <data name="alreadyexists">
-    <value>Папка с указанным именем уже существует...</value>
+  <data name="NotSupportedServerOld">
+    <value>В текущей версии сервера iFolder данная операция не поддерживается. Чтобы выполнить эту операцию, следует выполнить обновление до последней версии сервера iFolder.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@
   <data name="EncryptedText">
     <value>&amp;Зашифровано</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Контрольная фраза:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Выполнение мастера приглашений iFolder</value>

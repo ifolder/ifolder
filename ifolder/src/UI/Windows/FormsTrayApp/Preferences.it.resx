@@ -128,12 +128,6 @@
   <data name="btnMigrate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;Settings.Name" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="&gt;&gt;Settings.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;columnHeader5.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -167,21 +161,12 @@
   <data name="autoSync.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="notifyCollisions.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>System</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="hideSyncLog.Size" type="System.Drawing.Size, System.Drawing">
     <value>368, 24</value>
   </data>
   <data name="hideSyncLog.Text" xml:space="preserve">
     <value>Visualizza log di sincronizzazione</value>
-  </data>
-  <data name="&gt;&gt;notifyCheckbox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;notifyCheckbox.Name" xml:space="preserve">
-    <value>notifyCheckbox</value>
   </data>
   <data name="&gt;&gt;columnHeader1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ColumnHeader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -197,9 +182,6 @@
   </data>
   <data name="addAccount.HelpString" xml:space="preserve">
     <value>Fare clic per creare un nuovo account iFolder.</value>
-  </data>
-  <data name="notifyShared.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 20</value>
   </data>
   <data name="&gt;&gt;groupBox3.Parent" xml:space="preserve">
     <value>tabGeneral</value>
@@ -252,9 +234,6 @@
   <data name="&gt;&gt;timeUnit.Parent" xml:space="preserve">
     <value>groupBox1</value>
   </data>
-  <data name="notifyCollisions.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
   <data name="groupBox3.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
@@ -285,9 +264,6 @@
   <data name="&gt;&gt;displayConfirmation.Parent" xml:space="preserve">
     <value>groupBox3</value>
   </data>
-  <data name="notifyJoins.ShowHelp" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="addAccount.Location" type="System.Drawing.Point, System.Drawing">
     <value>177, 372</value>
   </data>
@@ -315,14 +291,26 @@
   <data name="displayConfirmation.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 48</value>
   </data>
-  <data name="&gt;&gt;policylistbox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="notificationsPreferencesList.Items1" xml:space="preserve">
+    <value>Quando è violata la norma delle dimensioni del file</value>
   </data>
-  <data name="&gt;&gt;policylistbox.Name" xml:space="preserve">
-    <value>policylistbox</value>
+  <data name="notificationsPreferencesList.Items3" xml:space="preserve">
+    <value>Quando il disco è pieno</value>
   </data>
-  <data name="&gt;&gt;hidenotification.Parent" xml:space="preserve">
-    <value>groupBox4</value>
+  <data name="notificationsPreferencesList.Items2" xml:space="preserve">
+    <value>Quando è violata la norma di esclusione del file</value>
+  </data>
+  <data name="notificationsPreferencesList.Items5" xml:space="preserve">
+    <value>Quando il percorso del file supera il limite ottimale</value>
+  </data>
+  <data name="notificationsPreferencesList.Items4" xml:space="preserve">
+    <value>Quando non sono disponibili le autorizzazioni necessarie</value>
+  </data>
+  <data name="notificationsPreferencesList.Items7" xml:space="preserve">
+    <value>Quando si verificano conflitti</value>
+  </data>
+  <data name="notificationsPreferencesList.Items6" xml:space="preserve">
+    <value>Quando le cartelle iFolder vengono condivise</value>
   </data>
   <data name="listView1.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -336,14 +324,8 @@
   <data name="btnHelp.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
-  <data name="&gt;&gt;notifyShared.Parent" xml:space="preserve">
-    <value>groupBox4</value>
-  </data>
   <data name="listView1.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 12</value>
-  </data>
-  <data name="Settings.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
   </data>
   <data name="columnHeader5.Text" xml:space="preserve">
     <value>Ubicazione iniziale</value>
@@ -351,23 +333,14 @@
   <data name="btnMigrate.Location" type="System.Drawing.Point, System.Drawing">
     <value>281, 367</value>
   </data>
-  <data name="&gt;&gt;hidenotification.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <data name="columnHeader4.Text" xml:space="preserve">
     <value>Nome utente</value>
   </data>
   <data name="ok.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
   </data>
-  <data name="hidenotification.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>System</value>
-  </data>
   <data name="tabGeneral.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
-  </data>
-  <data name="&gt;&gt;notifyCheckbox.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="accounts.HelpString" xml:space="preserve">
     <value>Visualizza l'elenco di account iFolder in questo computer.</value>
@@ -379,9 +352,6 @@
     <value>True</value>
   </data>
   <data name="hideSyncLog.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="notifyShared.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="details.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -408,9 +378,6 @@
   <data name="columnHeader3.Text" xml:space="preserve">
     <value>Online</value>
   </data>
-  <data name="notifyCollisions.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 48</value>
-  </data>
   <data name="groupBox4.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
@@ -418,13 +385,7 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="columnHeader2.Text" xml:space="preserve">
-    <value>Nome del server</value>
-  </data>
-  <data name="hidenotification.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="Settings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
+    <value>Nome account</value>
   </data>
   <data name="&gt;&gt;defaultInterval.Type" xml:space="preserve">
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -444,38 +405,11 @@
   <data name="listView1.Size" type="System.Drawing.Size, System.Drawing">
     <value>400, 339</value>
   </data>
-  <data name="hidenotification.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 106</value>
-  </data>
-  <data name="&gt;&gt;notifyCheckbox.Parent" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="notifyCheckbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 17</value>
-  </data>
-  <data name="policylistbox.Items2" xml:space="preserve">
-    <value>Quando viene violata la norma di esclusione del file.</value>
-  </data>
-  <data name="policylistbox.Items3" xml:space="preserve">
-    <value>Quando il disco è pieno.</value>
-  </data>
-  <data name="policylistbox.Items1" xml:space="preserve">
-    <value>Quando viene violata la norma delle dimensioni del file.</value>
-  </data>
-  <data name="policylistbox.Items4" xml:space="preserve">
-    <value>Quando non sono disponibili le autorizzazioni necessarie.</value>
-  </data>
-  <data name="policylistbox.Items5" xml:space="preserve">
-    <value>Quando il percorso del file supera il limite ottimale.</value>
-  </data>
-  <data name="&gt;&gt;notifyCollisions.Name" xml:space="preserve">
-    <value>notifyCollisions</value>
-  </data>
-  <data name="&gt;&gt;notifyCollisions.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;autoStart.Parent" xml:space="preserve">
     <value>groupBox3</value>
+  </data>
+  <data name="notificationsPreferencesList.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="tabControl1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -485,12 +419,6 @@
   </data>
   <data name="&gt;&gt;hideSyncLog.ZOrder" xml:space="preserve">
     <value>4</value>
-  </data>
-  <data name="Settings.Text" xml:space="preserve">
-    <value>Impostazioni</value>
-  </data>
-  <data name="Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>426, 408</value>
   </data>
   <data name="apply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -509,12 +437,6 @@
   </data>
   <data name="cancel.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
-  </data>
-  <data name="policylistbox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 40</value>
-  </data>
-  <data name="&gt;&gt;notifyShared.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="tabAccounts.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -542,15 +464,6 @@
   </data>
   <data name="&gt;&gt;btnHelp.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="notifyShared.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="notifyShared.Size" type="System.Drawing.Size, System.Drawing">
-    <value>368, 24</value>
-  </data>
-  <data name="notifyShared.Text" xml:space="preserve">
-    <value>Noti&amp;fica cartelle iFolder condivise</value>
   </data>
   <data name="groupBox4.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -594,9 +507,6 @@
   <data name="hideSyncLog.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="notifyJoins.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="accounts.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 12</value>
   </data>
@@ -609,14 +519,8 @@
   <data name="hideSyncLog.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="notifyCollisions.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="details.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
-  </data>
-  <data name="notifyCheckbox.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
   </data>
   <data name="&gt;&gt;tabControl1.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -635,6 +539,9 @@
   </data>
   <data name="displayTrayIcon.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 76</value>
+  </data>
+  <data name="notificationsPreferencesList.ShowHelp" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="accounts.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -723,12 +630,6 @@
   <data name="&gt;&gt;apply.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;hidenotification.Name" xml:space="preserve">
-    <value>hidenotification</value>
-  </data>
-  <data name="&gt;&gt;hidenotification.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;removeAccount.Parent" xml:space="preserve">
     <value>tabAccounts</value>
   </data>
@@ -738,9 +639,6 @@
   <data name="columnHeader3.Width" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;notifyCollisions.Parent" xml:space="preserve">
-    <value>groupBox4</value>
-  </data>
   <data name="&gt;&gt;listView1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
@@ -749,9 +647,6 @@
   </data>
   <data name="groupBox1.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
-  </data>
-  <data name="notifyJoins.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>System</value>
   </data>
   <data name="displayTrayIcon.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -770,9 +665,6 @@
   </data>
   <data name="listView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
-  </data>
-  <data name="policylistbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>376, 56</value>
   </data>
   <data name="hours" xml:space="preserve">
     <value>ore</value>
@@ -840,9 +732,6 @@
   <data name="displayConfirmation.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="notifyCollisions.HelpString" xml:space="preserve">
-    <value>Selezionare l'opzione per ricevere notifiche in caso di conflitto in una cartella iFolder.</value>
-  </data>
   <data name="autoSync.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -855,23 +744,11 @@
   <data name="startInTrayIcon.HelpString" xml:space="preserve">
     <value>Selezionare questa opzione per avviare iFolder dalla barra delle applicazioni.</value>
   </data>
-  <data name="notifyShared.HelpString" xml:space="preserve">
-    <value>Selezionare l'opzione per ricevere notifiche quando si appartiene alla condivisione di una cartella iFolder.</value>
-  </data>
-  <data name="&gt;&gt;notifyJoins.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="hidenotification.Text" xml:space="preserve">
-    <value>Visualizza notifiche per le violazioni delle norme</value>
-  </data>
-  <data name="hidenotification.Size" type="System.Drawing.Size, System.Drawing">
-    <value>368, 24</value>
+  <data name="notificationsPreferencesList.Location" type="System.Drawing.Point, System.Drawing">
+    <value>16, 19</value>
   </data>
   <data name="&gt;&gt;apply.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="&gt;&gt;notifyCollisions.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="displayTrayIcon.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
@@ -903,12 +780,6 @@
   <data name="addAccount.Text" xml:space="preserve">
     <value>A&amp;ggiungi</value>
   </data>
-  <data name="policylistbox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="policylistbox.Items" xml:space="preserve">
-    <value>Quando viene violata la norma delle quote.</value>
-  </data>
   <data name="details.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
   </data>
@@ -924,12 +795,6 @@
   <data name="displayConfirmation.Text" xml:space="preserve">
     <value>Mostra finestra di &amp;conferma per la creazione di cartelle iFolder</value>
   </data>
-  <data name="notifyCheckbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 17</value>
-  </data>
-  <data name="notifyCheckbox.Text" xml:space="preserve">
-    <value>Visualizza &amp;notifica</value>
-  </data>
   <data name="&gt;&gt;groupBox1.Parent" xml:space="preserve">
     <value>tabGeneral</value>
   </data>
@@ -941,15 +806,6 @@
   </data>
   <data name="removeAccount.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
-  </data>
-  <data name="&gt;&gt;notifyJoins.Parent" xml:space="preserve">
-    <value>groupBox4</value>
-  </data>
-  <data name="&gt;&gt;notifyShared.Name" xml:space="preserve">
-    <value>notifyShared</value>
-  </data>
-  <data name="&gt;&gt;notifyShared.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tabControl1.Name" xml:space="preserve">
     <value>tabControl1</value>
@@ -969,6 +825,9 @@
   <data name="tabControl1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
+  <data name="notificationsPreferencesList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>376, 109</value>
+  </data>
   <data name="&gt;&gt;startInTrayIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -977,9 +836,6 @@
   </data>
   <data name="timeUnit.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Left</value>
-  </data>
-  <data name="hidenotification.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="btnMigrate.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -993,9 +849,6 @@
   <data name="tabGeneral.Text" xml:space="preserve">
     <value>Generale</value>
   </data>
-  <data name="notifyShared.ShowHelp" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="&gt;&gt;displayConfirmation.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1007,12 +860,6 @@
   </data>
   <data name="startInTrayIcon.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;notifyJoins.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;notifyJoins.Name" xml:space="preserve">
-    <value>notifyJoins</value>
   </data>
   <data name="&gt;&gt;cancel.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -1034,15 +881,6 @@
   </data>
   <data name="displayTrayIcon.HelpString" xml:space="preserve">
     <value>Selezionare questa opzione per nascondere l'icona iFolder della barra delle applicazioni.</value>
-  </data>
-  <data name="notifyCheckbox.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="notifyCollisions.Text" xml:space="preserve">
-    <value>No&amp;tifica conflitti</value>
-  </data>
-  <data name="notifyCollisions.Size" type="System.Drawing.Size, System.Drawing">
-    <value>368, 24</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
     <value>groupBox1</value>
@@ -1067,12 +905,6 @@
   </data>
   <data name="&gt;&gt;details.Parent" xml:space="preserve">
     <value>tabAccounts</value>
-  </data>
-  <data name="notifyShared.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>System</value>
-  </data>
-  <data name="notifyJoins.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 76</value>
   </data>
   <data name="addAccount.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
@@ -1101,9 +933,6 @@
   <data name="displayConfirmation.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
   </data>
-  <data name="&gt;&gt;Settings.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="&gt;&gt;label1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1126,16 +955,7 @@
     <value>1</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 325</value>
-  </data>
-  <data name="notifyJoins.Text" xml:space="preserve">
-    <value>Notifica &amp;quando un utente aderisce al dominio iFolder</value>
-  </data>
-  <data name="notifyJoins.Size" type="System.Drawing.Size, System.Drawing">
-    <value>368, 24</value>
-  </data>
-  <data name="notifyJoins.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>12, 314</value>
   </data>
   <data name="&gt;&gt;details.Name" xml:space="preserve">
     <value>details</value>
@@ -1145,12 +965,6 @@
   </data>
   <data name="hideSyncLog.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 135</value>
-  </data>
-  <data name="hidenotification.ShowHelp" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="notifyCollisions.ShowHelp" type="System.Boolean, mscorlib">
-    <value>True</value>
   </data>
   <data name="&gt;&gt;hideSyncLog.Name" xml:space="preserve">
     <value>hideSyncLog</value>
@@ -1182,14 +996,14 @@
   <data name="&gt;&gt;tabMigrate.Name" xml:space="preserve">
     <value>tabMigrate</value>
   </data>
-  <data name="&gt;&gt;policylistbox.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
   <data name="&gt;&gt;autoSync.Name" xml:space="preserve">
     <value>autoSync</value>
   </data>
   <data name="&gt;&gt;autoSync.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;notificationsPreferencesList.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;tabAccounts.Parent" xml:space="preserve">
     <value>tabControl1</value>
@@ -1218,6 +1032,12 @@
   <data name="tabAccounts.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="&gt;&gt;notificationsPreferencesList.Parent" xml:space="preserve">
+    <value>groupBox4</value>
+  </data>
+  <data name="notificationsPreferencesList.Items" xml:space="preserve">
+    <value>Quando è violata la norma della quota</value>
+  </data>
   <data name="&gt;&gt;addAccount.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
@@ -1230,9 +1050,6 @@
   <data name="autoStart.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="hidenotification.HelpString" xml:space="preserve">
-    <value>Selezionare questa opzione per visualizzare la notifica per la violazione delle norme.</value>
-  </data>
   <data name="autoSync.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 24</value>
   </data>
@@ -1241,9 +1058,6 @@
   </data>
   <data name="&gt;&gt;accounts.Name" xml:space="preserve">
     <value>accounts</value>
-  </data>
-  <data name="&gt;&gt;Settings.Parent" xml:space="preserve">
-    <value>tabControl1</value>
   </data>
   <data name="&gt;&gt;listView1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1263,6 +1077,12 @@
   <data name="columnHeader1.Width" type="System.Int32, mscorlib">
     <value>162</value>
   </data>
+  <data name="&gt;&gt;notificationsPreferencesList.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckedListBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;notificationsPreferencesList.Name" xml:space="preserve">
+    <value>notificationsPreferencesList</value>
+  </data>
   <data name="apply.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
   </data>
@@ -1274,12 +1094,6 @@
   </data>
   <data name="btnMigrate.Text" xml:space="preserve">
     <value>Esegui migrazione</value>
-  </data>
-  <data name="&gt;&gt;policylistbox.Parent" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="notifyJoins.HelpString" xml:space="preserve">
-    <value>Selezionare l'opzione per ricevere notifiche quando un utente aderisce a una delle proprie cartelle iFolder.</value>
   </data>
   <data name="&gt;&gt;addAccount.Parent" xml:space="preserve">
     <value>tabAccounts</value>

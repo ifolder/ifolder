@@ -391,7 +391,7 @@
     <value>Ubicazione non valida</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
-    <value>Selezionare il conto per cui si desidera reimpostare la stringa di cifratura.</value>
+    <value>Selezionare l'account per cui si desidera reimpostare la stringa di cifratura.</value>
   </data>
   <data name="browseText" xml:space="preserve">
     <value>S&amp;foglia</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="finalPageName" xml:space="preserve">
     <value>PaginaFinale</value>
+  </data>
+  <data name="account" xml:space="preserve">
+    <value>Account</value>
   </data>
   <data name="uploadDir" xml:space="preserve">
     <value>Esecuzione dell'upload della directory in corso: {0}</value>
@@ -592,7 +595,7 @@
     <value>ImportaPagina</value>
   </data>
   <data name="recoveryError" xml:space="preserve">
-    <value>Impossibile reimpostare la stringa di cifratura. L''utente ha effettuato il logout dal conto. Effettuare il login e riprovare.</value>
+    <value>Impossibile reimpostare la stringa di cifratura. L''utente ha effettuato il logout dall'account. Effettuare il login e riprovare.</value>
   </data>
   <data name="newDataFileError" xml:space="preserve">
     <value>Nuova ubicazione file di dati non valida</value>
@@ -628,7 +631,7 @@
     <value>Default_server</value>
   </data>
   <data name="singleAccountText" xml:space="preserve">
-    <value>L'utente dispone di un conto singolo. Fare clic su Avanti per proseguire.</value>
+    <value>L'utente dispone di un account singolo. Fare clic su Avanti per proseguire.</value>
   </data>
   <data name="FolderDoesNotExistError" xml:space="preserve">
     <value>Quindi, il nome della cartella e della cartella iFolder devono essere gli stessi</value>
@@ -646,7 +649,7 @@
     <value>Selezionare OK per eseguire la fusione o Annulla per selezionare un'ubicazione diversa</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;Nuova stringa di cifratura:</value>
+    <value>N&amp;uova stringa di cifratura:</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>indietro</value>

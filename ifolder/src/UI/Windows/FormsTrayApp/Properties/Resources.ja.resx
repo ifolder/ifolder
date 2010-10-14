@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>最終ページ</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>アカウント</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>ディレクトリをアップロードしています: {0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>マージするには［OK］を、別の場所を選択するには［キャンセル］をクリックしてください</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>新しいパスフレーズ(&amp;N):</value>
+    <value>新しいパスフレーズ(&amp;E):</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>戻る</value>

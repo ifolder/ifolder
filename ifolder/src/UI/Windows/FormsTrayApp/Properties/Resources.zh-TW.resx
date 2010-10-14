@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>finalPage</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>正在上載目錄：{0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>選取「確定」進行合併，或選取「取消」選取不同位置</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>新密碼片語(&amp;N)：</value>
+    <value>新密碼片語(&amp;E)：</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>上一步</value>

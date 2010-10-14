@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>finalPage</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>Fiók</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>Könyvtár feltöltése: {0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>Az összefésüléshez kattintson az OK gombra, másik hely kijelöléséhez pedig a Mégse gombra.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;Új hozzáférési kód:</value>
+    <value>Új &amp;hozzáférési kód:</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>vissza</value>

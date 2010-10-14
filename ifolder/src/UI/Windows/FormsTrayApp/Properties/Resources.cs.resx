@@ -474,6 +474,9 @@
   <data name="finalPageName" xml:space="preserve">
     <value>finalPage</value>
   </data>
+  <data name="account" xml:space="preserve">
+    <value>Účet</value>
+  </data>
   <data name="uploadDir" xml:space="preserve">
     <value>Nahrávání adresáře: {0}</value>
   </data>
@@ -646,7 +649,7 @@
     <value>Klepněte na tlačítko OK, chcete-li provést sloučení, nebo klepněte na tlačítko Storno a vyberte jiné umístění.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;Nové heslo:</value>
+    <value>N&amp;ové heslo:</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>zpět</value>

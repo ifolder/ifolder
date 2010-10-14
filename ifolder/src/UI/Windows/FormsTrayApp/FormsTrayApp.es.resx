@@ -415,7 +415,7 @@
     <value>Verificar contraseña codificada</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>Dirección de &amp;dominio</value>
+    <value>Dirección del &amp;servidor</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Verificar información de cuenta iFolder</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>No es posible leer los archivos en la carpeta. Compruebe los permisos en la carpeta local.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>No es posible buscar actualizaciones, porque no está conectado a un servidor. Asegúrese de que está conectado a un servidor e inténtelo de nuevo.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Debe estar conectado al dominio para poder cambiar la contraseña codificada. Inicie sesión en el dominio y vuelva a intentarlo.</value>
+    <value>Debe estar conectado a una cuenta para poder cambiar la contraseña codificada. Inicie sesión en la cuenta y vuelva a intentarlo.</value>
   </data>
   <data name="AccWizardText">
     <value>Asistente para la creación de cuentas de iFolder</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Bienvenido al Asistente para la creación de cuentas de iFolder</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Hay una actualización disponible para el cliente iFolder.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Error al crear el directorio</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>La carpeta iFolder que ha seleccionado para descargar es una carpeta iFolder migrada. Hay dos carpetas iFolder 2.x en el equipo local. ¿Desea fusionar esta carpeta iFolder con alguna de las carpetas iFolder 2.x?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Haga clic en Siguiente para continuar.</value>
@@ -604,7 +611,7 @@
     <value>Servidor de iFolder antiguo</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Debe estar conectado al dominio para cambiar la contraseña. Inicie sesión en el dominio y vuelva a intentarlo.</value>
+    <value>Debe estar conectado a una cuenta para cambiar la contraseña. Inicie sesión en la cuenta y vuelva a intentarlo.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>Crear carpeta iFolder por &amp;defecto</value>
@@ -640,7 +647,10 @@
     <value>Seleccionar agente de recuperación:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Introduzca el nombre del dominio de iFolder (por ejemplo, ifolder.ejemplo.net).</value>
+    <value>Introduzca el nombre del servidor de iFolder (por ejemplo, ifolder.ejemplo.net).</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Está utilizando la versión más reciente disponible.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="SelectSecurityOptions">
     <value>Seleccionar opciones de seguridad</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Introduzca la contraseña codificada:</value>
+  <data name="operationIncomplete">
+    <value>No es posible realizar la operación. Inténtelo de nuevo.</value>
   </data>
   <data name="YourFiles">
     <value>Sus archivos</value>
@@ -780,12 +790,14 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="CopyParent">
     <value>Copiar la carpeta padre</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>La carpeta iFolder que ha seleccionado para descargar es una carpeta iFolder migrada. Hay dos carpetas iFolder 2.x en el equipo local. ¿Desea fusionar esta carpeta iFolder con alguna de las carpetas iFolder 2.x?
-    </value>
+  <data name="alreadyexists">
+    <value>Ya existe una carpeta con el nombre que ha especificado...</value>
   </data>
   <data name="ClickConnect">
     <value>Haga clic en Conectar para validar la conexión con el dominio.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Error al crear el directorio</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
     <value>Seleccione el dominio</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Migrar la carpeta de iFolder y desconectarla del dominio 2.x</value>
+    <value>Migrar la carpeta de iFolder y desconectarla del servidor 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Debe estar conectado al dominio para poder realizar la importación. Inicie sesión en el dominio y vuelva a intentarlo.</value>
+    <value>Debe estar conectado a una cuenta para poder realizar la importación. Inicie sesión en la cuenta y vuelva a intentarlo.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="MigrationTitle">
     <value>Asistente de migración de iFolder</value>
   </data>
-  <data name="alreadyexists">
-    <value>Ya existe una carpeta con el nombre que ha especificado...</value>
+  <data name="NotSupportedServerOld">
+    <value>Esta operación no se admite en la versión actual del servidor iFolder. Para poder realizar esta operación, debe actualizar a la versión más reciente del servidor iFolder.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ La próxima vez que entre, iFolder de Novell reconciliará las diferencias entre
   <data name="EncryptedText">
     <value>&amp;Cifrado</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Introduzca la contraseña codificada:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Finalizando el Asistente de invitación de iFolder</value>

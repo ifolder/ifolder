@@ -415,7 +415,7 @@
     <value>Hozzáférési kód ellenőrzése</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>&amp;Tartományi cím</value>
+    <value>Ki&amp;szolgáló címe</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Ellenőrizze az iFolder fiók adatait</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>A mappa fájljai nem olvashatók. Ellenőrizze a helyi mappára vonatkozó engedélyeket.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Nem tud frissítéseket keresni, mivel nincs kiszolgálóhoz csatlakozva. Csatlakozzon egy kiszolgálóhoz, majd próbálkozzon újra.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>A hozzáférési kód megváltoztatásához kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra.</value>
+    <value>A hozzáférési kódot csak úgy változtathatja meg, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra.</value>
   </data>
   <data name="AccWizardText">
     <value>iFolder fiók-létrehozási varázsló</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Üdvözli az iFolder fióklétrehozási varázsló</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Van elérhető frissítés az iFolder-ügyfélhez.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Hiba történt a könyvtár létrehozásakor</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>A letöltésre kijelölt iFolder mappa áttelepített iFolder mappa. A helyi számítógépen 2.x verziójú iFolder mappák találhatók. Egyesíti ezt az iFolder mappát a 2.x verziójú iFolder mappák valamelyikével?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>A folytatáshoz kattintson a Tovább gombra.</value>
@@ -604,7 +611,7 @@
     <value>Régi iFolder-kiszolgáló</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>A jelszó módosításához kapcsolódnia kell a tartományhoz. Jelentkezzen be a tartományba, és próbálja meg újra.</value>
+    <value>A jelszót csak úgy változtathatja meg, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>Alapértelmezett iFolder mappa &amp;létrehozása</value>
@@ -640,7 +647,10 @@
     <value>Helyreállítási ügynök kiválasztása:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Adja meg az iFolder tartomány nevét (például ifolder.pelda.net).</value>
+    <value>Adja meg az iFolder kiszolgáló nevét (például "ifolder.pelda.net").</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>A jelenleg használt verzió a legújabb elérhető verzió.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ Biztosan kilép az alkalmazásból?</value>
   <data name="SelectSecurityOptions">
     <value>Adja meg a biztonsági beállításokat</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Adja meg a hozzáférési kódot:</value>
+  <data name="operationIncomplete">
+    <value>Nem sikerült végrehajtani a műveletet. Próbálkozzon újra.</value>
   </data>
   <data name="YourFiles">
     <value>Saját fájlok</value>
@@ -780,12 +790,14 @@ Biztosan kilép az alkalmazásból?</value>
   <data name="CopyParent">
     <value>A szülőmappa másolása</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>A letöltésre kijelölt iFolder mappa áttelepített iFolder mappa. A helyi számítógépen 2.x verziójú iFolder mappák találhatók. Egyesíti ezt az iFolder mappát a 2.x verziójú iFolder mappák valamelyikével?
-    </value>
+  <data name="alreadyexists">
+    <value>Már van ilyen nevű mappa...</value>
   </data>
   <data name="ClickConnect">
     <value>A tartománnyal létrejött kapcsolat érvényesítéséhez kattintson a Kapcsolódás gombra.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Hiba történt a könyvtár létrehozásakor</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ Biztosan kilép az alkalmazásból?</value>
     <value>Válassza ki a tartományt</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Az iFolder mappa áttelepítése és leválasztása a 2.x tartományról</value>
+    <value>Az iFolder mappa áttelepítése és a 2.x kiszolgálóról való leválasztása</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Az importáláshoz kapcsolódnia kell a tartománynak. Jelentkezzen be a tartományba, és próbálja meg újra.</value>
+    <value>Csak úgy végezhet importálást, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ Biztosan kilép az alkalmazásból?</value>
   <data name="MigrationTitle">
     <value>iFolder áttelepítési segéd</value>
   </data>
-  <data name="alreadyexists">
-    <value>Már van ilyen nevű mappa...</value>
+  <data name="NotSupportedServerOld">
+    <value>Ezt a műveletet nem támogatja az iFolder-kiszolgáló aktuális verziója. A művelet végrehajtásához frissítse az iFolder-kiszolgálót a legújabb verzióra.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ Biztosan kilép az alkalmazásból?</value>
   <data name="EncryptedText">
     <value>&amp;Titkosított</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Adja meg a hozzáférési kódot:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Az iFolder meghívás varázsló befejezése</value>

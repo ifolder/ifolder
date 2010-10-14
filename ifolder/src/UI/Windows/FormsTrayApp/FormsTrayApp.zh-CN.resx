@@ -415,7 +415,7 @@
     <value>校验通行口令</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>域地址(&amp;D)</value>
+    <value>服务器地址(&amp;S)</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>校验 iFolder 帐户信息</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>无法从此文件夹读文件。请校验对您本地文件夹的权限。</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>无法搜索更新，因为您没有连接到服务器。请确保连接到服务器，然后重试。</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>要更改通行口令，应连接域。请登录域并进行尝试。</value>
+    <value>要更改通行口令，您必须登录帐户。请登录，然后重试。</value>
   </data>
   <data name="AccWizardText">
     <value>iFolder 帐户创建向导</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>欢迎使用 iFolder 帐户创建向导</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>iFolder 客户端升级可用。</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>创建目录时出错</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>选定要下载的 iFolder 是一个已迁移的 iFolder。本地计算机上存在一些 iFolder 2.x。是否要将此 iFolder 与某个 iFolder 2.x 合并？
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>要继续，单击“下一步”。</value>
@@ -604,7 +611,7 @@
     <value>iFolder 服务器较旧</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>要更改口令，应连接域。请登录域，然后重试。</value>
+    <value>要更改口令，您必须登录帐户。请登录，然后重试。</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>创建默认的 iFolder(&amp;D)</value>
@@ -640,7 +647,10 @@
     <value>选择恢复代理：</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>输入 iFolder 域的名称（例如，ifolder.example.net）。</value>
+    <value>输入 iFolder 服务器的名称（例如，ifolder.example.net）。</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>您使用的是最新的可用版本。</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@
   <data name="SelectSecurityOptions">
     <value>选择安全性选项</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>输入通行口令：</value>
+  <data name="operationIncomplete">
+    <value>无法完成此操作。请重试。</value>
   </data>
   <data name="YourFiles">
     <value>您的文件</value>
@@ -780,12 +790,14 @@
   <data name="CopyParent">
     <value>复制父文件夹</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>选定要下载的 iFolder 是一个已迁移的 iFolder。本地计算机上存在一些 iFolder 2.x。是否要将此 iFolder 与某个 iFolder 2.x 合并？
-    </value>
+  <data name="alreadyexists">
+    <value>已存在一个与您指定的名称相同的文件夹...</value>
   </data>
   <data name="ClickConnect">
     <value>单击“连接”可验证您与域的连接。</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>创建目录时出错</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@
     <value>选择域</value>
   </data>
   <data name="MigrateNRemove">
-    <value>迁移 ifolder 并断开它与 2.x 域的连接</value>
+    <value>迁移 ifolder 并断开它与 2.x 服务器的连接</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>要导入，应连接域。请登录域并进行尝试。</value>
+    <value>要导入，您必须登录帐户。请登录，然后重试。</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -959,7 +971,7 @@
     <value>发生冲突：{0}</value>
   </data>
   <data name="AccountName">
-    <value>帐户名</value>
+    <value>帐户名称</value>
   </data>
   <data name="$this.AutoScroll" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -1036,8 +1048,8 @@
   <data name="MigrationTitle">
     <value>iFolder 迁移助理</value>
   </data>
-  <data name="alreadyexists">
-    <value>已存在一个与您指定的名称相同的文件夹...</value>
+  <data name="NotSupportedServerOld">
+    <value>当前版本的 iFolder 服务器上不支持此操作。要执行此操作，您必须升级到最新版本的 iFolder 服务器。</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@
   <data name="EncryptedText">
     <value>已加密(&amp;E)</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>输入通行口令：</value>
   </data>
   <data name="CompletionPageWT">
     <value>完成 iFolder 邀请向导</value>

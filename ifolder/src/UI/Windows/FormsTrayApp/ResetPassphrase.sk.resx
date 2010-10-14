@@ -172,7 +172,7 @@
     <value>MiddleLeft</value>
   </data>
   <data name="buttonHelp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 231</value>
+    <value>19, 241</value>
   </data>
   <data name="waterMark.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>

@@ -415,7 +415,7 @@
     <value>パスフレーズの検査</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>ドメインアドレス(&amp;D)</value>
+    <value>サーバアドレス(&amp;S)</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>iFolderアカウント情報の検査</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>フォルダからファイルを読み込むことができません。ローカルフォルダに対するパーミッションを確認してください。</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>サーバに接続していないのでアップデートを検索できません。サーバに接続していることを確認してから再度実行してください。</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>パスフレーズを変更するには、ドメインに接続する必要があります。ドメインにログオンしてから試行してください。</value>
+    <value>パスフレーズを変更するには、アカウントにログインしている必要があります。ログインしてから再度実行してください。</value>
   </data>
   <data name="AccWizardText">
     <value>iFolderアカウント作成ウィザード</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>iFolderアカウント作成ウィザードへようこそ</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>iFolderクライアントのアップグレードが可能です。</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>ディレクトリの作成時にエラー</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>ダウンロードするために選択したiFolderは、移行済みのiFolderです。ローカルコンピュータに2.x形式のiFolderがあります。このiFolderを2.x形式のiFolderとマージしますか?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>続行するには、［次へ］をクリックします。</value>
@@ -604,7 +611,7 @@
     <value>iFolderサーバが古くなっています</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>パスワードを変更するには、ドメインに接続する必要があります。ドメインにログオンしてから実行してください。</value>
+    <value>パスワードを変更するには、アカウントにログインしている必要があります。ログインしてから再度実行してください。</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>デフォルトiFolderの作成(&amp;D)</value>
@@ -640,7 +647,10 @@
     <value>回復エージェントの選択:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>iFolderのドメイン名(ifolder.example.netなど)を入力してください。</value>
+    <value>iFolderサーバの名前(ifolder.example.netなど)を入力してください。</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>使用可能な最新のバージョンを使用しています。</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@
   <data name="SelectSecurityOptions">
     <value>セキュリティオプションを選択する</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>パスフレーズの入力:</value>
+  <data name="operationIncomplete">
+    <value>操作を完了できません。再度実行してください。</value>
   </data>
   <data name="YourFiles">
     <value>ユーザのファイル</value>
@@ -780,12 +790,14 @@
   <data name="CopyParent">
     <value>親フォルダをコピーする</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>ダウンロードするために選択したiFolderは、移行済みのiFolderです。ローカルコンピュータに2.x形式のiFolderがあります。このiFolderを2.x形式のiFolderとマージしますか?
-    </value>
+  <data name="alreadyexists">
+    <value>指定した名前のフォルダはすでに存在します...</value>
   </data>
   <data name="ClickConnect">
     <value>［接続］をクリックして、ドメインとの接続を検証します。</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>ディレクトリの作成時にエラー</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@
     <value>ドメインを選択</value>
   </data>
   <data name="MigrateNRemove">
-    <value>iFolderをマイグレートして2.xドメインとの接続を切断する</value>
+    <value>iFolderを移行して2.xサーバとの接続を切断する</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>インポートするには、ドメインに接続する必要があります。ドメインにログオンしてから試行してください。</value>
+    <value>インポートするには、アカウントにログインしている必要があります。ログインしてから再度実行してください。</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@
   <data name="MigrationTitle">
     <value>iFolder移行アシスタント</value>
   </data>
-  <data name="alreadyexists">
-    <value>指定した名前のフォルダはすでに存在します...</value>
+  <data name="NotSupportedServerOld">
+    <value>この操作はiFolderサーバの現在のバージョンではサポートされていません。この操作を実行するには、iFolderサーバの最新バージョンにアップグレードする必要があります。</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@
   <data name="EncryptedText">
     <value>暗号化(&amp;E)</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>パスフレーズの入力:</value>
   </data>
   <data name="CompletionPageWT">
     <value>iFolder招待ウィザードを完了中</value>

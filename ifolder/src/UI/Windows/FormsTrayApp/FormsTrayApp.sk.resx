@@ -415,7 +415,7 @@
     <value>Overiť prístupový výraz</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>A&amp;dresa domény</value>
+    <value>Adresa &amp;servera</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Overiť informácie o konte služby iFolder</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>Súbory v priečinku sa nedajú čítať. Overte povolenia pre lokálny priečinok.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Nemožno vyhľadať aktualizácie, pretože nie ste pripojení k serveru. Pripojte sa k serveru a skúste to znova.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Pre zmenu prístupového výrazu je potrebné, aby bola pripojená doména. Prihláste sa na doménu a skúste to.</value>
+    <value>Ak chcete zmeniť prístupový výraz, musíte byť prihlásení v konte. Prihláste sa a skúste to znova.</value>
   </data>
   <data name="AccWizardText">
     <value>Sprievodca vytvorením konta služby iFolder</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Víta vás sprievodca vytvorením konta služby iFolder</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>K dispozícii je aktualizácia klienta iFolder.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Chyba pri vytváraní adresára</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>Priečinok iFolder vybratý na prevzatie je prenesený priečinok iFolder. V lokálnom zariadení sa nachádzajú priečinky iFolder verzie 2.x. Chcete tento priečinok iFolder spojiť s priečinkami iFolder verzie 2.x?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Pokračujte kliknutím na tlačidlo Ďalej.</value>
@@ -604,7 +611,7 @@
     <value>Server iFolder je zastaraný</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Na zmenu hesla je potrebné, aby bola doména pripojená. Prihláste sa do domény a skúste to.</value>
+    <value>Ak chcete zmeniť heslo, musíte byť prihlásení v konte. Prihláste sa a skúste to znova.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>Vytvoriť &amp;predvolený priečinok iFolder</value>
@@ -640,7 +647,10 @@
     <value>Vyberte agenta pre obnovenie:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Zadajte názov svojej domény služby iFolder (napríklad ifolder.example.net).</value>
+    <value>Zadajte názov servera aplikácie iFolder (napríklad ifolder.priklad.sk).</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Používate najnovšiu dostupnú verziu.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="SelectSecurityOptions">
     <value>Vyberte možnosti zabezpečenia</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Zadajte prístupový výraz:</value>
+  <data name="operationIncomplete">
+    <value>Nemožno dokončiť operáciu. Skúste to znova.</value>
   </data>
   <data name="YourFiles">
     <value>Vaše súbory</value>
@@ -780,12 +790,14 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="CopyParent">
     <value>Kopírovať nadradený priečinok</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>Priečinok iFolder vybratý na prevzatie je prenesený priečinok iFolder. V lokálnom zariadení sa nachádzajú priečinky iFolder verzie 2.x. Chcete tento priečinok iFolder spojiť s priečinkami iFolder verzie 2.x?
-    </value>
+  <data name="alreadyexists">
+    <value>Priečinok so zadaným názvom už existuje. . .</value>
   </data>
   <data name="ClickConnect">
     <value>Kliknutím na položku Pripojiť overíte pripojenie k doméne.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Chyba pri vytváraní adresára</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ Naozaj chcete ukončiť aplikáciu ?</value>
     <value>Vyberte doménu</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Preneste priečinok iFolder a odpojte sa od domény 2.x</value>
+    <value>Preniesť priečinok iFolder a odpojiť ho od servera verzie 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Pre importovanie je potrebné, aby bola pripojená doména. Prihláste sa na doménu a skúste to.</value>
+    <value>Ak chcete vykonať import, musíte byť prihlásení v konte. Prihláste sa a skúste to znova.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="MigrationTitle">
     <value>Pomocník služby iFolder pre prenos</value>
   </data>
-  <data name="alreadyexists">
-    <value>Priečinok so zadaným názvom už existuje. . .</value>
+  <data name="NotSupportedServerOld">
+    <value>Aktuálna verzia servera iFolder nepodporuje túto operáciu. Ak chcete operáciu vykonať, musíte server iFolder inovovať na najnovšiu verziu.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   <data name="EncryptedText">
     <value>&amp;Zašifrované</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Zadajte prístupový výraz:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Ukončuje sa Sprievodca pozvaním iFolder</value>

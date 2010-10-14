@@ -415,7 +415,7 @@
     <value>Passwortsatz überprüfen</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>&amp;Domänenadresse</value>
+    <value>&amp;Serveradresse</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>iFolder-Kontoinformationen überprüfen</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>Dateien aus dem Ordner können nicht gelesen werden. Überprüfen Sie die Berechtigungen für Ihren lokalen Ordner.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Es kann nur nach Updates gesucht werden, wenn Sie mit einem Server verbunden sind. Stellen Sie sicher, dass Sie mit einem Server verbunden sind, und versuchen Sie es erneut.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Zum Ändern des Passwortsatzes muss eine Verbindung zur Domäne bestehen. Melden Sie sich bei der Domäne an und versuchen Sie es.</value>
+    <value>Zum Ändern des Passwortsatzes müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut.</value>
   </data>
   <data name="AccWizardText">
     <value>Assistent für die iFolder-Kontoerstellung</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Willkommen beim Assistenten für die iFolder-Kontoerstellung</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Aufrüstung für iFolder-Client verfügbar.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Fehler bei der Verzeichniserstellung</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>Bei dem iFolder-Ordner, den Sie zum Herunterladen ausgewählt haben, handelt es sich um einen migrierten iFolder-Ordner. Auf Ihrem lokalen Computer befinden sich 2.x iFolder-Ordner. Soll dieser iFolder-Ordner mit einem der 2.x iFolder-Ordner zusammengeführt werden?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Klicken Sie auf 'Weiter', um fortzufahren.</value>
@@ -604,7 +611,7 @@
     <value>Alter iFolder-Server</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Zum Ändern des Passworts sollten Sie mit der Domäne verbunden sein. Melden Sie sich bei der Domäne an und versuchen Sie es erneut.</value>
+    <value>Zum Ändern des Passworts müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>&amp;Standard-iFolder-Ordner erstellen</value>
@@ -640,7 +647,10 @@
     <value>Wiederherstellungsagenten auswählen:</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Geben Sie den Namen Ihrer iFolder-Domäne ein (z.B. ifolder.beispiel.net)</value>
+    <value>Geben Sie den Namen Ihres iFolder-Servers ein (z.B. "ifolder.beispiel.net")</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Sie verwenden die neueste Version, die verfügbar ist.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="SelectSecurityOptions">
     <value>Sicherheitsoptionen auswählen</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Passwortsatz eingeben:</value>
+  <data name="operationIncomplete">
+    <value>Der Vorgang kann nicht abgeschlossen werden. Versuchen Sie es erneut.</value>
   </data>
   <data name="YourFiles">
     <value>Ihre Dateien</value>
@@ -780,12 +790,14 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="CopyParent">
     <value>Übergeordneten Ordner kopieren</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>Bei dem iFolder-Ordner, den Sie zum Herunterladen ausgewählt haben, handelt es sich um einen migrierten iFolder-Ordner. Auf Ihrem lokalen Computer befinden sich 2.x iFolder-Ordner. Soll dieser iFolder-Ordner mit einem der 2.x iFolder-Ordner zusammengeführt werden?
-    </value>
+  <data name="alreadyexists">
+    <value>Ein Ordner mit dem angegebenen Namen existiert bereits. . .</value>
   </data>
   <data name="ClickConnect">
     <value>Klicken Sie auf 'Verbinden', um die Verbindung zur Domäne zu überprüfen.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Fehler bei der Verzeichniserstellung</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ Möchten Sie die Anwendung wirklich beenden?</value>
     <value>Domäne auswählen</value>
   </data>
   <data name="MigrateNRemove">
-    <value>iFolder-Ordner migrieren und von 2.x-Domäne trennen</value>
+    <value>iFolder-Ordner migrieren und von 2.x-Server trennen</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Zum Importieren muss eine Verbindung zur Domäne bestehen. Melden Sie sich in der Domäne an und versuchen Sie es.</value>
+    <value>Zum Importieren müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="MigrationTitle">
     <value>iFolder-Migrationsassistent</value>
   </data>
-  <data name="alreadyexists">
-    <value>Ein Ordner mit dem angegebenen Namen existiert bereits. . .</value>
+  <data name="NotSupportedServerOld">
+    <value>Dieser Vorgang wird von der aktuellen Version des iFolder-Servers nicht unterstützt. Zum Ausführen dieses Vorgangs müssen Sie eine Aktualisierung auf die neueste Version des iFolder-Servers vornehmen.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ Möchten Sie die Anwendung wirklich beenden?</value>
   <data name="EncryptedText">
     <value>&amp;Verschlüsselt</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Passwortsatz eingeben:</value>
   </data>
   <data name="CompletionPageWT">
     <value>iFolder-Einladungsassistenten ausführen</value>

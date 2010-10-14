@@ -406,7 +406,7 @@
     <value>965, 561</value>
   </data>
   <data name="titleServerorSize.Text" xml:space="preserve">
-    <value>Server</value>
+    <value>Účet</value>
   </data>
   <data name="titleServerorSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>48, 16</value>
@@ -505,7 +505,7 @@
     <value>0</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>Domény iFolder</value>
+    <value>Účty aplikace iFolder</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>139, 20</value>
@@ -607,7 +607,7 @@
     <value>Top</value>
   </data>
   <data name="Server.Text" xml:space="preserve">
-    <value>Server</value>
+    <value>Účet</value>
   </data>
   <data name="toolStipBtnChangeView.TextImageRelation" type="System.Windows.Forms.TextImageRelation, System.Windows.Forms">
     <value>ImageAboveText</value>
@@ -745,7 +745,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel1.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleServerorSize" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,52,76461,Percent,47,23539,Absolute,20" /&gt;&lt;Rows Styles="Percent,33,33333,Percent,33,33333,Percent,33,33333" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="titleName" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleServerorSize" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleAccess" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleEncrypted" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="titleOwner" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="titleLastSyncTime" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,52.76461,Percent,47.23539,Absolute,20" /&gt;&lt;Rows Styles="Percent,33.33333,Percent,33.33333,Percent,33.33333" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <data name="titleEncrypted.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Left</value>
@@ -1081,7 +1081,7 @@
     <value>groupBox1</value>
   </data>
   <data name="menuViewAccounts.Text" xml:space="preserve">
-    <value>Nastavení &amp;účtů...</value>
+    <value>Nastavení &amp;účtů</value>
   </data>
   <data name="&gt;&gt;iFolderView.Type" xml:space="preserve">
     <value>Novell.FormsTrayApp.TileListView, iFolderApp, Version=3.8.1.0, Culture=neutral, PublicKeyToken=08dab5faaddc8eb1</value>

@@ -415,7 +415,7 @@
     <value>Vérifier la phrase secrète</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>Adresse du &amp;domaine</value>
+    <value>Adresse du &amp;serveur</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Vérifier les informations du compte iFolder</value>
@@ -473,6 +473,9 @@
   </data>
   <data name="ioErrorReadFailure">
     <value>Les fichiers ne peuvent pas être lus à partir du dossier. Vérifiez les autorisations associées à votre dossier local.</value>
+  </data>
+  <data name="upgradeServerUnavailable">
+    <value>Impossible de rechercher des mises à jour car vous n'êtes pas connecté à un serveur. Veillez à être connecté à un serveur et réessayez.</value>
   </data>
   <data name="menuHelp.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -538,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Pour changer de phrase secrète, vous devez être logué au domaine. Loguez-vous au domaine et essayez.</value>
+    <value>Pour modifier la phrase secrète, vous devez être logué à un compte. Loguez-vous et réessayez.</value>
   </data>
   <data name="AccWizardText">
     <value>Assistant Création de compte iFolder</value>
@@ -548,6 +551,9 @@
   </data>
   <data name="&gt;&gt;menuAccounts.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
     <value>Bienvenue dans l'Assistant Création de compte iFolder</value>
@@ -588,8 +594,9 @@
   <data name="UpgradeAvailableTitle">
     <value>Une mise à niveau du client iFolder est disponible.</value>
   </data>
-  <data name="ErrDirCreate">
-    <value>Erreur lors de la création du répertoire</value>
+  <data name="MigrationMergePrompt.Text">
+    <value>Le dossier iFolder que vous avez sélectionné pour le téléchargement est un dossier iFolder migré. Votre machine locale contient des dossiers iFolder 2.x. Voulez-vous fusionner ce dossier iFolder avec l'un des dossiers iFolder 2.x ?
+    </value>
   </data>
   <data name="WelcomePageAction">
     <value>Pour continuer, cliquez sur Suivant.</value>
@@ -604,7 +611,7 @@
     <value>Ancien serveur iFolder</value>
   </data>
   <data name="NoLoggedInDomainsPasswordText">
-    <value>Le changement de mot de passe nécessite une connexion au domaine. Loguez-vous au domaine et essayez.</value>
+    <value>Pour modifier le mot de passe, vous devez être logué à un compte. Loguez-vous et réessayez.</value>
   </data>
   <data name="CreateDefaultiFolder">
     <value>Créer un dossier iFolder par &amp;défaut</value>
@@ -640,7 +647,10 @@
     <value>Sélectionner l'agent de récupération :</value>
   </data>
   <data name="ServerPagelbl2txt">
-    <value>Entrez le nom de votre domaine iFolder (par exemple, ifolder.exemple.net).</value>
+    <value>Entrez le nom de votre serveur iFolder (par exemple, "ifolder.exemple.net").</value>
+  </data>
+  <data name="upgradeUnavailable">
+    <value>Vous utilisez la dernière version disponible.</value>
   </data>
   <data name="menuSeparator1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -726,8 +736,8 @@ Voulez-vous vraiment quitter l'application ?</value>
   <data name="SelectSecurityOptions">
     <value>Sélectionner des options de sécurité</value>
   </data>
-  <data name="EnterPassPhrase">
-    <value>Entrer la phrase secrète :</value>
+  <data name="operationIncomplete">
+    <value>L'opération n'a pas pu être effectuée. Veuillez réessayer.</value>
   </data>
   <data name="YourFiles">
     <value>Vos fichiers</value>
@@ -780,12 +790,14 @@ Voulez-vous vraiment quitter l'application ?</value>
   <data name="CopyParent">
     <value>Copier le dossier parent</value>
   </data>
-  <data name="MigrationMergePrompt.Text">
-    <value>Le dossier iFolder que vous avez sélectionné pour le téléchargement est un dossier iFolder migré. Votre machine locale contient des dossiers iFolder 2.x. Voulez-vous fusionner ce dossier iFolder avec l'un des dossiers iFolder 2.x ?
-    </value>
+  <data name="alreadyexists">
+    <value>Un dossier portant ce nom existe déjà...</value>
   </data>
   <data name="ClickConnect">
     <value>Cliquez sur Connecter pour valider votre connexion avec le domaine.</value>
+  </data>
+  <data name="ErrDirCreate">
+    <value>Erreur lors de la création du répertoire</value>
   </data>
   <data name="menuAccounts.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,10 +806,10 @@ Voulez-vous vraiment quitter l'application ?</value>
     <value>Sélectionner le domaine</value>
   </data>
   <data name="MigrateNRemove">
-    <value>Migrer le dossier iFolder et le déconnecter du domaine 2.x</value>
+    <value>Migrer le dossier iFolder et le déconnecter du serveur 2.x</value>
   </data>
   <data name="NoLoggedInDomainsTextForImport">
-    <value>Pour importer, vous devez être logué au domaine. Loguez-vous au domaine et essayez.</value>
+    <value>Pour effectuer une importation, vous devez être logué à un compte. Loguez-vous et réessayez.</value>
   </data>
   <data name="menuExit.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1036,8 +1048,8 @@ Voulez-vous vraiment quitter l'application ?</value>
   <data name="MigrationTitle">
     <value>Assistant Migration iFolder</value>
   </data>
-  <data name="alreadyexists">
-    <value>Un dossier portant ce nom existe déjà...</value>
+  <data name="NotSupportedServerOld">
+    <value>Cette opération n'est pas prise en charge sur la version actuelle du serveur iFolder. Pour l'exécuter, vous devez effectuer la mise à niveau vers la dernière version du serveur iFolder.</value>
   </data>
   <data name="&gt;&gt;menuHelp.Type">
     <value>System.Windows.Forms.MenuItem, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1097,8 +1109,8 @@ Voulez-vous vraiment quitter l'application ?</value>
   <data name="EncryptedText">
     <value>&amp;Codé</value>
   </data>
-  <data name="menuSyncLog.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Private</value>
+  <data name="EnterPassPhrase">
+    <value>Entrer la phrase secrète :</value>
   </data>
   <data name="CompletionPageWT">
     <value>Fin de l'Assistant Invitation iFolder</value>
