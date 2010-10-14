@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:53\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,9 @@ msgstr "Ďalšie možnosti"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "Server iFolder:"
+
+msgid "iFolder Account:"
+msgstr "Konto aplikácie iFolder:"
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -1255,6 +1258,9 @@ msgstr "Meno používateľa"
 msgid "Server Name"
 msgstr "Názov servera"
 
+msgid "Account Name"
+msgstr "Názov konta"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "_Podrobnosti"
@@ -1388,6 +1394,9 @@ msgstr "Upozorniť pri vzniku konflik_tu"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Upozorniť na pridanie po_užívateľa do domény iFolder"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Upozorniť na pripojenie po_užívateľa k serveru iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "Automaticky s_ynchronizovať priečinky iFolder"
@@ -1433,6 +1442,9 @@ msgstr "Názov systému:"
 
 msgid "iFolder server name:"
 msgstr "Názov servera iFolder:"
+
+msgid "iFolder account name:"
+msgstr "Názov konta aplikácie iFolder:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1972,8 +1984,8 @@ msgstr "Pr_eniesť priečinok iFolder"
 msgid "Migrate from 2.x"
 msgstr "Preniesť z verzie 2.x"
 
-msgid "_Account Settings..."
-msgstr "N_astavenie konta..."
+msgid "_Account Settings"
+msgstr "N_astavenia konta"
 
 msgid "View _available iFolders"
 msgstr "Zobraziť _dostupné priečinky iFolder"
@@ -2152,6 +2164,9 @@ msgstr "Vyberte jednu z nasledujúcich možností"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "Preniesť priečinok iFolder a odpojiť ho z domény verzie 2.x"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "Preniesť priečinok iFolder a odpojiť ho od servera verzie 2.x"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "Vytvoriť kópiu priečinka iFolder a preniesť ho"
 
@@ -2208,6 +2223,9 @@ msgstr "Používateľ nie je prihlásený k doméne"
 
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "Ak chcete vytvoriť šifrovaný priečinok iFolder, mali by ste byť pripojení ku doméne."
+
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete vytvoriť šifrovaný priečinok iFolder, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
 
 msgid "Delete from iFolder2.X server"
 msgstr "Odstrániť zo servera aplikácie iFolder2.X"
@@ -2362,17 +2380,35 @@ msgstr "Synchronizované: {0}"
 msgid "No Logged-In domains"
 msgstr "Žiadne prihlásené domény"
 
+msgid "No Logged-In accounts"
+msgstr "Žiadne prihlásené kontá"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "Nie sú prihlásené žiadne domény na import kľúčov."
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "Nie sú prihlásené žiadne kontá na import kľúčov."
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "Nie sú prihlásené žiadne domény na obnovenie kľúčov."
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "Nie sú prihlásené žiadne kontá na obnovenie kľúčov."
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "Ak chcete znova nastaviť kľúče, doména musí byť pripojená. Prihláste sa do domény a skúste to."
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete znova nastaviť kľúče, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Na obnovenie prístupového výrazu musí byť doména pripojená. Prihláste sa do domény a skúste to."
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete obnoviť prístupový výraz, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete vykonať import, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "Úspešne importované kľúče a zmenený prístupový výraz"
@@ -2383,8 +2419,14 @@ msgstr "Chyba importu kľúčov."
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "Nie sú prihlásené žiadne domény na zmenu prístupového výrazu."
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "Nie sú prihlásené žiadne kontá na zmenu prístupového výrazu."
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Na zmenu prístupového výrazu musí byť doména pripojená. Prihláste sa na doménu a skúste to."
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete zmeniť prístupový výraz, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
 
 msgid "Successfully exported the keys."
 msgstr "Kľúče boli úspešne exportované."
@@ -2596,6 +2638,9 @@ msgstr "_Zmeniť heslo"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Heslo bolo úspešne zmenené. Prihláste sa do domény s novým heslom."
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "Heslo bolo úspešne zmenené. Prihláste sa do konta s novým heslom."
+
 msgid "_Current password"
 msgstr "_Aktuálne heslo"
 
@@ -2617,8 +2662,14 @@ msgstr "Potvrdiť nové heslo"
 msgid "There are no logged-in domains for changing the password."
 msgstr "Nie sú prihlásené žiadne domény na zmenu hesla."
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "Nie sú prihlásené žiadne kontá na zmenu hesla."
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "Na zmenu hesla je potrebné, aby bola doména pripojená. Prihláste sa do domény a skúste to."
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "Ak chcete zmeniť heslo, musíte byť prihlásení v konte. Prihláste sa a skúste to znova."
 
 msgid "Old password and new password should not be same."
 msgstr "Staré heslo a nové heslo by nemali byť rovnaké."
@@ -2668,6 +2719,9 @@ msgstr "Prístup: {0}"
 msgid "Server: {0}"
 msgstr "Server: {0}"
 
+msgid "Account: {0}"
+msgstr "Konto: {0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "Čas poslednej úspešnej synchronizácie: {0}"
 
@@ -2682,6 +2736,9 @@ msgstr "Typ priečinka iFolder: {0}"
 
 msgid "Domain List"
 msgstr "Zoznam domén"
+
+msgid "Account List"
+msgstr "Zoznam kont"
 
 msgid "User: {0}"
 msgstr "Používateľ: {0}"
@@ -2899,9 +2956,42 @@ msgstr "Ak nie sú k dispozícii požadované povolenia"
 msgid "When file path exceeds optimal limit"
 msgstr "Ak cesta k súboru presahuje optimálny limit"
 
+msgid "When iFolders are shared"
+msgstr "Ak sa zdieľajú priečinky iFolder"
+
+msgid "When conflicts arise"
+msgstr "Ak vzniknú konflikty"
+
+msgid "When a user joins the iFolder domain"
+msgstr "Ak sa používateľ pripojí k doméne iFolder"
+
+msgid "When a policy is violated"
+msgstr "Ak je porušená politika"
+
 msgid "_Upgrade"
 msgstr "_Inovovať"
 
 msgid "Synchronization disabled"
 msgstr "Synchronizácia je zakázaná"
+
+msgid "You are using the latest available version."
+msgstr "Používate najnovšiu dostupnú verziu."
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "Nemožno vyhľadať aktualizácie, pretože nie ste pripojení k doméne. Pripojte sa k doméne a skúste to znova."
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "Nemožno vyhľadať aktualizácie, pretože nie ste pripojení k serveru. Pripojte sa k serveru a skúste to znova."
+
+msgid "Unable to complete the operation. Try again."
+msgstr "Nemožno dokončiť operáciu. Skúste to znova."
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "Aktuálna verzia servera iFolder nepodporuje túto operáciu. Ak chcete operáciu vykonať, musíte server iFolder inovovať na najnovšiu verziu."
+
+msgid "Settings"
+msgstr "Nastavenia"
+
+msgid "Display _Notification"
+msgstr "Zobraziť upozor_nenie"
 

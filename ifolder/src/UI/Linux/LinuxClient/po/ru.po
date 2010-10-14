@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-08-10 10:09\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,9 @@ msgstr "Дополнительно"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "Сервер iFolder:"
+
+msgid "iFolder Account:"
+msgstr "Учетная запись iFolder:"
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -1255,6 +1258,9 @@ msgstr "Имя пользователя"
 msgid "Server Name"
 msgstr "Имя сервера"
 
+msgid "Account Name"
+msgstr "Имя учетной записи"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "_Подробная информация"
@@ -1388,6 +1394,9 @@ msgstr "Уведомлять о конфлик_те"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Уведомлять о пр_исоединении пользователя к домену iFolder"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Оповещать о пр_исоединении пользователя к серверу iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "Автоматическая с_инхронизация папок iFolder"
@@ -1433,6 +1442,9 @@ msgstr "Имя системы:"
 
 msgid "iFolder server name:"
 msgstr "Имя сервера iFolder:"
+
+msgid "iFolder account name:"
+msgstr "Учетная запись iFolder:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1972,8 +1984,8 @@ msgstr "_Мигрировать папку iFolder"
 msgid "Migrate from 2.x"
 msgstr "Миграция с версии 2.x"
 
-msgid "_Account Settings..."
-msgstr "_Настройки учетной записи..."
+msgid "_Account Settings"
+msgstr "_Настройки учетной записи"
 
 msgid "View _available iFolders"
 msgstr "Прос_мотр доступных папок iFolder"
@@ -2152,6 +2164,9 @@ msgstr "Выберите один из следующих параметров"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "Выполнить миграцию папки iFolder и отключить ее от домена 2.x"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "Выполнить миграцию папки iFolder и отключить ее от сервера 2.x"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "Создание копии iFolder и миграция"
 
@@ -2208,6 +2223,9 @@ msgstr "Пользователь не вошел в домен"
 
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "Для создания зашифрованной папки iFolder необходимо подключиться к домену."
+
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "Для создания шифрованной папки iFolder необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
 
 msgid "Delete from iFolder2.X server"
 msgstr "Удалить с сервера iFolder2.X"
@@ -2362,17 +2380,35 @@ msgstr "Синхронизирован: {0}"
 msgid "No Logged-In domains"
 msgstr "Нет доменов, в которые выполнен вход"
 
+msgid "No Logged-In accounts"
+msgstr "Нет учетных записей, в которые выполнен вход"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "Нет доменов, в которые выполнен вход, для импорта ключей."
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "Нет учетных записей, в которые выполнен вход, для импорта ключей."
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "Отсутствуют зарегистрированные домены для переустановки ключей."
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "Отсутствуют зарегистрированные учетные записи для переустановки ключей."
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "Для сброса ключей должен быть подключен домен. Выполните вход в домен и повторите попытку."
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "Для сброса ключей необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Для изменения ключевой фразы должен быть подключен домен. Выполните вход в домен и повторите попытку."
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Для сброса ключевой фразы необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "Для выполнения импорта необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "Успешное импортирование ключей и изменение контрольной фразы"
@@ -2383,8 +2419,14 @@ msgstr "Ошибка импорта ключей."
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "Нет доменов, в которые выполнен вход, для изменения контрольной фразы."
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "Нет доменов, в которые выполнен вход, для изменения ключевой фразы."
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Для изменения контрольной фразы должен быть подключен домен. Выполните вход в домен и повторите попытку."
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Для изменения ключевой фразы необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
 
 msgid "Successfully exported the keys."
 msgstr "Успешно экспортированные ключи."
@@ -2596,6 +2638,9 @@ msgstr "_Смена пароля"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Пароль изменен. Войдите в домен с помощью нового пароля."
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "Пароль изменен. Войдите в учетную запись с помощью нового пароля."
+
 msgid "_Current password"
 msgstr "_Текущий пароль"
 
@@ -2617,8 +2662,14 @@ msgstr "Подтверждение нового пароля"
 msgid "There are no logged-in domains for changing the password."
 msgstr "Нет доменов, в которые выполнен вход для изменения пароля."
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "Нет учетных записей, в которые выполнен вход для изменения пароля."
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "Для изменения пароля должен быть подключен домен. Выполните вход в домен и повторите попытку."
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "Для изменения пароля необходимо войти в учетную запись. Выполните вход и попробуйте еще раз."
 
 msgid "Old password and new password should not be same."
 msgstr "Старый и новый пароли не должны совпадать."
@@ -2668,6 +2719,9 @@ msgstr "Доступ: {0}"
 msgid "Server: {0}"
 msgstr "Сервер: {0}"
 
+msgid "Account: {0}"
+msgstr "Учетная запись: {0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "Время последней успешной синхр.: {0}"
 
@@ -2682,6 +2736,9 @@ msgstr "Тип папки iFolder: {0}"
 
 msgid "Domain List"
 msgstr "Список доменов"
+
+msgid "Account List"
+msgstr "Список учетных записей"
 
 msgid "User: {0}"
 msgstr "Пользователь: {0}"
@@ -2899,9 +2956,42 @@ msgstr "При недоступности необходимых разреше�
 msgid "When file path exceeds optimal limit"
 msgstr "Если путь к файлу превышает оптимальное ограничение"
 
+msgid "When iFolders are shared"
+msgstr "При совместном использовании папок iFolder"
+
+msgid "When conflicts arise"
+msgstr "При возникновении конфликтов"
+
+msgid "When a user joins the iFolder domain"
+msgstr "При присоединении пользователя к домену iFolder"
+
+msgid "When a policy is violated"
+msgstr "При нарушении политики квот"
+
 msgid "_Upgrade"
 msgstr "_Обновление"
 
 msgid "Synchronization disabled"
 msgstr "Синхронизация отключена"
+
+msgid "You are using the latest available version."
+msgstr "Вы используете последнюю доступную версию."
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "Невозможно выполнить поиск обновлений, поскольку отсутствует подключение к домену. Проверьте подключение к домену и попробуйте еще раз."
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "Невозможно выполнить поиск обновлений, поскольку отсутствует подключение к серверу. Проверьте подключение к серверу и попробуйте еще раз."
+
+msgid "Unable to complete the operation. Try again."
+msgstr "Невозможно выполнить операцию. Попробуйте еще раз."
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "Эта операция не поддерживается в текущей версии сервера iFolder. Для выполнения этой операции необходимо выполнить обновление до последней версии сервера iFolder."
+
+msgid "Settings"
+msgstr "Параметры"
+
+msgid "Display _Notification"
+msgstr "Показывать _оповещение"
 

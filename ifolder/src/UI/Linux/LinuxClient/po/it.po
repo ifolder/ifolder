@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-08-10 10:08\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr "Cartelle iFolder"
 
 #: src/LinuxClient/application/iFolderApplication.cs:886
 msgid "Accounts"
-msgstr "Conti"
+msgstr "Account"
 
 #: src/LinuxClient/application/iFolderApplication.cs:884
 msgid "Unable to read files from the folder. Verify the permissions on your local folder."
@@ -199,6 +199,9 @@ msgstr "Altre opzioni"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "Server iFolder:"
+
+msgid "iFolder Account:"
+msgstr "Account  iFolder:"
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -754,7 +757,7 @@ msgstr "_Modifica"
 
 #: src/LinuxClient/library/iFolderWindow.cs:609
 msgid "_Accounts"
-msgstr "_Conti"
+msgstr "_Account"
 
 #: src/LinuxClient/library/iFolderWindow.cs:614
 msgid "Synchronization _Log"
@@ -954,11 +957,11 @@ msgstr "Cancellazione sul server in corso: {0}"
 
 #: src/LinuxClient/library/iFolderWindow.cs:2131
 msgid "Set up an iFolder account?"
-msgstr "Configurare un conto iFolder?"
+msgstr "Configurare un account iFolder?"
 
 #: src/LinuxClient/library/iFolderWindow.cs:2132
 msgid "To begin using iFolder, you must first set up an iFolder account."
-msgstr "Per iniziare a utilizzare iFolder, è necessario configurare un conto iFolder."
+msgstr "Per iniziare a utilizzare iFolder, è necessario configurare un account iFolder."
 
 #: src/LinuxClient/library/iFolderWindow.cs:2179
 #: src/LinuxClient/library/iFolderWindow.cs:2195
@@ -1255,13 +1258,16 @@ msgstr "Nome utente:"
 msgid "Server Name"
 msgstr "Nome server"
 
+msgid "Account Name"
+msgstr "Nome account"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "_Dettagli"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:231
 msgid "Account Settings"
-msgstr "Impostazioni conto"
+msgstr "Impostazioni account"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:261
 msgid "User name:"
@@ -1273,11 +1279,11 @@ msgstr "Memorizza _password"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:303
 msgid "_Enable account"
-msgstr "_Abilita conto"
+msgstr "_Abilita account"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:310
 msgid "De_fault account"
-msgstr "Conto di de_fault"
+msgstr "Account di de_fault"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:431
 msgid "Logged in"
@@ -1298,7 +1304,7 @@ msgstr "Eliminare le impostazioni attuali?"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:583
 msgid "You are currently creating a new account.  By selecting a different account you cancel the operation."
-msgstr "È in corso la creazione di un nuovo conto. Se si seleziona un altro conto, l'operazione verrà annullata."
+msgstr "È in corso la creazione di un nuovo account. Se si seleziona un altro account, l'operazione verrà annullata."
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:674
 msgid "Unable to log out of the iFolder Server"
@@ -1310,7 +1316,7 @@ msgstr "Errore durante l'esecuzione del logout dal server iFolder. Se il problem
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:705
 msgid "An account for this server already exists on the local machine.  Only one account per server is allowed."
-msgstr "Esiste già un conto per questo server nel computer locale. È consentito un solo conto per server."
+msgstr "Esiste già un account per questo server nel computer locale. È consentito un solo account per server."
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:717
 #: src/LinuxClient/library/PrefsAccountsPage.cs:739
@@ -1349,7 +1355,7 @@ msgstr "Si dispone di {0} login extra rimanenti."
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1321
 msgid "You are currently creating a new account.  By closing the window or changing to a different page you cancel the operation."
-msgstr "È in corso la creazione di un nuovo conto. Se si chiude la finestra o si passa a un'altra pagina, l'operazione verrà annullata."
+msgstr "È in corso la creazione di un nuovo account. Se si chiude la finestra o si passa a un'altra pagina, l'operazione verrà annullata."
 
 #: src/LinuxClient/library/PrefsGeneralPage.cs:102
 msgid "Application"
@@ -1388,6 +1394,9 @@ msgstr "Invia notifica quando si verificano confli_tti"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Invia notifica quando un _utente partecipa al dominio iFolder"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Invia notifica quando un _utente partecipa al server iFolder"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "S_incronizza cartelle iFolder automaticamente"
@@ -1422,10 +1431,10 @@ msgstr "L'intervallo di sincronizzazione non può essere impostato su un valore 
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:61
 msgid "Remove this iFolder account?"
-msgstr "Rimuovere il conto iFolder?"
+msgstr "Rimuovere l'account iFolder?"
 
 msgid "Remove this iFolder Account?"
-msgstr "Rimuovere il conto iFolder?"
+msgstr "Rimuovere l'account iFolder?"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:77
 msgid "System Name:"
@@ -1433,6 +1442,9 @@ msgstr "Nome sistema:"
 
 msgid "iFolder server name:"
 msgstr "Nome server iFolder:"
+
+msgid "iFolder account name:"
+msgstr "Nome account  iFolder:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1513,7 +1525,7 @@ msgstr "Riprovare."
 
 #: src/LinuxClient/library/Util.cs:336
 msgid "The user account is disabled"
-msgstr "Conto utente disabilitato"
+msgstr "Account utente disabilitato"
 
 #: src/LinuxClient/library/Util.cs:337 src/LinuxClient/library/Util.cs:341
 msgid "Please contact your network administrator for assistance."
@@ -1521,7 +1533,7 @@ msgstr "Contattare l'amministratore di rete per assistenza."
 
 #: src/LinuxClient/library/Util.cs:340
 msgid "The user account is locked"
-msgstr "Conto utente bloccato"
+msgstr "Account utente bloccato"
 
 #: src/LinuxClient/library/Util.cs:344
 msgid "Unable to contact the specified server"
@@ -1544,13 +1556,13 @@ msgid "The Simias process must be running for iFolder to work.  Restart iFolder.
 msgstr "È necessario che il processo Simias sia in esecuzione per il corretto funzionamento di iFolder. Riavviare iFolder. Se il problema persiste, contattare l'amministratore di rete per assistenza."
 
 msgid "Configure an iFolder Account"
-msgstr "Configura un conto iFolder"
+msgstr "Configura un account iFolder"
 
 msgid "Welcome to the iFolder Account Assistant.\n\nClick \"Forward\" to begin."
-msgstr "Assistente conti iFolder.\n\nFare clic su \"Avanti\" per iniziare."
+msgstr "Assistente account iFolder.\n\nFare clic su \"Avanti\" per iniziare."
 
 msgid "Welcome to the iFolder Account Creation Wizard.\n\nClick \"Forward\" to begin."
-msgstr "Creazione guidata conto iFolder.\n\nFare clic su \"Avanti\" per iniziare."
+msgstr "Creazione guidata account iFolder.\n\nFare clic su \"Avanti\" per iniziare."
 
 msgid "iFolder Server"
 msgstr "Server iFolder"
@@ -1580,7 +1592,7 @@ msgid "Identity"
 msgstr "Identità"
 
 msgid "iFolder Account Information"
-msgstr "Informazioni sul conto iFolder"
+msgstr "Informazioni sull'account iFolder"
 
 msgid "Enter your iFolder user name and password (for example, \"jsmith\")."
 msgstr "Immettere il nome utente e la password di iFolder (ad esempio \"mrossi\")."
@@ -1622,7 +1634,7 @@ msgid "_Remember password:"
 msgstr "_Memorizza password:"
 
 msgid "Make default account:"
-msgstr "Imposta come conto di default:"
+msgstr "Imposta come account di default:"
 
 msgid "Click \"Connect\" to test your connection with the server."
 msgstr "Fare clic su \"Connetti\" per verificare la connessione al server."
@@ -1658,25 +1670,25 @@ msgid "Congratulations!"
 msgstr "Operazione completata con successo"
 
 msgid "iFolder Account Assistant"
-msgstr "Assistente conti iFolder"
+msgstr "Assistente account iFolder"
 
 msgid "iFolder Account Creation Wizard"
-msgstr "Creazione guidata conto iFolder"
+msgstr "Creazione guidata account iFolder"
 
 msgid "iFolder Account Assistant - (1 of 5)"
-msgstr "Assistente conti iFolder - (1 di 5)"
+msgstr "Assistente account iFolder - (1 di 5)"
 
 msgid "iFolder Account Assistant - (2 of 5)"
-msgstr "Assistente conti iFolder - (2 di 5)"
+msgstr "Assistente account iFolder - (2 di 5)"
 
 msgid "iFolder Account Assistant - (3 of 5)"
-msgstr "Assistente conti iFolder - (3 di 5)"
+msgstr "Assistente account iFolder - (3 di 5)"
 
 msgid "iFolder Account Assistant - (4 of 5)"
-msgstr "Assistente conti iFolder - (4 di 5)"
+msgstr "Assistente account iFolder - (4 di 5)"
 
 msgid "iFolder Account Assistant - (5 of 5)"
-msgstr "Assistente conti iFolder - (5 di 5)"
+msgstr "Assistente account iFolder - (5 di 5)"
 
 msgid "_Skip"
 msgstr "_Ignora"
@@ -1697,7 +1709,7 @@ msgid "Co_nnect"
 msgstr "Co_nnetti"
 
 msgid "Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
-msgstr "Connessione eseguita\na:\n\nNome conto: {0}\nIndirizzo server: {1}\nNome utente: {2}\n\nFare clic su \"Fine\" per chiudere la finestra."
+msgstr "Connessione eseguita\na:\n\nNome account: {0}\nIndirizzo server: {1}\nNome utente: {2}\n\nFare clic su \"Fine\" per chiudere la finestra."
 
 msgid "You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."
 msgstr "Connessione eseguita a:\n\nNome server: \t{0}\nIndirizzo server: \t{1}\nNome utente: \t{2}\n\nFare clic su \"Fine\" per chiudere la procedura guidata."
@@ -1745,10 +1757,10 @@ msgid "Connecting..."
 msgstr "Connessione in corso..."
 
 msgid "Please wait while your iFolder account is connecting."
-msgstr "Attendere. Connessione del conto iFolder in corso."
+msgstr "Attendere. Connessione dell'account iFolder in corso."
 
 msgid "An account already exists"
-msgstr "Esiste già un conto"
+msgstr "Esiste già un account"
 
 msgid "Accept the certificate of this server?"
 msgstr "Accettare il certificato di questo server?"
@@ -1778,10 +1790,10 @@ msgid "Unable to reset the passphrase"
 msgstr "Impossibile reimpostare la stringa di cifratura"
 
 msgid "Unable to remove the account"
-msgstr "Impossibile rimuovere il conto"
+msgstr "Impossibile rimuovere l'account"
 
 msgid "iFolder encountered a problem removing the account.  Please restart iFolder and try again."
-msgstr "È stato rilevato un problema di rimozione del conto. Riavviare iFolder e riprovare."
+msgstr "È stato rilevato un problema di rimozione dell'account. Riavviare iFolder e riprovare."
 
 msgid "iFolder passphrase"
 msgstr "Stringa di cifratura di iFolder"
@@ -1808,7 +1820,7 @@ msgid "_Automatically connect"
 msgstr "Connessione _automatica"
 
 msgid "Account is _default"
-msgstr "Conto di _default"
+msgstr "Account di _default"
 
 msgid "Address:"
 msgstr "Indirizzo:"
@@ -1841,22 +1853,22 @@ msgid "An error was encountered while attempting to modify the password."
 msgstr "Si è verificato un errore durante il tentativo di modifica della password."
 
 msgid "Could not enable this account"
-msgstr "Impossibile abilitare il conto"
+msgstr "Impossibile abilitare l'account"
 
 msgid "There was an error enabling this account."
-msgstr "Si è verificato un errore durante l'abilitazione di questo conto."
+msgstr "Si è verificato un errore durante l'abilitazione di questo account."
 
 msgid "Could not disable this account"
-msgstr "Impossibile disabilitare il conto"
+msgstr "Impossibile disabilitare l'account"
 
 msgid "There was an error disabling this account."
-msgstr "Si è verificato un errore durante la disabilitazione di questo conto."
+msgstr "Si è verificato un errore durante la disabilitazione di questo account."
 
 msgid "Could not make this account the default"
-msgstr "Impossibile impostare il conto come default"
+msgstr "Impossibile impostare l'account come default"
 
 msgid "There was an error making this account the default."
-msgstr "Si è verificato un errore durante l'impostazione di questo conto come conto di default."
+msgstr "Si è verificato un errore durante l'impostazione di questo account come account di default."
 
 msgid "Export Encrypted Keys"
 msgstr "Esporta chiavi cifrate"
@@ -1916,7 +1928,7 @@ msgid "Yesterday"
 msgstr "Ieri"
 
 msgid "Connect iFolder Account"
-msgstr "Connetti conto iFolder"
+msgstr "Connetti account iFolder"
 
 msgid "Unable to launch File Browser"
 msgstr "Impossibile avviare il browser di file"
@@ -1925,7 +1937,7 @@ msgid "iFolder attempted to open the Nautilus File Manager and the Konqueror Fil
 msgstr "Tentativo di aprire i file manager Nautilus e Konqueror non riuscito."
 
 msgid "Account:"
-msgstr "Conto:"
+msgstr "Account:"
 
 msgid "Add Users"
 msgstr "Aggiungi utenti"
@@ -1972,8 +1984,8 @@ msgstr "Esegui _migrazione di iFolder"
 msgid "Migrate from 2.x"
 msgstr "Esegui migrazione da 2.x"
 
-msgid "_Account Settings..."
-msgstr "Imp_ostazioni conto..."
+msgid "_Account Settings"
+msgstr "_Impostazioni account"
 
 msgid "View _available iFolders"
 msgstr "Visualizza c_artelle iFolder disponibili"
@@ -2152,6 +2164,9 @@ msgstr "Scegliere una delle opzioni seguenti"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "Esegui la migrazione della cartella iFolder e disconnettila dal dominio 2.x"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "Esegui la migrazione della cartella iFolder e disconnettila dal server 2.x"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "Creare una copia della cartella iFolder ed eseguire la migrazione"
 
@@ -2209,6 +2224,9 @@ msgstr "Utente che non ha eseguito il login al dominio"
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "Per creare una cartella iFolder cifrata è necessario essere connessi al dominio."
 
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "Per creare una cartella iFolder cifrata è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
+
 msgid "Delete from iFolder2.X server"
 msgstr "Cancella dal server iFolder2.X"
 
@@ -2231,13 +2249,13 @@ msgid "Error in Migration"
 msgstr "Errore durante la migrazione"
 
 msgid "Sorry! The iFolder cannot be migrated to the specified account.\n\nPlease try again."
-msgstr "Impossibile eseguire la migrazione della cartella iFolder al conto specificato.\n\nRiprovare."
+msgstr "Impossibile eseguire la migrazione della cartella iFolder all'account specificato.\n\nRiprovare."
 
 msgid "Online"
 msgstr "In linea"
 
 msgid "Account Name:"
-msgstr "Nome conto:"
+msgstr "Nome account:"
 
 msgid "Change Passphrase"
 msgstr "Cambia stringa di cifratura"
@@ -2303,13 +2321,13 @@ msgid "Please contact your system administrator."
 msgstr "Rivolgersi all'amministratore di sistema."
 
 msgid "Account Error"
-msgstr "Errore conto"
+msgstr "Errore account"
 
 msgid "This account has been removed from your computer."
-msgstr "Il conto è stato rimosso dal computer."
+msgstr "L'account è stato rimosso dal computer."
 
 msgid "If you wish to connect to this account again, please add it in the Account Settings Dialog."
-msgstr "Se si desidera connettersi nuovamente al conto, aggiungerlo nella finestra di dialogo Impostazioni conto."
+msgstr "Se si desidera connettersi nuovamente all'account, aggiungerlo nella finestra di dialogo Impostazioni account."
 
 msgid "Migration Alert"
 msgstr "Avviso di migrazione"
@@ -2348,7 +2366,7 @@ msgid "Next"
 msgstr "Avanti"
 
 msgid "iFolder account"
-msgstr "Conto iFolder"
+msgstr "Account iFolder"
 
 msgid "Convert to an iFolder..."
 msgstr "Converti in cartella iFolder..."
@@ -2362,17 +2380,35 @@ msgstr "Sincronizzato: {0}"
 msgid "No Logged-In domains"
 msgstr "Nessun dominio connesso"
 
+msgid "No Logged-In accounts"
+msgstr "Nessun account connesso"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "Non vi sono domini collegati per l'importazione delle chiavi."
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "Non vi sono account collegati per l'importazione delle chiavi."
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "Non vi sono domini collegati per la reimpostazione delle chiavi."
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "Non vi sono account collegati per la reimpostazione delle chiavi."
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "Per reimpostare le chiavi, è necessario connettersi al dominio. Eseguire il login al dominio e riprovare."
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "Per reimpostare le chiavi è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Per reimpostare la stringa di cifratura, è necessario connettersi al dominio. Eseguire il login al dominio, quindi, riprovare."
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Per reimpostare la stringa di cifratura è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "Per l'importazione è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "Importazione delle chiavi e modifica della stringa di cifratura completate"
@@ -2383,8 +2419,14 @@ msgstr "Errore durante l'importazione delle chiavi."
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "Non vi sono domini collegati per la modifica della stringa di cifratura."
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "Non vi sono account collegati per la modifica della stringa di cifratura."
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Per modificare la stringa di cifratura, è necessario connettersi al dominio. Eseguire il login al dominio e riprovare."
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Per modificare la stringa di cifratura è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
 
 msgid "Successfully exported the keys."
 msgstr "Esportazione delle chiavi completata."
@@ -2429,7 +2471,7 @@ msgid "No Password"
 msgstr "Nessuna password"
 
 msgid "Entering password is cancelled. If password is not provided, Automatic Account creation will fail. Do you want to continue?"
-msgstr "Immissione della password annullata. Se non viene specificata una password, la creazione automatica del conto avrà esito negativo. Continuare?"
+msgstr "Immissione della password annullata. Se non viene specificata una password, la creazione automatica dell'account avrà esito negativo. Continuare?"
 
 msgid "No Passphrase"
 msgstr "Nessuna stringa di cifratura"
@@ -2570,7 +2612,7 @@ msgid "Login disabled."
 msgstr "Login disabilitato."
 
 msgid "User account expired."
-msgstr "Conto utente scaduto."
+msgstr "Account utente scaduto."
 
 msgid "User can not change password."
 msgstr "Impossibile cambiare la password."
@@ -2596,6 +2638,9 @@ msgstr "_Cambia password"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Password cambiata. Eseguire il login al dominio con la nuova password."
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "Password cambiata. Eseguire il login all'account con la nuova password."
+
 msgid "_Current password"
 msgstr "_Password attuale"
 
@@ -2617,8 +2662,14 @@ msgstr "Conferma nuova password"
 msgid "There are no logged-in domains for changing the password."
 msgstr "Non vi sono domini collegati per la modifica della password."
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "Non vi sono account collegati per la modifica della password."
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "Per modificare la password, è necessario connettersi al dominio. Eseguire il login al dominio e riprovare."
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "Per reimpostare la password è necessario aver eseguito il login a un account. Eseguire il login e riprovare."
 
 msgid "Old password and new password should not be same."
 msgstr "La password precedente e quella nuova non devono essere uguali."
@@ -2668,6 +2719,9 @@ msgstr "Accesso: {0}"
 msgid "Server: {0}"
 msgstr "Server: {0}"
 
+msgid "Account: {0}"
+msgstr "Account: {0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "Ora dell'ultima sincronizzazione completata: {0}"
 
@@ -2682,6 +2736,9 @@ msgstr "Tipo di cartella iFolder: {0}"
 
 msgid "Domain List"
 msgstr "Elenco domini"
+
+msgid "Account List"
+msgstr "Elenco account"
 
 msgid "User: {0}"
 msgstr "Utente: {0}"
@@ -2714,7 +2771,7 @@ msgid "Welcome to the Passphrase Recovery Wizard"
 msgstr "Recupero guidato della stringa di cifratura"
 
 msgid "Select the account for which the passphrase must to be reset."
-msgstr "Selezionare il conto per cui deve essere reimpostata la stringa di cifratura."
+msgstr "Selezionare l'account per cui deve essere reimpostata la stringa di cifratura."
 
 msgid "Click Forward to proceed."
 msgstr "Fare clic su Inoltra per andare avanti."
@@ -2735,7 +2792,7 @@ msgid "I have the secret file and it password, I have the new data file sent by 
 msgstr "È disponibile il file segreto e la password corrispondente, è disponibile il nuovo file di dati inviato dall'amministratore, non è disponibile il file segreto o di dati."
 
 msgid "_iFolder account"
-msgstr "Conto _iFolder"
+msgstr "Account _iFolder"
 
 msgid "_Location of secret file"
 msgstr "_Ubicazione del file segreto"
@@ -2777,7 +2834,7 @@ msgid "Select passphrase recovery step"
 msgstr "Selezionare il passaggio di recupero della stringa di cifratura"
 
 msgid "Select account"
-msgstr "Seleziona conto"
+msgstr "Seleziona account"
 
 msgid "Select an option to recover your passphrase."
 msgstr "Selezionare un'opzione per recuperare la stringa di cifratura."
@@ -2804,10 +2861,10 @@ msgid "Passphrase reset failed"
 msgstr "Reimpostazione della stringa di cifratura non riuscita"
 
 msgid "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
-msgstr "Impossibile autenticare il dominio. È stato eseguito il logout del conto. Eseguire il login e riprovare"
+msgstr "Impossibile autenticare l'account. È stato eseguito il logout dell'account. Eseguire il login e riprovare"
 
 msgid "You have been logged out of the account.Please login and try again."
-msgstr "È stato eseguito il logout del conto. Eseguire il login e riprovare."
+msgstr "È stato eseguito il logout dell'account. Eseguire il login e riprovare."
 
 msgid "Passphrase reset successfully"
 msgstr "Reimpostazione della stringa di cifratura completata"
@@ -2849,22 +2906,22 @@ msgid "Passphrase Recovery Wizard"
 msgstr "Recupero guidato stringa di cifratura"
 
 msgid "_iFolder Account"
-msgstr "_Conto iFolder"
+msgstr "_Account iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Percorso cartella dei conflitti"
 
 msgid "Account Not Encrypted"
-msgstr "Conto non cifrato"
+msgstr "Account non cifrato"
 
 msgid "Encryption is not enabled for this account. Contact your system administrator to enable encryption."
-msgstr "Cifratura non abilitata per il conto. Contattare l'amministratore del sistema per abilitare la cifratura."
+msgstr "Cifratura non abilitata per l'account. Contattare l'amministratore del sistema per abilitare la cifratura."
 
 msgid "Passphrase Not Set"
 msgstr "Stringa di cifratura non impostata"
 
 msgid "Passphrase is not set for this account."
-msgstr "Stringa di cifratura non impostata per il conto."
+msgstr "Stringa di cifratura non impostata per l'account."
 
 msgid "Available for download"
 msgstr "Disponibile per il download"
@@ -2899,9 +2956,42 @@ msgstr "Quando non sono disponibili le autorizzazioni necessarie"
 msgid "When file path exceeds optimal limit"
 msgstr "Quando il percorso del file supera il limite ottimale"
 
+msgid "When iFolders are shared"
+msgstr "Quando le cartelle iFolder vengono condivise"
+
+msgid "When conflicts arise"
+msgstr "Quando si verificano conflitti"
+
+msgid "When a user joins the iFolder domain"
+msgstr "Quando un utente partecipa al dominio iFolder"
+
+msgid "When a policy is violated"
+msgstr "Quando è violata una norma"
+
 msgid "_Upgrade"
 msgstr "_Upgrade"
 
 msgid "Synchronization disabled"
 msgstr "Sincronizzazione disabilitata"
+
+msgid "You are using the latest available version."
+msgstr "Si sta utilizzando l'ultima versione disponibile."
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "Impossibile effettuare la ricerca di aggiornamenti perché non si è connessi ad alcun dominio. Accertarsi di essere connessi a un dominio e riprovare."
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "Impossibile effettuare la ricerca di aggiornamenti perché non si è connessi ad alcun server. Accertarsi di essere connessi a un server e riprovare."
+
+msgid "Unable to complete the operation. Try again."
+msgstr "Impossibile completare l'operazione. Riprovare."
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "Questa operazione non è supportata dalla versione corrente del server iFolder. Per effettuarla è necessario eseguire l'upgrade all'ultima versione del server iFolder."
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Display _Notification"
+msgstr "Visualizza _notifica"
 

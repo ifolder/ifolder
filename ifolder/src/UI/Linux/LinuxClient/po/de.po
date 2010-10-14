@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:51\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:13\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,9 @@ msgstr "Weitere Optionen"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "iFolder-Server:"
+
+msgid "iFolder Account:"
+msgstr "iFolder-Konto:"
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -1255,6 +1258,9 @@ msgstr "Benutzername:"
 msgid "Server Name"
 msgstr "Servername"
 
+msgid "Account Name"
+msgstr "Kontoname"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "_Details"
@@ -1388,6 +1394,9 @@ msgstr "Benachrichtigung bei Auftreten von Konflik_ten"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Benachrichtigung bei Eintritt eines _Benutzers in die iFolder-Domäne"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Benachrichtigung bei Eintritt eines _Benutzers auf den iFolder-Server"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "iFolder-Ordner automatisch s_ynchronisieren"
@@ -1433,6 +1442,9 @@ msgstr "Systemname:"
 
 msgid "iFolder server name:"
 msgstr "iFolder-Servername:"
+
+msgid "iFolder account name:"
+msgstr "iFolder-Kontoname:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1972,8 +1984,8 @@ msgstr "iFolder-Ordner _migrieren"
 msgid "Migrate from 2.x"
 msgstr "Von 2.x migrieren"
 
-msgid "_Account Settings..."
-msgstr "_Kontoeinstellungen..."
+msgid "_Account Settings"
+msgstr "_Kontoeinstellungen"
 
 msgid "View _available iFolders"
 msgstr "_Verfügbare iFolder-Ordner anzeigen"
@@ -2152,6 +2164,9 @@ msgstr "Wählen Sie eine der folgenden Optionen aus"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "iFolder-Ordner migrieren und von 2.x-Domäne trennen"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "iFolder-Ordner migrieren und von 2.x-Server trennen"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "Eine Kopie des iFolder-Ordners erstellen und migrieren"
 
@@ -2208,6 +2223,9 @@ msgstr "Benutzer nicht bei der Domäne angemeldet"
 
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "Zum Erstellen eines verschlüsselten iFolder-Ordners müssen Sie mit der Domäne verbunden sein."
+
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "Zum Erstellen eines verschlüsselten iFolder-Ordners müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
 
 msgid "Delete from iFolder2.X server"
 msgstr "Von iFolder 2.x-Server löschen"
@@ -2362,17 +2380,35 @@ msgstr "Synchronisiert: {0}"
 msgid "No Logged-In domains"
 msgstr "Keine angemeldeten Domänen"
 
+msgid "No Logged-In accounts"
+msgstr "Keine angemeldeten Konten"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "Es sind keine angemeldeten Domänen zum Importieren von Schlüsseln vorhanden."
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "Es sind keine angemeldeten Konten zum Importieren von Schlüsseln vorhanden."
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "Es sind keine angemeldeten Domänen zum Zurücksetzen von Schlüsseln vorhanden."
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "Es sind keine angemeldeten Konten zum Zurücksetzen von Schlüsseln vorhanden."
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "Zum Zurücksetzen der Schlüssel sollte die Domäne verbunden sein. Melden Sie sich bei der Domäne an, und wiederholen Sie den Vorgang."
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "Zum Zurücksetzen der Schlüssel müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Zum Zurücksetzen des Passwortsatzes sollte die Domäne verbunden sein. Melden Sie sich bei der Domäne an und wiederholen Sie den Vorgang."
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Zum Zurücksetzen des Passwortsatzes müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "Zum Importieren müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "Schlüssel wurden erfolgreich importiert und der Passwortsatz wurde erfolgreich geändert"
@@ -2383,8 +2419,14 @@ msgstr "Fehler beim Importieren der Schlüssel."
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "Es sind keine angemeldeten Domänen zum Ändern des Passwortsatzes vorhanden."
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "Es sind keine angemeldeten Konten zum Ändern des Passwortsatzes vorhanden."
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "Zum Ändern des Passwortsatzes sollte die Domäne verbunden sein. Melden Sie sich bei der Domäne an und wiederholen Sie den Vorgang."
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "Zum Ändern des Passwortsatzes müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
 
 msgid "Successfully exported the keys."
 msgstr "Die Schlüssel wurden erfolgreich exportiert."
@@ -2596,6 +2638,9 @@ msgstr "Passwort _ändern"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Passwort erfolgreich geändert. Melden Sie sich bei der Domäne mit dem neuen Passwort an."
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "Passwort erfolgreich geändert. Melden Sie sich bei dem Konto mit dem neuen Passwort an."
+
 msgid "_Current password"
 msgstr "_Aktuelles Passwort"
 
@@ -2617,8 +2662,14 @@ msgstr "Neues Passwort bestätigen"
 msgid "There are no logged-in domains for changing the password."
 msgstr "Es sind keine angemeldeten Domänen zum Ändern des Passworts vorhanden."
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "Es sind keine angemeldeten Konten zum Ändern des Passworts vorhanden."
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "Zum Ändern des Passworts sollte die Domäne verbunden sein. Melden Sie sich bei der Domäne an und wiederholen Sie den Vorgang."
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "Zum Ändern des Passworts müssen Sie bei einem Konto angemeldet sein. Melden Sie sich an und versuchen Sie es erneut."
 
 msgid "Old password and new password should not be same."
 msgstr "Das alte und das neue Passwort sollten nicht identisch sein."
@@ -2668,6 +2719,9 @@ msgstr "Zugriff: {0}"
 msgid "Server: {0}"
 msgstr "Server: {0}"
 
+msgid "Account: {0}"
+msgstr "Konto: {0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "Uhrzeit der letzten erfolgreichen Synchronisierung: {0}"
 
@@ -2682,6 +2736,9 @@ msgstr "iFolder-Typ: {0}"
 
 msgid "Domain List"
 msgstr "Domänenliste"
+
+msgid "Account List"
+msgstr "Kontoliste"
 
 msgid "User: {0}"
 msgstr "Benutzer: {0}"
@@ -2899,9 +2956,42 @@ msgstr "Wenn die erforderlichen Berechtigungen nicht verfügbar sind"
 msgid "When file path exceeds optimal limit"
 msgstr "Wenn der Dateipfad die optimale Grenze überschreitet"
 
+msgid "When iFolders are shared"
+msgstr "Wenn iFolder-Ordner freigegeben sind"
+
+msgid "When conflicts arise"
+msgstr "Wenn Konflikte auftreten"
+
+msgid "When a user joins the iFolder domain"
+msgstr "Wenn ein Benutzer in die iFolder-Domäne eintritt"
+
+msgid "When a policy is violated"
+msgstr "Wenn eine Richtlinie verletzt wird"
+
 msgid "_Upgrade"
 msgstr "_Aufrüstung"
 
 msgid "Synchronization disabled"
 msgstr "Synchronisierung deaktiviert"
+
+msgid "You are using the latest available version."
+msgstr "Sie verwenden die neueste Version, die verfügbar ist."
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "Es kann nur nach Updates gesucht werden, wenn Sie mit einer Domäne verbunden sind. Stellen Sie sicher, dass Sie mit einer Domäne verbunden sind, und versuchen Sie es erneut."
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "Es kann nur nach Updates gesucht werden, wenn Sie mit einem Server verbunden sind. Stellen Sie sicher, dass Sie mit einem Server verbunden sind, und versuchen Sie es erneut."
+
+msgid "Unable to complete the operation. Try again."
+msgstr "Der Vorgang kann nicht abgeschlossen werden. Versuchen Sie es erneut."
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "Dieser Vorgang wird von der aktuellen Version des iFolder-Servers nicht unterstützt. Zum Ausführen dieses Vorgangs müssen Sie eine Aktualisierung auf die neueste Version des iFolder-Servers vornehmen."
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Display _Notification"
+msgstr "_Benachrichtigung anzeigen"
 

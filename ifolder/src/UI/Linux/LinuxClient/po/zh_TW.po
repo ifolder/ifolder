@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:54\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:15\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,9 @@ msgstr "更多選項"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "iFolder 伺服器："
+
+msgid "iFolder Account:"
+msgstr "iFolder 帳戶："
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -1255,6 +1258,9 @@ msgstr "使用者名稱"
 msgid "Server Name"
 msgstr "伺服器名稱"
 
+msgid "Account Name"
+msgstr "帳戶名稱"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "細節(_D)"
@@ -1388,6 +1394,9 @@ msgstr "發生衝突時通知我(_T)"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "使用者加入 iFolder 網域時通知我(_U)"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "使用者加入 iFolder 伺服器時通知我(_U)"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "自動同步化 iFolder(_Y)"
@@ -1433,6 +1442,9 @@ msgstr "系統名稱："
 
 msgid "iFolder server name:"
 msgstr "iFolder 伺服器名稱："
+
+msgid "iFolder account name:"
+msgstr "iFolder 帳戶名稱："
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1972,8 +1984,8 @@ msgstr "移轉 iFolder(_M)"
 msgid "Migrate from 2.x"
 msgstr "從 2.x 移轉"
 
-msgid "_Account Settings..."
-msgstr "帳戶設定(_A)..."
+msgid "_Account Settings"
+msgstr "帳戶設定(_A)"
 
 msgid "View _available iFolders"
 msgstr "檢視可用的 iFolder(_A)"
@@ -2152,6 +2164,9 @@ msgstr "選取下列其中一個選項"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "移轉 iFolder，並解除與 2.x 領域之間的連接"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "移轉 iFolder，並將其自 2.x 伺服器中斷"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "建立 iFolder 副本並移轉"
 
@@ -2208,6 +2223,9 @@ msgstr "使用者未登入領域"
 
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "若要建立加密的 iFolder，您應該連接至領域。"
+
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "若要建立加密的 iFolder，您必須先登入至帳戶中。請登入，然後再試一次。"
 
 msgid "Delete from iFolder2.X server"
 msgstr "從 iFolder2.X 伺服器刪除"
@@ -2362,17 +2380,35 @@ msgstr "已同步化的：{0}"
 msgid "No Logged-In domains"
 msgstr "沒有已登入的領域"
 
+msgid "No Logged-In accounts"
+msgstr "沒有已登入的帳戶"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "沒有已登入領域可用於輸入金鑰。"
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "沒有已登入的帳戶可用於輸入金鑰。"
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "沒有已登入的網域領域可用於重設金鑰。"
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "沒有已登入的帳戶可用於重設金鑰。"
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "需要連接網域才能重設金鑰。請登入網域然後再試一次。"
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "若要重設金鑰，您必須先登入至帳戶中。請登入，然後再試一次。"
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "需要連接網域才能重設密碼片語。請登入網域然後再嘗試。"
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "若要重設密碼片語，您必須先登入至帳戶中。請登入，然後再試一次。"
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "若要輸入，您必須先登入至帳戶中。請登入，然後再試一次。"
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "已成功輸入金鑰並變更通關密語"
@@ -2383,8 +2419,14 @@ msgstr "輸入金鑰時發生錯誤。"
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "沒有已登入領域可用於變更通關密語。"
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "沒有已登入的帳戶可用於變更密碼片語。"
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "需要連接領域才能變更密碼片語。請登入領域然後再試一次。"
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "若要變更密碼片語，您必須先登入至帳戶中。請登入，然後再試一次。"
 
 msgid "Successfully exported the keys."
 msgstr "已成功輸出金鑰。"
@@ -2596,6 +2638,9 @@ msgstr "變更密碼(_C)"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "已成功變更密碼。請使用新密碼登入網域。"
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "已成功變更密碼。請使用新密碼登入帳戶。"
+
 msgid "_Current password"
 msgstr "目前的密碼(_C)"
 
@@ -2617,8 +2662,14 @@ msgstr "確認新密碼"
 msgid "There are no logged-in domains for changing the password."
 msgstr "未登入網域，因此無法變更密碼。"
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "沒有已登入的帳戶可用於變更密碼。"
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "需要連接網域才能變更密碼。請登入網域然後再試一次。"
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "若要變更密碼，您必須先登入帳戶。請登入，然後再試一次。"
 
 msgid "Old password and new password should not be same."
 msgstr "舊密碼與新密碼不能相同。"
@@ -2668,6 +2719,9 @@ msgstr "存取：{0}"
 msgid "Server: {0}"
 msgstr "伺服器：{0}"
 
+msgid "Account: {0}"
+msgstr "帳戶：{0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "上次成功同步時間：{0}"
 
@@ -2682,6 +2736,9 @@ msgstr "iFolder 類型：{0}"
 
 msgid "Domain List"
 msgstr "網域清單"
+
+msgid "Account List"
+msgstr "帳戶清單"
 
 msgid "User: {0}"
 msgstr "使用者：{0}"
@@ -2899,9 +2956,42 @@ msgstr "無法使用需要的許可時"
 msgid "When file path exceeds optimal limit"
 msgstr "檔案路徑超過最佳限制時"
 
+msgid "When iFolders are shared"
+msgstr "共享 iFolders 時"
+
+msgid "When conflicts arise"
+msgstr "發生衝突時"
+
+msgid "When a user joins the iFolder domain"
+msgstr "使用者加入 iFolder 網域時"
+
+msgid "When a policy is violated"
+msgstr "違反規則時"
+
 msgid "_Upgrade"
 msgstr "_升級"
 
 msgid "Synchronization disabled"
 msgstr "已停用同步"
+
+msgid "You are using the latest available version."
+msgstr "您使用的是最新版本。"
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "由於您未連線至網域，因此無法搜尋更新。請確認您已連接至網域，並再試一次。"
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "由於您未連線至伺服器，因此無法搜尋更新。請確認您已連接至伺服器，並再試一次。"
+
+msgid "Unable to complete the operation. Try again."
+msgstr "無法完成操作。請再試一次。"
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "目前版本的 iFolder 伺服器不支援此操作。若要執行此操作，您必須升級至最新版本的 iFolder 伺服器。"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Display _Notification"
+msgstr "顯示通知(_N)"
 

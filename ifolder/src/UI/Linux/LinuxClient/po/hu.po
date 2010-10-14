@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-09 12:01-0700\n"
-"PO-Revision-Date: 2010-07-04 18:52\n"
+"POT-Creation-Date: 2010-10-05 12:01-0700\n"
+"PO-Revision-Date: 2010-10-12 12:14\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -199,6 +199,9 @@ msgstr "További lehetőségek"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:195
 msgid "iFolder Server:"
 msgstr "iFolder kiszolgáló:"
+
+msgid "iFolder Account:"
+msgstr "iFolder-fiók:"
 
 #: src/LinuxClient/library/FileRenameDialog.cs:57
 msgid "Rename file"
@@ -1255,6 +1258,9 @@ msgstr "Felhasználónév"
 msgid "Server Name"
 msgstr "Kiszolgáló neve"
 
+msgid "Account Name"
+msgstr "Fiók neve"
+
 #: src/LinuxClient/library/PrefsAccountsPage.cs:226
 msgid "_Details"
 msgstr "_Részletek"
@@ -1388,6 +1394,9 @@ msgstr "Értesítés az üt_közésekről"
 msgid "Notify when a _user joins the iFolder domain"
 msgstr "Értesítés, ha egy _felhasználó belép az iFolder-tartományba"
 
+msgid "Notify when a _user joins the iFolder server"
+msgstr "Értesítés, ha egy _felhasználó belép az iFolder-kiszolgálóra"
+
 #: src/LinuxClient/library/PrefsGeneralPage.cs:219
 msgid "Automatically S_ynchronize iFolders"
 msgstr "Az iFolder mappák automatikus s_zinkronizálása"
@@ -1433,6 +1442,9 @@ msgstr "Rendszer neve:"
 
 msgid "iFolder server name:"
 msgstr "iFolder-kiszolgáló neve:"
+
+msgid "iFolder account name:"
+msgstr "iFolder-fiók neve:"
 
 #: src/LinuxClient/library/RemoveAccountDialog.cs:121
 msgid "_Remove my iFolders and files from the server"
@@ -1972,8 +1984,8 @@ msgstr "Az iFolder ma_ppa áttelepítése"
 msgid "Migrate from 2.x"
 msgstr "Áttérés 2.x verzióról"
 
-msgid "_Account Settings..."
-msgstr "_Fiókbeállítások..."
+msgid "_Account Settings"
+msgstr "_Fiókbeállítások"
 
 msgid "View _available iFolders"
 msgstr "E_lérhető iFolder mappák megjelenítése"
@@ -2152,6 +2164,9 @@ msgstr "Válasszon ki egyet a következő lehetőségek közül"
 msgid "Migrate the iFolder and disconnect it from 2.x domain"
 msgstr "Az iFolder mappa áttelepítése és a 2.x tartományról való leválasztása"
 
+msgid "Migrate the iFolder and disconnect it from 2.x server"
+msgstr "Az iFolder mappa áttelepítése és a 2.x kiszolgálóról való leválasztása"
+
 msgid "Create a copy of the iFolder and migrate"
 msgstr "Az iFolder mappa másolatának létrehozása és áttelepítése"
 
@@ -2208,6 +2223,9 @@ msgstr "A felhasználó nincs bejelentkezve a tartományba"
 
 msgid "For creating an encrypted iFolder you should be connected to the domain."
 msgstr "Titkosított iFolder mappa létrehozásához csatlakoznia kell a tartományhoz"
+
+msgid "To create an encrypted iFolder, you must be logged in to an account. Log in and try again."
+msgstr "Titkosított iFolder mappát csak úgy hozhat létre, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
 
 msgid "Delete from iFolder2.X server"
 msgstr "Törlése az iFolder2.X kiszolgálóról"
@@ -2362,17 +2380,35 @@ msgstr "Szinkronizálva: {0}"
 msgid "No Logged-In domains"
 msgstr "Nincs bejelentkezve a tartományba"
 
+msgid "No Logged-In accounts"
+msgstr "Nincs bejelentkezett fiók"
+
 msgid "There are no logged-in domains for importing keys."
 msgstr "Nincsen bejelentkezett tartomány a kulcsok importálásához."
+
+msgid "There are no logged-in accounts for importing keys."
+msgstr "Nincs bejelentkezett fiók a kulcsok importálásához."
 
 msgid "There are no logged-in domains for resetting keys."
 msgstr "Nincs bejelentkezett tartomány a kulcsok alaphelyzetbe állításához."
 
+msgid "There are no logged-in accounts for resetting keys."
+msgstr "Nincs bejelentkezett fiók a kulcsok alaphelyzetbe állításához."
+
 msgid "For resetting keys the domain should be connected. Log on to the domain and try."
 msgstr "Kulcsok alaphelyzetbe állításához kapcsolódnia kell a tartományhoz. Jelentkezzen be a tartományba, és próbálja meg újra."
 
+msgid "To reset the keys, you must be logged in to an account. Log in and try again."
+msgstr "A kulcsokat csak úgy állíthatja alaphelyzetbe, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
+
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
 msgstr "A hozzáférési kód alaphelyzetbe állításához kapcsolódnia kell a tartományhoz. Jelentkezzen be a tartományba, és próbálja meg újra."
+
+msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "A hozzáférési kódot csak úgy állíthatja alaphelyzetbe, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
+
+msgid "To import, you must be logged in to an account. Log in and try again."
+msgstr "Csak úgy végezhet importálást, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
 
 msgid "Successfully imported the keys and changed the passphrase"
 msgstr "Sikeresen importálta a kulcsokat, és módosította a hozzáférési kódot"
@@ -2383,8 +2419,14 @@ msgstr "Hiba történt a kulcsok importálásakor."
 msgid "There are no logged-in domains for changing the passphrase."
 msgstr "Nincsen bejelentkezett tartomány a hozzáférési kód módosításához."
 
+msgid "There are no logged-in accounts for changing the passphrase."
+msgstr "Nincs bejelentkezett fiók a hozzáférési kód módosításához."
+
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
 msgstr "A hozzáférési kód módosításához kapcsolódnia kell a tartományhoz. Jelentkezzen be a tartományba, és próbálja meg újra."
+
+msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
+msgstr "A hozzáférési kódot csak úgy változtathatja meg, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
 
 msgid "Successfully exported the keys."
 msgstr "Sikeresen exportálta a kulcsokat."
@@ -2596,6 +2638,9 @@ msgstr "_Jelszó megváltoztatása"
 msgid "Successfully changed the password. Log on to the domain with new password."
 msgstr "Sikerült a jelszó módosítása. Jelentkezzen be a tartományba az új jelszóval."
 
+msgid "Successfully changed the password. Log on to the account with new password."
+msgstr "Sikerült a jelszó módosítása. Jelentkezzen be a fiókba az új jelszóval."
+
 msgid "_Current password"
 msgstr "_Aktuális jelszó"
 
@@ -2617,8 +2662,14 @@ msgstr "Új jelszó megerősítése"
 msgid "There are no logged-in domains for changing the password."
 msgstr "Nincsen bejelentkezett tartomány a jelszó módosításához."
 
+msgid "There are no logged-in accounts for changing the password."
+msgstr "Nincs bejelentkezett fiók a jelszó módosításához."
+
 msgid "For changing password the domain should be connected. Log on to the domain and try."
 msgstr "A jelszó módosításához kapcsolódnia kell a tartományhoz. Jelentkezzen be a tartományba, és próbálja meg újra."
+
+msgid "To change the password, you must be logged in to an account. Log in and try again."
+msgstr "A jelszót csak úgy változtathatja meg, ha be van jelentkezve egy fiókba. Jelentkezzen be, majd próbálkozzon újra."
 
 msgid "Old password and new password should not be same."
 msgstr "A régi és az új jelszó nem lehet ugyanaz."
@@ -2668,6 +2719,9 @@ msgstr "Hozzáférés: {0}"
 msgid "Server: {0}"
 msgstr "Kiszolgáló: {0}"
 
+msgid "Account: {0}"
+msgstr "Fiók: {0}"
+
 msgid "Last Successful Sync time: {0}"
 msgstr "Legutóbbi sikeres szinkronizálás ideje: {0}"
 
@@ -2682,6 +2736,9 @@ msgstr "iFolder mappa típusa: {0}"
 
 msgid "Domain List"
 msgstr "Tartománylista"
+
+msgid "Account List"
+msgstr "Fióklista"
 
 msgid "User: {0}"
 msgstr "Felhasználó: {0}"
@@ -2899,9 +2956,42 @@ msgstr "Ha nem érhetők el a szükséges engedélyek"
 msgid "When file path exceeds optimal limit"
 msgstr "Ha a fájl elérési útja túllépi az optimális korlátot"
 
+msgid "When iFolders are shared"
+msgstr "iFolder mappák megosztásakor"
+
+msgid "When conflicts arise"
+msgstr "Ütközések esetén"
+
+msgid "When a user joins the iFolder domain"
+msgstr "Ha egy felhasználó belép az iFolder-tartományba"
+
+msgid "When a policy is violated"
+msgstr "Házirend megsértésekor"
+
 msgid "_Upgrade"
 msgstr "_Frissítés"
 
 msgid "Synchronization disabled"
 msgstr "Szinkronizálás letiltva"
+
+msgid "You are using the latest available version."
+msgstr "A jelenleg használt verzió a legújabb elérhető verzió."
+
+msgid "Unable to search for updates as you are not connected to a domain. Ensure that you are connected to a domain and try again."
+msgstr "Nem tud frissítéseket keresni, mivel nincs tartományhoz csatlakozva. Csatlakozzon egy tartományhoz, majd próbálkozzon újra."
+
+msgid "Unable to search for updates as you are not connected to a server. Ensure that you are connected to a server and try again."
+msgstr "Nem tud frissítéseket keresni, mivel nincs kiszolgálóhoz csatlakozva. Csatlakozzon egy kiszolgálóhoz, majd próbálkozzon újra."
+
+msgid "Unable to complete the operation. Try again."
+msgstr "Nem sikerült végrehajtani a műveletet. Próbálkozzon újra."
+
+msgid "This operation is not supported on the current version of the iFolder server. To perform this operation, you must upgrade to the latest version of iFolder server."
+msgstr "Ezt a műveletet nem támogatja az iFolder-kiszolgáló aktuális verziója. A művelet végrehajtásához frissítse az iFolder-kiszolgálót a legújabb verzióra."
+
+msgid "Settings"
+msgstr "Beállítások"
+
+msgid "Display _Notification"
+msgstr "Értesítés megjele_nítése"
 
