@@ -98,6 +98,7 @@
                 showPrefs = id; 
                 showSyncLog = id; 
                 showiFolderWindow = id; 
+                update = id; 
             }; 
             CLASS = iFolderApplication; 
             LANGUAGE = ObjC; 

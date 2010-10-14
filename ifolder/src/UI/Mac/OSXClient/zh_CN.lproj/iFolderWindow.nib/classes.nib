@@ -8,6 +8,7 @@
                 enableConflictBin = id; 
                 ifolderMatrixClicked = id; 
                 localFileOpen = id; 
+                renameFile = id; 
                 saveFile = id; 
                 serverFileOpen = id; 
                 showWindow = id; 
@@ -30,12 +31,16 @@
                 localFileDate = NSTextField; 
                 localFileName = NSTextField; 
                 localFileSize = NSTextField; 
+                localVersionBox = NSBox; 
                 locationName = NSTextField; 
                 mainWindow = id; 
                 nameColumn = NSTableColumn; 
+                renameBox = NSBox; 
+                renameNewFileName = NSTextField; 
                 serverFileDate = NSTextField; 
                 serverFileName = NSTextField; 
                 serverFileSize = NSTextField; 
+                serverVersionBox = NSBox; 
                 setupSheet = id; 
             }; 
             SUPERCLASS = NSWindowController; 
