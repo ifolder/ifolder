@@ -327,6 +327,9 @@
 //========================================================================
 - (void)logoutAccount
 {
+	if([rememberPassword state] == NO)
+	[password setStringValue:@""];
+			
 	if( (selectedDomain != nil) &&
 		([selectedDomain authenticated]) )
 	{
