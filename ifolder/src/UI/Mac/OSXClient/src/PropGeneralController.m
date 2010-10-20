@@ -79,8 +79,7 @@
 				[currentSpace setStringValue:valueString];
 
 			prevLimit = [diskSpace Limit];
-
-			if([diskSpace Limit] != 0)
+			if([diskSpace Limit] >= 0)
 			{
 				[limitSpace setStringValue:[NSString stringWithFormat:@"%qi", 
 										([diskSpace Limit]/(1024 * 1024))]];
