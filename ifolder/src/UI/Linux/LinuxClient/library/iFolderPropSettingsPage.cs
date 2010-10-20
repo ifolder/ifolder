@@ -52,6 +52,7 @@ namespace Novell.iFolder
 		private DiskSpace			ds;
 		
 		private Table				BasicTable;
+		private Label				GeneralSectionLabel;
 		private Label				NameLabel;
 		private Label				OwnerLabel;
 		private Label				LocationLabel;
@@ -161,7 +162,7 @@ namespace Novell.iFolder
 
 
 	
-			NameLabel.Markup = string.Format("<span weight=\"bold\">{0}</span>", GLib.Markup.EscapeText(ifolderName));
+			NameLabel.Markup = string.Format("{0}", GLib.Markup.EscapeText(ifolderName));
 			OwnerLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolder.Owner));
 			LocationLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(ifolderLocation));
 			AccountLabel.Markup = string.Format("<span size=\"small\">{0}</span>", GLib.Markup.EscapeText(domain.Name));
@@ -243,12 +244,12 @@ namespace Novell.iFolder
 				{
 					LimitLabel = new Label(Util.GS("Quota:"));
 					LimitLabel.Xalign = 0;
-					diskTable.Attach(LimitLabel, 0,1,1,2,
+					diskTable.Attach(LimitLabel, 0,1,0,1,
 						AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 				
 					LimitValue = new Label(Util.GS("0"));
 					LimitValue.Xalign = 1;
-					diskTable.Attach(LimitValue, 1,2,1,2,
+					diskTable.Attach(LimitValue, 1,2,0,1,
 						AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 					LimitLabel.ShowAll();
 					LimitValue.ShowAll();
@@ -369,9 +370,18 @@ namespace Novell.iFolder
 			//----------------------------------------
 			// Basic information (Name/Owner/Location)
 			//----------------------------------------
+
+			VBox GeneralSectionVbox = new VBox (false, 0);
+			this.PackStart(GeneralSectionVbox, false, true, 0);
+
+			GeneralSectionLabel = new Label("<span weight=\"bold\">" + Util.GS("Details")+ "</span>");
+			GeneralSectionLabel.UseMarkup = true;
+			GeneralSectionLabel.Xalign = 0;
+			GeneralSectionVbox.PackStart (GeneralSectionLabel, false, false, 0);
+
 			HBox basicBox = new HBox();
 			basicBox.Spacing = 10;
-			this.PackStart(basicBox, false, true, 0);
+			GeneralSectionVbox.PackStart(basicBox, false, true, 0);
 			
 			// ifolder48.png
 			Gdk.Pixbuf iFolderPixbuf = new Gdk.Pixbuf(Util.ImagesPath("ifolder48.png"));
@@ -385,7 +395,6 @@ namespace Novell.iFolder
 			basicBox.PackStart(basicLabelsBox, false, true, 0);
 
 			NameLabel = new Label("");
-			NameLabel.UseMarkup = true;
 			NameLabel.UseUnderline = false;
 			NameLabel.Xalign = 0;
 			basicLabelsBox.PackStart(NameLabel, false, true, 5);
@@ -468,19 +477,19 @@ namespace Novell.iFolder
 
 			Label usedLabel = new Label(Util.GS("Used:"));
 			usedLabel.Xalign = 0;
-			diskTable.Attach(usedLabel, 0,1,0,1,
+			diskTable.Attach(usedLabel, 0,1,1,2,
 					AttachOptions.Expand | AttachOptions.Fill, 0,0,0);
 			UsedValue = new Label(Util.GS("0"));
 			UsedValue.Xalign = 1;
-			diskTable.Attach(UsedValue, 1,2,0,1,
+			diskTable.Attach(UsedValue, 1,2,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 			Label usedUnit = new Label(Util.GS("MB"));
-			diskTable.Attach(usedUnit, 2,3,0,1,
+			diskTable.Attach(usedUnit, 2,3,1,2,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 
 			LimitUnit = new Label(Util.GS("MB"));
-			diskTable.Attach(LimitUnit, 2,3,1,2,
+			diskTable.Attach(LimitUnit, 2,3,0,1,
 					AttachOptions.Shrink | AttachOptions.Fill, 0,0,0);
 
 
