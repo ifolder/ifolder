@@ -2461,11 +2461,12 @@ namespace Novell.iFolderCom
 		{
 			try
 			{
-				connectToWebService();
+                System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(iFolderAdvanced));
+                connectToWebService();
 				DiskSpace diskSpace = ifWebService.GetiFolderDiskSpace(currentiFolder.ID);
 				double usedSpace = Math.Round(diskSpace.UsedSpace/megaByte, 2);
 				used.Text = usedSpace.ToString();
-				if (diskSpace.Limit != 0)
+				if (diskSpace.Limit >= 0)
 				{
 					limitEdit.Text = limit.Text = ((double)Math.Round(diskSpace.Limit/megaByte, 2)).ToString();
 					setLimit.Checked = true;
@@ -2475,11 +2476,16 @@ namespace Novell.iFolderCom
 					gaugeChart.MaxValue = diskSpace.Limit / megaByte;
 					gaugeChart.Used = usedSpace;
 					gaugeChart.BarColor = SystemColors.ActiveCaption;
+                    label7.Text = resources.GetString("label7.Text");
+                    availableUnits.Text = resources.GetString("availableUnits.Text");
+
 				}
 				else
 				{
 					setLimit.Checked = false;
-					available.Text = limit.Text = limitEdit.Text = "";
+                    available.Text = limit.Text = resources.GetString("na");
+                      
+                    availableUnits.Text = label7.Text=limitEdit.Text = "";
 					gaugeChart.Used = 0;
 				}
 			}

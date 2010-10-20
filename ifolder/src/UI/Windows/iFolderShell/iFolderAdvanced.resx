@@ -5143,6 +5143,9 @@
   <data name="diskQuotaReadError">
     <value>An error was encountered while reading disk space restrictions.</value>
   </data>
+  <data name="na">
+    <value>N/A</value>
+  </data>
   <data name="errorTitle">
     <value>iFolder Error</value>
   </data>
