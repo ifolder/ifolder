@@ -271,7 +271,7 @@ namespace Novell.iFolder
 				int tmpValue;
 
 				// there is no limit set, disable controls
-				if(ds.Limit == 0)
+				if(ds.Limit == -1)
 				{
 					LimitUnit.Sensitive = false;
 					AvailLabel.Sensitive = false;
@@ -281,7 +281,8 @@ namespace Novell.iFolder
 					DiskUsageFrame.Sensitive = false;
 					DiskUsageFullLabel.Sensitive = false;
 					DiskUsageEmptyLabel.Sensitive = false;
-
+					AvailUnit.Text="";
+					LimitUnit.Text="";
 					if(LimitCheckButton != null)
 					{
 						LimitCheckButton.Active = false; 
@@ -292,9 +293,9 @@ namespace Novell.iFolder
 					{
 						LimitLabel.Sensitive = false;
 						LimitValue.Sensitive = false;
-						LimitValue.Text = Util.GS("0");
+						LimitValue.Text = Util.GS("N/A");
 					}
-					AvailValue.Text = Util.GS("0");
+					AvailValue.Text = Util.GS("N/A");
 				}
 				else
 				{
@@ -306,6 +307,8 @@ namespace Novell.iFolder
 					DiskUsageFrame.Sensitive = true;
 					DiskUsageFullLabel.Sensitive = true;
 					DiskUsageEmptyLabel.Sensitive = true;
+					AvailUnit.Text= Util.GS("MB");
+                                        LimitUnit.Text= Util.GS("MB");
 
 					if(LimitCheckButton != null)
 					{
