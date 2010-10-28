@@ -272,15 +272,16 @@ namespace Simias.UserMovement
 				{
 					preprocessing = true;
 				}
-				else
-					member.UserMoveState = (int)Member.userMoveStates.Initialized;
 
 				member.NewHomeServer = NewHomeServerID;
 				if( ! preprocessing)
 				{
 					if(domain.IsLoginDisabledForUser(member))
 					{
-						member.LoginAlreadyDisabled = true;
+						if( member.UserMoveState < (int)Member.userMoveStates.UserDisabled )
+						{
+							member.LoginAlreadyDisabled = true;
+						}
 					}
 					else
 						domain.SetLoginDisabled(member.UserID, true);
@@ -548,6 +549,11 @@ namespace Simias.UserMovement
 				Store store = Store.GetStore();
 				Domain domain = store.GetDomain(DomainID);
 				Simias.Storage.Member member = domain.GetMemberByID(UserID);
+				if( UserMoveState == (int)Member.userMoveStates.Initialized &&  member.UserMoveState != (int)Member.userMoveStates.PreProcessing)
+				{
+					log.Debug("Initialized state must come only after preprocessing...any other condition..return");
+					return true;
+				}
 				member.UserMoveState = UserMoveState;
 				domain.Commit( member );
 			}
