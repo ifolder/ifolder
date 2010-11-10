@@ -39,13 +39,13 @@ License:        GNU General Public License (GPL) v2
 Group:          System/GUI/Other
 Autoreqprov:    on
 Requires:       simias >= 1.8.5
-Requires:       ifolder3 >= 3.8.2
+Requires:       ifolder3 >= 3.8.4
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
 Requires:       gtk-sharp2
 Requires:       xsp >= 1.2.5
 #Obsoletes:      %{name} < %{version}
-Version:        3.8.2.@@BUILDNUM@@.1
+Version:        3.8.4.@@BUILDNUM@@.1
 Release:        1
 Summary:        Plugins adding additional capability to iFolder 3 client
 Vendor:         Novell, Inc.

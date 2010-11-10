@@ -28,9 +28,9 @@ License:        GNU General Public License (GPL) v2
 Group:          Productivity/Networking/Novell
 Autoreqprov:    on
 Requires:       novell-ifolder-mono >= 2.4
-Requires:       ifolder3-enterprise >= 3.8.2
+Requires:       ifolder3-enterprise >= 3.8.4
 #Obsoletes:      %{name} < %{version}
-Version:        3.8.2.@@BUILDNUM@@.1
+Version:        3.8.4.@@BUILDNUM@@.1
 Release:        2
 Summary:        Plugins adding additional capability to iFolder 3 enterprise server
 Source:         novell-ifolder-enterprise-plugins.tar.gz
