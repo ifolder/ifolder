@@ -35,10 +35,10 @@ URL:          http://www.ifolder.com
 License:      GNU General Public License (GPL) v2
 Group:        System/GUI/Other
 Autoreqprov:  on
-Version:      3.8.2.@@BUILDNUM@@.1
+Version:      3.8.4.@@BUILDNUM@@.1
 Requires:     nautilus >= 2.10.0
 Requires:     simias >= 1.8.5
-Requires:     ifolder3 >= 3.8.2 
+Requires:     ifolder3 >= 3.8.4 
 #Obsoletes:    %{name} < %{version}
 Provides:     nautilus-ifolder
 Obsoletes:    nautilus-ifolder
