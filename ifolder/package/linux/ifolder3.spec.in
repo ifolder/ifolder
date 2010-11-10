@@ -39,7 +39,7 @@ Requires:       gnome-sharp2
 Requires:       gtk-sharp2
 Requires:       xsp >= 1.2.5
 #Obsoletes:      %{name} < 3.7.2.@@BUILDNUM@@.1
-Version:        3.8.2.@@BUILDNUM@@.1
+Version:        3.8.4.@@BUILDNUM@@.1
 Release:        1
 Summary:        File Sharing and Collaboration Tool
 Source:         ifolder3.tar.gz
