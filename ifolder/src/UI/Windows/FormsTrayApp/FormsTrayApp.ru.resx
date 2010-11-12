@@ -415,7 +415,7 @@
     <value>Проверка контрольной фразы</value>
   </data>
   <data name="ServerNameTextbox">
-    <value>Адре&amp;с сервера</value>
+    <value>Адрес с&amp;ервера</value>
   </data>
   <data name="VerifyPageHeaderTitle">
     <value>Проверка и подключение</value>
@@ -614,7 +614,7 @@
     <value>Для смены пароля необходимо войти в учетную запись. Войдите в систему и повторите попытку.</value>
   </data>
   <data name="CreateDefaultiFolder">
-    <value>&amp;Создание папки iFolder по умолчанию</value>
+    <value>Соз&amp;дание папки iFolder по умолчанию</value>
   </data>
   <data name="menuItem10.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -635,7 +635,7 @@
     <value>Доступно: </value>
   </data>
   <data name="SharableText">
-    <value>&amp;Обычный</value>
+    <value>О&amp;бычный</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>Закрытие сервисов iFolder...</value>
