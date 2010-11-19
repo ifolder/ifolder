@@ -387,8 +387,17 @@ namespace Simias.Identity
 
 				if ( credentials.Length == 2 )
 				{
-					this.username = DecodeCreds(credentials[ 0 ], encodingName);
-                                        this.password = DecodeCreds(credentials[ 1 ], encodingName);
+					bool encoded = false;
+					this.username = DecodeCreds(credentials[ 0 ], encodingName, true, out encoded);
+					if( encoded )
+					{
+	                                        this.password = DecodeCreds(credentials[ 1 ], encodingName, false, out encoded);
+					}
+					else
+					{
+						log.Debug("User name is notencoded. No need to decode passwd.."+this.username);
+						this.password = credentials[ 1 ];
+					}
 					this.authType = "basic";
 					returnStatus = true;
 				}
@@ -403,18 +412,54 @@ namespace Simias.Identity
                 /// Returns the decoded value of user creds if its encoded. Else will return the same [ Old Client ] .
                 /// </summary>
                 /// <returns>String - User Creds in String</returns>
-                private string DecodeCreds(string creds, string encodingName)
+                private string DecodeCreds(string creds, string encodingName, bool isusername, out bool encoded)
                 {
+			encoded = true;
+			Store store = Store.GetStore();
+			Domain Domain = store.GetDomain( store.DefaultDomain );
                         try
                         {
                                 byte[] encodedCredsByteArray = Convert.FromBase64String(creds);
                                 Encoding encoder = System.Text.Encoding.GetEncoding( encodingName );
-                                return encoder.GetString(encodedCredsByteArray, 0, encodedCredsByteArray.Length);
+				string decodedCred = encoder.GetString(encodedCredsByteArray, 0, encodedCredsByteArray.Length);
+				if( isusername )
+				{
+					Member mem = Domain.GetMemberByName( decodedCred );
+					if( mem != null )
+						return decodedCred;
+					if(mem == null)
+					{
+						mem = Domain.GetMemberByDN( decodedCred );
+						if(mem != null)
+							return decodedCred;
+					}
+					if( mem == null )
+						mem = Domain.GetMemberByName( creds );
+					if( mem != null )
+					{
+						encoded = false;
+						return creds;
+					}
+					if( mem == null)
+					{
+						mem = Domain.GetMemberByDN( creds );
+						if( mem != null)
+						{
+							encoded = false;
+							return creds;
+						}
+					}
+					
+				}
+				
+				return decodedCred;
                         }
                         catch(Exception ex)
                         {
 				// Exception occurs when we try to decode string which is not encoded
                                 // TODO : Find the right exception and catch it.
+				log.Debug("Caught exception while decoding the string, so return original string. Username notencoded");
+				encoded = false;
                                 return creds;
                         }
 
