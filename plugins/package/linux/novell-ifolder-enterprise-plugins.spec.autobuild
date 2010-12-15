@@ -17,9 +17,21 @@
 # norootforbuild
 
 Name:           novell-ifolder-enterprise-plugins
+%if %suse_version <= 1100
 BuildRequires:  compat-libstdc++ e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
+%else
+%ifarch         x86_64
+BuildRequires:  libstdc++33-32bit libstdc++33-devel-32bit e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
 
-%define buildnum @@BUILDNUM@@
+%else
+BuildRequires:  libstdc++33 libstdc++33-devel e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
+
+%endif
+%endif
+
+
+
+%define buildnum 10349
 Url:            http://www.ifolder.com
 %define prefix /opt/novell/ifolder3
 %define novell_lib /opt/novell/%_lib
