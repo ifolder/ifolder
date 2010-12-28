@@ -1044,7 +1044,11 @@ namespace Novell.AutoAccount
                         else
                         {
                             // Passphrase not enterd at the time of login...
-                            EnterPassphraseDialog enterPassPhrase = new EnterPassphraseDialog(con.DomainInformation.ID, this.simws);
+                            EnterPassphraseDialog enterPassPhrase;
+                            if (ifWebService != null)
+                                enterPassPhrase = new EnterPassphraseDialog(con.DomainInformation.ID, this.simws, ifWebService);
+                            else
+                                enterPassPhrase = new EnterPassphraseDialog(con.DomainInformation.ID, this.simws);
                             enterPassPhrase.ShowDialog();
                             passPhraseStatus = enterPassPhrase.PassphraseStatus;
                             enterPassPhrase.Close();
