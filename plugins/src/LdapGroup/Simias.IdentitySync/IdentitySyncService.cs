@@ -379,6 +379,7 @@ namespace Simias.IdentitySynchronization
 			log.Debug( "Processing member: " + Username + " , " + groupmembers + " , " + groupmembership + ".");
 			Simias.Storage.Member member = null;
 			MemberStatus status = MemberStatus.Unchanged;
+			bool UserRenamed = false;
 
 			if(Username == null || Username.Equals(String.Empty))
 			{
@@ -396,6 +397,7 @@ namespace Simias.IdentitySynchronization
 					if (member != null){
 						//TBD:iFolder needs to handle the renamed users properly.
 						log.Info("This user is renamed on the LDAP server. Old Username = {0}, new Username= {1}", member.Name, Username);
+						UserRenamed = true;
 					}
 				}
 			}
@@ -693,6 +695,36 @@ namespace Simias.IdentitySynchronization
 					this.ReportError( "Failed creating member: " + Username + ex.Message );
 					return;
 				}
+			}
+
+			if( UserRenamed == true )
+			{
+				// First store the current username to provide grace login from thick clients/web-access. Since thick clients will be using
+				// older usernames, so they must continue login and then get the new username. provide 30 days such grace logins
+				string counter = DateTime.Now.Ticks.ToString();
+				string UserNames = null;
+				string CountAndDN = member.OldDN;
+				if( CountAndDN != null)
+				{
+					//consider older UserNames also and add new one.
+					string[] Elements = CountAndDN.Split(new char[] { ':' });
+					if ( Elements != null && Elements.Length > 1 )
+					{
+						UserNames = Elements[2];
+						string [] names = UserNames.Split( new char[] { ';' } );
+						if( Array.IndexOf( names, Username ) < 0 )
+						{		
+							// take care that new username is not same as any of older ones
+							UserNames += ( ";" + member.Name );
+						}
+					}
+					else UserNames = ";" + member.Name;
+				}
+				else UserNames = ";" + member.Name;
+				member.OldDN = counter + ":" + Username + ":" + UserNames ;
+
+				member.Name = Username;
+				log.Debug(" changed the username property with new value :"+Username);
 			}
 			
 			member.Properties.ModifyProperty( syncGuid );
@@ -1257,7 +1289,7 @@ namespace Simias.IdentitySynchronization
 					Member member = c.GetMemberByID( Zombie.UserID );
 					if (member != null && member.IsOwner == true )
 					{
-						if( CheckForSecondaryAdmin = true && GroupIDs != null && GroupIDs.Length > 0 ) //make sure this cond gets executed only once, even if collections change
+						if( CheckForSecondaryAdmin == true && GroupIDs != null && GroupIDs.Length > 0 ) //make sure this cond gets executed only once, even if collections change
 						{
 							// foreach group this zombie user belongs to, check if the group has a right secondary admin
 							foreach( string groupID in GroupIDs)
@@ -1820,6 +1852,8 @@ namespace Simias.IdentitySynchronization
 					// moving this call after ProcessDeletedMembers() because in ProcessDeletedMembers(), disabling of users will
 					// take place which will be used by ProcessMembersAndGroupsLocally..
 					ProcessMembersAndGroupsLocally( state );
+					// if the grace interval for renamed users has expired, then delete the flag that says login is allowed
+					CleanGraceLoginForRenamed();
 				}
 				catch( Exception ex )
 				{
@@ -1978,6 +2012,40 @@ namespace Simias.IdentitySynchronization
                         }
 
                 }
+
+		/// <summary>
+		/// This function will check the grace login period for renamed users and if it expires, then delete the property so that login with old username is no more allo
+wed
+		/// <summary>
+		private static void CleanGraceLoginForRenamed()
+		{
+			int RenameGraceLogin = 60 * 60 * 24 * 30; // 30 days
+			Member member = null;
+			Store store = Store.GetStore();
+			Domain domain = store.GetDomain( store.DefaultDomain );
+			ICSList list = domain.Search( "OldDN", "*", SearchOp.Exists );
+			foreach ( ShallowNode sn in list )
+			{
+				log.Debug("plugin GMBON: checking the list");
+				member = new Member( domain, sn );
+				string Elements = member.OldDN;
+				if( Elements == null ) continue;
+				string [] CountAndUserNames = Elements.Split(new char[] { ':' });
+				if ( CountAndUserNames != null && CountAndUserNames.Length >= 1 )
+				{
+					// user is found, now check for grace login period
+					DateTime counter = new DateTime(Convert.ToInt64( CountAndUserNames[0] ) ) ;
+					if ( counter.AddSeconds( RenameGraceLogin ) < DateTime.Now )
+					{
+						// the grace interval has expired, so delete this olddn property
+						log.Debug("Since grace interval for older name login is expired for renamed user, deleting the property :"+member.Name);
+						member.OldDN = null;
+						domain.Commit( member );	
+					}
+					
+				}
+			}
+		}
 
 
 		
