@@ -2014,8 +2014,7 @@ namespace Simias.IdentitySynchronization
                 }
 
 		/// <summary>
-		/// This function will check the grace login period for renamed users and if it expires, then delete the property so that login with old username is no more allo
-wed
+		/// This function will check the grace login period for renamed users and if it expires, then delete the property so that login with old username is no more allowed
 		/// <summary>
 		private static void CleanGraceLoginForRenamed()
 		{
