@@ -17,15 +17,16 @@
 # norootforbuild
 
 Name:           novell-ifolder-enterprise-plugins
+
+BuildRequires:  e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libxml2 libxml2-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise apache2-mod_mono-addon mono-addon-core mono-addon-data mono-addon-devel mono-addon-web
+
 %if %suse_version <= 1100
-BuildRequires:  compat-libstdc++ e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
+BuildRequires:  compat-libstdc++ libstdc++ libstdc++-devel
 %else
 %ifarch         x86_64
-BuildRequires:  libstdc++33-32bit libstdc++33-devel-32bit e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
-
+BuildRequires:  libstdc++33-32bit libstdc++33-devel-32bit libstdc++ libstdc++-devel
 %else
-BuildRequires:  libstdc++33 libstdc++33-devel e2fsprogs e2fsprogs-devel gcc-c++ glib2 glib2-devel libflaim libflaim-devel libstdc++ libstdc++-devel libxml2 libxml2-devel novell-ifolder-mono novell-ifolder-mono-devel novell-NLDAPbase novell-NLDAPsdk-devel pkgconfig gtk-sharp2 glib-sharp2 ifolder3-enterprise
-
+BuildRequires:  libstdc++33 libstdc++33-devel libstdc++ libstdc++-devel
 %endif
 %endif
 
@@ -39,13 +40,14 @@ Url:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2
 Group:          Productivity/Networking/Novell
 Autoreqprov:    on
-Requires:       novell-ifolder-mono >= 2.4
 Requires:       ifolder3-enterprise >= 3.8.4
+Requires:       mono-addon-core >= 2.6.7
 #Obsoletes:      %{name} < %{version}
-Version:        3.8.4.@@BUILDNUM@@.1
+Version:        3.8.4.10365.1
 Release:        2
 Summary:        Plugins adding additional capability to iFolder 3 enterprise server
 Source:         novell-ifolder-enterprise-plugins.tar.gz
+Patch0:         if3-server-plugin_mono26_fixes.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
 %description
@@ -54,6 +56,7 @@ Plugins for iFolder 3 enterprise server
 %prep
 export BUILDNUM=%{buildnum}
 %setup -n %{name}
+%patch0 -p1
 #=============================================================================
 
 %build
@@ -61,17 +64,21 @@ export BUILDNUM=%{buildnum}
 export EDIR_INCLUDE=/opt/novell/eDirectory/include
 export EDIR_LIBDIR=/opt/novell/eDirectory/%_lib
 export LIBDIR=%_lib
-[ -f %{prefix}/mono/bin/novell-ifolder-mono-environment.sh ] && \
-source %{prefix}/mono/bin/novell-ifolder-mono-environment.sh
+[ -f /opt/novell/mono/bin/mono-addon-environment.sh ] && \
+	source /opt/novell/mono/bin/mono-addon-environment.sh
+export MONO_PATH=/usr/lib/mono/log4net/:$MONO_PATH
 ./autogen.sh --prefix=%{prefix} #--with-runasclient
-make
+make MONO_PATH=$MONO_PATH
 #make dist
 #=============================================================================
 
 %install
 export BUILDNUM=%{buildnum}
 %{__rm} -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install
+[ -f /opt/novell/mono/bin/mono-addon-environment.sh ] && \
+	source /opt/novell/mono/bin/mono-addon-environment.sh
+export MONO_PATH=/usr/lib/mono/log4net/:$MONO_PATH
+make DESTDIR=$RPM_BUILD_ROOT MONO_PATH=$MONO_PATH install
 #=============================================================================
 
 %clean
