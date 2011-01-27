@@ -41,8 +41,9 @@ namespace Novell.iFolder
     /// </summary>
 	public class CopyLocation : FileChooserDialog
 	{
-		private DomainInformation[]	domains;
-		private ComboBox			domainComboBox;
+		//not used	
+		//private DomainInformation[]	domains;
+	//	private ComboBox			domainComboBox;
 	//	private ComboBox			security_lvl_ComboBox;
 		private uint				keyReleasedTimeoutID;
 
@@ -61,10 +62,11 @@ namespace Novell.iFolder
 			}
 		}
 
+	//member inside function are never initilized
         /// <summary>
         /// Gets / Sets Domain ID
         /// </summary>
-		public string DomainID
+	/*	public string DomainID
 		{
 			get
 			{
@@ -74,7 +76,7 @@ namespace Novell.iFolder
 				else
 					return "0";
 			}
-		}
+		}*/
 
 		///
 		/// filteredDomainID: If the main iFolders window is currently

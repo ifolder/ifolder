@@ -371,15 +371,17 @@ namespace Novell.iFolder
                         ((CellRendererText) cell).Text = HomeLocation;
                 }
 
+
+	//never used
         /// <summary>
         /// Event Handler for Cancel Button Clicked Event
         /// </summary>
-        private void OnCancelClicked(object o, EventArgs args)
+/*        private void OnCancelClicked(object o, EventArgs args)
 		{
 			this.Destroy();
 			this.MergePath = null;
 			this.Cancelled = true;
-		}
+		}*/
 
                 /// <summary>
                 /// Event Handler on MIgrate Account event
@@ -443,24 +445,25 @@ namespace Novell.iFolder
                         }
                 }
 
-
-                private void OnAccTreeRowActivated(object o, RowActivatedArgs args)
+		//not been used
+             /*   private void OnAccTreeRowActivated(object o, RowActivatedArgs args)
                 {
                         OnDetailsClicked(o, args);
-                }
+                } */
 
                 public void AccSelectionChangedHandler(object o, EventArgs args)
                 {
                         UpdateWidgetSensitivity();
                 }
 
+		//not doing anything
                 /// <summary>
                 /// Event Handler for Details Clicked Event
                 /// </summary>
-                private void OnDetailsClicked(object o, EventArgs args)
+                /*private void OnDetailsClicked(object o, EventArgs args)
                 {
                         return;
-                }
+                }*/
                 
                 /// <summary>
                 /// Remove Item

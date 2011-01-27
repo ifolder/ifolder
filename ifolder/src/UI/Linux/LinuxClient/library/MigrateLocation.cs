@@ -41,8 +41,9 @@ namespace Novell.iFolder
     /// </summary>
 	public class MigrateLocation : FileChooserDialog
 	{
-		private DomainInformation[]	domains;
-		private ComboBox			domainComboBox;
+		//never initilized
+		//private DomainInformation[]	domains;
+		//private ComboBox			domainComboBox;
 	//	private ComboBox			security_lvl_ComboBox;
 //		private CheckButton			Encryption;
 //		private CheckButton 			SSL;
@@ -66,10 +67,12 @@ namespace Novell.iFolder
 			}
 		}
 
+
+	// never called, as member inside function is never initilized
         /// <summary>
         /// Gets the Domain ID
         /// </summary>
-		public string DomainID
+	/*	public string DomainID
 		{
 			get
 			{
@@ -79,7 +82,7 @@ namespace Novell.iFolder
 				else
 					return "0";
 			}
-		}
+		}*/
 
 		///
 		/// filteredDomainID: If the main iFolders window is currently

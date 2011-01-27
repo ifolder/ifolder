@@ -903,7 +903,7 @@ namespace Novell.iFolder
         /// <summary>
         /// Event Handler for Update RA Page Sensitivity
         /// </summary>
-		private void UpdateRAPageSensitivity(object o, EventArgs args)
+	/*	private void UpdateRAPageSensitivity(object o, EventArgs args)
 		{
 			string currentUserName = UserNameEntry.Text;
 			string currentPassword = PasswordEntry.Text;
@@ -918,7 +918,7 @@ namespace Novell.iFolder
 			}
 			else
 				AccountDruid.SetButtonsSensitive(true, false, true, true);
-		}
+		} */
 
 		///
 		/// Event Handlers

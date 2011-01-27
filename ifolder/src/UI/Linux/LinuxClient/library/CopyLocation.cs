@@ -41,15 +41,20 @@ namespace Novell.iFolder
     /// </summary>
 	public class CopyLocation : FileChooserDialog
 	{
-		private DomainInformation[]	domains;
-		private ComboBox			domainComboBox;
+		//never assinged	
+		//private DomainInformation[]	domains;
+		//private ComboBox			domainComboBox;
 	//	private ComboBox			security_lvl_ComboBox;
-		private CheckButton			Encryption;
-		private CheckButton 			SSL;
-		private string				initialPath;
-		iFolderWebService			ifws;
+
+		//never used
+//		private CheckButton			Encryption;
+//		private CheckButton 			SSL;
+//		private string				initialPath;
+//		iFolderWebService			ifws;
+//		private Label 				Mesg;
+
+
 		private uint				keyReleasedTimeoutID;
-		private Label 				Mesg;
 
         /// <summary>
         /// Gets / Sets the iFolder Path
@@ -66,9 +71,11 @@ namespace Novell.iFolder
 			}
 		}
 
+	//variable inside function never assinged, means this function never get called
         /// <summary>
         /// Gets / Sets Domain ID
         /// </summary>
+	/*
 		public string DomainID
 		{
 			get
@@ -80,7 +87,7 @@ namespace Novell.iFolder
 					return "0";
 			}
 		}
-
+        */
 		///
 		/// filteredDomainID: If the main iFolders window is currently
 		/// filtering the list of domains, this parameter is used to allow this
@@ -100,7 +107,6 @@ namespace Novell.iFolder
 
 		protected override void OnSelectionChanged()
 		{
-			string currentPath = this.Filename;
 
 			this.SetResponseSensitive(ResponseType.Ok, true);
 		}
@@ -123,15 +129,10 @@ namespace Novell.iFolder
         /// Check Enable OK Button
         /// </summary>
         /// <returns></returns>
-		private bool CheckEnableOkButton()
+		/*private bool CheckEnableOkButton()
 		{
-			try
-			{
-				string currentPath = this.Filename;
-			}
-			catch{}
 			this.SetResponseSensitive(ResponseType.Ok, false);
 			return false;
-		}
+		}*/
 	}
 }

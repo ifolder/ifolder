@@ -834,7 +834,7 @@ namespace Novell.iFolder
 							rightsMenu.ShowAll();
 
 							rightsMenu.Popup(null, null, null, 
-								IntPtr.Zero, 3, 
+								3, 
 								Gtk.Global.CurrentEventTime);
 						}
 					}

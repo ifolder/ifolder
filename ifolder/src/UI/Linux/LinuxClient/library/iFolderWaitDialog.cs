@@ -131,7 +131,7 @@ public class iFolderWaitDialog : Dialog
 
 		progressBar = new ProgressBar();
 		contentVBox.PackStart(progressBar, true, false, 8);
-		progressBar.ActivityBlocks = 20;
+		//progressBar.ActivityBlocks = 20;
 		progressBar.Orientation = ProgressBarOrientation.LeftToRight;
 		progressBar.PulseStep = 0.05;
 		

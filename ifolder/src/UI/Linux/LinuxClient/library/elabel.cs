@@ -45,7 +45,7 @@ public class ELabel : Label {
 	string text = "";
 	const string ellipsis = "...";
 	const string en_char = "n";
-	int ellipsis_width, en_width, tmp;
+	int ellipsis_width, en_width;
 	int old_width;
 	Pango.Layout layout;
 	bool refreshed = false;
@@ -87,6 +87,7 @@ public class ELabel : Label {
 
 	void Reload ()
 	{
+		int tmp;
 		layout = Layout.Copy ();
 
 		layout.SetText (ellipsis);

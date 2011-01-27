@@ -348,9 +348,9 @@ namespace Novell.iFolder
         /// <summary>
         /// Event Handler for Forward CLicked
         /// </summary>
-        private void OnForwardClicked(object o, EventArgs e)
+        /*private void OnForwardClicked(object o, EventArgs e)
 		{
-		}
+		}*/
 		
 		///
 		/// User Information Page (2 of 3)
@@ -790,9 +790,9 @@ namespace Novell.iFolder
 		///
 		/// Sensitivity Methods
 		///
-		private void UpdateServerInformationPageSensitivity(object o, EventArgs args)
+		/*private void UpdateServerInformationPageSensitivity(object o, EventArgs args)
 		{
-		}
+		}*/
 		
 		///
 		/// Event Handlers

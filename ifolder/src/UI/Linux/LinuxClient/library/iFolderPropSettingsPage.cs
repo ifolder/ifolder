@@ -66,10 +66,10 @@ namespace Novell.iFolder
 
 		private Table				diskTable;
 		private Label				LimitLabel;
-		private CheckButton			LimitCheckButton;
+//		private CheckButton			LimitCheckButton;
 		private CheckButton			SecureSync;
 		private Label				LimitValue;
-		private Entry				LimitEntry;
+//		private Entry				LimitEntry;
 		private Label				LimitUnit;
 
 		private Label				AvailLabel;
@@ -260,11 +260,13 @@ namespace Novell.iFolder
 					LimitValue.Visible = true;
 				}
 
+				//LimitCheckButton never assinged, always has value NULL, below code will never get excuted
+				/*
 				if(LimitCheckButton != null)
 				{
 					LimitCheckButton.Visible = false;
 					LimitEntry.Visible = false;
-				}
+				}*/
 //			}
 
 			if(ds != null)
@@ -284,12 +286,14 @@ namespace Novell.iFolder
 					DiskUsageEmptyLabel.Sensitive = false;
 					AvailUnit.Text="";
 					LimitUnit.Text="";
-					if(LimitCheckButton != null)
+				//LimitCheckButton never assinged, always has value NULL, below code will never get excuted
+	
+				/*	if(LimitCheckButton != null)
 					{
 						LimitCheckButton.Active = false; 
 						LimitEntry.Sensitive = false;
 						LimitEntry.Text = Util.GS("0");
-					}
+					}*/
 					if(LimitLabel != null)
 					{
 						LimitLabel.Sensitive = false;
@@ -311,13 +315,15 @@ namespace Novell.iFolder
 					AvailUnit.Text= Util.GS("MB");
                                         LimitUnit.Text= Util.GS("MB");
 
+				//LimitCheckButton never assinged, always has value NULL, below code will never get excuted
+					/*
 					if(LimitCheckButton != null)
 					{
 						LimitCheckButton.Active = true; 
 						LimitEntry.Sensitive = true;
 						tmpValue = (int)(ds.Limit / (1024 * 1024));
 						LimitEntry.Text = string.Format("{0}", tmpValue);
-					}
+					}*/
 					if(LimitLabel != null)
 					{
 						LimitLabel.Sensitive = true;
@@ -628,7 +634,7 @@ namespace Novell.iFolder
         /// <summary>
         /// Event Handler for LimitSize Button event
         /// </summary>
-		private void OnLimitSizeButton(object o, EventArgs args)
+    /*		private void OnLimitSizeButton(object o, EventArgs args)
 		{
 			if(LimitCheckButton.Active == true)
 			{
@@ -664,14 +670,14 @@ namespace Novell.iFolder
 					//SaveLimit();
 				}
 			}
-		}
+		}  */
 
 
 
         /// <summary>
         /// Event Handler for LImit Changed event
         /// </summary>
-		private void OnLimitChanged(object o, EventArgs args)
+/*		private void OnLimitChanged(object o, EventArgs args)
 		{
 			int tmpValue;
 
@@ -695,25 +701,25 @@ namespace Novell.iFolder
 			}
 
 			SetGraph(ds.UsedSpace, sizeLimit);
-		}
+		} */
 
 
 
         /// <summary>
         /// Event Handler for Limit Edited event
         /// </summary>
-		private void OnLimitEdited(object o, EventArgs args)
+/*		private void OnLimitEdited(object o, EventArgs args)
 		{
 			SaveLimit();
-		}
+		} */
 
 
 
 
-		private void OnLimitFocusLost(object o, FocusOutEventArgs args)
+	/*	private void OnLimitFocusLost(object o, FocusOutEventArgs args)
 		{
 			SaveLimit();
-		}
+		} */
 
 
 
@@ -750,7 +756,7 @@ namespace Novell.iFolder
         /// <summary>
         /// Save Limit
         /// </summary>
-		private void SaveLimit()
+	/*	private void SaveLimit()
 		{
 			long sizeLimit = GetCurrentLimit();
 
@@ -767,13 +773,13 @@ namespace Novell.iFolder
 				return;
 			}
 		}
-
+*/
 
         /// <summary>
         /// Get Current Limit
         /// </summary>
         /// <returns>Limit </returns>
-		private long GetCurrentLimit()
+	/*	private long GetCurrentLimit()
 		{
 			long sizeLimit;
 
@@ -793,7 +799,7 @@ namespace Novell.iFolder
 
 			sizeLimit = sizeLimit * 1024 * 1024;
 			return sizeLimit;
-		}
+		} */
 
 
 

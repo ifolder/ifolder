@@ -615,10 +615,10 @@ namespace Novell.iFolder
         /// <summary>
         /// Event Handler for Fields Changed event
         /// </summary>
-        private void OnFieldsChanged(object obj, EventArgs args)
+        /*private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
-		}
+		} */
 	}
 }

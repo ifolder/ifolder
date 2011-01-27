@@ -1246,17 +1246,17 @@ namespace Novell.iFolder.Controller
         /// </summary>
         /// <param name="domainID">Domain ID</param>
         /// <returns>true if server is old</returns>
-		private bool IsServerOld(string domainID)
+/*		private bool IsServerOld(string domainID)
 		{
 			return ifws.CheckForServerUpdate(domainID);
-		}
+		}*/
 
         /// <summary>
         /// GetNewClientAvailable
         /// </summary>
         /// <param name="domainID">Domain ID</param>
         /// <returns>string - Client Version</returns>
-		private string GetNewClientAvailable(string domainID)
+/*		private string GetNewClientAvailable(string domainID)
 		{
 			string AvailableClientVersion = null;
 			try
@@ -1267,10 +1267,10 @@ namespace Novell.iFolder.Controller
 			{
 			}
 			return AvailableClientVersion;
-		}
+		} */
 
 		/// <returns>Returns the version of a newer client or null if no new version exists.</returns>		
-		private string GetNewClientVersion(string domainID)
+	/*	private string GetNewClientVersion(string domainID)
 		{
 			string newClientVersion = null;
 
@@ -1288,7 +1288,7 @@ namespace Novell.iFolder.Controller
 			}
 
 			return newClientVersion;
-		}
+		} */
 		
         /// <summary>
         /// Authenticate to Domain

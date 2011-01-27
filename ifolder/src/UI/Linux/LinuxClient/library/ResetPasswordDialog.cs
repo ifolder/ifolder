@@ -459,10 +459,10 @@ namespace Novell.iFolder
 											0, 0);
 		}
 
-		private void OnFieldsChanged(object obj, EventArgs args)
+		/*private void OnFieldsChanged(object obj, EventArgs args)
 		{
 			bool enableOK = false;
 			this.SetResponseSensitive(ResponseType.Ok, enableOK);
-		}
+		} */
 	}
 }

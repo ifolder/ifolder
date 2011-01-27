@@ -52,7 +52,7 @@ namespace Novell.iFolder
 //		private Entry retypePassPhrase;
 		private Entry recoveryAgentCombo;
 //		private string[] RAList;
-		private string DomainID;
+//		private string DomainID;
 		private DomainInformation[] domains;
 //		private CheckButton savePassPhrase;
 	
@@ -97,7 +97,7 @@ namespace Novell.iFolder
 		{
 			this.ifws = ifws;
 			this.simws = simws;
-			this.DomainID = DomainID;
+			//this.DomainID = DomainID;
 			SetupDialog();
 		}
 

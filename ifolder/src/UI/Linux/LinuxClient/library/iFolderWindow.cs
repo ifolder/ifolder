@@ -143,7 +143,7 @@ namespace Novell.iFolder
 		public ListTreeView 			tv;
 		private static iFolderViewGroup	localGroup;
 		private TreeModelFilter	myiFoldersFilter,iFolderFilter,treeModelFilter;
-		private Timer				updateStatusTimer;
+//		private Timer				updateStatusTimer;
 
 		private VBox				SynchronizedFolderTasks;
 
@@ -1475,7 +1475,7 @@ namespace Novell.iFolder
 		/// <summary>
                 /// Event Handler for Tree View Selection Changed event
                 /// </summary>
-                private void OnSelectionChanged(object o, EventArgs args)
+               /* private void OnSelectionChanged(object o, EventArgs args)
                 {
 			TreeIter iter;
                 	TreeModel model;
@@ -1488,7 +1488,7 @@ namespace Novell.iFolder
         	        }
 			
 			UpdateSensitivity();
-		}
+		}*/
 
 
 		private Widget CreateActions()
@@ -1957,7 +1957,7 @@ namespace Novell.iFolder
 		}
 
 
-		private Widget CreateViewWithDetails(Widget combinedview)
+	/*	private Widget CreateViewWithDetails(Widget combinedview)
 		{
 			VBox view = new VBox();
 			view.PackStart(combinedview,true,true,0);
@@ -1965,7 +1965,7 @@ namespace Novell.iFolder
 			
 			return view;
 
-		}
+		} */
 
 				
 		private Widget CreateIconViewPane()
@@ -1983,11 +1983,11 @@ namespace Novell.iFolder
 			///
 			/// Create a timer that calls UpdateLocalViewItems every 30 seconds
 			/// beginning in 30 seconds from now.
-			updateStatusTimer =
+			/*updateStatusTimer =
 				new Timer(new TimerCallback(UpdateLocalViewItems),
 						  myiFoldersFilter,
 						  30000,
-						  30000);
+						  30000);*/
 			
 			localGroup = new iFolderViewGroup(Util.GS("iFolders on This Computer"), myiFoldersFilter, SearchEntry);
 			iFoldersIconView.AddGroup(localGroup);
@@ -2146,14 +2146,14 @@ namespace Novell.iFolder
 		/// Event Handlers
 		///
 	
-		private void UpdateLocalViewItems(object state)
+	/*	private void UpdateLocalViewItems(object state)
 		{
 			// Do the work on the main UI thread so that stuff isn't corrupted.
 			if( ifolderlistview.Visible )
 				GLib.Idle.Add(UpdateListViewItemsMainThread);
 			else
 				GLib.Idle.Add(UpdateLocalViewItemsMainThread);
-		}
+		} */
 
 		private bool UpdateListViewItemsMainThread()
 		{
@@ -2285,7 +2285,7 @@ namespace Novell.iFolder
 			return;
 		}
 
-		private void ExportClicked( object o, EventArgs args)
+	/*	private void ExportClicked( object o, EventArgs args)
 		{
 			ExportKeysDialog export = new ExportKeysDialog(ifws, simws);
 			export.TransientFor = this;
@@ -2330,9 +2330,9 @@ namespace Novell.iFolder
 			{
 				Util.ShowHelp("managingpassphrse.html", this);
 			}
-		}
+		} */
 
-		private void ImportClicked( object o, EventArgs args)
+	/*	private void ImportClicked( object o, EventArgs args)
 		{
 			DomainInformation[] domains = this.domainController.GetLoggedInDomains();
 			if( domains == null)
@@ -2405,7 +2405,7 @@ namespace Novell.iFolder
 			{
 				Util.ShowHelp("managingpassphrse.html", this);
 			}
-		}
+		} */
 		
 		private void OnToggleViewServeriFoldersMenuItem(object o, EventArgs args)
 		{
@@ -2496,9 +2496,7 @@ namespace Novell.iFolder
 	
 				menu.ShowAll();
 				
-				menu.Popup(null, null, null, 
-					IntPtr.Zero, 3, 
-					Gtk.Global.CurrentEventTime);
+				menu.Popup(null, null, null, 3, Gtk.Global.CurrentEventTime);
 		        	UpdateServerInfoForSelectedDomain();
 			}
 		}
@@ -2716,7 +2714,7 @@ namespace Novell.iFolder
 					menu.ShowAll();
 
 					menu.Popup(null, null, null, 
-						IntPtr.Zero, 3, 
+						3, 
 						Gtk.Global.CurrentEventTime);
 					break;
 				default:
@@ -4627,7 +4625,7 @@ namespace Novell.iFolder
 
 				
 			int rc = 0;
-			string folderPath =null;
+			//string folderPath =null;
 			do
 			{
 				rc = cd.Run();
@@ -4722,7 +4720,7 @@ namespace Novell.iFolder
 							dialog.Destroy();
 							if( (ResponseType)response == ResponseType.Yes )
 							{
-								folderPath = selectedFolder;
+								//folderPath = selectedFolder;
 								try{
 									Directory.CreateDirectory(selectedFolder);
 								}
@@ -5770,13 +5768,13 @@ namespace Novell.iFolder
 						menu.Append(item_refresh);
 						item_refresh.Activated +=  this.ifwin.RefreshiFoldersHandler;
 						menu.ShowAll();
-						menu.Popup(null, null, null, IntPtr.Zero, 3, Gtk.Global.CurrentEventTime);
+						menu.Popup(null, null, null, 3, Gtk.Global.CurrentEventTime);
 					}	
 
 					menu.ShowAll();
 
 					menu.Popup(null, null, null, 
-						IntPtr.Zero, 3, 
+						3, 
 						Gtk.Global.CurrentEventTime); 
 				//	this.ifwin.UpdateSensitivity();
 					retValue = true; 

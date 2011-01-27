@@ -301,10 +301,10 @@ namespace Novell.iFolder
 				}
 			}
 		}
-		private void nothing()
+		/*private void nothing()
 		{
 			return;
-		}
+		}*/
 
         /// <summary>
         /// Event Handler for Realize Widget

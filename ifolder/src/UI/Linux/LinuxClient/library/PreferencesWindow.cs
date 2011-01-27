@@ -52,7 +52,7 @@ namespace Novell.iFolder
 		private Gtk.Notebook			PrefNoteBook;
 		private PrefsGeneralPage		generalPage;
 		private PrefsAccountsPage		accountsPage;
-		private MigrationPage			migrationPage;
+		//private MigrationPage			migrationPage;
 		private bool					ControlKeyPressed;
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Novell.iFolder
 			PrefNoteBook.AppendPage( accountsPage,
 										new Label(Util.GS("Accounts")));
 
-	              /*migrationPage = */new MigrationPage(this, ifws);
+	              /*migrationPage =*/ new MigrationPage(this, ifws); 
 //			PrefNoteBook.AppendPage( migrationPage, new Label(Util.GS("Migration")));
 
 			PrefNoteBook.SwitchPage +=

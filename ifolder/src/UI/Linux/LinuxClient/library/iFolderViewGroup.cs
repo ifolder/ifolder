@@ -79,7 +79,7 @@ namespace Novell.iFolder
 		private uint						searchTimeoutID;
 		
 		private bool						alreadyDisposed;
-		private static iFolderLog 				log;
+		public static IiFolderLog 				log;
 
 		public new string Name
 		{
@@ -314,7 +314,7 @@ namespace Novell.iFolder
 			contentVBox.PackStart(groupNotebook, true, true, 0);
 			groupNotebook.ShowTabs = false;
 			groupNotebook.ShowBorder = false;
-			groupNotebook.Homogeneous = false;
+			//groupNotebook.Homogeneous = false;
 			
 			groupNotebook.AppendPage(CreateMainPage(), null);
 			groupNotebook.AppendPage(CreateEmptyPage(), null);

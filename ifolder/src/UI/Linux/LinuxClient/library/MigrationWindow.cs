@@ -364,11 +364,11 @@ namespace Novell.iFolder
                         }
                 }
 
-
-                private void OnAccTreeRowActivated(object o, RowActivatedArgs args)
+		//never been used
+               /* private void OnAccTreeRowActivated(object o, RowActivatedArgs args)
                 {
                         OnDetailsClicked(o, args);
-                }
+                }*/
 
 
                 public void AccSelectionChangedHandler(object o, EventArgs args)
@@ -377,10 +377,10 @@ namespace Novell.iFolder
                 }
 
 
-                private void OnDetailsClicked(object o, EventArgs args)
+                /*private void OnDetailsClicked(object o, EventArgs args)
                 {
                         return;
-                }
+                }*/
                 
                 /// <summary>
                 /// Remove Item

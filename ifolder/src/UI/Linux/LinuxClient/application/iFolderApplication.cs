@@ -620,7 +620,8 @@ namespace Novell.iFolder
                                                  //       return;
                                                 // }
 						ShowClientUpgradeMessageBox();
-                                                int result;
+						//not used
+                                               // int result;
 						int policy = ifws.GetSecurityPolicy(DomainID);
 						if( policy % 2 == 0)
 							break;
@@ -1738,7 +1739,7 @@ namespace Novell.iFolder
 
 			trayMenu.ShowAll();
 
-			trayMenu.Popup(null, null, null, IntPtr.Zero, 3,
+			trayMenu.Popup(null, null, null, 3,
 					Gtk.Global.CurrentEventTime);
 //			trayMenu.Popup(null, null, null, IntPtr.Zero, 3,
 //					Gtk.Global.CurrentEventTime);

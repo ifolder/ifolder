@@ -344,9 +344,9 @@ namespace Novell.iFolder
 			return;
 		}
 
-		private void OnAccountDialogDestroyedEvent(object o, EventArgs args)
+	/*	private void OnAccountDialogDestroyedEvent(object o, EventArgs args)
 		{
-		}
+		}*/
 
 		public void AccSelectionChangedHandler(object o, EventArgs args)
 		{

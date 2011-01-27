@@ -264,10 +264,10 @@ namespace Novell.iFolder
 
 				langCode = "en";
 			}
-			else if (langCode.StartsWith("zh") || langCode.StartsWith("pt"))
-			;
-			else
+			else if (!langCode.StartsWith("zh") && !langCode.StartsWith("pt"))
+			{
 				langCode = langCode.Substring(0, 2); // Only use the first two letters if NOT Chinese
+			}
 
 			return string.Format("file://{0}/{1}/{2}", helpdir, langCode, helpFile);
 		}
@@ -451,7 +451,9 @@ namespace Novell.iFolder
 					"  Sandeep Gaddam",
 					"  Srinidhi"
 				};
-
+			
+				//use this inseted of Gnome.About
+				//AboutDialog dia = new AboutDialog();
 				Gnome.About aboutDialog =
 					GnomeAboutNew(
 						"iFolder",
