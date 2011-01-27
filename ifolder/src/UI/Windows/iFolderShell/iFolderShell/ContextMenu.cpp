@@ -127,7 +127,7 @@ STDMETHODIMP CiFolderShell::QueryContextMenu(HMENU hMenu,
 			}
 
 			BOOL biFolder= FALSE;
-			VARIANT_BOOL hasConflicts;
+			VARIANT_BOOL hasConflicts=FALSE;
 
 			try
 			{
@@ -523,7 +523,7 @@ HBITMAP CiFolderShell::GetBitmap()
 	HDC hDC = NULL;
 	HBRUSH hBrush = NULL;
 	HICON hIcon = NULL;
-
+    HBITMAP hBmp=NULL;
 	if (m_hBmpMenu)
 		return m_hBmpMenu;
 	
@@ -538,7 +538,7 @@ HBITMAP CiFolderShell::GetBitmap()
 	int y = GetSystemMetrics(SM_CYMENUCHECK);
 
 	// Create the bitmap.
-	HBITMAP hBmp = CreateCompatibleBitmap(hScreenDC, x, y);
+	hBmp = CreateCompatibleBitmap(hScreenDC, x, y);
 	if (!hBmp)
 		goto Cleanup;
 	

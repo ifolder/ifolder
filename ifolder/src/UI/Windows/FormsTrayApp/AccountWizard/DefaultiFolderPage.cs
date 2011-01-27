@@ -496,7 +496,7 @@ namespace Novell.Wizard
 				{
 					passphraseStatus = simws.IsPassPhraseSet(domainInfo.ID);
 				}
-				catch(Exception ex)
+				catch(Exception )
 				{
 				//	MessageBox.Show("Unable to contact the server.");
 					return null;

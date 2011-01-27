@@ -118,7 +118,7 @@ namespace Novell.FormsTrayApp
 		private bool simiasRunning = false;
         private bool simiasStarting = false;
 		private bool wizardRunning = false;
-        private bool exitFlag = true;
+        //private bool exitFlag = true;
         private bool simiasStopNeeded = true;
 		private Icon trayIcon;
 		private Icon startupIcon;
@@ -128,7 +128,7 @@ namespace Novell.FormsTrayApp
 		private int index = 0;
 		private bool syncToServer = false;
 
-		private Image trayImage;
+		//private Image trayImage;
 
 		private Queue eventQueue;
 		private Thread worker = null;
@@ -180,10 +180,10 @@ namespace Novell.FormsTrayApp
 		private Manager simiasManager;
 		private string iFolderLogPath;
 		static private FormsTrayApp instance;
-		private bool NoAccounts;
+		//private bool NoAccounts;
         public static IiFolderLog log;
         private const int HWND_BOARDCAST = 0xffff;
-        private System.Windows.Forms.Timer splashTimer;
+        //private System.Windows.Forms.Timer splashTimer;
         private System.Windows.Forms.Timer SimiasTimer;
         private static bool RegularStart = false;
         private static string lockObject = "SimiasStarting";
@@ -401,7 +401,7 @@ namespace Novell.FormsTrayApp
 		static public bool ClientUpdates(string domainID, out bool serverOld)
 		{
 			string newClientVersion = null;
-			bool result = false;
+			//bool result = false;
 			int res;
 			serverOld = false;
 			string serverVersion = null;
@@ -450,11 +450,11 @@ namespace Novell.FormsTrayApp
 			{
 				case UpdateResult.Latest:
 					// No update required...
-					result = true;
+					//result = true;
 					break;
 				case UpdateResult.UpgradeNeeded:
 					// Client upgrade needed...
-					result = false;
+					//result = false;
 					res = (int) MessageBox.Show(String.Format( resourceManager.GetString("UpgradeClientMsg"),
                         newClientVersion), 
                         resourceManager.GetString("UpgradeNeededTitle"),
@@ -527,7 +527,7 @@ namespace Novell.FormsTrayApp
                 return true;
             else
                 return false;
-            return false;           
+            //return false;           
         }
 
 		/// <summary>
@@ -1056,7 +1056,7 @@ namespace Novell.FormsTrayApp
 
                         if (domains.Length.Equals(0))
                         {
-                            this.NoAccounts = true;
+                            //this.NoAccounts = true;
                             accountPrompt = true;
                         }
                     }
@@ -1238,8 +1238,8 @@ namespace Novell.FormsTrayApp
                    this.startupWind.Dispose();
                    this.startupWind = null;
               }
-              splashTimer.Stop();
-              splashTimer.Enabled = false;
+              //splashTimer.Stop();
+              //splashTimer.Enabled = false;
             
         }
 		private void errorHandler(ApplicationException e, object context)
@@ -2325,14 +2325,14 @@ namespace Novell.FormsTrayApp
 		}
         private void yes_Clicked(object sender, EventArgs e)
 		{
-    		exitFlag=true;
+    		//exitFlag=true;
 	
 		}
 
 		private void no_Clicked(object sender, EventArgs e)
 		{
 		
-			exitFlag=false;
+			//exitFlag=false;
 			msb.Hide();
 			
 		}

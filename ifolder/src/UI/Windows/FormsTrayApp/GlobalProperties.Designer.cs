@@ -4,7 +4,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Collections;
 using Novell.iFolderCom;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 namespace Novell.FormsTrayApp
 {
@@ -905,11 +905,11 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.MenuItem menuActionExit;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.StatusBar statusBar1;
-        private System.Windows.Forms.MenuItem menuClose;
+        //private System.Windows.Forms.MenuItem menuClose;
 
 
-        private System.Windows.Forms.MenuItem MigrationMenuItem;
-        private System.Windows.Forms.MenuItem MigrationMenuSubItem;
+        //private System.Windows.Forms.MenuItem MigrationMenuItem;
+        //private System.Windows.Forms.MenuItem MigrationMenuSubItem;
         private Panel panel3;
         private TextBox filter;
         private ContextMenuStrip iFolderContextMenu;

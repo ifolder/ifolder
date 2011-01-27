@@ -398,7 +398,7 @@ namespace Novell.FormsTrayApp
 						this.Dispose();
 						this.Close();
 					}
-					catch(Exception ex) 
+					catch(Exception ) 
 					{
 						MessageBox.Show(Resource.GetString("PassStoreErr"));
 						status = false;

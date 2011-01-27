@@ -141,8 +141,8 @@ public:
 	STDMETHODIMP			GetPriority(int *pIPriority);
 	
 	//IShellPropSheetExt methods
-	STDMETHODIMP			AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
-									LPARAM lParam);
+	STDMETHODIMP			AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,LPARAM lParam);
+							
 	
 	STDMETHODIMP			ReplacePage(UINT uPageID,
 										LPFNADDPROPSHEETPAGE lpfnReplaceWith,

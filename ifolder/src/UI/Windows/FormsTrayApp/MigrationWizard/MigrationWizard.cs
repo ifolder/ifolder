@@ -90,7 +90,7 @@ namespace Novell.Wizard
 	public class MigrationWizard : System.Windows.Forms.Form
 	{
 		#region Class Members
-		DomainInformation domainInfo;
+		//DomainInformation domainInfo;
 		private string UserName;
 		private string location;
 		private System.Windows.Forms.Button cancel;
@@ -525,7 +525,7 @@ namespace Novell.Wizard
 						{
 							this.simiasWebService.StorePassPhrase( this.identityPage.domain.ID, this.passphraseVerifyPage.Passphrase, CredentialType.Basic, this.passphraseVerifyPage.RememberPassphrase);
 						}
-						catch(Exception ex) 
+						catch(Exception ) 
 						{
 							MessageBox.Show("Unable to store Passphrase");
 							return;
@@ -577,7 +577,7 @@ namespace Novell.Wizard
 							nextIndex = 4;
 						}						
 					}
-					catch(Exception ex)
+					catch(Exception )
 					{
 						MessageBox.Show("Unable to get passphrase. \nLogin to the domain and try again.");
 						// Stay in the same page
@@ -694,7 +694,7 @@ namespace Novell.Wizard
 				{
 					destination.Create();
 				}
-				catch(Exception e)
+				catch(Exception )
 				{
 				}
 			}
@@ -711,7 +711,7 @@ namespace Novell.Wizard
 					file.CopyTo(System.IO.Path.Combine(destination.FullName, file.Name));
 				}
 			}
-			catch(Exception e)
+			catch(Exception )
 			{
 			}
 			try
@@ -727,7 +727,7 @@ namespace Novell.Wizard
 				}
 				return true;
 			}
-			catch(Exception e)
+			catch(Exception )
 			{
 			}
 			return false;
@@ -836,7 +836,7 @@ namespace Novell.Wizard
 					}
 				}
 			}
-			catch(Exception ex)
+			catch(Exception )
 			{
 				this.verifyPage.CloseWaitDialog();
 				MessageBox.Show(Resource.GetString("CannotBeiFolder")/*"The folder can not be converted into ifolder"*/,Resource.GetString("MigrationTitle")/*"Error creating iFolder"*/,MessageBoxButtons.OK);

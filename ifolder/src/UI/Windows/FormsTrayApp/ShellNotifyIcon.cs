@@ -93,9 +93,9 @@ namespace Novell.CustomUIControls
 		private static readonly int NIM_ADD = 0x00;
 		private static readonly int NIM_MODIFY = 0x01;
 		private static readonly int NIM_DELETE = 0x02;
-		private static readonly int NIM_SETVERSION = 0x04;
+		//private static readonly int NIM_SETVERSION = 0x04;
 
-		private static readonly int NOTIFYICON_VERSION = 3;
+		//private static readonly int NOTIFYICON_VERSION = 3;
 
 		[DllImport("shell32.dll")]
 		private static extern bool Shell_NotifyIcon(int dwMessage,	ref NOTIFYICONDATA lpData);

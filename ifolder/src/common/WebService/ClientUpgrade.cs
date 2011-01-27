@@ -321,7 +321,7 @@ namespace Novell.iFolder.Install
         private StatusCodes CheckForMacUpdate(string curVersion, out string ServerVersion)
         {
             log.Debug("Calling Server to check for Update with version:{0}", curVersion);
-            string updateVersion = null;
+            //string updateVersion = null;
             ServerVersion = null;
             // Make sure that the service object is authenticated.
             if (service != null)
@@ -334,7 +334,7 @@ namespace Novell.iFolder.Install
                 {
                     stat = (StatusCodes)service.CheckForUpdateSoapDocMethod("Darwin", curVersion, out serverVersion);
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     stat = (StatusCodes)service.CheckForUpdate("Darwin", curVersion, out serverVersion);
                 }

@@ -1037,7 +1037,7 @@ namespace Novell.FormsTrayApp
 
 					domain.DomainInfo.IsDefault = true;
 				}
-				catch (Exception ex)
+				catch (Exception )
 				{
 // TODO:					mmb = new MyMessageBox(resourceManager.GetString("setDefaultError"), resourceManager.GetString("accountErrorTitle"), ex.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
 //					mmb.ShowDialog();

@@ -94,13 +94,13 @@ namespace Novell.FormsTrayApp
         private SimiasWebService simiasWebService;
         private bool shutdown = false;
         private Domain currentDefaultDomain = null;
-        private Domain selectedDomain = null;
-        private ListViewItem newAccountLvi = null;
-        private bool processing = false;
+        //private Domain selectedDomain = null;
+        //private ListViewItem newAccountLvi = null;
+        //private bool processing = false;
         private bool successful;
         private bool updatePassword = false;
         private bool updateEnabled = false;
-        private bool updateHost = false;
+        //private bool updateHost = false;
         private bool initialPositionSet = false;
         private System.Windows.Forms.Button apply;
         private System.Windows.Forms.Button cancel;
@@ -1539,7 +1539,7 @@ namespace Novell.FormsTrayApp
             {
                 defaultInterval.Value = displayValue;
             }
-            catch (ArgumentOutOfRangeException ae)
+            catch (ArgumentOutOfRangeException )
             {
                 defaultInterval.Value = syncInterval;
                 timeUnit.SelectedIndex = 0;
@@ -1971,13 +1971,13 @@ namespace Novell.FormsTrayApp
                 // If we haven't received a shutdown event, cancel the close event and hide the dialog.
                 e.Cancel = true;
                 currentDefaultDomain = null;
-                newAccountLvi = null;
+                //newAccountLvi = null;
 
                 // Disable/enable the controls.
                 addAccount.Enabled = true;
                 details.Enabled = removeAccount.Enabled = false;
 
-                updatePassword = updateEnabled = updateHost = false;
+                updatePassword = updateEnabled /*= updateHost*/  =  false;
 
                 Hide();
             }
@@ -2159,9 +2159,9 @@ namespace Novell.FormsTrayApp
             if (domain == null)
             {
                 // Remove the new account
-                newAccountLvi = null;
+                //newAccountLvi = null;
                 lvi.Remove();
-                updatePassword = updateEnabled = updateHost = false;
+                updatePassword = updateEnabled /*= updateHost*/ = false;
                 addAccount.Enabled = true;
             }
             else
@@ -2203,7 +2203,7 @@ namespace Novell.FormsTrayApp
                             }
                         }
 
-                        updatePassword = updateEnabled = updateHost = false;
+                        updatePassword = updateEnabled /*= updateHost*/ = false;
                     }
                     catch (Exception ex)
                     {

@@ -80,8 +80,8 @@ namespace Novell.FormsTrayApp
         private bool autoAccountEnabled;
         private bool promptForInvalidCert;
         private bool httpsConnect = false;
-		private bool CertAcceptedCond1 = false;
-		private bool CertAcceptedCond2 = false;
+		//private bool CertAcceptedCond1 = false;
+		//private bool CertAcceptedCond2 = false;
 		private ArrayList ServersForCertStore = new ArrayList();
               
 

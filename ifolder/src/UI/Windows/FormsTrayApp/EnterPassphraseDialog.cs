@@ -77,9 +77,9 @@ namespace Novell.FormsTrayApp
         private SizeF strSize;
         private int maxTextWidth = 240;
         private int defaultNameXPos = 16;
-        private int defaultNameYPos = 75;
+        //private int defaultNameYPos = 75;
         private int defaultValueXPos = 159;
-        private int defaultValueYPos = 75;
+        //private int defaultValueYPos = 75;
         private int defaultSpacing = 10;
 
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
@@ -573,7 +573,7 @@ namespace Novell.FormsTrayApp
                     {
                         publicKey = this.ifws.GetDefaultServerPublicKey(this.DomainID, memberUID);
                     }
-                    catch(Exception ex)
+                    catch(Exception )
                     {
                         Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(Resource.GetString("PassStoreErr")/*"Unable to set the passphrase"*/, resourceManager.GetString("$this.Text")/*"Error setting the passphrase"*/, ""/*Resource.GetString("TryAgain")*//*"Please try again"*/, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
                         mmb.ShowDialog();

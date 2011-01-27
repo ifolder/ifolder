@@ -266,8 +266,7 @@ INT_PTR CALLBACK iFolderPageDlgProc(HWND hDlg,
 //  COMMENTS:
 //
 
-STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
-									 LPARAM lParam)
+STDMETHODIMP CiFolderShell::AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam)
 {
     //OutputDebugString(TEXT("CiFolderShell::AddPages()\n"));
 

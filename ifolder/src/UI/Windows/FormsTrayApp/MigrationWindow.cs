@@ -443,7 +443,7 @@ namespace Novell.FormsTrayApp
 				{
 					iFolderKey.DeleteSubKeyTree(UserName);
 				}
-				catch(Exception ex)
+				catch(Exception )
 				{
                     /*
 					Novell.iFolderCom.MyMessageBox mmb = new MyMessageBox(ex.Message, Resource.GetString("MigrationTitle"),"", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
@@ -497,7 +497,7 @@ namespace Novell.FormsTrayApp
                 }
                 iFolderKey.Close();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
             return status;

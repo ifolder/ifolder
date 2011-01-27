@@ -1640,7 +1640,7 @@ namespace Novell.iFolderCom
                 this.ifws.ChangePassword(DomainID, null, null);
                 this.RecoveryAgentCombo.Items.Add(resources.GetString("serverDefaultRA"));
             }
-            catch (System.Web.Services.Protocols.SoapHeaderException soapEx)
+            catch (System.Web.Services.Protocols.SoapHeaderException )
             {
             }
 

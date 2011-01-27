@@ -75,7 +75,7 @@ namespace Novell.FormsTrayApp
 		private iFolderWebService ifWebService;
 		private Manager simiasManager;
        
-        private bool wizardStatus = false;
+        //private bool wizardStatus = false;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>

@@ -64,7 +64,7 @@ namespace Novell.FormsTrayApp
 		private System.Windows.Forms.Button btnImport;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox DomainComboBox;
-		private DomainItem selectedDomain;
+		//private DomainItem selectedDomain;
 		private System.Windows.Forms.PictureBox pictureBox;
 		private SimiasWebService simiasWebService;
         private iFolderWebService ifws = null;
@@ -626,11 +626,11 @@ namespace Novell.FormsTrayApp
 			{
 				if( this.DomainComboBox.Items.Count > 0)
 				{
-					if (selectedDomain != null)
+					/*if (selectedDomain != null)
 					{
 						this.DomainComboBox.SelectedItem = selectedDomain;
 					}
-					else
+					else*/
 						this.DomainComboBox.SelectedIndex = 0;
 				}
 				else
@@ -780,7 +780,7 @@ namespace Novell.FormsTrayApp
 					}
 				}
 			}
-			catch(Exception ex)
+			catch(Exception )
 			{
 			}
 		}

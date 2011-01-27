@@ -251,7 +251,7 @@ namespace Novell.iFolder.Web
 			Collection col = SharedCollection.GetCollectionByPath(LocalPath);
 			if(col != null)
 			{
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					return true;
 			}
 			return false;
@@ -406,7 +406,7 @@ namespace Novell.iFolder.Web
 			}
 			else
 			{
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					return true;
 				else
 					return false;
@@ -435,7 +435,7 @@ namespace Novell.iFolder.Web
 			{
 				// CRG: Removed the code that checked for a Subscription
 				// USE: GetiFolderInvitation to be safe in multi-domain
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					ifolder = new iFolderWeb(col);
 				else
 					ifolder = null;
@@ -478,7 +478,7 @@ namespace Novell.iFolder.Web
 			{
 				// CRG: Removed the code that checked for a Subscription
 				// USE: GetiFolderInvitation to be safe in multi-domain
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					ifolder = new iFolderWeb(col, infoToFetch);
 				else
 					ifolder = null;
@@ -991,7 +991,7 @@ namespace Novell.iFolder.Web
 				if (sn.Type.Equals(NodeTypes.CollectionType))
 				{
 					Collection col = store.GetCollectionByID(sn.ID);
-					if (col.IsType(col, iFolderWeb.iFolderType))
+					if (col.IsType(iFolderWeb.iFolderType))
 					{
 						list.Add(new iFolderWeb(col));
                         if( ht.ContainsKey( col.ID) == false)
@@ -1041,7 +1041,7 @@ namespace Novell.iFolder.Web
 			foreach(ShallowNode sn in iFolderList)
 			{
 				Collection col = store.GetCollectionByID(sn.ID);
-				if(col.IsType(col, iFolderWeb.iFolderType))
+				if(col.IsType(iFolderWeb.iFolderType))
 					list.Add(new iFolderWeb(col));
 			}
 
@@ -1149,7 +1149,7 @@ namespace Novell.iFolder.Web
 
                     poBox.Commit(sub);
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
                     // do nothing , this is the case: user was moved to another server , POBox was not moved, so client
                     // does not have those POBox.
@@ -1287,7 +1287,7 @@ namespace Novell.iFolder.Web
                     col.Domain,
                     store.GetUserIDFromDomainID(col.Domain));
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 poBox = null;
             }
@@ -1779,11 +1779,11 @@ namespace Novell.iFolder.Web
 				if(node != null)
 				{
 					Domain domain = store.GetDomain( col.Domain );
-					if (col.IsBaseType(node, NodeTypes.MemberType))
+					if (col.IsBaseType(NodeTypes.MemberType))
 					{
 						ifolderUser = new iFolderUser( domain, new Member( node ) );
 					}
-					else if (col.IsType(node, typeof( Subscription ).Name))
+					else if (col.IsType(typeof( Subscription ).Name))
 					{
 						ifolderUser = new iFolderUser( new Subscription( node ) );
 					}

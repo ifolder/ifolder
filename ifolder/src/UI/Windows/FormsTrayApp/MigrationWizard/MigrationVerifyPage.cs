@@ -42,7 +42,7 @@ using Novell.FormsTrayApp;
 using Simias.Client;
 using Simias.Client.Authentication;
 using Simias.Client.Event;
-using Novell.FormsTrayApp;
+//using Novell.FormsTrayApp;
 using System.Threading;
 
 namespace Novell.Wizard

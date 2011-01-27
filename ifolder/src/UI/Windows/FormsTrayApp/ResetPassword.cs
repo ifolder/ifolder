@@ -66,7 +66,7 @@ namespace Novell.FormsTrayApp
         private iFolderWebService ifws;
         private DomainItem selectedDomain = null;
 		private string domainID;
-		private bool success;
+		//private bool success;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(FormsTrayApp));
 		private System.Windows.Forms.PictureBox pictureBox;
 		/// <summary>
@@ -613,7 +613,7 @@ namespace Novell.FormsTrayApp
             try{
                 result = this.ifws.ChangePassword(domainid, oldpassword, newpassword);
             }
-            catch (System.Web.Services.Protocols.SoapHeaderException soapEx)
+            catch (System.Web.Services.Protocols.SoapHeaderException )
             {
                 result = (int)ResetPasswordStatus.NotSupportedServerOld;
             }
@@ -643,7 +643,7 @@ namespace Novell.FormsTrayApp
                 MyMessageBox mb = new MyMessageBox(message, title, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Information);
                 mb.ShowDialog();
                 mb.Dispose();
-                this.success = true;
+                //this.success = true;
                 this.Dispose();
                 this.Close();
                 return;
@@ -690,7 +690,7 @@ namespace Novell.FormsTrayApp
             mb1.ShowDialog();
             mb1.Dispose();
             Cursor.Current = Cursors.Default;
-            this.success = false;
+            //this.success = false;
         }
 
 		private void btnReset_Click(object sender, System.EventArgs e)
@@ -705,7 +705,7 @@ namespace Novell.FormsTrayApp
                 MyMessageBox mb1 = new MyMessageBox(message, title, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
                 mb1.ShowDialog();
                 mb1.Dispose();
-                this.success = false;
+                //this.success = false;
                 return;
             }
             else if (this.newPassword.Text == this.oldpassword.Text)
@@ -715,7 +715,7 @@ namespace Novell.FormsTrayApp
                 MyMessageBox mb1 = new MyMessageBox(message, title, "", MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
                 mb1.ShowDialog();
                 mb1.Dispose();
-                this.success = false;
+                //this.success = false;
                 return;
             }
 			try
@@ -729,7 +729,7 @@ namespace Novell.FormsTrayApp
 			catch(Exception)
 			{
 				MessageBox.Show(Resource.GetString("ResetError")/*"Error resetting passphrase"*/ , Resource.GetString("ResetTitle")/*"reset error"*/ );
-				this.success = false;
+				//this.success = false;
 			}
 		}
 	
@@ -745,7 +745,7 @@ namespace Novell.FormsTrayApp
 
 		private void btnCancel_Click(object sender, System.EventArgs e)
 		{
-			this.success = false;
+			//this.success = false;
 			this.Dispose();
 			this.Close();
 		}

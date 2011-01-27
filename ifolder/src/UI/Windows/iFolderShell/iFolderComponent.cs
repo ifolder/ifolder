@@ -442,14 +442,14 @@ namespace Novell.iFolderCom
                                     return true;
                                 }
                             }
-                            catch (Exception e)
+                            catch (Exception )
                             {
                             }
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
             return false;

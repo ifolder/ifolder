@@ -60,7 +60,7 @@ namespace Novell.FormsTrayApp
 		private Novell.FormsTrayApp.ToolBarEx toolBar1;
 		private System.Windows.Forms.ToolBarButton toolBarSave;
 		private System.Windows.Forms.ToolBarButton toolBarClear;
-		private System.ComponentModel.IContainer components;
+		//private System.ComponentModel.IContainer components;
 		#endregion
 
 		/// <summary>
@@ -103,10 +103,10 @@ namespace Novell.FormsTrayApp
 		{
 			if( disposing )
 			{
-				if(components != null)
+				/*if(components != null)
 				{
 					components.Dispose();
-				}
+				}*/
 			}
 			base.Dispose( disposing );
 		}

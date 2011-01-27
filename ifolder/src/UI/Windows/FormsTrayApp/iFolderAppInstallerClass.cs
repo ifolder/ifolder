@@ -125,7 +125,7 @@ namespace Novell.FormsTrayApp
 		/// <param name="savedState"></param>
         public override void Uninstall(IDictionary savedState)
 		{
-            string regstring = "AA81D832-3B41-497c-B508-E9D02F8DF421";
+            //string regstring = "AA81D832-3B41-497c-B508-E9D02F8DF421";
 			if (savedState == null)
 			{
 				throw new InstallException("iFolderApp Uninstall: savedState should not be null");

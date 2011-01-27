@@ -52,21 +52,21 @@ namespace Novell.Wizard
 		private System.Windows.Forms.TextBox EnterPPText;
 		private System.Windows.Forms.CheckBox RememberPPCheck;
 		
-		private System.Windows.Forms.RadioButton removeFromServer;
-		private System.Windows.Forms.RadioButton copyToServer;
+		//private System.Windows.Forms.RadioButton removeFromServer;
+		//private System.Windows.Forms.RadioButton copyToServer;
 
-		private System.Windows.Forms.CheckBox copyOption;
-
-		private System.Windows.Forms.TextBox iFolderLocation;
-		private System.Windows.Forms.Button browseButton;
-		private System.Windows.Forms.CheckBox defaultServer;
-		private System.Windows.Forms.Label defaultDescription;
+		//private System.Windows.Forms.CheckBox copyOption;
+        
+		//private System.Windows.Forms.TextBox iFolderLocation;
+		//private System.Windows.Forms.Button browseButton;
+		//private System.Windows.Forms.CheckBox defaultServer;
+		//private System.Windows.Forms.Label defaultDescription;
 		private System.ComponentModel.IContainer components = null;
 
-		private System.Windows.Forms.Label label1, label2;
+		//private System.Windows.Forms.Label label1, label2;
 
-		private string homeLocation;
-		private string prevLoc;
+		//private string homeLocation;
+		//private string prevLoc;
 		private static System.Resources.ResourceManager Resource = new System.Resources.ResourceManager(typeof(Novell.FormsTrayApp.FormsTrayApp));
 
 		#endregion
@@ -79,7 +79,7 @@ namespace Novell.Wizard
 		public MigrationPassphraseVerifyPage()
 		{
 			// This call is required by the Windows Form Designer.
-			this.homeLocation = "Home Location";
+			//this.homeLocation = "Home Location";
 			InitializeComponent();
 		}
 

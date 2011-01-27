@@ -104,7 +104,7 @@ namespace Novell.FormsTrayApp
         private Hashtable acceptedFolders = new Hashtable();
         private ImageList largeImageList;
         private ImageList smallImageList;
-        private ImageList largeMenuImageList;        
+        //private ImageList largeMenuImageList;        
         private TileListViewItem selectedItem;
         private bool hide = true;
         private NoiFolderMessage infoMessage;
@@ -140,7 +140,7 @@ namespace Novell.FormsTrayApp
         private System.Windows.Forms.Timer searchTimer;
         private System.Windows.Forms.Timer refreshTimer;
         private const double megaByte = 1048576;
-        private Domain Currentdomain = null;
+        //private Domain Currentdomain = null;
         private int comboBoxSelectedIndex = -1;
         private bool thumbnailView = false;
         private string selectediFolderID = null ;
@@ -313,7 +313,7 @@ namespace Novell.FormsTrayApp
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 //Ignore
             }
@@ -1745,7 +1745,7 @@ namespace Novell.FormsTrayApp
 					ifolderArray = ifWebService.GetAlliFolders();
 					done = true;
 				}
-				catch(Exception e)
+				catch(Exception )
 				{
 					Thread.Sleep(3000);
 					done = false;
@@ -3366,7 +3366,7 @@ namespace Novell.FormsTrayApp
         /// <param name="none"></param>
         private void DomainsListUpdate()
         {
-            string DomainName = null;
+            //string DomainName = null;
             DomainInformation[] domains;
             //Reading and Initilizing the Domain List.
             domains = this.simiasWebService.GetDomains(false);
@@ -3397,7 +3397,7 @@ namespace Novell.FormsTrayApp
         private void DomainsListUpdateComboBox()
         {
             int domaincount = 0;
-            string DomainName = null;
+            //string DomainName = null;
             DomainInformation[] domains;
             //Reading and Initilizing the Domain List.
             domains = this.simiasWebService.GetDomains(false);
