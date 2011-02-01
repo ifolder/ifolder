@@ -47,7 +47,6 @@ Version:        3.8.4.10365.1
 Release:        2
 Summary:        Plugins adding additional capability to iFolder 3 enterprise server
 Source:         novell-ifolder-enterprise-plugins.tar.gz
-Patch0:         if3-server-plugin_mono26_fixes.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 #=============================================================================
 %description
@@ -56,7 +55,6 @@ Plugins for iFolder 3 enterprise server
 %prep
 export BUILDNUM=%{buildnum}
 %setup -n %{name}
-%patch0 -p1
 #=============================================================================
 
 %build
