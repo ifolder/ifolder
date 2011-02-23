@@ -53,7 +53,7 @@ HMODULE g_hmodResDll = NULL; // Handle to resource DLL.
 
 
 // static members
-IiFolderComponentPtr CiFolderShell::m_spiFolder = NULL;
+//IiFolderComponentPtr CiFolderShell::m_spiFolder = NULL;
 
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
@@ -353,7 +353,7 @@ CiFolderShell::CiFolderShell(iFolderClass iFClass)
     m_cRef = 0L;
     m_pDataObj = NULL;
 	m_hBmpMenu = NULL;
-//	m_spiFolder= NULL;
+	m_spiFolder= NULL;
 	m_iFolderClass = iFClass;
 
     InterlockedIncrement((LONG *)&g_cRefThisDll);
