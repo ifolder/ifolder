@@ -33,14 +33,14 @@ URL:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2 
 Group:          System/GUI/Other
 Autoreqprov:    on
-Requires:       simias >= 1.8.5
-Requires:       ifolder3 >= 3.8.4
+Requires:       simias >= 1.9.0
+Requires:       ifolder3 >= 3.9.0
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
 Requires:       gtk-sharp2
 Requires:       xsp >= 1.2.5
 #Obsoletes:      %{name} < %{version}
-Version:        3.8.4.@@BUILDNUM@@.1
+Version:        3.9.0.@@BUILDNUM@@.0
 Release:        1
 Summary:        Plugins adding additional capability to iFolder 3 client
 Source:         %{name}.tar.gz
