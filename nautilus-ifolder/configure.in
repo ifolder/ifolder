@@ -26,7 +26,7 @@ AC_SUBST(PACKAGE)
 AC_CHECKING([whether the version of nautilus is specified or not.])
 AC_ARG_WITH(newnautilus,[AS_HELP_STRING([--with-newnautilus],[configure nautilus plugins to run with nautilus 1.x API's or nautilus 2.x API's. [Default=FALSE]])], [newnautilus="TRUE"],[newnautilus="FALSE"])
 
-AM_INIT_AUTOMAKE($PACKAGE, 3.8)
+AM_INIT_AUTOMAKE($PACKAGE, 3.9)
 # Check to see if the BUILDNUM is set by global build
 #if test "$BUILDNUM" = ""; then
 #	let "BUILDNUM=`date +%G%j`-2000000"
