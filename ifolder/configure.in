@@ -8,12 +8,12 @@ fi
 AC_PROG_CXX(am__fastdepCXX)
 m4_pattern_allow(PKG_CONFIG)
 
-AM_INIT_AUTOMAKE(ifolder3, 3.8)
+AM_INIT_AUTOMAKE(ifolder3, 3.9)
 # Check to see if the BUILDNUM is set by global build
 #if test "$BUILDNUM" = ""; then
 #	let "BUILDNUM=`date +%G%j`-2000000"
 #fi
-ASSEMBLY_VERSION=4
+ASSEMBLY_VERSION=0
 BUILD_NUMBER=0
 VERSION=$VERSION.$ASSEMBLY_VERSION.$BUILD_NUMBER
 SIMIASVER=1.5.$BUILDNUM.1
