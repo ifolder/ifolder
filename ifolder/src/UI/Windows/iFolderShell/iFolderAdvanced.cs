@@ -3869,7 +3869,7 @@ namespace Novell.iFolderCom
 				ListViewItem lvi = shareWith.SelectedItems[0];
 				userProperties.Title = string.Format(resourceManager.GetString("userProperties"), lvi.Text);
 				userProperties.Rights = ((ShareListMember)lvi.Tag).iFolderUser.Rights;
-				userProperties.CanBeOwner = ((ShareListMember)lvi.Tag).iFolderUser.State.Equals(member);
+                userProperties.CanBeOwner = ((ShareListMember)lvi.Tag).iFolderUser.State.Equals(member) || ((ShareListMember)lvi.Tag).iFolderUser.State.Equals(inviting);
 				userProperties.IsOwner = newOwnerLvi != null ? lvi.Equals(newOwnerLvi) : lvi.Equals(ownerLvi);
 			}
 
