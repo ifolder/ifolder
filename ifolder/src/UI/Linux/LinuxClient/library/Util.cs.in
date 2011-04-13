@@ -458,7 +458,7 @@ namespace Novell.iFolder
 					GnomeAboutNew(
 						"iFolder",
 						"@_VERSION_@",
-						Util.GS("Copyright (C) 2004-2010 Novell, Inc.")+" All rights reserved.",
+						Util.GS("Copyright (C) 2004-2011 Novell, Inc.")+" All rights reserved.",
 						Util.GS("The iFolder Project is a file sharing solution that allows people to easily share folders or files of any type with other users, whether they use the same or different operating system. This project is built on the mono/.NET framework to integrate seamlessly into existing desktop environments."),
 						authors,
 						null,
