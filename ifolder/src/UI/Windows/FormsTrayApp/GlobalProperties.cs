@@ -1976,6 +1976,7 @@ namespace Novell.FormsTrayApp
                     this.menuActionResolve.Enabled = false;
                         
 					// Enable the available iFolder related menu items.
+                    toolStripBtnDelete.Enabled =
                     this.menuActionRemove.Enabled = 
                     this.menuActionAccept.Enabled = 
                     this.menuActionMerge.Enabled = true;
@@ -2044,6 +2045,32 @@ namespace Novell.FormsTrayApp
                     {
                         this.toolStripBtnRevert.Enabled = this.menuActionRevert.Enabled = this.MenuRevert.Enabled = true;
                     }
+
+                    iFolderWeb ifolder = ((iFolderObject)selectedItem.Tag).iFolderWeb;
+                    bool IsMaster = (ifolder.CurrentUserID == ifolder.OwnerID);
+                    menuActionRemove.Enabled = true;
+                    this.MenuRemove.Enabled = true;
+                    if (!IsMaster)
+                    {
+                        this.MenuRemove.Text = TrayApp.Properties.Resources.RemoveMyMembership;
+                        this.menuActionRemove.Text = Resources.RemoveMyMembershipText;
+                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\remove_share_48.png"));
+                        toolStripBtnDelete.Text = Resources.remove;
+                        toolStripBtnDelete.ToolTipText = Resources.RemoveMyMembership;
+                    }
+                    else
+                    {
+                        this.MenuRemove.Text = TrayApp.Properties.Resources.menuActionRemove;
+                        this.menuActionRemove.Text = TrayApp.Properties.Resources.menuRemoveText;
+                        toolStripBtnDelete.Image = Bitmap.FromFile(Path.Combine(Application.StartupPath, @"res\delete_48.png"));
+                        toolStripBtnDelete.Text = Resources.delete;
+                        toolStripBtnDelete.ToolTipText = Resources.menuActionRemove;
+                        
+                    }
+
+
+
+
 				}
 			}
 		}
@@ -2082,9 +2109,10 @@ namespace Novell.FormsTrayApp
             else
             {
                 this.toolStripBtnDownload.Enabled =
-                this.toolStripBtnMerge.Enabled =
-                this.toolStripBtnDelete.Enabled = server;
-
+                this.toolStripBtnMerge.Enabled = server;
+                
+                
+                this.toolStripBtnDelete.Enabled =
                 this.toolStripBtnSyncNow.Enabled =
                 this.toolStripBtnShare.Enabled =
                 this.toolStripBtnRevert.Enabled = !server;
