@@ -133,6 +133,7 @@ NSString* defiFolderID;
 		BOOL isDir;
 		int option;
 		//int merge = NO;
+		
 		if([[NSFileManager defaultManager] fileExistsAtPath:[ifolderPath stringValue] isDirectory:&isDir] && isDir)
 		{
 			 option = NSRunAlertPanel(NSLocalizedString(@"A folder with the name you specified already exists",@"Folder already exists"),NSLocalizedString(@"Click Yes to merge or No to select a different location",@"Download default ifolder merge option"),NSLocalizedString(@"Yes",@"   Confirmation dialog to download default ifolder and merge"),NSLocalizedString(@"No",@"Negative confiramtion to download default ifolder and merge"),nil);
@@ -143,6 +144,7 @@ NSString* defiFolderID;
 			}
 			else
 			{
+			NSLog(@"onCreate2");
 				//iFolder* tempiFolder = [[iFolderData sharedInstance] mergeiFolder:defiFolderID InDomain:domID toPath:[ifolderPath stringValue]];
 				[[iFolderWindowController sharedInstance] acceptiFolderInvitation:defiFolderID InDomain:domID toPath:[ifolderPath stringValue] canMerge:YES];
 				//merge = YES;
@@ -150,6 +152,7 @@ NSString* defiFolderID;
 		}
 		else
 		{
+		NSLog(@"onCreate3");
 			//download the default iFolder
 			//iFolder* tempiFolder = nil;
 			//tempiFolder = [[iFolderData sharedInstance] getiFolder:defiFolderID];
