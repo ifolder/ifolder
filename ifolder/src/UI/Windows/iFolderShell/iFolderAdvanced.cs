@@ -2767,45 +2767,7 @@ namespace Novell.iFolderCom
 			// Change the pointer to an hourglass.
 			Cursor = Cursors.WaitCursor;
 
-			// Change the owner.
-			if (newOwnerLvi != null)
-			{
-				try
-				{
-					connectToWebService();
-					ShareListMember oldOwner = (ShareListMember)ownerLvi.Tag;
-					ShareListMember newOwner = (ShareListMember)newOwnerLvi.Tag;
-                    if(ifWebService.CanOwnerBeChanged(newOwner.iFolderUser.UserID,currentiFolder.DomainID))
-                    {
-					    ifWebService.ChangeOwner(currentiFolder.ID, newOwner.iFolderUser.UserID, oldOwner.iFolderUser.Rights);
-					    oldOwner.Changed = newOwner.Changed = false;
-                    }
-                    else
-                    {
-                        MyMessageBox mmb = new MyMessageBox(String.Format(resourceManager.GetString("ifolderlimiterror"), currentiFolder.Name,newOwner.iFolderUser.Name), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-                        mmb.ShowDialog();
-                    }
-				}
-				catch (WebException e)
-				{
-					MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-					mmb.ShowDialog();
-
-					if (e.Status == WebExceptionStatus.ConnectFailure)
-					{
-						ifWebService = null;
-					}
-				}
-				catch (Exception e)
-				{
-					if (e.Message.IndexOf("Invalid iFolderID") == -1)
-					{
-						MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
-						mmb.ShowDialog();
-					}
-				}
-			}
-
+			
 			//string sendersEmail = null;
 
             foreach (ListViewItem lvitem in shareWith.Items)
@@ -2904,6 +2866,49 @@ namespace Novell.iFolderCom
 				// Clear the list.
 				removedList.Clear();
 			}
+
+            // Change the owner.
+            if (newOwnerLvi != null)
+            {
+                try
+                {
+                    connectToWebService();
+                    ShareListMember oldOwner = (ShareListMember)ownerLvi.Tag;
+                    ShareListMember newOwner = (ShareListMember)newOwnerLvi.Tag;
+                    if (ifWebService.CanOwnerBeChanged(newOwner.iFolderUser.UserID, currentiFolder.DomainID))
+                    {
+                        ifWebService.ChangeOwner(currentiFolder.ID, newOwner.iFolderUser.UserID, oldOwner.iFolderUser.Rights);
+                        oldOwner.Changed = newOwner.Changed = false;
+                    }
+                    else
+                    {
+                        MyMessageBox mmb = new MyMessageBox(String.Format(resourceManager.GetString("ifolderlimiterror"), currentiFolder.Name, newOwner.iFolderUser.Name), resourceManager.GetString("errorTitle"), string.Empty, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                        mmb.ShowDialog();
+                    }
+                }
+                catch (WebException e)
+                {
+                    MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                    mmb.ShowDialog();
+
+                    if (e.Status == WebExceptionStatus.ConnectFailure)
+                    {
+                        ifWebService = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (e.Message.IndexOf("Invalid iFolderID") == -1)
+                    {
+                        MyMessageBox mmb = new MyMessageBox(resourceManager.GetString("changeOwnerError"), resourceManager.GetString("saveErrorTitle"), e.Message, MyMessageBoxButtons.OK, MyMessageBoxIcon.Error);
+                        mmb.ShowDialog();
+                    }
+                }
+            }
+
+
+
+
 
 			try
 			{
