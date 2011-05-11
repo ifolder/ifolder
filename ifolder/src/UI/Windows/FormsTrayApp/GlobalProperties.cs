@@ -3662,7 +3662,7 @@ namespace Novell.FormsTrayApp
             }
             tableLayoutPanel1.Width = panel1.Width;
             //first 'ifolder on iFolder' label was getting truncated some times so reseting  iFolderView hieght
-            this.iFolderView.ItemHeight = 72;
+            updateView();
         }
         
         private void listView1_ColumnClick(object sender, ColumnClickEventArgs e)
