@@ -3693,14 +3693,22 @@ namespace Novell.FormsTrayApp
         }
         private void setListViewItemSelected()
         {
-            if (listView1 != null && selectedItem != null)
+            try
             {
-                listView1.Focus();
-                iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
-                ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
-                listView1.Items[item.Index].Focused = true;
-                listView1.Items[item.Index].Selected = true;
+                if (listView1 != null && selectedItem != null)
+                {
+                    listView1.Focus();
+                    iFolderObject ifObj = (iFolderObject)selectedItem.Tag;
+                    ListViewItem item = listView1.FindItemWithText(ifObj.iFolderWeb.ID);
+                    listView1.Items[item.Index].Focused = true;
+                    listView1.Items[item.Index].Selected = true;
+                }
             }
+            catch 
+            {
+                //Random Exception, while ifolder is highlighted and corresponding account has been removed.
+            }
+
         }
 
         //TODO: picked from WebUtils.cs need to find a better place to keep these 
