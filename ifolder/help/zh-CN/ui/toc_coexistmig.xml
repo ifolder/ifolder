@@ -4,6 +4,6 @@
 <tocsection parent="bookinfo" level="2" id="coexistmig">
  <title>Novell iFolder 迁移和升级</title>
  <entry leaf="true" id="migration">从 iFolder 2.x 迁移到 iFolder 3.7 或更高版本</entry>
- <entry leaf="true" id="bctryt7">升级 iFolder 3。x 客户程序</entry>
+ <entry leaf="true" id="bctryt7">升级 iFolder 3.x 客户程序</entry>
  <entry leaf="true" id="bctrxs4">Novell iFolder 2.x 与 iFolder 客户程序共存</entry>
 </tocsection>

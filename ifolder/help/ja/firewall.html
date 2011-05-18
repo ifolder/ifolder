@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, October 07, 2010 12:36" />
-<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Monday, May 16, 2011 09:34" />
+<meta name="Content-Date" content="Mon, 21 Apr 1911 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -47,8 +47,8 @@
 <h1 class="title"> iFolderトラフィックに対するローカルファイアウォールの設定</h1>
 
 <p class="para">ローカルファイアウォールを使用する場合、iFolderがローカルのダイナミックポートを選択できるようにファイアウォールを設定するか、またはiFolderクライアントにローカルのスタティックポートを設定してローカル(同じコンピュータ)でMono XSP Serverと通信できるようにします。iFolderはMono XSP Webサービスを使用して、iFolderアカウントを保持するNovell iFolderエンタープライズサーバとHTTP経由で通信します。iFolderの管理者は、iFolderサービスを設定して、ユーザ環境でHTTPを使用して通信するかどうかを指定します。</p>
-<p class="para">Mono XSPはトラフィックに対して標準的なHTTPポートを使用するので、お使いのファイアウォールが、Mono XSPとNovell iFolderエンタープライズサーバ間のトラフィックをブロックすることはありません。 ただし、クライアントとMono XSP間のトラフィックをブロックすると、クライアントはサーバと通信できません。ユーザはiFolderアカウントにログインして、iFolderデータを同期できなくなります。</p>
-<p class="para">最初は、iFolder環境設定でクライアントとMono XSPとの通信で使用する特定のポートを指定しません。 iFolderをはじめて実行すると、Mono XSPからの要求をリッスンして、データをMono XSP経由でサーバに送信するための、使用可能なローカルポートが開かれます。 そのポート番号が環境設定ファイルに書き込まれ、それ以降iFolderを開始するときは、ポートが使用不可でない限り、常にこのポートが使用されます。 そのポートが別のアプリケーションで使用されている場合、iFolderは使用可能な別のポートを選択し、環境設定ファイルにそのポートを再設定し、以降はその新しいポートを使用します。たとえば、iFolderが停止中に他のアプリケーションがそのポートを使用すると、iFolderは再起動時に別のポートを選択してこれを使用するように設定する必要があります。</p>
+<p class="para">Mono XSPはトラフィックに対して標準的なHTTPポートを使用するので、お使いのファイアウォールが、Mono XSPとNovell iFolderエンタープライズサーバ間のトラフィックをブロックすることはありません。ただし、クライアントとMono XSP間のトラフィックをブロックすると、クライアントはサーバと通信できません。ユーザはiFolderアカウントにログインして、iFolderデータを同期できなくなります。</p>
+<p class="para">最初は、iFolder環境設定でクライアントとMono XSPとの通信で使用する特定のポートを指定しません。iFolderをはじめて実行すると、Mono XSPからの要求をリッスンして、データをMono XSP経由でサーバに送信するための、使用可能なローカルポートが開かれます。そのポート番号が環境設定ファイルに書き込まれ、それ以降iFolderを開始するときは、ポートが使用不可でない限り、常にこのポートが使用されます。そのポートが別のアプリケーションで使用されている場合、iFolderは使用可能な別のポートを選択し、環境設定ファイルにそのポートを再設定し、以降はその新しいポートを使用します。たとえば、iFolderが停止中に他のアプリケーションがそのポートを使用すると、iFolderは再起動時に別のポートを選択してこれを使用するように設定する必要があります。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -64,7 +64,7 @@
 
 <h2 class="title"> ローカルダイナミックポートの使用</h2>
 
-<p class="para">お使いのコンピュータでローカルファイアウォールを使用する場合、iFolderがサーバに接続してユーザのリストとiFolderデータを同期するときは、ファイアウォールは常にiFolderとMono XSPサーバ間のローカルトラフィックを検出する必要があります。 このセッションでiFolderトラフィックを許可するには［<span class="guimenu"></span>許可］を選択します。トラフィックを永続的に許可すると、再度ファイアウォールによって通知されることはなく、iFolder起動時のポップアップ警告も表示されなくなります。</p>
+<p class="para">お使いのコンピュータでローカルファイアウォールを使用する場合、iFolderがサーバに接続してユーザのリストとiFolderデータを同期するときは、ファイアウォールは常にiFolderとMono XSPサーバ間のローカルトラフィックを検出する必要があります。このセッションでiFolderトラフィックを許可するには［<span class="guimenu">許可</span>］を選択します。トラフィックを永続的に許可すると、再度ファイアウォールによって通知されることはなく、iFolder起動時のポップアップ警告も表示されなくなります。</p>
 <p class="para">iFolderとMono XSPとの間のトラフィックをブロックすると、ファイアウォールによってiFolderサーバとの接続が切断されるため、ファイルを同期できなくなります。iFolderは、トラフィックがファイアウォールによってブロックされたことを検出せず、iFolderサーバ上のアカウントに接続できないことだけを報告します。</p>
 </div>
 
@@ -72,7 +72,7 @@
 
 <h2 class="title"> ローカルスタティックポートの使用</h2>
 
-<p class="para">必要に応じて、<span class="filename">Simias.config</span>ファイルのService ManagerセクションにWeb Service PORT Rangeパラメータを追加することで、Mono XSPサーバがこのローカルトラフィック用にスタティックポートまたは一定の範囲のポートを使用するようにできます。 これにより、ファイアウォールでこのポートまたは一定の範囲のポートが開かれ、Mono XSPとの通信が可能になります。 </p>
+<p class="para">必要に応じて、<span class="filename">Simias.config</span>ファイルのService ManagerセクションにWeb Service PORT Rangeパラメータを追加することで、Mono XSPサーバがこのローカルトラフィック用にスタティックポートまたは一定の範囲のポートを使用するようにできます。これにより、ファイアウォールでこのポートまたは一定の範囲のポートが開かれ、Mono XSPとの通信が可能になります。 </p>
 <p class="para"><span class="filename">Simias.config</span>ファイルは、次の場所にあります。</p>
 <div class="informaltable">
 <table class="topbot-lines">
@@ -106,9 +106,9 @@
 <p class="para">ファイアウォールを、iFolderトラフィックで使用するポートまたはポート範囲でのトラフィックを許可するように設定します。</p>
 <p class="para">ファイアウォールのポートを開く方法については、お使いのファイアウォールのマニュアルを参照してください。</p></li>
 <li class="step" id="bw4v6ou">
-<p class="para">iFolderアイコンを右クリックしてから［<span class="guimenu"></span>終了］を選択して、iFolderクライアントを停止します。</p></li>
+<p class="para">iFolderアイコンを右クリックしてから［<span class="guimenu">終了</span>］を選択して、iFolderクライアントを停止します。</p></li>
 <li class="step" id="bw4v6r7">
-<p class="para">Service ManagerセクションにWeb Service Port Rangeパラメータを追加することで、<span class="filename">Simias.config</span>ファイルを変更します。<span class="guimenu"></span></p><pre class="screen">
+<p class="para"><span class="guimenu">Service Manager</span>セクションにWeb Service Port Rangeパラメータを追加することで、<span class="filename">Simias.config</span>ファイルを変更します。</p><pre class="screen">
 &lt;configuration&gt;
 </pre><pre class="screen">
   &lt;section name="ServiceManager"&gt;
@@ -126,11 +126,11 @@
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">単一のスタティックポートを使用する場合は、単一の4桁のポート番号の値(1234など)を指定します。 例を次に示します。</p><pre class="screen">
+<p class="listitem">単一のスタティックポートを使用する場合は、単一の4桁のポート番号の値(1234など)を指定します。例を次に示します。</p><pre class="screen">
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234</span>" /&gt;
 </pre></li>
 <li class="listitem">
-<p class="listitem">指定したポートの範囲内で可能なポートを使用する場合は、ポートの範囲(「"1234-1236"」など)を指定します。 例を次に示します。</p><pre class="screen">
+<p class="listitem">指定したポートの範囲内で可能なポートを使用する場合は、ポートの範囲(「"1234-1236"」など)を指定します。例を次に示します。</p><pre class="screen">
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234-1236</span>" /&gt;
 </pre></li></ul></div>
 </li></ol>

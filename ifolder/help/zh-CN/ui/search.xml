@@ -14,9 +14,9 @@
 
 <site>
 <topic>
-  <title>Novell iFolder 3.8.4 跨平台帮助</title>
+  <title>Novell iFolder 3.9 跨平台帮助</title>
   <url>../bookinfo.html</url>
-  <content>Novell iFolder 3.8.4 跨平台帮助 3.8.4 iFolder 帮助 Novell iFolder 是用于 Linux、Windows 和 Macintosh 客户端的文件共享应用程序。使用 iFolder，您的本地文件将跨过多台计算机自动跟随在您的左右，无论您处于联机还是脱机状态，都始终相伴，形影不离。您可以在多个 iFolder 中共享文件，每个 iFolder 都有不同的用户。您可以控制哪些用户可以加入 iFolder 以及他们对 iFolder 中文件的访问权限。您还可以加入其他用户与您共享的 iFolder。 本帮助系统介绍如何使用和管理 iFolder 客户程序。 适用对象 本指南适用于 iFolder 客户程序的用户。 其他文档 如果在 Novell iFolder 3.7 或更高版本 Enterprise Server 或万维网访问服务器上使用 iFolder 3.7 或更高版本客户程序，请参见 Novell iFolder 文档网站 上的 iFolder 3.8.4 用户指南 。 </content>
+  <content>Novell iFolder 3.9 跨平台帮助 3.9 iFolder 帮助 Novell iFolder 是用于 Linux、Windows 和 Macintosh 客户端的文件共享应用程序。使用 iFolder，您的本地文件将跨过多台计算机自动跟随在您的左右，无论您处于联机还是脱机状态，都始终相伴，形影不离。您可以在多个 iFolder 中共享文件，每个 iFolder 都有不同的用户。您可以控制哪些用户可以加入 iFolder 以及他们对 iFolder 中文件的访问权限。您还可以加入其他用户与您共享的 iFolder。 本帮助系统介绍如何使用和管理 iFolder 客户程序。 适用对象 本指南适用于 iFolder 客户程序的用户。 其他文档 如果在 Novell iFolder 3.7 或更高版本 Enterprise Server 或万维网访问服务器上使用 iFolder 3.7 或更高版本客户程序，请参见 Novell iFolder 文档网站 上的 iFolder 3.9 用户指南 。 </content>
 </topic>
 
 <topic>
@@ -34,7 +34,7 @@
 <topic>
   <title>iFolder 客户程序</title>
   <url>../bawqltp.html</url>
-  <content>iFolder 客户程序 iFolder 客户程序可与您的操作系统集成以在本机桌面环境中提供 iFolder 服务。通过使用 iFolder 客户程序，您可以管理自己的 iFolder，并且可以选择要在每台计算机上设置的共享 iFolder。iFolder 支持以下操作系统： SUSE Linux Enterprise Desktop 10 SP1、SP2 和 SP3 SUSE Linux Enterprise Desktop 11 Windows Vista SP1 Windows XP SP2和 SP3 Windows 7 OpenSUSE 11.1 OpenSUSE 11.2 Apple Macintosh 10.4 和更高版本 </content>
+  <content>iFolder 客户程序 iFolder 客户程序可与您的操作系统集成以在本机桌面环境中提供 iFolder 服务。通过使用 iFolder 客户程序，您可以管理自己的 iFolder，并且可以选择要在每台计算机上设置的共享 iFolder。iFolder 支持以下操作系统： SUSE Linux Enterprise Desktop (SLED) 10 、SP3 SUSE Linux Enterprise Desktop (SLED) 11 SP1 64 位 openSUSE 11.3 iFolder Linux 客户端需要适用于 Linux 的 Mono 框架以及 GNOME desktop foriFolder Nautilus 插件支持。 Windows XP SP3（32 位） Windows Vista SP1 Windows 7 Macintosh OS X 32 位（Intel 体系结构）v10.5 及更高版本（需要 Mono 2.4.2.3）。不支持 PowerPc 结构。 </content>
 </topic>
 
 <topic>
@@ -278,9 +278,9 @@
 </topic>
 
 <topic>
-  <title>升级 iFolder 3。x 客户程序</title>
+  <title>升级 iFolder 3.x 客户程序</title>
   <url>../bctryt7.html</url>
-  <content>升级 iFolder 3。 x 客户程序 本节讨论以下内容： 在升级 3.4.1 客户程序前，必须备份本地 Simias 储存。如果不进行备份，当升级操作失败时，则会丢失计算机上的所有配置信息，因为该操作将删除 Simias 储存。 自动升级到 iFolder 3.7 或更高版本 仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 /tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz 。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户端之前，不能使用 iFolder 3. x 客户端连接到 iFolder 3.7 或更高版本的服务器。 从 iFolder 3. x 客户程序（低于 iFolder 3.7 版本），尝试连接到 iFolder 服务器。系统提示您升级。 单击 “是” 以自动升级 iFolder 3. x 客户程序。 对于 iFolder 3.4.1，如果您单击 “否” 并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 或更高版本服务器，则将显示一条错误讯息。单击 “确定” 关闭此讯息。 手动升级到 iFolder 3.7 或更高版本 单击“帮助”菜单中的 升级 。系统提示您升级。单击 接受 可以升级您的 iFolder 3.x 客户端。 当单击升级选项时，iFolder 将检查所有已连接服务器的升级。 或 打开一个终端。在命令提示符下，运行 install-ifolder.sh 。 在系统请求根口令时输入该口令。 如果 iFolder 客户程序已在运行，此过程将关闭该客户程序，然后更新 XSP 万维网服务器和 iFolder 客户程序以及 Nautilus-ifolder3 插件。 从 “应用程序” 菜单启动 iFolder。 </content>
+  <content>升级 iFolder 3. x 客户程序 本节讨论以下内容： 在升级 3.4.1 客户程序前，必须备份本地 Simias 储存。如果不进行备份，当升级操作失败时，则会丢失计算机上的所有配置信息，因为该操作将删除 Simias 储存。 自动升级到 iFolder 3.7 或更高版本 仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 /tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz 。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户端之前，不能使用 iFolder 3. x 客户端连接到 iFolder 3.7 或更高版本的服务器。 从 iFolder 3. x 客户程序（低于 iFolder 3.7 版本），尝试连接到 iFolder 服务器。系统提示您升级。 单击 “是” 以自动升级 iFolder 3. x 客户程序。 对于 iFolder 3.4.1，如果您单击 “否” 并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 或更高版本服务器，则将显示一条错误讯息。单击 “确定” 关闭此讯息。 手动升级到 iFolder 3.7 或更高版本 单击“帮助”菜单中的 升级 。系统提示您升级。单击 接受 可以升级您的 iFolder 3.x 客户端。 当单击升级选项时，iFolder 将检查所有已连接服务器的升级。 或 打开一个终端。在命令提示符下，运行 install-ifolder.sh 。 在系统请求根口令时输入该口令。 如果 iFolder 客户程序已在运行，此过程将关闭该客户程序，然后更新 XSP 万维网服务器和 iFolder 客户程序以及 Nautilus-ifolder3 插件。 从 “应用程序” 菜单启动 iFolder。 </content>
 </topic>
 
 <topic>
@@ -292,7 +292,7 @@
 <topic>
   <title>法律声明</title>
   <url>../legal.html</url>
-  <content>法律声明 Novell, Inc. 对本文档的内容或使用不作任何声明或保证，特别是对适销性或用于任何特定目的的适用性不作任何明示或暗示保证。另外，Novell, Inc. 保留随时修改本出版物及其内容的权利，并且没有义务将这些修改通知任何个人或实体。 Novell, Inc. 对任何软件不作任何声明或保证，特别是对适销性或用于任何特定目的的适用性不作任何明示或暗示保证。另外，Novell, Inc. 保留随时修改 Novell 软件全部或部分内容的权利，并且没有义务将这些修改通知任何个人或实体。 依据本协议提供的任何产品或技术信息都将受到美国出口控制和其他国家/地区的贸易法律的约束。您同意遵守所有出口控制法规，并同意在出口、再出口或进口可交付产品之前取得所有必要的许可证或分类证书。您同意不出口或再出口至当前美国出口排除列表上所列的实体，或者美国出口法律中规定的任何被禁运的国家/地区或支持恐怖主义的国家/地区。您同意不将可交付产品用于禁止的核武器、导弹或生物化学武器的最终用途。有关导出 Novell 软件的更多信息，请访问 Novell 国际贸易服务万维网页 。如果您未能获得任何必要的出口许可，Novell 对此将不负任何责任。 版权所有 © 2010 Novell, Inc. 保留所有权利。根据自由软件基金会 (Free Software Foundation) 发布的 GNU 自由文档许可证（GNU Free Documentation License，GFDL）版本 1.2 或更高版本中的条款，在此授予您复制、分发和/或修订本文档的许可权限，本文档没有“固定部分”、“封面文字”和“封底文字”。可从 GNU 自由文档许可证 找到 GFDL 的拷贝。 本文档和本文档的修订版均依照 GNU 自由文档许可证的条款提供，并受以下条款约束： 1.本文档按“原样”提供，不包含任何种类的担保，无论是明示担保或暗示担保，包括但不限于本文档或其修订后的版本不存在缺陷、适销、适用于某种特定目的或非侵权的担保。有关本文档或其修订版的质量、准确性和作用方面的全部风险均由您承担。如经证实本文档或其修订版有任何缺陷，则由您（而不是原撰稿人、作者或投稿人）承担所需服务、修复或更正的费用。本免责声明是此许可证的基本组成部分。如无本免责声明，对本文档或本文档修订版的使用均视为未经授权。并且 2. 对于因使用本文档或其修订版所引起或者与之相关的任何性质的任何直接损失、间接损失、特殊损失、偶发或连带损失，包括但不限于商誉受损、工作中断、计算机故障以及所有其他损失，本文档或其修订版的作者、原撰稿人、任何投稿人、任何发行人或者上述各方的任何供应商，在任何情况下，无论涉及民事侵权（包括疏忽）、合约，还是其他方面，均不依据任何法律对任何人承担任何责任，即使上述各方已被告知可能出现此类损失。 Novell, Inc. 404 Wyman Street, Suite 500 Waltham, MA 02451 U.S.A. www.novell.com 联机文档： 要访问本产品和其他 Novell 产品的联机文档并获取更新，请访问 Novell 文档网页 。 </content>
+  <content>法律声明 Novell, Inc. 对本文档的内容或使用不作任何声明或保证，特别是对适销性或用于任何特定目的的适用性不作任何明示或暗示保证。另外，Novell, Inc. 保留随时修改本出版物及其内容的权利，并且没有义务将这些修改通知任何个人或实体。 Novell, Inc. 对任何软件不作任何声明或保证，特别是对适销性或用于任何特定目的的适用性不作任何明示或暗示保证。另外，Novell, Inc. 保留随时修改 Novell 软件全部或部分内容的权利，并且没有义务将这些修改通知任何个人或实体。 依据本协议提供的任何产品或技术信息都将受到美国出口控制和其他国家/地区的贸易法律的约束。您同意遵守所有出口控制法规，并同意在出口、再出口或进口可交付产品之前取得所有必要的许可证或分类证书。您同意不出口或再出口至当前美国出口排除列表上所列的实体，或者美国出口法律中规定的任何被禁运的国家/地区或支持恐怖主义的国家/地区。您同意不将可交付产品用于禁止的核武器、导弹或生物化学武器的最终用途。有关导出 Novell 软件的更多信息，请访问 Novell 国际贸易服务万维网页 。如果您未能获得任何必要的出口许可，Novell 对此将不负任何责任。 版权所有 © 2005-2011 Novell, Inc. 保留所有权利。根据自由软件基金会 (Free Software Foundation) 发布的 GNU 自由文档许可证（GNU Free Documentation License，GFDL）版本 1.2 或更高版本中的条款，在此授予您复制、分发和/或修订本文档的许可权限，本文档没有“固定部分”、“封面文字”和“封底文字”。可从 GNU 自由文档许可证 找到 GFDL 的拷贝。 本文档和本文档的修订版均依照 GNU 自由文档许可证的条款提供，并受以下条款约束： 1.本文档按“原样”提供，不包含任何种类的担保，无论是明示担保或暗示担保，包括但不限于本文档或其修订后的版本不存在缺陷、适销、适用于某种特定目的或非侵权的担保。有关本文档或其修订版的质量、准确性和作用方面的全部风险均由您承担。如经证实本文档或其修订版有任何缺陷，则由您（而不是原撰稿人、作者或投稿人）承担所需服务、修复或更正的费用。本免责声明是此许可证的基本组成部分。如无本免责声明，对本文档或本文档修订版的使用均视为未经授权。并且 2. 对于因使用本文档或其修订版所引起或者与之相关的任何性质的任何直接损失、间接损失、特殊损失、偶发或连带损失，包括但不限于商誉受损、工作中断、计算机故障以及所有其他损失，本文档或其修订版的作者、原撰稿人、任何投稿人、任何发行人或者上述各方的任何供应商，在任何情况下，无论涉及民事侵权（包括疏忽）、合约，还是其他方面，均不依据任何法律对任何人承担任何责任，即使上述各方已被告知可能出现此类损失。 Novell, Inc. 404 Wyman Street, Suite 500 Waltham, MA 02451 U.S.A. www.novell.com 联机文档： 要访问本产品和其他 Novell 产品的联机文档并获取更新，请访问 Novell 文档网页 。 </content>
 </topic>
 
 </site>

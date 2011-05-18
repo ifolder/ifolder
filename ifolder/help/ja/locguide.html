@@ -7,8 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
 <meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Thursday, October 07, 2010 12:36" />
-<meta name="Content-Date" content="Mon, 04 Oct 2010 12:00:00 GMT" />
+<meta name="Generation-Date" content="Monday, May 16, 2011 09:34" />
+<meta name="Content-Date" content="Mon, 21 Apr 1911 12:00:00 GMT" />
 <meta name="Copyright" content="Copyright Novell, Inc. 2010" />
 
 <style type="text/css">
@@ -46,7 +46,7 @@
 
 <h1 class="title"> iFolderの場所と利用法のガイドライン</h1>
 
-<p class="para">一般に、iFolderは、iFolderを作成するか、共有するiFolderを設定したときに、ローカルハードドライブの任意の場所に配置できます。 ただし、実際にはいくつかの制約があります。 コンピュータ上にiFolderを配置して使用する際には、次のガイドラインを考慮してください。</p>
+<p class="para">一般に、iFolderは、iFolderを作成するか、共有するiFolderを設定したときに、ローカルハードドライブの任意の場所に配置できます。ただし、実際にはいくつかの制約があります。コンピュータ上にiFolderを配置して使用する際には、次のガイドラインを考慮してください。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -61,23 +61,23 @@
 <li class="listitem">
 <p class="listitem">iFolderは、ハードドライブのルートには配置できません。 </p></li>
 <li class="listitem">
-<p class="listitem">iFolderは、ファイルの読み込みと書き込みを行うファイルシステムアクセス権があるフォルダからのみ作成できます。 コンピュータに共有iFolderを設定する場合、iFolderを配置するフォルダに対するファイルシステムアクセス権が必要です。</p></li>
+<p class="listitem">iFolderは、ファイルの読み込みと書き込みを行うファイルシステムアクセス権があるフォルダからのみ作成できます。コンピュータに共有iFolderを設定する場合、iFolderを配置するフォルダに対するファイルシステムアクセス権が必要です。</p></li>
 <li class="listitem">
 <p class="listitem">iFolderは、Program Filesフォルダのようなアプリケーションフォルダを含んだり、そこに配置したりすることはできません。</p></li>
 <li class="listitem">
-<p class="listitem">iFolderは、メタデータフォルダを含んだり、そこに配置したりすることはできません。 メタデータフォルダのデフォルトの場所は次のとおりです。</p>
+<p class="listitem">iFolderは、メタデータフォルダを含んだり、そこに配置したりすることはできません。メタデータフォルダのデフォルトの場所は次のとおりです。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bx09dxu">
                 <p class="title"><em class="title">Linux:</em>
-                <span class="filename">&lt;ホームディレクトリ&gt;\.local\share</span>\<span class="filename">simias</span>サブディレクトリのホームフォルダ内</p>
+                <span class="filename">&amp;lt;ホームディレクトリ&amp;gt;\.local\share</span>\<span class="filename">simias</span>サブディレクトリのホームフォルダ内</p>
               </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bx09ffv">
                 <p class="title"><em class="title">Windows:</em>
-                <span class="filename">C:\Documents and Settings\<span class="replaceable"></span>&lt;Windowsログオンユーザ名&gt;\Local Settings\Application Data\simias</span>ディレクトリ内</p>
+                <span class="filename">C:\Documents and Settings\<span class="replaceable"></span>&amp;lt;Windowsログオンユーザ名&amp;gt;\Local Settings\Application Data\simias</span>ディレクトリ内</p>
               </div>
 </li>
 <li class="listitem">
@@ -96,7 +96,7 @@
 <p class="listitem">iFolderがLDAPGroupと共有されている場合、そのLDAPGroupに属しているすべてのメンバーがiFolderを使用できます。</p></li>
 <li class="listitem">
 <p class="listitem">複数のユーザが1台のコンピュータを使用する際に、ファイルシステムがプライバシー機能をサポートしており、これを使用するようにシステムを設定してある場合、iFolderのローカルコピーはディスク上の自分専用のストレージ領域に維持されます。</p>
-<p class="listitem">Windowsの場合、NTFSにファイルやフォルダのアクセス権や、NTFSボリューム上でファイルを暗号化して保存する技術であるEncrypting File System (EFS)などのセキュリティ機能が組み込まれています。このようなセキュリティ機能はFAT32ファイルシステムではサポートされません。管理者のIDを除き、ユーザのローカルログインIDに、管理者権限や同等の権限を付与しないようにしてください。管理者ユーザには、コンピュータ上のすべてのファイルやディレクトリへのアクセス権があります。共有のコンピュータで、ユーザごとにプライバシーとセキュリティを維持する必要がある場合は、iFolderのローカルコピーをEFSまたはサードパーティのファイルシステム暗号化機能を使用して暗号化します。</p>
+<p class="listitem">Windowsの場合、NTFSにファイルやフォルダのアクセス権や、NTFSボリューム上でファイルを暗号化して保存する技術であるEncrypting File System(EFS)などのセキュリティ機能が組み込まれています。このようなセキュリティ機能はFAT32ファイルシステムではサポートされません。管理者のIDを除き、ユーザのローカルログインIDに、管理者権限や同等の権限を付与しないようにしてください。管理者ユーザには、コンピュータ上のすべてのファイルやディレクトリへのアクセス権があります。共有のコンピュータで、ユーザごとにプライバシーとセキュリティを維持する必要がある場合は、iFolderのローカルコピーをEFSまたはサードパーティのファイルシステム暗号化機能を使用して暗号化します。</p>
 <p class="listitem">LinuxおよびMacintoshのファイルシステムは、複数のユーザ環境を考慮して設計されています。ファイルのアクセス権により、ユーザ、グループおよびその他のアクセスを制御できます。ユーザの個人的なファイルには、通常はそのユーザに対してのみ、すべてのアクセス権が設定され、他のグループやその他には設定されません。 </p>
 <p class="listitem">iFolderをLinux上のFAT32ボリュームにローカル保存する場合、FAT32ファイルシステムはPOSIXとの互換性がないため、特別な対処が必要です。詳細については、<a href="createifolder.html#fat32mtpt" class="xref">FAT32マウントポイント(Linux)上にiFolderを作成する</a>を参照してください。</p></li>
 <li class="listitem">
