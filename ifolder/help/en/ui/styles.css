@@ -51,7 +51,7 @@ body {
 	p.trademark {font-size: 75%; font-weight: normal; font-style: italic;}
 	/*p.entry {font-size: 95%; font-weight: normal; color: #000000; margin-top: -5px;}
 	p.table {font-weight: bold;}*/
-	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 130%;color: #000000;}
+	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 100%;color: #000000;}
 	p.glossterm {font-weight: bold;}
 	div.glossdef {margin:-10pt 0 0 0;}
 	
@@ -137,7 +137,7 @@ body {
 /* italic inlines */	
 	em {font-style: italic}
 	span.citetitle,span.guimenu,span.replaceable {font-style: italic;}
-	tt,span.command,span.literal,span.filename {font-family: monospace; font-size: 130%;}
+	tt,span.command,span.literal,span.filename {font-family: monospace; font-size: 100%;}
 	
 /* bold inlines */	
 	em.refclass,em.glossterm,em.option {font-weight: bold}
