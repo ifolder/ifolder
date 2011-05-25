@@ -118,12 +118,41 @@
 	{
 		[setupSheet orderOut:nil];
 		[NSApp endSheet:setupSheet];
+		NSFileManager *fm = [NSFileManager defaultManager];
+		BOOL isDir;
+		int option;
+		NSString * folderName = @"";
+		
+		folderName= [[ [ folderName stringByAppendingString:[pathField stringValue] ]stringByAppendingString: @"/"] stringByAppendingString: [[ifolderWindowController selectediFolder] Name]];
+		
+		if((fm !=NULL  && [fm fileExistsAtPath:folderName isDirectory:&isDir] && isDir)||  ([[pathField stringValue] hasSuffix: [[ifolderWindowController selectediFolder] Name]]))
+		{
+			 option = NSRunAlertPanel(NSLocalizedString(@"A folder with the name you specified already exists",@"Folder already exists"),NSLocalizedString(@"Click Yes to merge or No to select a different location",@"Download default ifolder merge option"),NSLocalizedString(@"Yes",@"   Confirmation dialog to download default ifolder and merge"),NSLocalizedString(@"No",@"Negative confiramtion to download default ifolder and merge"),nil);
+			
+			if(option != NSAlertDefaultReturn)
+			{
+				return;
+			}
+			else
+			{
 
+				//iFolder* tempiFolder = [[iFolderData sharedInstance] mergeiFolder:defiFolderID InDomain:domID toPath:[ifolderPath stringValue]];
+			[ifolderWindowController acceptiFolderInvitation:[iFolderID stringValue] 
+												InDomain:[domainID stringValue]	
+												toPath:[pathField stringValue] 
+												canMerge:YES 
+		];
+
+				//merge = YES;
+			}
+		}
+		else {
 		[ifolderWindowController acceptiFolderInvitation:[iFolderID stringValue] 
 												InDomain:[domainID stringValue]	
 												toPath:[pathField stringValue] 
 												canMerge:NO 
 		];
+            }
 	}
 }
 
