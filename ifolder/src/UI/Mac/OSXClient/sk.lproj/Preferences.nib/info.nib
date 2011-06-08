@@ -15,14 +15,18 @@
 		<key>7</key>
 		<string>459 488 522 196 0 0 1440 878 </string>
 		<key>8</key>
-		<string>460 408 520 356 0 0 1440 878 </string>
+		<string>420 432 600 356 0 0 1440 878 </string>
 	</dict>
 	<key>IBFramework Version</key>
-	<string>446.1</string>
+	<string>437.0</string>
 	<key>IBLastKnownRelativeProjectPath</key>
 	<string>../iFolder.xcodeproj</string>
 	<key>IBOldestOS</key>
 	<integer>5</integer>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>8</integer>
+	</array>
 	<key>IBSystem Version</key>
 	<string>8S2167</string>
 	<key>targetFramework</key>
