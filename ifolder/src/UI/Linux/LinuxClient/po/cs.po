@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-05 12:01-0700\n"
-"PO-Revision-Date: 2010-10-12 12:13\n"
+"PO-Revision-Date: 2011-06-06 15:23\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -543,7 +543,7 @@ msgid "Acc_ess..."
 msgstr "Pří_stup..."
 
 msgid "R_ights..."
-msgstr "_Práva..."
+msgstr "P_ráva..."
 
 msgid "Rights"
 msgstr "Práva"
@@ -1574,7 +1574,7 @@ msgid "Server _Address:"
 msgstr "_Adresa serveru:"
 
 msgid "Server _address:"
-msgstr "_Adresa serveru:"
+msgstr "Adresa ser_veru:"
 
 msgid "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
 msgstr "Nastavení tohoto serveru iFolder jako výchozího serveru umožní aplikaci iFolder automaticky vybrat tento server při přidávání nových složek."
@@ -1610,7 +1610,7 @@ msgid "_Remember my password"
 msgstr "_Zapamatovat si heslo"
 
 msgid "_Remember password on this computer"
-msgstr "_Zapamatovat si heslo v tomto počítači"
+msgstr "Zapamat_ovat si heslo v tomto počítači"
 
 msgid "Verify and Connect"
 msgstr "Ověřit a připojit"
@@ -1799,7 +1799,7 @@ msgid "iFolder passphrase"
 msgstr "Heslo složky iFolder"
 
 msgid "_Re-type passphrase:"
-msgstr "_Znovu zadejte heslo:"
+msgstr "Znovu zad_ejte heslo:"
 
 msgid "Re-type passphrase:"
 msgstr "Znovu zadejte heslo:"
@@ -2267,7 +2267,7 @@ msgid "Enter new passphrase"
 msgstr "Zadat nové heslo"
 
 msgid "_Enter passphrase"
-msgstr "_Zadejte heslo"
+msgstr "Zadejte hesl_o"
 
 msgid "Enter new _passphrase"
 msgstr "Zadejte nové _heslo"
@@ -2645,7 +2645,7 @@ msgid "_Current password"
 msgstr "_Aktuální heslo"
 
 msgid "_New password"
-msgstr "_Nové heslo:"
+msgstr "N_ové heslo"
 
 msgid "Confirm new _password"
 msgstr "Potvrďte nové _heslo"
@@ -2777,7 +2777,7 @@ msgid "Click Forward to proceed."
 msgstr "Pokračujte klepnutím na tlačítko Postoupit. "
 
 msgid "_New passphrase"
-msgstr "_Nové heslo"
+msgstr "Nové hesl_o"
 
 msgid "_Confirm passphrase"
 msgstr "_Potvrďte heslo"
@@ -2954,7 +2954,7 @@ msgid "When required permissions are unavailable"
 msgstr "Když nejsou k dispozici požadovaná oprávnění"
 
 msgid "When file path exceeds optimal limit"
-msgstr "Když cesta k souboru překračuje optimální limit"
+msgstr "Když cesta souboru překračuje optimální délku"
 
 msgid "When iFolders are shared"
 msgstr "Když jsou sdíleny složky iFolder"

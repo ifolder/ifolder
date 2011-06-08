@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: en\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-05 12:01-0700\n"
-"PO-Revision-Date: 2010-10-12 12:14\n"
+"PO-Revision-Date: 2011-06-06 15:24\n"
 "Last-Translator: Novell Language <language@novell.com>\n"
 "Language-Team: Novell Language <language@novell.com>\n"
 "MIME-Version: 1.0\n"
@@ -439,7 +439,7 @@ msgstr "Mot de passe :"
 #: src/LinuxClient/library/iFolderLoginDialog.cs:189
 #: src/LinuxClient/library/iFolderLoginDialog.cs:235
 msgid "_Remember password"
-msgstr "_Mémoriser le mot de passe"
+msgstr "Mémo_riser le mot de passe"
 
 #: src/LinuxClient/library/iFolderLoginDialog.cs:245
 #: src/LinuxClient/library/PrefsAccountsPage.cs:327
@@ -1574,7 +1574,7 @@ msgid "Server _Address:"
 msgstr "_Adresse du serveur :"
 
 msgid "Server _address:"
-msgstr "_Adresse du serveur :"
+msgstr "Adresse du ser_veur :"
 
 msgid "Setting this iFolder Server as your default server will allow iFolder to automatically select this server when adding new folders."
 msgstr "La définition de ce serveur iFolder comme serveur par défaut permettra à iFolder de sélectionner automatiquement ce serveur lors de l'ajout de nouveaux dossiers."
@@ -1598,10 +1598,10 @@ msgid "Enter your iFolder user name and password (for example, \"jsmith\")."
 msgstr "Entrez votre nom d'utilisateur et votre mot de passe iFolder (par exemple, \"jdupont\")."
 
 msgid "_User Name:"
-msgstr "_Nom d'utilisateur :"
+msgstr "Nom _d'utilisateur :"
 
 msgid "_User name:"
-msgstr "_Nom d'utilisateur :"
+msgstr "Nom _d'utilisateur :"
 
 msgid "_Password:"
 msgstr "_Mot de passe :"
@@ -1610,7 +1610,7 @@ msgid "_Remember my password"
 msgstr "_Mémoriser mon mot de passe"
 
 msgid "_Remember password on this computer"
-msgstr "_Mémoriser le mot de passe sur cet ordinateur"
+msgstr "Mém_oriser le mot de passe sur cet ordinateur"
 
 msgid "Verify and Connect"
 msgstr "Vérifier et connecter"
@@ -1706,7 +1706,7 @@ msgid "_No"
 msgstr "_Non"
 
 msgid "Co_nnect"
-msgstr "Se co_nnecter"
+msgstr "_Se connecter"
 
 msgid "Congratulations!  You are now\nconnected to:\n\nAccount Name: {0}\nServer Address: {1}\nUser Name: {2}\n\nClick \"Finish\" to close this window."
 msgstr "Félicitations ! Vous êtes désormais\nconnecté à :\n\nNom de compte : {0}\nAdresse du serveur : {1}\nNom d'utilisateur : {2}\n\nCliquez sur \"Terminer\" pour fermer cette fenêtre."
@@ -1949,7 +1949,7 @@ msgid "_Find:"
 msgstr "_Rechercher :"
 
 msgid "_Add"
-msgstr "_Ajouter"
+msgstr "A_jouter"
 
 msgid "_Users to add:"
 msgstr "_Utilisateurs à ajouter :"
@@ -2138,7 +2138,7 @@ msgid "User Name"
 msgstr "Nom d'utilisateur"
 
 msgid "_User name"
-msgstr "_Nom d'utilisateur"
+msgstr "Nom _d'utilisateur"
 
 msgid "Home Location"
 msgstr "Emplacement d'origine"
@@ -2642,13 +2642,13 @@ msgid "Successfully changed the password. Log on to the account with new passwor
 msgstr "Le mot de passe a été modifié. Utilisez ce nouveau mot de passe pour vous loguer au compte."
 
 msgid "_Current password"
-msgstr "Mot de passe _actuel"
+msgstr "Mot de pa_sse actuel"
 
 msgid "_New password"
-msgstr "_Nouveau mot de passe"
+msgstr "Nou_veau mot de passe"
 
 msgid "Confirm new _password"
-msgstr "Confirmer le _mot de passe"
+msgstr "_Confirmer le mot de passe"
 
 msgid "Current password"
 msgstr "Mot de passe actuel"
@@ -2777,7 +2777,7 @@ msgid "Click Forward to proceed."
 msgstr "Cliquez sur Suivant pour continuer."
 
 msgid "_New passphrase"
-msgstr "_Nouvelle phrase secrète"
+msgstr "Nou_velle phrase secrète"
 
 msgid "_Confirm passphrase"
 msgstr "_Confirmer la phrase secrète"
@@ -2891,7 +2891,7 @@ msgid "Display notifications for _policy violations"
 msgstr "Afficher des notifications pour les _violations de stratégies"
 
 msgid "Hide ifolder _main window at startup"
-msgstr "Masquer la _fenêtre principale du dossier iFolder au démarrage"
+msgstr "_Masquer la fenêtre principale du dossier iFolder au démarrage"
 
 msgid "_Location:"
 msgstr "_Emplacement :"
@@ -2906,7 +2906,7 @@ msgid "Passphrase Recovery Wizard"
 msgstr "Assistant de récupération de la phrase secrète"
 
 msgid "_iFolder Account"
-msgstr "_Compte iFolder"
+msgstr "C_ompte iFolder"
 
 msgid "Conflict Bin Path"
 msgstr "Chemin d'accès de la liste des conflits"
