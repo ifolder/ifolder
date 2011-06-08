@@ -695,7 +695,7 @@
     <value>False</value>
   </data>
   <data name="lblPassphrase.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>159, 16</value>
+    <value>158, 16</value>
   </data>
   <data name="&gt;&gt;pictureBox1.ZOrder">
     <value>0</value>
@@ -845,7 +845,7 @@
     <value />
   </data>
   <data name="lblRetypePassphrase.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>153, 16</value>
+    <value>158, 16</value>
   </data>
   <data name="$this.DrawGrid" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1079,7 +1079,7 @@
     <value>Top, Left</value>
   </data>
   <data name="lblRecoveryAgent.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>140, 20</value>
+    <value>158, 20</value>
   </data>
   <data name="RecoveryAgentCombo.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
