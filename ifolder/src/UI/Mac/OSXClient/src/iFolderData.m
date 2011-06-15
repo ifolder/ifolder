@@ -1781,8 +1781,9 @@ static iFolderData *sharedInstance = nil;
 				if(updateStatus)
 				{
 					//exit the application
+					NSString* iFolderUpdateDirectory = @"ead51d60-cd98-4d35-8c7c-b43a2ca949c8";
 					NSRunAlertPanel(NSLocalizedString(@"New Client is Available for Installing",@"Upgrade status title"),
-									[NSString stringWithFormat:NSLocalizedString(@"Install the latest client available at the location %@",@"Upgrade status message"),dirName],
+									[NSString stringWithFormat:NSLocalizedString(@"Install the latest client available at the location %@/%@",@"Upgrade status message"),dirName,iFolderUpdateDirectory],
 									NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 					
 				//	forceQuit = YES;
