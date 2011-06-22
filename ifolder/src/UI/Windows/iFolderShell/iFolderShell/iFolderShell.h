@@ -92,7 +92,7 @@ protected:
     LPDATAOBJECT m_pDataObj;
 
 public:
-	static IiFolderComponentPtr m_spiFolder;
+	IiFolderComponentPtr m_spiFolder;
     TCHAR m_szFileUserClickedOn[MAX_PATH];
 	static TCHAR m_szShellPath[MAX_PATH];
 	iFolderClass m_iFolderClass;
@@ -141,8 +141,8 @@ public:
 	STDMETHODIMP			GetPriority(int *pIPriority);
 	
 	//IShellPropSheetExt methods
-	STDMETHODIMP			AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,LPARAM lParam);
-							
+	STDMETHODIMP			AddPages(LPFNADDPROPSHEETPAGE lpfnAddPage,
+									LPARAM lParam);
 	
 	STDMETHODIMP			ReplacePage(UINT uPageID,
 										LPFNADDPROPSHEETPAGE lpfnReplaceWith,
