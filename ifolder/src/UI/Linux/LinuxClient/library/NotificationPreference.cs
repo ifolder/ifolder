@@ -120,11 +120,11 @@ namespace Novell.iFolder
 			toggleCell.Activatable = true;
 			toggleCell.Mode = CellRendererMode.Activatable;
 			toggleCell.Toggled += preferenceToggled;
-			PolicyTreeView.AppendColumn ("Enabled", toggleCell, "active", 0);
+			PolicyTreeView.AppendColumn (Util.GS("Enabled"), toggleCell, "active", 0);
 
 			//Description of the notification event
 			CellRendererText textCell = new CellRendererText ();
-			PolicyTreeView.AppendColumn ("Notification", textCell, "text", 1);
+			PolicyTreeView.AppendColumn (Util.GS("Notification"), textCell, "text", 1);
 
 			this.PackStart(sw, true, true, 0);
 		}

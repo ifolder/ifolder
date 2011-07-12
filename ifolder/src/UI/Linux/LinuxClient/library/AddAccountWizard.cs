@@ -1156,7 +1156,7 @@ namespace Novell.iFolder
 			{
 				SummaryPage.Text = 
 					string.Format(
-						Util.GS("You are now connected to:\n\nAccount Name: \t{0}\nServer address: {1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."),
+						Util.GS("You are now connected to:\n\nServer name: \t{0}\nServer address: \t{1}\nUser name: \t{2}\n\nClick \"Finish\" to close this wizard."),
 						ConnectedDomain.Name,
 						ConnectedDomain.Host,
 						UserNameEntry.Text.Trim());
