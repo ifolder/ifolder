@@ -100,7 +100,7 @@
 	
 	if (([fileManager fileExistsAtPath:[pathField stringValue] isDirectory:&isDir] == NO) || !isDir)
 	{
-		int selection= NSRunAlertPanel(NSLocalizedString(@"Select Directory",@"Select directory title"),NSLocalizedString(@"The specified location does not exists .Do you want to create it?",@"Select directory message"),NSLocalizedString(@"OK",@"OK"),NSLocalizedString(@"CANCEL",@"CANCEL"),nil);
+		int selection= NSRunAlertPanel(NSLocalizedString(@"Select Directory",@"Select directory title"),NSLocalizedString(@"The specified location does not exists. Do you want to create it?",@"Select directory message"),NSLocalizedString(@"OK",@"OK"),NSLocalizedString(@"Cancel",@"Cancel"),nil);
 		if(1 != selection) //selected cancel
 			return;
 	    else{ //create dir  
@@ -132,7 +132,7 @@
 			while(temp != NULL &&  ![temp isEqualToString:@"/"]){
 				if([[iFolderData sharedInstance] isiFolderByPath:temp]){
 					NSRunAlertPanel(NSLocalizedString(@"Exception in Create iFolder",@"Create iFolder Exception Title"), 
-									[NSString stringWithFormat:NSLocalizedString(@"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders.please select a different location and try again",@"Create iFolder Exception Message"), temp],
+									[NSString stringWithFormat:NSLocalizedString(@"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders. Select a different location and try again.",@"Create iFolder Exception Message"), temp],
 									NSLocalizedString(@"OK",@"OK Button"),nil,nil);   
 					return ;
 				}

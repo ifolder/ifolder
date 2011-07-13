@@ -357,10 +357,10 @@
 "Invalid PassPhrase Status" = "Invalid PassPhrase Status";
 
 /* Create iFolder Exception Message */
-"Path is invalid. Please check the path that you entered" = "Invalid Path. Please check the path that you entered";
+"Path is invalid. Please check the path that you entered" = "Path is invalid. Please check the path that you entered";
 
 /* Create iFolder Exception Message */
-"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders.please select a different location and try again"="The selected location is inside another iFolder, iFolder cannot exist inside other iFolders. Select a different location and try again.";
+"The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders. Select a different location and try again." = "The selected location is inside iFolder \"%@\", iFolder cannot exist inside other iFolders. Select a different location and try again.";
 
 /* iFolder Member Status */
 "Invited User" = "Invited User";
@@ -938,7 +938,7 @@
 "Select Directory" = "Select Directory";
 
 /*Select directory message*/
-"The specified location does not exists. Do you want t o create it?" = "The specified location does not exists. Do you want t o create it?";
+"The specified location does not exists. Do you want to create it?" = "The specified location does not exists. Do you want to create it?";
 
 /*Cannot share iFolder title*/
 "Cannot share iFolder" = "Cannot share iFolder";
@@ -969,6 +969,9 @@
 
 /*Successful*/
 "Successfuly changed password.Log on to the domain with new password" = "Successfuly changed password.Log on to the domain with new password";
+
+/*Successful message title*/
+"Successful" = "Successful";
 
 /*Incorrect old password*/
 "Incorrect old password" = "Incorrect old password";
