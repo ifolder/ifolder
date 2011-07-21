@@ -457,7 +457,7 @@
     <value>EmailPage</value>
   </data>
   <data name="finalPageTitle" xml:space="preserve">
-    <value>Der Passwortsatz wurde erfolgreich zurückgesetzt.</value>
+    <value>Der Passwortsatz wurde zurückgesetzt.</value>
   </data>
   <data name="removeTitle" xml:space="preserve">
     <value>iFolder-Ordner löschen</value>

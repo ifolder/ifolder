@@ -697,7 +697,7 @@
     <value>107, 24</value>
   </data>
   <data name="details.Text" xml:space="preserve">
-    <value>Ei&amp;genschaften...</value>
+    <value>Ei&amp;genschaften</value>
   </data>
   <data name="&gt;&gt;groupBox3.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

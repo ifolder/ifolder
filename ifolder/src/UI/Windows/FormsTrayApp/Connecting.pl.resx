@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>Program iFolder nie może zweryfikować tożsamości serwera programu iFolder {0}. Certyfikat tego serwera programu iFolder został podpisany przez nieznany urząd certyfikacji. Istnieje niebezpieczeństwo połączenia z serwerem podszywającym się pod {0} co groziłoby ujawnieniem poufnych informacji. Przed zaakceptowaniem tego certyfikatu należy skonsultować się z administratorem systemu. Czy chcesz zaakceptować na stałe ten certyfikat i kontynuować nawiązywanie połączenia?</value>
+    <value>Program iFolder nie może zweryfikować serwera "{0}" jako zaufanego. Dokładnie sprawdź certyfikat tożsamości tego serwera.</value>
   </data>
   <data name="expiryCertTitle">
     <value>Certyfikat utracił ważność</value>

@@ -556,7 +556,7 @@
     <value>Private</value>
   </data>
   <data name="WelcomePageTitle">
-    <value>Добро пожаловать в мастер создания учетных записей iFolder</value>
+    <value>Mастер создания учетных записей iFolder</value>
   </data>
   <data name="uploadDir">
     <value>Отправка каталога: {0}</value>

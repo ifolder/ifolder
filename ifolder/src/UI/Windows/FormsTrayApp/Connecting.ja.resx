@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>iFolderはiFolderサーバ {0} のIDを確認できません。このiFolderサーバの証明書が不明な認証局によって署名されています。{0} になりすましているサーバに接続している可能性があり、機密情報が危険にさらされるおそれがあります。この証明書を受け入れる前に、管理者に確認する必要があります。この証明書を永続的に受け入れて、接続を続行しますか?</value>
+    <value>iFolderは「{0}」を信頼するサーバとして確認できません。このサーバのID証明書を慎重に検証してください。</value>
   </data>
   <data name="expiryCertTitle">
     <value>期限切れの証明書</value>

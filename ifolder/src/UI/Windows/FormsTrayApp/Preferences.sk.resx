@@ -163,7 +163,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="hideSyncLog.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>368, 24</value>
   </data>
   <data name="hideSyncLog.Text" xml:space="preserve">
     <value>Zobraziť denníky synchronizácie</value>
@@ -223,7 +223,7 @@
     <value>s</value>
   </data>
   <data name="apply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>369, 452</value>
   </data>
   <data name="&gt;&gt;groupBox3.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -241,7 +241,7 @@
     <value>tabGeneral</value>
   </data>
   <data name="tabControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>434, 434</value>
   </data>
   <data name="details.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -265,7 +265,7 @@
     <value>groupBox3</value>
   </data>
   <data name="addAccount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>179, 372</value>
   </data>
   <data name="&gt;&gt;timer1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -274,7 +274,7 @@
     <value>timer1</value>
   </data>
   <data name="details.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>339, 372</value>
   </data>
   <data name="removeAccount.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -289,7 +289,7 @@
     <value>False</value>
   </data>
   <data name="displayConfirmation.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>16, 48</value>
   </data>
   <data name="notificationsPreferencesList.Items1" xml:space="preserve">
     <value>Ak je porušená politika veľkosti súboru</value>
@@ -319,19 +319,19 @@
     <value>2</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>448, 478</value>
+    <value>450, 480</value>
   </data>
   <data name="btnHelp.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
   <data name="listView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 12</value>
   </data>
   <data name="columnHeader5.Text" xml:space="preserve">
     <value>Domovské umiestnenie</value>
   </data>
   <data name="btnMigrate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>328, 367</value>
   </data>
   <data name="columnHeader4.Text" xml:space="preserve">
     <value>Meno používateľa</value>
@@ -340,7 +340,7 @@
     <value>System</value>
   </data>
   <data name="tabGeneral.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>4, 22</value>
   </data>
   <data name="accounts.HelpString" xml:space="preserve">
     <value>Zobrazí zoznam kont služby iFolder na tomto počítači.</value>
@@ -367,7 +367,7 @@
     <value>Synchronizovať priečinky iFolder každ.</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>201, 16</value>
   </data>
   <data name="&gt;&gt;tabGeneral.Name" xml:space="preserve">
     <value>tabGeneral</value>
@@ -397,13 +397,13 @@
     <value>Upozornenia</value>
   </data>
   <data name="groupBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>404, 135</value>
   </data>
   <data name="cancel.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
   </data>
   <data name="listView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>400, 339</value>
   </data>
   <data name="&gt;&gt;autoStart.Parent" xml:space="preserve">
     <value>groupBox3</value>
@@ -424,7 +424,7 @@
     <value>NoControl</value>
   </data>
   <data name="groupBox3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>404, 162</value>
   </data>
   <data name="groupBox3.Text" xml:space="preserve">
     <value>Aplikácia</value>
@@ -451,7 +451,7 @@
     <value>Synchronizácia</value>
   </data>
   <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>404, 80</value>
   </data>
   <data name="cancel.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -493,7 +493,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="groupBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 173</value>
   </data>
   <data name="addAccount.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Right</value>
@@ -502,16 +502,16 @@
     <value>Skryť ikonu panela iFolder</value>
   </data>
   <data name="displayTrayIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>368, 24</value>
   </data>
   <data name="hideSyncLog.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="accounts.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 12</value>
   </data>
   <data name="autoSync.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>284, 16</value>
   </data>
   <data name="autoSync.Text" xml:space="preserve">
     <value>Automaticky s&amp;ynchronizovať priečinky iFolder</value>
@@ -526,7 +526,7 @@
     <value>1</value>
   </data>
   <data name="removeAccount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>259, 372</value>
   </data>
   <data name="apply.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -538,7 +538,7 @@
     <value>False</value>
   </data>
   <data name="displayTrayIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>16, 76</value>
   </data>
   <data name="notificationsPreferencesList.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -580,16 +580,16 @@
     <value>&amp;OK</value>
   </data>
   <data name="accounts.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>402, 348</value>
   </data>
   <data name="defaultInterval.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>216, 48</value>
   </data>
   <data name="autoSync.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>System</value>
   </data>
   <data name="defaultInterval.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>64, 20</value>
   </data>
   <data name="label1.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -601,7 +601,7 @@
     <value>48, 18</value>
   </data>
   <data name="timeUnit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>288, 48</value>
   </data>
   <data name="timeUnit.ItemHeight" type="System.Int32, mscorlib">
     <value>13</value>
@@ -610,7 +610,7 @@
     <value>0</value>
   </data>
   <data name="btnHelp.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>8, 448</value>
   </data>
   <data name="timeUnit.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -622,7 +622,7 @@
     <value>2</value>
   </data>
   <data name="startInTrayIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>368, 24</value>
   </data>
   <data name="startInTrayIcon.Text" xml:space="preserve">
     <value>Skryť hlavné okno priečinka iFolder pri spustení</value>
@@ -655,13 +655,13 @@
     <value>groupBox3</value>
   </data>
   <data name="cancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>289, 452</value>
   </data>
   <data name="cancel.Text" xml:space="preserve">
     <value>&amp;Zrušiť</value>
   </data>
   <data name="cancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="listView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -694,10 +694,10 @@
     <value>2</value>
   </data>
   <data name="details.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="details.Text" xml:space="preserve">
-    <value>&amp;Vlastnosti...</value>
+    <value>&amp;Vlastnosti</value>
   </data>
   <data name="&gt;&gt;groupBox3.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -718,7 +718,7 @@
     <value>1</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 50</value>
   </data>
   <data name="&gt;&gt;tabGeneral.Parent" xml:space="preserve">
     <value>tabControl1</value>
@@ -766,16 +766,16 @@
     <value>Od&amp;strániť</value>
   </data>
   <data name="removeAccount.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="apply.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="apply.Text" xml:space="preserve">
     <value>&amp;Použiť</value>
   </data>
   <data name="addAccount.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="addAccount.Text" xml:space="preserve">
     <value>Pr&amp;idať</value>
@@ -790,7 +790,7 @@
     <value>2</value>
   </data>
   <data name="displayConfirmation.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>368, 24</value>
   </data>
   <data name="displayConfirmation.Text" xml:space="preserve">
     <value>Pri vytvorení priečinka iFolder zobraziť &amp;dialógové okno s potvrdením</value>
@@ -817,7 +817,7 @@
     <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="startInTrayIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>16, 105</value>
   </data>
   <data name="autoStart.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -844,7 +844,7 @@
     <value>1</value>
   </data>
   <data name="tabGeneral.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>426, 408</value>
   </data>
   <data name="tabGeneral.Text" xml:space="preserve">
     <value>Všeobecné</value>
@@ -910,7 +910,7 @@
     <value>System</value>
   </data>
   <data name="autoStart.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>16, 20</value>
   </data>
   <data name="columnHeader5.Width" type="System.Int32, mscorlib">
     <value>241</value>
@@ -922,7 +922,7 @@
     <value>424, 406</value>
   </data>
   <data name="btnHelp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="btnHelp.Text" xml:space="preserve">
     <value>Po&amp;mocník</value>
@@ -949,13 +949,13 @@
     <value>Spustiť &amp;aplikáciu iFolder pri prihlásení sa na počítač</value>
   </data>
   <data name="autoStart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>368, 24</value>
   </data>
   <data name="addAccount.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
   <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 314</value>
   </data>
   <data name="&gt;&gt;details.Name" xml:space="preserve">
     <value>details</value>
@@ -964,7 +964,7 @@
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="hideSyncLog.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>16, 135</value>
   </data>
   <data name="&gt;&gt;hideSyncLog.Name" xml:space="preserve">
     <value>hideSyncLog</value>
@@ -1045,13 +1045,13 @@
     <value>Kontá</value>
   </data>
   <data name="tabAccounts.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>426, 408</value>
   </data>
   <data name="autoStart.ShowHelp" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="autoSync.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>13, 24</value>
   </data>
   <data name="&gt;&gt;accounts.Type" xml:space="preserve">
     <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1087,10 +1087,10 @@
     <value>Bottom, Right</value>
   </data>
   <data name="timeUnit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>104, 21</value>
   </data>
   <data name="btnMigrate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 0</value>
+    <value>75, 23</value>
   </data>
   <data name="btnMigrate.Text" xml:space="preserve">
     <value>Preniesť</value>
@@ -1099,7 +1099,7 @@
     <value>tabAccounts</value>
   </data>
   <data name="tabControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>8, 8</value>
   </data>
   <data name="&gt;&gt;btnMigrate.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -1111,13 +1111,13 @@
     <value>deň</value>
   </data>
   <data name="tabAccounts.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>4, 22</value>
   </data>
   <data name="accounts.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="groupBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+    <value>12, 1</value>
   </data>
   <data name="tabControl1.ShowHelp" type="System.Boolean, mscorlib">
     <value>False</value>

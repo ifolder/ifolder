@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>Impossibile verificare l'identità del server iFolder {0}. Il certificato relativo a questo server iFolder è firmato da un'autorità di certificazione sconosciuta. È possibile che il server a cui si sta tentando di eseguire la connessione non sia {0}. Ciò può costituire un rischio per la riservatezza dei propri dati. Prima di accettare il certificato, è necessario rivolgersi all'amministratore di sistema. Accettare il certificato in modo permanente e continuare la connessione?</value>
+    <value>Impossibile confermare l'attendibilità del server "{0}".  Esaminare attentamente il certificato di identità del server.</value>
   </data>
   <data name="expiryCertTitle">
     <value>Certificato scaduto</value>

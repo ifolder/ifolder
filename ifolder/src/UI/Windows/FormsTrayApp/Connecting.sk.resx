@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>Aplikácia iFolder nemôže overiť identitu servera iFolder {0}. Certifikát tohto servera iFolder bol podpísaný neznámym certifikačným úradom. Je možné, že sa pripájate na server, ktorý predstiera, že je {0}. Mohlo by to ohroziť vaše dôverné informácie. Pred prijatím tohto certifikátu sa poraďte so správcom systému. Chcete tento certifikát natrvalo prijať a pokračovať v pripojení?</value>
+    <value>Aplikácia iFolder nemôže overiť „{0}“ ako dôveryhodný server. Mali by ste dôkladne skontrolovať certifikát identity tohto servera.</value>
   </data>
   <data name="expiryCertTitle">
     <value>Certifikát so skončenou platnosťou</value>

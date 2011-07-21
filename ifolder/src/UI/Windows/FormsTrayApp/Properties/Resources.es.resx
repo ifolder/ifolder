@@ -457,7 +457,7 @@
     <value>EmailPage</value>
   </data>
   <data name="finalPageTitle" xml:space="preserve">
-    <value>La contraseña codificada se ha restaurado correctamente.</value>
+    <value>Contraseña restaurada correctamente.</value>
   </data>
   <data name="removeTitle" xml:space="preserve">
     <value>Suprimir carpeta iFolder</value>
@@ -649,7 +649,8 @@
     <value>Seleccione Aceptar para fusionar o Cancelar para seleccionar una ubicación distinta</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>&amp;Nueva contraseña codificada:</value>
+    <value>&amp;Nueva contraseña
+codificada:</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>atrás</value>

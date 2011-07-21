@@ -200,7 +200,7 @@
     <value>0</value>
   </data>
   <data name="NoPassphraseWarning">
-    <value>已取消輸入通關密語。如果未提供通關密語，「預設 iFolder」的建立/下載將會失敗。您要繼續嗎？</value>
+    <value>已取消輸入密碼片語。如果未提供密碼片語，建立/下載「預設 iFolder」將會失敗。您要繼續嗎？</value>
   </data>
   <data name="graceLogin">
     <value>您的密碼已經過期。您剩下的寬限登入次數為 {0}。</value>
@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>iFolder 無法驗證 iFolder 伺服器 {0} 的身份。此 iFolder 伺服器的證書是由不明的憑證授權單位所簽署。您可能會連接到假裝是 {0} 的伺服器，這會讓您的機密資訊陷入遭竊之虞。在接受此證書之前，您應先向您的系統管理員查證。您要永久接受此證書並繼續進行連接嗎？</value>
+    <value>iFolder 無法將「{0}」驗證為信任伺服器。您應該小心檢查此伺服器的身分證書。</value>
   </data>
   <data name="expiryCertTitle">
     <value>過期的憑證</value>
@@ -278,7 +278,7 @@
     <value>無法連接至 iFolder 伺服器</value>
   </data>
   <data name="IsPassphraseSetException">
-    <value>無法檢查通關密語。 </value>
+    <value>無法檢查密碼片語。 </value>
   </data>
   <data name="$this.Name">
     <value>Connecting</value>
@@ -311,7 +311,7 @@
     <value>Inherit</value>
   </data>
   <data name="NoCertWarning">
-    <value>沒有選取「復原代辦」。日後如果遺失通關密語，將無法復原已加密的資料。您要繼續嗎？</value>
+    <value>沒有選取「復原代辦」。日後如果遺失密碼片語，將無法復原已加密的資料。您要繼續嗎？</value>
   </data>
   <data name="UpgradeNeededMsg">
     <value>您必須升級用戶端，才能連接至這部伺服器。</value>
@@ -398,7 +398,7 @@
     <value>True</value>
   </data>
   <data name="NoPassphraseTitle">
-    <value>沒有通關密語</value>
+    <value>沒有密碼片語</value>
   </data>
   <data name="$this.TrayHeight" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>80</value>

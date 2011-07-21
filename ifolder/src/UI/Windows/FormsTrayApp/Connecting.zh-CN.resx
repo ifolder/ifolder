@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>iFolder 无法校验 iFolder 服务器 {0} 的身份。此 iFolder 服务器的证书由未知的认证授权者签名。您可能连接到假扮 {0} 的服务器，这可能会泄漏机密信息。在接受此证书前，您应与系统管理员进行核对。是否要永久接受此证书并继续连接？</value>
+    <value>iFolder 无法将“{0}”校验为可信服务器。应仔细检查该服务器的身份证书。</value>
   </data>
   <data name="expiryCertTitle">
     <value>证书已过期</value>

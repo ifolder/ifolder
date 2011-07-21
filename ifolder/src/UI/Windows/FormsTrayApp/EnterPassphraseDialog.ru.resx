@@ -452,7 +452,7 @@
     <value>Private</value>
   </data>
   <data name="Passphrase.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Top</value>
   </data>
   <data name="lblRecoveryAgent.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -503,7 +503,7 @@
     <value />
   </data>
   <data name="Passphrase.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>192, 122</value>
+    <value>221, 122</value>
   </data>
   <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Invariant Language (Invariant Country)</value>
@@ -833,7 +833,7 @@
     <value />
   </data>
   <data name="RetypePassphrase.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>192, 150</value>
+    <value>221, 150</value>
   </data>
   <data name="$this.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -893,7 +893,7 @@
     <value>savePassphrase</value>
   </data>
   <data name="RetypePassphrase.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Top</value>
   </data>
   <data name="pictureBox1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -929,7 +929,7 @@
     <value>MiddleLeft</value>
   </data>
   <data name="RecoveryAgentCombo.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>192, 94</value>
+    <value>221, 94</value>
   </data>
   <data name="savePassphrase.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -1076,7 +1076,7 @@
     <value>0, 0</value>
   </data>
   <data name="RecoveryAgentCombo.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Top, Left</value>
+    <value>Top</value>
   </data>
   <data name="lblRecoveryAgent.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>158, 20</value>

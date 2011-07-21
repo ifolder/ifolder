@@ -1465,7 +1465,7 @@
     <value>ImageAboveText</value>
   </data>
   <data name="menuSecurity.Text" xml:space="preserve">
-    <value>&amp;Zabezpečenie</value>
+    <value>Z&amp;abezpečenie</value>
   </data>
   <data name="iFolderView.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>

@@ -218,7 +218,7 @@
     <value>0, 0</value>
   </data>
   <data name="verifyCert">
-    <value>iFolder ne parvient pas à vérifier l'identité du serveur iFolder {0}. Le certificat de ce serveur iFolder a été signé par une autorité de certification inconnue. Vous vous connectez peut-être à un serveur qui se fait passer pour {0}. Vous risquez de mettre en péril vos informations confidentielles. Consultez votre administrateur système avant d'accepter ce certificat.  Souhaitez-vous accepter ce certificat de manière permanente et poursuivre la connexion ?</value>
+    <value>iFolder ne peut pas identifier "{0}" comme un serveur approuvé. Examinez attentivement le certificat d'identité de ce serveur.</value>
   </data>
   <data name="expiryCertTitle">
     <value>Certificat expiré</value>
