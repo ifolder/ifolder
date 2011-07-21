@@ -536,7 +536,7 @@ static iFolderData *sharedInstance = nil;
 	    {
 			ifexconlog(@"iFolderDate:createiFolder(encrypted)",ex);
 			NSRunAlertPanel(NSLocalizedString(@"Exception in Create iFolder",@"Create iFolder Exception Title"), 
-							NSLocalizedString(@"Invalid Path. Please check the path that you entered",@"Create iFolder Exception Message"), 
+							NSLocalizedString(@"Path is invalid. Please check the path that you entered",@"Create iFolder Exception Message"), 
 							NSLocalizedString(@"OK",@"OK Button"),nil,nil);
 			
 			[instanceLock unlock];
