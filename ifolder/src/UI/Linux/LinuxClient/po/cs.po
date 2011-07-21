@@ -3,17 +3,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: en\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-05 12:01-0700\n"
-"PO-Revision-Date: 2011-06-06 15:23\n"
-"Last-Translator: Novell Language <language@novell.com>\n"
-"Language-Team: Novell Language <language@novell.com>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
+# "Following lines are added while creating .po files using  gettext; and has been commneted out to fix bug 551246"
+# "Project-Id-Version: ifolder-build 0.1\n"
+# "Report-Msgid-Bugs-To: \n"
+# "POT-Creation-Date: 2005-11-09 12:01-0700\n"
+# "PO-Revision-Date: 2005-11-09 12:01-0700\n"
+# "Last-Translator: Automatically generated\n"
+# "Language-Team: none\n"
+# "MIME-Version: 1.0\n"
+# "Content-Type: text/plain; charset=UTF-8\n"
+# "Content-Transfer-Encoding: 8bit\n"
+# "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: src/LinuxClient/application/iFolderApplication.cs:377
 msgid "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
 msgstr "Složka iFolder je plná.\n\nKlepnutím na <a href=\"ShowSyncLog\">tento odkaz</a> zobrazíte synchronizační protokol."
@@ -2234,7 +2235,7 @@ msgid "Create a copy and migrate to iFolder3.x"
 msgstr "Vytvořit kopii a migrovat do složky iFolder3.x"
 
 msgid "Encrypt the iFolder "
-msgstr "Šifrovat složku iFolder"
+msgstr "Šifrovat složku iFolder "
 
 msgid "Regular iFolder"
 msgstr "Bežná složka iFolder"
@@ -2994,4 +2995,10 @@ msgstr "Nastavení"
 
 msgid "Display _Notification"
 msgstr "Zobrazit _upozornění"
+
+msgid "Enabled"
+msgstr "Zapnuto"
+
+msgid " All rights reserved."
+msgstr " Všechna práva vyhrazena."
 

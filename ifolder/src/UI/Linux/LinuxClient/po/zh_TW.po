@@ -3,17 +3,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: en\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-05 12:01-0700\n"
-"PO-Revision-Date: 2010-10-12 12:15\n"
-"Last-Translator: Novell Language <language@novell.com>\n"
-"Language-Team: Novell Language <language@novell.com>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 
+# "Following lines are added while creating .po files using  gettext; and has been commneted out to fix bug 551246"
+# "Project-Id-Version: ifolder-build 0.1\n"
+# "Report-Msgid-Bugs-To: \n"
+# "POT-Creation-Date: 2005-11-09 12:01-0700\n"
+# "PO-Revision-Date: 2005-11-09 12:01-0700\n"
+# "Last-Translator: Automatically generated\n"
+# "Language-Team: none\n"
+# "MIME-Version: 1.0\n"
+# "Content-Type: text/plain; charset=UTF-8\n"
+# "Content-Transfer-Encoding: 8bit\n"
+# "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: src/LinuxClient/application/iFolderApplication.cs:377
 msgid "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
 msgstr "iFolder 已滿。\n\n按一下<a href=\"ShowSyncLog\">這裡</a>以檢視「同步化記錄」。"
@@ -2994,4 +2995,10 @@ msgstr "設定"
 
 msgid "Display _Notification"
 msgstr "顯示通知(_N)"
+
+msgid "Enabled"
+msgstr "已啟用"
+
+msgid " All rights reserved."
+msgstr " 保留所有權利。"
 

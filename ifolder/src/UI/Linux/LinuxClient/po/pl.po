@@ -3,17 +3,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: en\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-05 12:01-0700\n"
-"PO-Revision-Date: 2010-10-12 12:14\n"
-"Last-Translator: Novell Language <language@novell.com>\n"
-"Language-Team: Novell Language <language@novell.com>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
+# "Following lines are added while creating .po files using  gettext; and has been commneted out to fix bug 551246"
+# "Project-Id-Version: ifolder-build 0.1\n"
+# "Report-Msgid-Bugs-To: \n"
+# "POT-Creation-Date: 2005-11-09 12:01-0700\n"
+# "PO-Revision-Date: 2005-11-09 12:01-0700\n"
+# "Last-Translator: Automatically generated\n"
+# "Language-Team: none\n"
+# "MIME-Version: 1.0\n"
+# "Content-Type: text/plain; charset=UTF-8\n"
+# "Content-Transfer-Encoding: 8bit\n"
+# "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: src/LinuxClient/application/iFolderApplication.cs:377
 msgid "The iFolder is full.\n\nClick <a href=\"ShowSyncLog\">here</a> to view the Synchronization Log."
 msgstr "Określony folder iFolder jest pełny.\n\nKliknij <a href=\"ShowSyncLog\">tutaj</a>, aby wyświetlić dziennik synchronizacji."
@@ -140,7 +141,7 @@ msgstr "0"
 #: src/LinuxClient/library/AccountDialog.cs:201
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:195
 msgid "Quota:"
-msgstr "Przydział: "
+msgstr "Przydział:"
 
 #: src/LinuxClient/library/AccountDialog.cs:209
 #: src/LinuxClient/library/AccountDialog.cs:221
@@ -157,12 +158,12 @@ msgstr "MB"
 #: src/LinuxClient/library/AccountDialog.cs:213
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:394
 msgid "Used:"
-msgstr "Używane: "
+msgstr "Używane:"
 
 #: src/LinuxClient/library/AccountDialog.cs:225
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:412
 msgid "Available:"
-msgstr "Dostępny: "
+msgstr "Dostępny:"
 
 #: src/LinuxClient/library/AccountDialog.cs:258
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:441
@@ -217,7 +218,7 @@ msgstr "Konfiguruj iFolder: "
 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:78
 msgid "Details:"
-msgstr "Szczegóły: "
+msgstr "Szczegóły:"
 
 #: src/LinuxClient/library/iFolderAcceptDialog.cs:88
 #, csharp-format
@@ -305,7 +306,7 @@ msgstr "Ten iFolder zawiera konflikty."
 #: src/LinuxClient/library/iFolderConflictDialog.cs:350
 #: src/LinuxClient/library/iFolderPropSettingsPage.cs:350
 msgid "Location:"
-msgstr "Położenie: "
+msgstr "Położenie:"
 
 #: src/LinuxClient/library/iFolderConflictDialog.cs:380
 msgid "Local Version"
@@ -1295,7 +1296,7 @@ msgstr "Wylogowany"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:440
 msgid "Disabled"
-msgstr "Wyłączone "
+msgstr "Wyłączone"
 
 #: src/LinuxClient/library/PrefsAccountsPage.cs:582
 #: src/LinuxClient/library/PrefsAccountsPage.cs:1320
@@ -2150,7 +2151,7 @@ msgid "iFolder Migration Assistant"
 msgstr "Asystent migracji folderu programu iFolder"
 
 msgid "Migrate the iFolder "
-msgstr "Migruj iFolder"
+msgstr "Migruj iFolder "
 
 msgid "Welcome to iFolder Migration Assistant.\nThe next few screens will let you,\nmigrate your data to iFolder 3.x.\n\nClick \"Forward\" to continue."
 msgstr "Witamy w Asystencie migracji folderu programu iFolder.\nInstrukcje na następnych ekranach umożliwią\nmigrację danych do programu iFolder 3.x.\n\nKliknij przycisk Dalej, aby kontynuować."
@@ -2459,7 +2460,7 @@ msgid "Action"
 msgstr "Czynność"
 
 msgid ":"
-msgstr ": "
+msgstr ":"
 
 msgid "/"
 msgstr "/"
@@ -2627,7 +2628,7 @@ msgid "User not found in simias."
 msgstr "Nie znaleziono użytkownika w repozytorium simias."
 
 msgid "Could not change password, "
-msgstr "Nie można zmienić hasła."
+msgstr "Nie można zmienić hasła. "
 
 msgid "Change password"
 msgstr "Zmień hasło"
@@ -2708,7 +2709,7 @@ msgid "List View"
 msgstr "Widok listy"
 
 msgid "Name: {0}"
-msgstr "Nazwa: {0} "
+msgstr "Nazwa: {0}"
 
 msgid "Owner: {0}"
 msgstr "Właściciel: {0}"
@@ -2717,7 +2718,7 @@ msgid "Access: {0}"
 msgstr "Dostęp: {0}"
 
 msgid "Server: {0}"
-msgstr "Serwer: {0} "
+msgstr "Serwer: {0}"
 
 msgid "Account: {0}"
 msgstr "Konto: {0}"
@@ -2994,4 +2995,10 @@ msgstr "Ustawienia"
 
 msgid "Display _Notification"
 msgstr "_Wyświetl powiadomienie"
+
+msgid "Enabled"
+msgstr "Włączone"
+
+msgid " All rights reserved."
+msgstr " Wszelkie prawa zastrzeżone."
 
