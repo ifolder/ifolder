@@ -579,12 +579,15 @@ namespace Novell.iFolder.Install
                             // exists.  It will be launched to run/control the
                             // installation.
                             string installScriptPath = Path.Combine(downloadDir, "install-ifolder.sh");
+downloadDir= downloadDir;
                             if (File.Exists(installScriptPath))
                             {
                                 Process installProcess = new Process();
 
                                 installProcess.StartInfo.FileName = "sh";
+installScriptPath = "\""+ installScriptPath+ "\"";
                                 installProcess.StartInfo.WorkingDirectory = downloadDir;
+
                                 installProcess.StartInfo.Arguments =
                                     string.Format("{0} {1}", installScriptPath, downloadDir);
                                 installProcess.StartInfo.UseShellExecute = true;
