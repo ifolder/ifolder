@@ -20,14 +20,22 @@
 Name:           ifolder3
 
 %if %suse_version < 1110
-BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ novell-ifolder-libflaim novell-ifolder-libflaim-devel glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ 
+BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ novell-ifolder-libflaim novell-ifolder-libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ 
 %else
 %ifarch         x86_64
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+BuildRequires:  aspell-en bison cairo cairo-devel libstdc++33-32bit gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias  xsp gcc-c++ gnome-sharp2 gconf-sharp2
 %else
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33 glitz-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ gnome-sharp2 gconf-sharp2
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33 gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias   xsp gcc-c++ gnome-sharp2 gconf-sharp2
 %endif
 %endif
+
+%if %{suse_version} > 1120
+BuildRequires:  simias-devel
+%endif
+%if %{suse_version} < 1140
+BuildRequires:  glitz-devel
+%endif
+
 
 #suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
 #From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
@@ -63,12 +71,27 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 The iFolder Project is a project focused on file sharing and
 collaboration, released under the GPL and supporting the iFolder 3
 protocol from Novell.
-
-
-
+ 
+%if %{suse_version} > 1120
+ 
+%package devel
+License:        GPLv2
+Summary:        Development files for ifolder
+Group:          Development/Libraries/C and C++
+Requires:       %{name} = %{version}
+Requires:       simias-devel
+ 
+%description devel
+Development files for iFolder.  The iFolder Project is a project
+focused on file sharing and collaboration, released under the GPL and
+supporting the iFolder 3 protocol from Novell.
+ 
+%endif
+  
+ 
 %prep
 export BUILDNUM=%{buildnum}
-%setup -n %{name}
+%setup -q -n %{name}
 #=============================================================================
 
 %build
@@ -137,6 +160,14 @@ ldconfig
 /usr/bin/ifolder
 /usr/share/applications/ifolder.desktop
 
+%if %{suse_version} > 1120
+ 
+%files devel
+%defattr(644,root,root, 755)
+%endif
+%dir %{prefix}/include/ifolder3
+%{prefix}/include/ifolder3/*
+%attr(755,root,root) %{prefix}/%_lib/libifolderclient.so
 %changelog -n ifolder3
 * Tue Feb 06 2007 - ro@suse.de
 - rebuild tools/gsoap utils (again)
@@ -342,3 +373,5 @@ ldconfig
 - added libicu26 to neededforbuild
 * Wed May 26 2004 - clahey@suse.de
 - Initial import.
+
+
