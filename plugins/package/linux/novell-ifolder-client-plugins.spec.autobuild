@@ -22,11 +22,15 @@ Name:           novell-ifolder-client-plugins
 BuildRequires:  aspell-en cairo cairo-devel compat-libstdc++ glitz-devel novell-ifolder-libflaim novell-ifolder-libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 e2fsprogs-devel
 %else
 %ifarch         x86_64
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33-32bit  libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
 %else
-BuildRequires:  aspell-en cairo cairo-devel libstdc++33 glitz-devel libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
+BuildRequires:  aspell-en cairo cairo-devel libstdc++33  libflaim libflaim-devel gnutls-devel gtk-sharp2 gtk-sharp2-complete gtk2 gtk2-devel libglade2-devel libgnomeprintui-devel libgnomeui-devel libpng-devel libwnck-devel log4net mDNSResponder mono-core mono-data mono-devel mono-web pango pango-devel simias xsp gcc-c++ simias ifolder3 libflaim-devel e2fsprogs-devel
 %endif
 %endif
+
+%if %{suse_version} <  1140  
+BuildRequires:  glitz-devel  
+%endif 
 
 #suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
 #From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
@@ -89,3 +93,4 @@ make DESTDIR=$RPM_BUILD_ROOT install
 %{prefix}/share/plugins/COPYING
 
 %changelog -n ifolder3
+
