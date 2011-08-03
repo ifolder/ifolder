@@ -20,11 +20,16 @@
 BuildRequires: aspell-en compat-libstdc++ gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel
 %else
 %ifarch         x86_64
-BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
+BuildRequires: aspell-en libstdc++33-32bit libstdc++33-devel-32bit gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel 
 %else
-BuildRequires: aspell-en libstdc++33 libstdc++33-devel gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel
+BuildRequires: aspell-en libstdc++33 libstdc++33-devel gnutls-devel gtk-sharp2-complete ifolder3 intltool libgnomeprintui-devel libwnck-devel nautilus-devel perl-XML-Parser mDNSResponder update-desktop-files gconf2 gconf2-devel gnome-vfs2 gnome-vfs2-devel 
 %endif
 %endif
+
+
+%if %{suse_version} >1120  
+BuildRequires:  simias-devel  
+%endif 
 
 #suse_version determines the suse version 1110 is equivalent to 11.1 and sle11 , 1100 is 11.0.
 #From suse 11.1 compat-libstdc++ package is split in to libstdc++33 for 32 bit and libstdc++33-32bit for 64 bit architecture.
@@ -153,3 +158,4 @@ echo "Restart the system before you start using iFolder"
 - fix file list
 * Wed Feb 16 2005 - nadvornik@suse.cz
 - new package
+
