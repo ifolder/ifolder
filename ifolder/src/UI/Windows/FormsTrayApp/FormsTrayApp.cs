@@ -1949,8 +1949,8 @@ namespace Novell.FormsTrayApp
 				}
 				else if (ifolderUser != null)
 				{
-					if (Preferences.NotifyJoinEnabled)
-					{
+                    //same flag NotifyShareEnabled is use to control both share and join.
+                    if (Preferences.NotifyShareEnabled)					{
 						ifolderFromNotify = ifolder;
 						string message = string.Format(resourceManager.GetString("newMemberMessage"), 
 							(ifolderUser.FN != null) && !ifolderUser.FN.Equals(string.Empty) ? ifolderUser.FN : ifolderUser.Name, 

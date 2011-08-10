@@ -1779,13 +1779,13 @@ namespace Novell.iFolder.Web
 				if(node != null)
 				{
 					Domain domain = store.GetDomain( col.Domain );
-					if (col.IsBaseType(NodeTypes.MemberType))
+					if (node.IsBaseType(NodeTypes.MemberType))
 					{
 						ifolderUser = new iFolderUser( domain, new Member( node ) );
 					}
 					else if (col.IsType(typeof( Subscription ).Name))
 					{
-						ifolderUser = new iFolderUser( new Subscription( node ) );
+                        ifolderUser = new iFolderUser( new Subscription( node ) );
 					}
 				}
 			}
