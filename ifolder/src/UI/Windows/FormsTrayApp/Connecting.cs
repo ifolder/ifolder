@@ -1287,7 +1287,7 @@ namespace Novell.FormsTrayApp
 			else
 			{
 				// Set any proxy information for this domain.
-				IWebProxy iwp = GlobalProxySelection.Select;
+				IWebProxy iwp = WebRequest.GetSystemWebProxy();
 				if ( !iwp.IsBypassed( ubHost.Uri ) )
 				{
 					string proxyUser = null;
