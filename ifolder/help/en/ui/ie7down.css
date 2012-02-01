@@ -1,0 +1,9 @@
+	p { margin: 9px 0px 5px 0px; padding: 0px 0px 0px 0px; }
+ 	p.listitem { margin: 10px 0px 10px 0px; padding: 0px 0px 0px 0px; }
+	div.note p { margin: 5px 0px 5px 0px; padding: 0px 0px 0px 0px; }
+	div.note { margin-top: 12px; }
+	div.itemizedlist { margin-top: -5px; }
+	div.procedure .title,div.itemizedlist .title {margin-bottom: -8px;}
+	ul.listbullet  {list-style-image : none; list-style-type: disc;}
+
+	

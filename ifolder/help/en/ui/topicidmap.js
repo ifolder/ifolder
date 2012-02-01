@@ -1,5 +1,6 @@
 var tIdMap = new Object();
 tIdMap['bookinfo'] = 'bookinfo.html';
+tIdMap['preface'] = 'bookinfo.html#preface';
 tIdMap['overview'] = 'overview.html';
 tIdMap['benefits'] = 'benefits.html';
 tIdMap['bawqltp'] = 'bawqltp.html';

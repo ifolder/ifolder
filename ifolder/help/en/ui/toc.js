@@ -170,7 +170,7 @@ this.isSelected=_39;
 var s=dom_getEl(document,"tocentry"+this.thisIndex);
 if(s&&s.style){
 if(_39){
-s.style.color="#cc0000";
+s.style.color=(CFG_HELP_TYPE=="tablethtml")?"#a40000":"#cc0000";
 s.style.fontWeight="bold";
 }else{
 s.style.color="#333333";
@@ -332,24 +332,23 @@ var _5c=true;
 var _5d=1;
 var _5e=dom_getEl(document,"tocTop");
 var _5f=_5e?_5e.offsetHeight:0;
-var _60=null;
-var s=null;
+var _60=(CFG_HELP_TYPE=="tablethtml")?9:0;
+var _61=null;
 while(_5b>0){
-_60=_5a.getDomNode();
-s=_60.style;
+_61=_5a.getDomNode();
 if(_5c){
 if(CFG_RTL_TEXT==true){
-s.right=(_5a.depth*_58)+"px";
+_61.style.right=(_5a.depth*_58)+_60+"px";
 }else{
-s.left=(_5a.depth*_58)+"px";
+_61.style.left=(_5a.depth*_58)+_60+"px";
 }
-s.top=_5f+"px";
-s.visibility="visible";
-_5f+=getDHTMLObjHeight(_60);
+_61.style.top=_5f+"px";
+_61.style.visibility="visible";
+_5f+=getDHTMLObjHeight(_61);
 _5d=_5b;
 }else{
-s.visibility="hidden";
-s.top="0px";
+_61.style.visibility="hidden";
+_61.style.top="0px";
 }
 if(_5a.firstChild!=null){
 _5c=(_5a.isopen==true)&&_5c;
@@ -673,28 +672,44 @@ return true;
 }
 function initOutlineIcons(_be){
 var _bf=18;
-var ip="images/";
-_be.add("iconPlusTop",ip+"plustop.gif",_bf,_bf);
-_be.add("iconPlus",ip+"plus.gif",_bf,_bf);
-_be.add("iconPlusBottom",ip+"plusbottom.gif",_bf,_bf);
-_be.add("iconPlusOnly",ip+"plusonly.gif",_bf,_bf);
-_be.add("iconMinusTop",ip+"minustop.gif",_bf,_bf);
-_be.add("iconMinus",ip+"minus.gif",_bf,_bf);
-_be.add("iconMinusBottom",ip+"minusbottom.gif",_bf,_bf);
-_be.add("iconMinusOnly",ip+"minusonly.gif",_bf,_bf);
-_be.add("iconLine",ip+"line.gif",_bf,_bf);
-_be.add("iconBlank",ip+"blank.gif",_bf,_bf);
-_be.add("iconJoinTop",ip+"jointop.gif",_bf,_bf);
-_be.add("iconJoin",ip+"join.gif",_bf,_bf);
-_be.add("iconJoinBottom",ip+"joinbottom.gif",_bf,_bf);
-_be.add("Folder",ip+"folder.gif",_bf,_bf);
-_be.add("FolderMouseOver",ip+"folder_mo.gif",_bf,_bf);
-_be.add("FolderExpanded",ip+"folder_ex.gif",_bf,_bf);
-_be.add("FolderExpandedMouseOver",ip+"folder_ex_mo.gif",_bf,_bf);
-_be.add("FolderExpandedSelected",ip+"folder_ex_sel.gif",_bf,_bf);
-_be.add("Document",ip+"doc.gif",_bf,_bf);
-_be.add("DocumentMouseOver",ip+"doc_mo.gif",_bf,_bf);
-_be.add("DocumentSelected",ip+"doc_sel.gif",_bf,_bf);
+var ip=CFG_BOOKUI2SHAREDUI_RELPATH+"images/";
+var _c1=(CFG_HELP_TYPE=="tablethtml")?"t":"";
+_be.add("iconPlusTop",ip+"plustop.png",_bf,_bf);
+_be.add("iconPlus",ip+_c1+"plus.png",_bf,_bf);
+_be.add("iconPlusBottom",ip+_c1+"plusbottom.png",_bf,_bf);
+_be.add("iconPlusOnly",ip+"plusonly.png",_bf,_bf);
+_be.add("iconMinusTop",ip+"minustop.png",_bf,_bf);
+_be.add("iconMinus",ip+_c1+"minus.png",_bf,_bf);
+_be.add("iconMinusBottom",ip+"minusbottom.png",_bf,_bf);
+_be.add("iconMinusOnly",ip+_c1+"minusonly.png",_bf,_bf);
+_be.add("iconLine",ip+"line.png",_bf,_bf);
+_be.add("iconBlank",ip+"blank.png",_bf,_bf);
+_be.add("iconJoinTop",ip+"jointop.png",_bf,_bf);
+_be.add("iconJoin",ip+"join.png",_bf,_bf);
+_be.add("iconJoinBottom",ip+"joinbottom.png",_bf,_bf);
+_be.add("Folder",ip+_c1+"folder.png",_bf,_bf);
+_be.add("FolderMouseOver",ip+_c1+"folder_mo.png",_bf,_bf);
+_be.add("FolderExpanded",ip+_c1+"folder_ex.png",_bf,_bf);
+_be.add("FolderExpandedMouseOver",ip+_c1+"folder_ex_mo.png",_bf,_bf);
+_be.add("FolderExpandedSelected",ip+_c1+"folder_ex_sel.png",_bf,_bf);
+_be.add("Document",ip+_c1+"doc.png",_bf,_bf);
+_be.add("DocumentMouseOver",ip+_c1+"doc_mo.png",_bf,_bf);
+_be.add("DocumentSelected",ip+_c1+"doc_sel.png",_bf,_bf);
+}
+function TocUpdate(_c2){
+var _c3=false;
+var _c4=top.frames[theToc.contentFrame];
+if(_c4&&typeof (_c4.thisId)!="undefined"){
+_c3=theToc.load(_c4.thisId,_c4.parentId);
+if(_c3==true){
+theToc.syncWithPage(_c4.thisId);
+}else{
+if(typeof _c2=="undefined"){
+dom_getEl(document,"tocContent").innerHTML="<div class='entry0'>Contents not available.</div>"+"<div class='entry0'>Unable to load xml content.</div>";
+}
+}
+}
+return _c3;
 }
 function TocUpdateFromTopic(){
 if(!theToc){
@@ -702,13 +717,8 @@ setTimeout("TocUpdateFromTopic()",200);
 }
 if(theToc.isVisible){
 if(!theToc.isBusy){
-var _c1=top.frames[theToc.contentFrame];
-if(_c1){
-if(theToc.load(_c1.thisId,_c1.parentId)==true){
-theToc.syncWithPage(_c1.thisId);
-}else{
-dom_getEl(document,"tocContent").innerHTML="<div class='entry0'>Contents not available.</div>"+"<div class='entry0'>Unable to load xml content.</div>";
-}
+if(TocUpdate(false)==false){
+setTimeout("TocUpdate()",0);
 }
 }else{
 setTimeout("TocUpdateFromTopic()",200);

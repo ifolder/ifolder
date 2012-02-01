@@ -9,9 +9,11 @@ body {
 }
 
 /* headings */
-	h1 {font-size: 125%; font-weight: bold; color: #000000;}
-	h2,h3,h4,h5,h6 {font-size: 100%; font-weight: bold; color: #000000; margin-bottom:-6px;}
-
+	h1,h2,h3,h4,h5,h6 {font-weight: bold; color: #000000;}
+	h1 {font-size: 150%;}
+	h2 {font-size: 120%;}
+	h3,h4,h5,h6 {font-size: 100%; margin-bottom:-1px;}
+	
 	/* single file heading adjustments */
 	.singlefile h1 {font-size: 185%; color: #CC0000; margin-top:10px;}
 	.singlefile h2 {font-size: 140%; margin-top:35px;}
@@ -19,8 +21,7 @@ body {
 
 /* sections */
 	div.sect1 { margin-bottom: 10pt; }
-	div.sect2 { }
-	div.sect3, div.sect4, div.sect5, div.sect6 {margin-left:18px;}
+	div.sect3,div.sect4,div.sect5,div.sect6 {margin-left:18px;}
 	
 /* msgset */
 	div.msgexplan {margin: 0px 0px 7px 0px;}
@@ -30,44 +31,52 @@ body {
 	#tocref { display:inline; float:right; }
 
 /* links */
-	a {color:#0000cc;}
+	a {text-decoration:none; color:#0000cc;}
 	a:hover {color:#3366ff;}
 	a:visited {color:#993333;}
 	li.listitem a:hover {color:#3366ff;}
-	a.ulink a:hover {text-decoration:none; color:#3366ff;}
+	a.ulink a:hover {color:#3366ff;}
 
+	.breadcrumbs a:link, .breadcrumbs a:visited, .breadcrumbs a:active { color: gray; font-size: 100%;}
+	.breadcrumbs a:hover { color: #0000cc; font-size: 100%;}  
   .nav { vertical-align:middle; white-space:nowrap; }
 	.nav img { vertical-align:middle; border: none; padding:1px 3px 1px 3px; }
-/*	.nav img { vertical-align:middle; border: none; height:18px; width:18px; padding:1px 3px 1px 3px; } */
 	.nav a:link,
 	.nav a:visited,
-	.nav a:active { vertical-align: middle; font-weight: bold; color: gray; text-decoration: none; font-size: 100%;}
-	.nav a:hover { vertical-align: middle; font-weight: bold; color: #999999; text-decoration: none; font-size: 100%;}  
+	.nav a:active { vertical-align: middle; color: gray; font-size: 100%;}
+	.nav a:hover { vertical-align: middle; color: #0000cc; font-size: 100%;}  
+
 
 /* paragraphs */	
 	p.para {font-weight: normal; color: #000000;}
-/*	p.title {margin:10px 0 4px 0;} */
 	p.msgtext {font-style: italic; font-weight: normal}
 	p.trademark {font-size: 75%; font-weight: normal; font-style: italic;}
-	/*p.entry {font-size: 95%; font-weight: normal; color: #000000; margin-top: -5px;}
-	p.table {font-weight: bold;}*/
-	pre.screen {font-family: monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 5px;font-size: 100%;color: #000000;}
+	pre {font-family: Courier New, monospace; margin: 10px 5px 10px 0px; padding: 1px 0px 3px 0px;font-size: 100%;font-weight: normal;}
+	pre.compact {font-size: 95%;}
+	pre.compact2,pre.screenshot {font-size: 88%;}
+	pre.screenshot { border-top:1px solid #000000; border-bottom:1px solid #000000; }
+	
 	p.glossterm {font-weight: bold;}
 	div.glossdef {margin:-10pt 0 0 0;}
-	
+
 /* admonitions */	
 	div.note,
 	div.tip,
 	div.warning,
-	div.important {margin: 12px 0px 5px 0px; padding: 0px 15px 0px 15px; border-bottom: 1px solid #999999; border-top: 1px solid #999999;}
+	div.important {margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; border-bottom: 1px solid #999999; border-top: 1px solid #999999;}
+
+	div.note p:first-child,div.tip p:first-child,div.warning p:first-child,div.important p:first-child {margin-top: 5px;}
+	div.note p:last-child,div.tip p:last-child,div.warning p:last-child,div.important p:last-child {margin-bottom: 4px;}
+	table div.note,table div.tip, table div.warning, table div.important { border-bottom: none; border-top: none; }
 
 	div.note p em.title,
 	div.tip p em.title,
 	div.warning p em.title,
-	div.important p em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;font-size:95%;}
+	div.important p em.title {margin: 0px 7px 0px 0px; font-weight: bold; font-style: normal;}
 	div.warning em.title {color: #cc0000}
 
 /* figures and images */	
+	img { max-width: 100%; }
 	img.inline {vertical-align: middle;}
 	img {line-height: normal;}
 	br.img {line-height: normal;}
@@ -81,35 +90,24 @@ body {
 
 	
 /* tables */
+	table {border-collapse:collapse;}
 	div.table p.title em.num {font-size: 95%; font-style: normal; font-weight: bold; color: #000000; margin:0 5px 0px 0;}
-	td {font-size: 95%; font-weight: normal; color: #000000;}
 	div.table p.title {font-size: 95%; font-style: normal; font-weight: normal; color: #000000;}
-	div.formalpara table.topbot-lines {margin:0px 0 16px 0;}
-	div.informaltable table.topbot-lines {margin:10px 0 7px 0;}
+	div.informaltable table {margin:10px 0 7px 0;}
 
-	table.topbot-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
-	table.topbot-lines tr.headerrow th {border-bottom:1px solid #000000; border-top:none; padding: 4px 4px 4px 4px;}
-	table.topbot-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; margin:1px 0 0 0;}
-	table.topbot-lines tr.evenrow {background-color: white}
-	table.topbot-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px;}
-	table.topbot-lines tr.oddrow {background-color: #f8f8f8}
-	table.topbot-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #f8f8f8}
-
-	table.all-lines {border-spacing: 0px; border-top:2px solid #000000; border-bottom:1px solid #606060;}
-	table.all-lines tr.headerrow th {border-bottom:1px solid #000000; border-top:none; padding: 4px 4px 4px 4px;}
-	table.all-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; margin:1px 0 0 0;}
-	table.all-lines tr.evenrow {background-color: white}
-	table.all-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px;}
-	table.all-lines tr.oddrow {background-color: #f8f8f8}
-	table.all-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: #f8f8f8}
-
-	table.no-lines tr.headerrow {background-color: white }
-	table.no-lines tr.headerrow th p.para {font-size: 95%; font-weight: bold; color: #404040; margin:1pt 0 0 0; background-color: white }
-	table.no-lines tr.evenrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: white }
-	table.no-lines tr.evenrow td {background-color: white}
-	table.no-lines tr.oddrow td p.para {font-size: 95%; font-weight: normal; color: #000000; margin:1pt 0 2pt 0; padding: 4px 8px 4px 6px; background-color: white}
-	table.no-lines tr.oddrow td {background-color: white}
+	table tr.headerrow th {padding: 6px 4px 5px 0px;}
+	table tr td {padding: 0px 4px 0px 0px; }
+	table tr td p:first-child {margin-top: 6px;}
+	table tr td p:last-child {margin-bottom: 6px;}
 	
+	table tr.headerrow th p.para {font-weight: bold; margin:1px 0 0 0;}
+	table.allseps, table.rowseps, table.topbot {border-spacing: 0px; border-top:2px solid #000000; border-bottom:2px solid #606060;}
+	table.allseps tr.headerrow th,table.rowseps tr.headerrow th,table.topbot tr.headerrow th {border-bottom:2px solid #000000;}
+	table.allseps tr.headerrow th {border-left:1px solid #000000; padding-left: 5px;}
+	table.allseps tr td {border-bottom:1px solid #000000; border-left:1px solid #000000; padding-left: 5px;}
+	table.allseps tr td:first-child,table.allseps tr th:first-child {border-left:0;}
+	table.rowseps tr td {border-bottom:1px solid #000000;}
+
 	table.calloutlist td {margin:0px; padding: 0px 6px 0px 0px;}
 	table.calloutlist p {margin: 5px 0px 5px 0px; padding: 0px;}
 	
@@ -120,9 +118,11 @@ body {
 	
 /* lists,procedures */
 	div.itemizedlist, div.orderedlist, div.procedure, div.substeps {margin-bottom:15px; font-weight: normal;}
-	ul.listbullet,ul.listcheck,ol {margin-left: 28px; padding-left: 0pt;}
-	ul.listcheck  {list-style-image : url("images/checkbox.gif"); list-style-type: square;}
-	ul.listbullet {list-style-type: disc; list-style-image : none;}
+	ul,ol {margin-left: 28px; padding-left: 0pt;}
+	ul.listbox  {list-style-image : url("images/checkbox.png"); list-style-type: square;}
+	ul.listcheck  {list-style-image : url("images/checkedbox.png"); list-style-type: square;}
+	ul.listbullet  {list-style-image : url("images/diamond.png"); list-style-type: square;}
+	ul.listdash  {list-style-image : url("images/dash.png"); list-style-type: square;}
 	ul.simplelist {margin-left: 0px; list-style-type: none; list-style-image : none;padding-left: 0pt;}
 	div.orderedlist div.orderedlist > ol {list-style-type: lower-alpha;}
 	div.orderedlist div.orderedlist div.orderedlist > ol {list-style-type: lower-roman;}
@@ -132,20 +132,22 @@ body {
 	li {margin: 5px 0 4px 0;}
 	li.member {margin:3px 0px 0px 10px;text-indent:-10px; font-weight: normal;}
 	li.step {font-weight: bold;color: #000000;}
-	div.procedure h1.title {font-weight: bold; color: #000000; margin-top: 22px; margin-bottom: -4pt;}
-
+	div.procedure .title {font-size: 100%; font-weight: bold; color: #000000; margin-top: 16px;  margin-bottom: 0px;}
+	div.itemizedlist .title {font-size: 100%; font-weight: bold; color: #000000; margin-top: 16px;  margin-bottom: 0px;}
+	
 /* italic inlines */	
 	em {font-style: italic}
 	span.citetitle,span.guimenu,span.replaceable {font-style: italic;}
-	tt,span.command,span.literal,span.filename {font-family: monospace; font-size: 100%;}
+	tt,span.command,span.literal,span.filename {font-family: Courier New, monospace; font-size: 100%;}
 	
 /* bold inlines */	
 	em.refclass,em.glossterm,em.option {font-weight: bold}
-	span.strongemphasis {font-weight: bold;}
+	span.strong, span.bold, span.windowitem {font-weight: bold;}
 
 /* other inlines */	
+	span.emphasis  {font-style: italic}
+	span.strongemphasis,span.listif {font-weight: bold; font-style: italic}
 	em.msgtext {font-weight: bold; font-style: italic}
-	span.emphasis {font-style: italic}
 
 /* superscript and subscript */	
 	span.subscript,span.superscript {font-size: 80%;}
