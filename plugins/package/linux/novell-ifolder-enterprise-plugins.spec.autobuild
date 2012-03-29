@@ -40,10 +40,10 @@ Url:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2
 Group:          Productivity/Networking/Novell
 Autoreqprov:    on
-Requires:       ifolder3-enterprise >= 3.9.0
+Requires:       ifolder3-enterprise >= 3.9.1
 Requires:       mono-addon-core >= 2.6.7
 #Obsoletes:      %{name} < %{version}
-Version:        3.9.0.@@BUILDNUM@@.1
+Version:        3.9.1.@@BUILDNUM@@.1
 Release:        2
 Summary:        Plugins adding additional capability to iFolder 3 enterprise server
 Source:         novell-ifolder-enterprise-plugins.tar.gz
