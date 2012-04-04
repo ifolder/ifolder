@@ -8,7 +8,7 @@ iFolderClient_RESOURCES =
 iFolderClient_FLAGS = $(CSC_EXEFLAG)
 #iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll
 iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(top_srcdir)/src/common/iFolder $(srcdir)/../library 
-iFolderClient_LIBS = System.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll  
+iFolderClient_LIBS = System.dll System.Web.Services.dll System.Drawing.dll System.Data.dll Novell.iFolder.dll TrayIcon.dll Novell.iFolder.UI.gtk.dll Mono.Posix.dll  
 #iFolderClient_LIBPATH = $(srcdir)/../../TrayIcon $(srcdir)/../../iFolder $(srcdir)/../library $(srcdir)/../NetworkManager-sharp
 
 EXTRA_DIST = $(iFolderClient_CSFILES) ifolder.in ifolder.desktop.in AssemblyInfo.cs.in

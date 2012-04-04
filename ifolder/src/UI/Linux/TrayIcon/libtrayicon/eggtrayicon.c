@@ -26,7 +26,7 @@
 #include <libintl.h>
 
 #include "eggtrayicon.h"
-
+#include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <X11/Xatom.h>
 
@@ -234,8 +234,13 @@ egg_tray_icon_unrealize (GtkWidget *widget)
     {
       GdkWindow *gdkwin;
 
+#if GTK_CHECK_VERSION(2, 24, 0)
+      gdkwin = gdk_x11_window_lookup_for_display (gtk_widget_get_display (widget),
+                                              icon->manager_window);
+#else
       gdkwin = gdk_window_lookup_for_display (gtk_widget_get_display (widget),
                                               icon->manager_window);
+#endif
 
       gdk_window_remove_filter (gdkwin, egg_tray_icon_manager_filter, icon);
     }
@@ -298,10 +303,13 @@ egg_tray_icon_update_manager_window (EggTrayIcon *icon)
   if (icon->manager_window != None)
     {
       GdkWindow *gdkwin;
-
+#if GTK_CHECK_VERSION(2, 24, 0)
+	gdkwin = gdk_x11_window_lookup_for_display (gtk_widget_get_display (GTK_WIDGET (icon)),
+					      icon->manager_window);
+#else
       gdkwin = gdk_window_lookup_for_display (gtk_widget_get_display (GTK_WIDGET (icon)),
 					      icon->manager_window);
-      
+#endif 
       gdk_window_remove_filter (gdkwin, egg_tray_icon_manager_filter, icon);
     }
   
@@ -320,10 +328,13 @@ egg_tray_icon_update_manager_window (EggTrayIcon *icon)
   if (icon->manager_window != None)
     {
       GdkWindow *gdkwin;
-
+#if GTK_CHECK_VERSION(2, 24, 0)
+	gdkwin = gdk_x11_window_lookup_for_display (gtk_widget_get_display (GTK_WIDGET (icon)),
+					      icon->manager_window);
+#else
       gdkwin = gdk_window_lookup_for_display (gtk_widget_get_display (GTK_WIDGET (icon)),
 					      icon->manager_window);
-      
+#endif 
       gdk_window_add_filter (gdkwin, egg_tray_icon_manager_filter, icon);
 
       /* Send a request that we'd like to dock */
