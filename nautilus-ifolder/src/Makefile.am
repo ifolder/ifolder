@@ -16,7 +16,7 @@ INCLUDES =						\
 	$(NAUTILUS_CFLAGS)						\
 	$(SIMIAS_CLIENT_C_CFLAGS)	\
 	$(IFOLDER_C_CFLAGS)	
-
+EXTRA_RESOURCE = System.Web.Services.dll
 EXTRA_DIST = nautilus-ifolder.h nautilus-ifolder.cs emblem-ifolder.icon emblem-ifolder.png ifolder-folder.png shareWith16.png AssemblyInfo.cs.in
 
 AssemblyInfo.cs: $(srcdir)/AssemblyInfo.cs.in Makefile 
@@ -44,7 +44,7 @@ libnautilus_ifolder_la_LIBADD  = $(NAUTILUS_LIBS) $(GNOME_VFS2_LIBS)
 libnautilus_ifolder_la_DEPENDENCIES = nautilus-ifolder.exe
 
 nautilus-ifolder.exe: nautilus-ifolder.cs AssemblyInfo.cs
-	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) nautilus-ifolder.cs AssemblyInfo.cs
+	$(CSC) /out:$@ $(CSCFLAGS) $(GTK_SHARP_LIBS) $(GNOME_SHARP_LIBS) $(SIMIAS_CLIENT_LIBS) $(IFOLDER_LIBS) $(EXTRA_RESOURCE:%=/r:%) nautilus-ifolder.cs AssemblyInfo.cs
 
 install-exec-local: libnautilus-ifolder.la
 	$(mkinstalldirs) $(INSTALL_EMBLEM_PATH)

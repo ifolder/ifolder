@@ -1574,7 +1574,7 @@ show_ifolder_created_dialog (void *user_data)
 	gtk_container_add (GTK_CONTAINER (cb_alignment), check_button);
 	gtk_box_pack_start (GTK_BOX (vbox), cb_alignment, TRUE, TRUE, 0);
 
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (creation_dialog)->vbox),
+	gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area(GTK_DIALOG (creation_dialog))),
 					   vbox);
 					   
 	/* Hook up the signal callbacks for the buttons */
@@ -1858,7 +1858,7 @@ create_ifolder_callback (NautilusMenuItem *item, gpointer user_data)
 
 	vbox = gtk_vbox_new(FALSE, 10);
 	gtk_container_border_width(GTK_CONTAINER(vbox), 10);
-	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
+	gtk_container_add(GTK_CONTAINER(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), vbox);
 
 	/* Domain drop-down list */
 	domain_label = gtk_label_new(NULL);

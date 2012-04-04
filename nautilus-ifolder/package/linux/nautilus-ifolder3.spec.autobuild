@@ -79,12 +79,13 @@ export BUILDNUM=%{buildnum}
 
 %build
 export BUILDNUM=%{buildnum}
+export CFLAGS="$RPM_OPT_FLAGS"
 %if %suse_version < 1100
 ./autogen.sh --prefix=%{prefix}
 %else
-./autogen.sh --prefix=%{prefix} --with-newnautilus
+./autogen.sh --prefix=%{prefix} --libdir=%{prefix}/%_lib --with-newnautilus --disable-static
 %endif
-make
+make CFLAGS="$RPM_OPT_FLAGS"
 #make dist
 #=============================================================================
 
@@ -114,6 +115,7 @@ echo "Restart the system before you start using iFolder"
 %dir %{gnome_root}/share/nautilus-ifolder3/pixmaps
 %dir %{gnome_root}/share/icons/gnome/48x48
 %dir %{gnome_root}/share/icons/gnome/48x48/emblems
+%{gnome_root}/%_lib/nautilus/%{extension}
 %{gnome_root}/%_lib/nautilus/%{extension}/libnautilus-ifolder*
 %{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.icon
 %{gnome_root}/share/icons/gnome/48x48/emblems/emblem-ifolder.png
