@@ -52,14 +52,14 @@ URL:            http://www.ifolder.com
 License:        GNU General Public License (GPL) v2
 Group:          System/GUI/Other
 Autoreqprov:    on
-Requires:       simias >= 1.9.0
+Requires:       simias >= 1.9.1
 Requires:       gconf-sharp2
 Requires:       gnome-sharp2
 Requires:       gtk-sharp2
 #Requires:       dbus-1-mono
 Requires:       xsp >= 1.2.5 
 #Obsoletes:      %{name} < %{version}
-Version:        3.9.0.@@BUILDNUM@@.0
+Version:        3.9.1.@@BUILDNUM@@.0
 Release:        1
 Summary:        File Sharing and Collaboration Tool
 Vendor:         Novell, Inc.
