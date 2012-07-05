@@ -1650,22 +1650,22 @@ msgid "Encryption"
 msgstr "Šifrování"
 
 msgid "Enter the passphrase"
-msgstr "Zadejte heslo"
+msgstr "Zadejte šifrovací klíč"
 
 msgid "_Passphrase:"
-msgstr "_Heslo:"
+msgstr "Ši_frovací klíč:"
 
 msgid "R_etype the Passphrase:"
-msgstr "Z_novu zadejte heslo:"
+msgstr "Z_novu zadejte šifrovací klíč:"
 
 msgid "_Remember the Passphrase"
-msgstr "_Zapamatovat heslo"
+msgstr "_Zapamatovat šifrovací klíč"
 
 msgid "Select the Passphrase Recovery Agent"
-msgstr "Vyberte agenta pro obnovení hesla"
+msgstr "Vyberte agenta pro obnovení šifrovacího klíče"
 
 msgid "Passphrase Recovery Agents"
-msgstr "Agenti obnovení hesla"
+msgstr "Agenti obnovení šifrovacího klíče"
 
 msgid "Congratulations!"
 msgstr "Blahopřejeme"
@@ -1719,37 +1719,37 @@ msgid "_Finish"
 msgstr "Do_končit"
 
 msgid "Passphrase mismatch"
-msgstr "Heslo nesouhlasí"
+msgstr "Šifrovací klíč nesouhlasí"
 
 msgid "The passphrase and retyped passphrase are not same"
-msgstr "Heslo a opětovně napsané heslo nesouhlasí."
+msgstr "Šifrovací klíč a opětovně napsaný šifrovací klíč nesouhlasí."
 
 msgid "None"
 msgstr "Žádný"
 
 msgid "Error setting the passphrase"
-msgstr "Při nastavování hesla došlo k chybě."
+msgstr "Při nastavování šifrovacího klíče došlo k chybě."
 
 msgid "Unable to change the Passphrase"
-msgstr "Nelze změnit heslo."
+msgstr "Nelze změnit šifrovací klíč."
 
 msgid "PassPhrase Invalid"
-msgstr "Neplatné heslo"
+msgstr "Neplatný šifrovací klíč"
 
 msgid "Invalid PassPhrase"
-msgstr "Neplatné heslo"
+msgstr "Neplatný šifrovací klíč"
 
 msgid "The PassPhrase entered is not valid"
-msgstr "Zadané heslo není platné"
+msgstr "Zadaný šifrovací klíč není platný"
 
 msgid "The Current PassPhrase entered is not valid"
-msgstr "Aktuální zadané heslo není platné"
+msgstr "Aktuálně zadaný šifrovací klíč není platný"
 
 msgid "Unable to set the passphrase"
-msgstr "Nelze nastavit heslo"
+msgstr "Nelze nastavit šifrovací klíč"
 
 msgid "Please enter the passphrase again"
-msgstr "Zadejte heslo znovu"
+msgstr "Zadejte šifrovací klíč znovu"
 
 msgid "gtk-go-back"
 msgstr "gtk-go-back"
@@ -1779,7 +1779,7 @@ msgid "Select a folder..."
 msgstr "Vybrat složku..."
 
 msgid "Passphrase Encryption"
-msgstr "Šifrování heslem"
+msgstr "Šifrování pomocí šifrovacího klíče"
 
 msgid "Regular"
 msgstr "Pravidelný"
@@ -1788,7 +1788,7 @@ msgid "Type"
 msgstr "Typ"
 
 msgid "Unable to reset the passphrase"
-msgstr "Nelze nastavit heslo."
+msgstr "Nelze nastavit šifrovací klíč."
 
 msgid "Unable to remove the account"
 msgstr "Účet nelze odebrat"
@@ -1797,16 +1797,16 @@ msgid "iFolder encountered a problem removing the account.  Please restart iFold
 msgstr "Aplikace iFolder zjistila chybu při odebírání účtu. Restartujte aplikaci iFolder a zkuste to znovu."
 
 msgid "iFolder passphrase"
-msgstr "Heslo složky iFolder"
+msgstr "Šifrovací klíč složky iFolder"
 
 msgid "_Re-type passphrase:"
-msgstr "Znovu zad_ejte heslo:"
+msgstr "Znovu zad_ejte šifrovací klíč:"
 
 msgid "Re-type passphrase:"
-msgstr "Znovu zadejte heslo:"
+msgstr "Znovu zadejte šifrovací klíč:"
 
 msgid "Select Passphrase Recovery Agent"
-msgstr "Vyberte agenta pro obnovení hesla"
+msgstr "Vyberte agenta pro obnovení šifrovacího klíče"
 
 msgid "Recovery Agents"
 msgstr "Agenti pro obnovení"
@@ -1995,13 +1995,13 @@ msgid "_Migrate"
 msgstr "_Migrovat"
 
 msgid "_Forgot Passphrase"
-msgstr "_Zapomenuté heslo"
+msgstr "_Zapomenutý šifrovací klíč"
 
 msgid "Import Decrypted Keys"
 msgstr "Importovat dešifrované klíče"
 
 msgid "Change _Passphrase"
-msgstr "Změnit _přístupovou frázi"
+msgstr "Změnit ši_frovací klíč"
 
 msgid "_Security"
 msgstr "_Zabezpečení"
@@ -2061,19 +2061,19 @@ msgid "No matches found"
 msgstr "Nebyly nalezeny žádné odpovídající položky"
 
 msgid "Invalid passphrase"
-msgstr "Neplatné heslo"
+msgstr "Neplatný šifrovací klíč"
 
 msgid "Passphrase entered is wrong"
-msgstr "Zadané heslo je nesprávné"
+msgstr "Zadaný šifrovací klíč je nesprávný"
 
 msgid "Passphrase Reset"
-msgstr "Heslo obnoveno"
+msgstr "Šifrovací klíč obnoven"
 
 msgid "Successfully changed the passphrase"
-msgstr "Heslo bylo úspěšně změněno"
+msgstr "Šifrovací klíč byl úspěšně změněn"
 
 msgid "Use your new passphrase from now"
-msgstr "Od této chvíle používejte nové heslo"
+msgstr "Od této chvíle používejte nový šifrovací klíč"
 
 msgid "Hide available iFolders"
 msgstr "Skrýt dostupné složky iFolder"
@@ -2124,13 +2124,13 @@ msgid "You should be logged-in to the domain for creating encrypted iFolders."
 msgstr "Chcete-li vytvářet zašifrované složky iFolder, měli byste být přihlášeni k doméně."
 
 msgid "One time passphrase"
-msgstr "Jednorázové heslo"
+msgstr "Jednorázový šifrovací klíč"
 
 msgid "New passphrase"
-msgstr "Nové heslo"
+msgstr "Nový šifrovací klíč"
 
 msgid "Re-type passphrase"
-msgstr "Znovu zadejte heslo"
+msgstr "Znovu zadejte šifrovací klíč"
 
 msgid "iFolder Migration"
 msgstr "Migrace složky iFolder"
@@ -2184,7 +2184,7 @@ msgid "Select Security options"
 msgstr "Vyberte možnosti zabezpečení"
 
 msgid "Passphrase"
-msgstr "Heslo"
+msgstr "Šifrovací klíč"
 
 msgid "Verify and Migrate"
 msgstr "Ověřit a migrovat"
@@ -2235,7 +2235,7 @@ msgid "Create a copy and migrate to iFolder3.x"
 msgstr "Vytvořit kopii a migrovat do složky iFolder3.x"
 
 msgid "Encrypt the iFolder "
-msgstr "Šifrovat složku iFolder "
+msgstr "Šifrovat složku iFolder"
 
 msgid "Regular iFolder"
 msgstr "Bežná složka iFolder"
@@ -2259,28 +2259,28 @@ msgid "Account Name:"
 msgstr "Název účtu:"
 
 msgid "Change Passphrase"
-msgstr "Změnit přístupovou frázi"
+msgstr "Změnit šifrovací klíč"
 
 msgid "Enter passphrase"
-msgstr "Zadat heslo"
+msgstr "Zadat šifrovací klíč"
 
 msgid "Enter new passphrase"
-msgstr "Zadat nové heslo"
+msgstr "Zadat nový šifrovací klíč"
 
 msgid "_Enter passphrase"
-msgstr "Zadejte hesl_o"
+msgstr "Zadejte šifr_ovací klíč"
 
 msgid "Enter new _passphrase"
-msgstr "Zadejte nové _heslo"
+msgstr "Zadejte nový šifrova_cí klíč"
 
 msgid "Reset"
 msgstr "Obnovit"
 
 msgid "_Remember passphrase"
-msgstr "_Pamatovat si heslo"
+msgstr "_Pamatovat si šifrovací klíč"
 
 msgid "Remember passphrase"
-msgstr "Pamatovat si heslo"
+msgstr "Pamatovat si šifrovací klíč"
 
 msgid "iFolder Server Older"
 msgstr "Server iFolder starší"
@@ -2403,31 +2403,31 @@ msgid "To reset the keys, you must be logged in to an account. Log in and try ag
 msgstr "Chcete-li obnovit klíče, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
 
 msgid "For resetting the passphrase the domain should be connected. Log on to the domain and try."
-msgstr "Pro změnu hesla by měla být připojena doména. Přihlaste se k doméně a zkuste to."
+msgstr "Pro změnu šifrovacího klíče by měla být připojena doména. Přihlaste se k doméně a zkuste to."
 
 msgid "To reset the passphrase, you must be logged in to an account. Log in and try again."
-msgstr "Chcete-li obnovit heslo, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
+msgstr "Chcete-li obnovit šifrovací klíč, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
 
 msgid "To import, you must be logged in to an account. Log in and try again."
 msgstr "Chcete-li provést import, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
 
 msgid "Successfully imported the keys and changed the passphrase"
-msgstr "Klíče byly úspěšně naimportovány a heslo bylo změněno"
+msgstr "Klíče byly úspěšně naimportovány a šifrovací klíč byl změněn"
 
 msgid "Error importing the keys."
 msgstr "Při importu klíčů došlo k chybě."
 
 msgid "There are no logged-in domains for changing the passphrase."
-msgstr "Nejsou žádné přihlášené domény pro změnu hesla."
+msgstr "Nejsou žádné přihlášené domény pro změnu šifrovacího klíče."
 
 msgid "There are no logged-in accounts for changing the passphrase."
-msgstr "Nejsou žádné přihlášené účty pro změnu hesla."
+msgstr "Nejsou žádné přihlášené účty pro změnu šifrovacího klíče."
 
 msgid "For changing passphrase the domain should be connected. Log on to the domain and try."
-msgstr "Pro změnu hesla by měla být připojena doména. Přihlaste se k doméně a zkuste to."
+msgstr "Pro změnu šifrovacího klíče by měla být připojena doména. Přihlaste se k doméně a zkuste to."
 
 msgid "To change the passphrase, you must be logged in to an account. Log in and try again."
-msgstr "Chcete-li změnit heslo, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
+msgstr "Chcete-li změnit šifrovací klíč, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu."
 
 msgid "Successfully exported the keys."
 msgstr "Klíče byly úspěšně exportovány."
@@ -2439,7 +2439,7 @@ msgid "The client tarball {0} is downlaoded to the location {1}. Run the script 
 msgstr "Soubory klienta {0} byly staženy do umístění {1}. Pokud chcete instalovat nového klienta, spusťte z tohoto umístění skript {2} s povolením ke kořenovému adresáři."
 
 msgid "There is no Recovery Agent selected. Encrypted data cannot be recovered later, if passphrase is lost. Do you want to continue?"
-msgstr "Není vybrán žádný agent pro obnovení. Pokud dojde ke ztrátě hesla, nemohou být zašifrovaná data později obnovena. Přejete si pokračovat?"
+msgstr "Není vybrán žádný agent pro obnovení. Pokud dojde ke ztrátě šifrovacího klíče, nemohou být zašifrovaná data později obnovena. Přejete si pokračovat?"
 
 msgid "Recovery Agent Not Selected"
 msgstr "Nebyl vybrán agent pro obnovení"
@@ -2475,13 +2475,13 @@ msgid "Entering password is cancelled. If password is not provided, Automatic Ac
 msgstr "Zadání hesla je zrušeno. Pokud není zadáno heslo, automatické vytvoření účtu selže. Přejete si pokračovat?"
 
 msgid "No Passphrase"
-msgstr "Žádné heslo"
+msgstr "Žádný šifrovací klíč"
 
 msgid "Entering Passphrase is cancelled. If Passphrase is not provided, Default iFolder creation/download will fail. Do you want to continue?"
-msgstr "Zadání hesla je zrušeno. Pokud není zadáno heslo, automatické vytvoření nebo stažení výchozí složky iFolder selže. Přejete si pokračovat?"
+msgstr "Zadávání šifrovacího klíče je zrušeno. Pokud není zadán šifrovací klíč, automatické vytvoření nebo stažení výchozí složky iFolder selže. Přejete si pokračovat?"
 
 msgid "Entering Passphrase is cancelled"
-msgstr "Zadání hesla je zrušeno."
+msgstr "Zadávání šifrovací klíč je zrušeno."
 
 msgid "Entering password is cancelled"
 msgstr "Zadání hesla je zrušeno."
@@ -2769,25 +2769,25 @@ msgid "iFolder Type:    {0}"
 msgstr "Typ složky iFolder:    {0}"
 
 msgid "Welcome to the Passphrase Recovery Wizard"
-msgstr "Vítejte v Průvodci obnovením hesla"
+msgstr "Vítejte v Průvodci obnovením šifrovacího klíče"
 
 msgid "Select the account for which the passphrase must to be reset."
-msgstr "Vyberte účet, pro který je třeba resetovat heslo."
+msgstr "Vyberte účet, pro který je třeba resetovat šifrovací klíč."
 
 msgid "Click Forward to proceed."
 msgstr "Pokračujte klepnutím na tlačítko Postoupit. "
 
 msgid "_New passphrase"
-msgstr "Nové hesl_o"
+msgstr "Nový šifr_ovací klíč"
 
 msgid "_Confirm passphrase"
-msgstr "_Potvrďte heslo"
+msgstr "_Potvrďte šifrovací klíč"
 
 msgid "To recover a lost passphrase, you require the secret file (private key of the certificate) and its passowrd or the data file from the administrator."
-msgstr "Chcete-li obnovit ztracené heslo, potřebujete tajný soubor (soukromý klíč certifikátu) a jeho heslo nebo datový soubor od správce."
+msgstr "Chcete-li obnovit ztracený šifrovací klíč, potřebujete tajný soubor (soukromý klíč certifikátu) a jeho heslo nebo datový soubor od správce."
 
 msgid "If you don't have this information, you must use this wizard to obtain the old data file and then mail the file to your administrator.The administrator will send back to you a new data file which you can use to reset your passphrase."
-msgstr "Pokud tyto informace nemáte, musíte pomocí tohoto průvodce získat starý datový soubor, který následně odešlete správci. Správce vám zašle zpět nový datový soubor, pomocí kterého můžete resetovat heslo."
+msgstr "Pokud tyto informace nemáte, musíte pomocí tohoto průvodce získat starý datový soubor, který následně odešlete správci. Správce vám zašle zpět nový datový soubor, pomocí kterého můžete resetovat šifrovací klíč."
 
 msgid "I have the secret file and it password, I have the new data file sent by the administrator, I have no secret or data file."
 msgstr "Mám tajný soubor a jeho heslo, mám nový datový soubor odeslaný správcem, nemám žádný tajný ani datový soubor."
@@ -2808,10 +2808,10 @@ msgid "_One time password"
 msgstr "_Jednorázové heslo"
 
 msgid "Passphrase is reset using the new data file obtained from the administrator."
-msgstr "Heslo je resetováno pomocí nového datového souboru získaného od správce."
+msgstr "Šifrovací klíč je resetován pomocí nového datového souboru získaného od správce."
 
 msgid "Send this file to the administrator to obtain the new data file. You must then use the new data file to reset your passphrase using the second option of the wizard. "
-msgstr "Odešlete tento soubor správci, abyste mohli získat nový datový soubor. Potom musíte nový datový soubor použít k resetování hesla pomocí druhé možnosti průvodce. "
+msgstr "Odešlete tento soubor správci, abyste mohli získat nový datový soubor. Potom musíte nový datový soubor použít k resetování šifrovacího klíče pomocí druhé možnosti průvodce. "
 
 msgid "The old data file was successfully stored at the following path"
 msgstr "Starý datový soubor byl úspěšně uložen do následující cesty."
@@ -2820,10 +2820,10 @@ msgid "_Location to save old data file"
 msgstr "_Umístění pro uložení starého datového souboru"
 
 msgid "Congratulations!! You have successfully reset the passphrase.Now,you can use the new passphrase to access your data."
-msgstr "Blahopřejeme! Úspěšně jste resetovali heslo. Nyní můžete získat přístup k datům pomocí nového hesla."
+msgstr "Blahopřejeme! Úspěšně jste resetovali šifrovací klíč. Nyní můžete získat přístup k datům pomocí nového šifrovacího klíče."
 
 msgid "Set new passphrase"
-msgstr "Nastavit nové heslo"
+msgstr "Nastavit nový šifrovací klíč"
 
 msgid "Old data file sent successfully"
 msgstr "Starý datový soubor byl úspěšně odeslán."
@@ -2832,13 +2832,13 @@ msgid "Obtain old data file"
 msgstr "Získat starý datový soubor"
 
 msgid "Select passphrase recovery step"
-msgstr "Vybrat krok pro obnovení hesla"
+msgstr "Vybrat krok pro obnovení šifrovacího klíče"
 
 msgid "Select account"
 msgstr "Vybrat účet"
 
 msgid "Select an option to recover your passphrase."
-msgstr "Vyberte možnost pro obnovení hesla."
+msgstr "Vyberte možnost pro obnovení šifrovacího klíče."
 
 msgid "I have the _secret file and its password"
 msgstr "Mám _tajný soubor a jeho heslo"
@@ -2859,7 +2859,7 @@ msgid "Finish"
 msgstr "Konec"
 
 msgid "Passphrase reset failed"
-msgstr "Resetování hesla se nezdařilo."
+msgstr "Resetování šifrovacího klíče se nezdařilo."
 
 msgid "Unable to authenticate to the domain.You have been logged out of the account.Please login and try again"
 msgstr "Nelze provést ověření v doméně. Byli jste odhlášeni od účtu. Přihlaste se a zkuste to znovu."
@@ -2868,13 +2868,13 @@ msgid "You have been logged out of the account.Please login and try again."
 msgstr "Byli jste odhlášeni od účtu. Přihlaste se a zkuste to znovu."
 
 msgid "Passphrase reset successfully"
-msgstr "Resetování hesla bylo úspěšné."
+msgstr "Resetování šifrovacího klíče bylo úspěšné."
 
 msgid "Server_Default"
 msgstr "_Výchozí nastavení serveru"
 
 msgid "The values in the new and confirm passphrase fields do not match"
-msgstr "Hodnoty v polích pro nové heslo a jeho potvrzení se neshodují."
+msgstr "Hodnoty v polích pro nový šifrovací klíč a jeho potvrzení se neshodují."
 
 msgid "New data location is invalid"
 msgstr "Nové datové umístění je neplatné."
@@ -2904,7 +2904,7 @@ msgid "Save as..."
 msgstr "Uložit jako..."
 
 msgid "Passphrase Recovery Wizard"
-msgstr "Průvodce obnovením hesla"
+msgstr "Průvodce obnovením šifrovacího klíče"
 
 msgid "_iFolder Account"
 msgstr "Účet _iFolder"
@@ -2919,10 +2919,10 @@ msgid "Encryption is not enabled for this account. Contact your system administr
 msgstr "Šifrování není pro tento účet zapnuto. Požádejte správce systému o zapnutí šifrování."
 
 msgid "Passphrase Not Set"
-msgstr "Heslo není nastaveno."
+msgstr "Šifrovací klíč není nastaven."
 
 msgid "Passphrase is not set for this account."
-msgstr "Pro tento účet není nastaveno heslo."
+msgstr "Pro tento účet není nastaven šifrovací klíč."
 
 msgid "Available for download"
 msgstr "Dostupné pro stažení"
