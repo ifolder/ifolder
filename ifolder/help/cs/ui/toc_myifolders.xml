@@ -14,7 +14,7 @@
  <entry leaf="true" id="merge">Sloučení složek iFolder</entry>
  <entry leaf="true" id="setupifolder">Stažení dostupných složek iFolder</entry>
  <entry leaf="true" id="propifolders">Zobrazení a konfigurování vlastností složek iFolder</entry>
- <entry leaf="true" id="managingpassphrse">Správa hesel pro zašifrované složky iFolder</entry>
+ <entry leaf="true" id="managingpassphrse">Správa šifrovacích klíčů pro zašifrované složky iFolder</entry>
  <entry leaf="true" id="bkmgmdj">Změna hesla</entry>
  <entry leaf="true" id="ifquota">Nastavení kvóty iFolder</entry>
  <entry leaf="true" id="sync">Synchronizace souborů</entry>

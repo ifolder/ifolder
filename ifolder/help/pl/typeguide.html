@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="pl" lang="pl">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:38" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,33 +30,33 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Spis treści' title='Spis treści' />Spis treści</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
 
 <div class="sect1" id="typeguide">
 
-<h1 class="title"> Wytyczne dotyczące typów i rozmiarów plików, które nie powinny być synchronizowane</h1>
+<h1 class="title">Wytyczne dotyczące typów i rozmiarów plików, które nie powinny być synchronizowane</h1>
 
 <p class="para">Gdy używany jest klient programu iFolder, administrator programu iFolder może określić ograniczenia typów i maksymalnego rozmiaru plików na poziomie systemu, użytkownika lub iFolderu. Konto użytkownika może także mieć ograniczoną ilość miejsca, które może być wykorzystywane dla danych w iFolderach użytkownika. Gdy użytkownik uczestniczy y innych iFolderach, zajmowane na serwerze miejsce jest uwzględniane dla użytkownika będącego właścicielem tego iFolderu.</p>
 <p class="para">Niektóre typy plików, takie jak pliki systemu operacyjnego, ukryte pliki utworzone przez menedżera plików czy bazy danych będące kolekcjami połączonych plików, nie powinny być synchronizowane. Można uwzględnić tylko kluczowe typy plików używane w celach zawodowych lub wykluczyć pliki, które prawdopodobnie nie są związane z pracą, takie jak pliki <span class="filename">.mp3</span>. </p>
 <div class="sect2" id="bctogsl">
 
-<h2 class="title"> Pliki systemu operacyjnego</h2>
+<h2 class="title">Pliki systemu operacyjnego</h2>
 
 <p class="para">Nie należy konwertować katalogów systemowych na iFoldery. Większość plików systemowych nie ulega częstym zmianom i lepiej jest przechowywać obraz systemu i najważniejszego oprogramowania niż podejmować próby synchronizowania tych plików na serwerze.</p>
 </div>
 
 <div class="sect2" id="bctogyn">
 
-<h2 class="title"> Pliki ukryte</h2>
+<h2 class="title">Pliki ukryte</h2>
 
 <p class="para">Jeżeli system plików wykorzystuje pliki ukryte do śledzenia preferencji wyświetlania, administrator może wykluczyć te typy plików z synchronizacji na serwerze. Zwykle plik ukryte są związane z komputerem, na którym zostały utworzone i zmieniane są podczas każdego dostępu do katalogu. Nie ma potrzeby zachowywania tych plików i ich synchronizacja może powodować powtarzające się konflikty. </p>
 <p class="para">Na przykład program iFolder automatycznie wyklucza dwa ukryte pliki menedżera plików o nazwach <span class="filename">thumbs.db</span> i <span class="filename">.DS_Store</span>.</p>
@@ -65,7 +64,7 @@
 
 <div class="sect2" id="bctoh6r">
 
-<h2 class="title"> Pliki bazy danych</h2>
+<h2 class="title">Pliki bazy danych</h2>
 
 <p class="para">Program iFolder synchronizuje pojedyncze pliki lub zmienione fragmenty plików, nie synchronizuje plików jako zbioru. Jeżeli baza danych jest zaimplementowana jako zbiór połączonych plików, nie należy podejmować próby synchronizowania ich w programie iFolder.</p>
 <p class="para">Nie należy synchronizować danych programu GroupWise, umieszczając w folderach iFolder takich elementów jak archiwum, pamięć podręczna i katalogi zdalne programu GroupWise. Jeżeli ta operacja zostanie wykonana, dane programu GroupWise zostaną po kilku synchronizacjach uszkodzone. Program GroupWise wymaga traktowania plików w archiwum jako zbioru plików.</p>
@@ -77,7 +76,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 

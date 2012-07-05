@@ -60,14 +60,15 @@ _6=null;
 }
 }
 if(_6){
+try{
 _6.open("GET",_5,false);
 _6.send(null);
-try{
 if(!_6.responseXML.documentElement&&_6.responseStream){
 _6.responseXML.load(_6.responseStream);
 }
 }
 catch(e){
+return null;
 }
 return _6.responseXML;
 }else{

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="sk" lang="sk">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="sk" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:45" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 13:47" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Obsah' title='Obsah' />Obsah</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</h1>
+<h1 class="title">Konfigurácia lokálnych nastavení brány firewall pre prevádzku aplikácie iFolder</h1>
 
 <p class="para">Ak používate lokálnu bránu firewall, musíte ju nastaviť tak, aby ste povolili aplikácii iFolder vybrať lokálny dynamický port alebo nakonfigurovať lokálny statický port tak, aby mohol klient aplikácie iFolder komunikovať lokálne (na rovnakom počítači) so serverom Mono XSP. Aplikácia iFolder používa služby servera Mono XSP Web na komunikáciu prostredníctvom protokolu HTTP s podnikovými servermi Novell iFolder, na ktorých máte kontá aplikácie iFolder. Správca aplikácie iFolder nakonfiguruje služby aplikácie iFolder, ktoré rozhodujú, či má komunikácia vo vašom prostredí prebiehať pomocou protokolu HTTP. </p>
 <p class="para">Brána firewall neblokuje komunikáciu medzi serverom Mono XSP a podnikovým serverom Novell iFolder, pretože server Mono XSP používa na prevádzku štandardné porty protokolov HTTP. Ak však zablokujete prevádzku medzi klientom a serverom Mono XSP, klient nebude schopný komunikovať so serverom. Nebudete schopní prihlásiť sa na konto aplikácie iFolder a synchronizovať údaje aplikácie iFolder.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Použitie lokálneho dynamického portu</h2>
+<h2 class="title">Použitie lokálneho dynamického portu</h2>
 
 <p class="para">Ak na počítači používate lokálnu bránu firewall, mala by táto brána zistiť lokálnu prevádzku medzi aplikáciou iFolder a serverom Mono XSP vždy, keď aplikácia iFolder kontaktuje server, aby synchronizovala svoj zoznam používateľov a údaje aplikácie iFolder. Výberom možnosti <span class="guimenu">Povoliť</span> umožníte prevádzku aplikácie iFolder pre túto reláciu. Ak natrvalo povolíte prevádzku, brána firewall by vás nemala viac upozorňovať a mali by ste tým zabrániť zobrazovaniu kontextových okien s upozorneniami pri každom spustení aplikácie iFolder.</p>
 <p class="para">Ak zablokujete prevádzku medzi aplikáciou iFolder a serverom Mono XSP, brána firewall zabráni pripojeniu na server iFolder a nebudete môcť synchronizovať svoje súbory. Aplikácia iFolder nerozpozná, že prevádzka je blokovaná bránou firewall. Oznámi iba, že sa nemôže pripojiť na vaše konto na serveri iFolder.</p>
@@ -70,36 +69,36 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Použitie lokálneho statického portu</h2>
+<h2 class="title">Použitie lokálneho statického portu</h2>
 
 <p class="para">Môžete tiež pridať parameter Rozsah portov webovej služby v časti Správca služieb súboru <span class="filename">Simias.config</span> a tým povoliť serveru Mono XSP používať statický port alebo rozsah portov pre túto lokálnu prevádzku. Tento port alebo rozsah portov bude možné v bráne firewall otvoriť a umožniť tak komunikáciu so serverom Mono XSP. </p>
 <p class="para">Súbor <span class="filename">Simias.config</span> môžete nájsť v nasledovných umiestneniach:</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Operačný systém</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Umiestnenie súboru Simias.config</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Systém Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">username</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Systém Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
-                    <span class="filename">C:\Documents and Settings\<span class="replaceable">username</span>\Local Settings\Application Data\simias\Simias.config</span>
+                    <span class="filename">C:\Documents and Settings\<span class="replaceable">meno používateľa</span>\Local Settings\Application Data\simias\Simias.config</span>
                   </p></td>
 </tr></table>
 </div>
 
-<p class="para">Konfigurácia systému na použitie určitého portu alebo rozsahu portov.</p>
+<p class="para">Konfigurácia systému na použitie určitého portu alebo rozsahu portov:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw4v93e">
@@ -145,11 +144,11 @@
 
 </div>
 
-<p class="trademark"> Informácie o ochranných známkach a autorských právach nájdete v časti <a href="legal.html">Právne prehlásenia</a>.</p>
+<p class="trademark"> Informácie o ochranných známkach a autorských právach nájdete v časti <a href="legal.html">Právne poznámky</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="naspäť" title="naspäť" />naspäť</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 

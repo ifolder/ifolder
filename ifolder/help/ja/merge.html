@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="ja" lang="ja">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:28" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 12:59" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目次' title='目次' />目次</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='目次' title='目次' />目次</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="setupifolder.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 
 
 <div class="sect1" id="merge">
 
-<h1 class="title"> iFolderのマージ</h1>
+<h1 class="title">iFolderのマージ</h1>
 
 <p class="para">マージによりiFolderのデータが統合されるため、iFolderサーバおよびクライアント間のデータ転送を最小化できます。サーバ上のiFolderのコンテンツと既存のローカルマシンにあるフォルダのコンテンツをマージできます。</p>
 <div class="itemizedlist">
@@ -64,7 +63,7 @@
 
 <div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-Folder間のマージ</h2>
+<h2 class="title">iFolder-Folder間のマージ</h2>
 
 <p class="para">iFolderと標準フォルダを同一名でマージできます。たとえば、<span class="filename">corporate</span>という名前のiFolderのコンテンツと<span class="filename">corporate</span>という名前の標準フォルダのコンテンツをマージできます。 </p>
 <p class="para"><span class="filename">corporate</span> iFolderに、<span class="filename">hr</span>、<span class="filename">finance</span>、<span class="filename">marketing</span>の3つのサブフォルダがあるとします。<span class="filename">corporate</span> iFolderのコンテンツを、<span class="filename">hr</span>フォルダと<span class="filename">finance</span>フォルダしかない<span class="filename">corporate</span>という名前のフォルダにダウンロードしようとしています。この場合、<span class="filename">corporate</span>フォルダに3つのフォルダをすべてダウンロードし、転送率を上げる必要はありません。代わりに、<span class="filename">corporate</span>iFolderと<span class="filename">corporate</span>フォルダをマージすることで、［<span class="guimenu">Merge to folder(フォルダにマージ)</span>］機能によりインテリジェントに<span class="filename">hr</span>と<span class="filename">finance</span>のサブフォルダをダウンロードせず、<span class="filename">marketing</span>サブフォルダのみがダウンロードされます。<span class="filename">corporate</span>iFolderのデータが<span class="filename">corporate</span>フォルダと異なる場合は、バージョンの競合が表示されます。手動で競合を解決できます。同様に、ファイル名の競合が表示された場合も手動で解決できます。</p>
@@ -82,7 +81,7 @@
 
 <div class="sect2" id="bcq0kks">
 
-<h2 class="title"> 既存のiFolderを別の場所に移動する</h2>
+<h2 class="title">既存のiFolderを別の場所に移動する</h2>
 
 <p class="para"><span class="filename">corporate</span>という名前の既存のiFolderをクライアントマシンの別の場所に移動するには、次の手順に従います。 </p>
 <div class="procedure">
@@ -112,7 +111,7 @@
 
 <div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> 移行済みの2.<span class="replaceable">x</span>のiFolderと3.7以降のiFolderのマージ </h2>
+<h2 class="title">移行済みの2.<span class="replaceable">x</span>のiFolderと3.7以降のiFolderのマージ </h2>
 
 <p class="para">移行済みの2.xのiFolderを、iFolder 3.7以降のサーバで作成されたiFolderにマージすることができます。移行の詳細については、「<a href="coexistmig.html" class="xref">Novell iFolderの移行とアップグレード</a>」を参照してください。 </p>
 <p class="para">移行後、2.<span class="replaceable">x</span>のiFolderはiFolder 3.7以降のサーバに移動されます。3.7以降のサーバ上にある移行済みのiFolderをクライアントマシンにダウンロードするかどうかを選択できます。ただし、iFolderがすでにクライアントマシン上に存在している可能性があります。この場合、マージ機能を使用して不要なデータがサーバからクライアントに転送されないようにします。 </p>
@@ -137,7 +136,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="setupifolder.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 

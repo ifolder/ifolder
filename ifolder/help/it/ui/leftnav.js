@@ -6,9 +6,6 @@ function load_index(_1){
 var _2=false;
 var _3=dom_LoadXMLDoc(_1);
 if(_3){
-if(document.implementation&&document.implementation.createDocument){
-_3.normalize();
-}
 var _4=new Array();
 if(generateIndexHtml(_3,_4)==true){
 dom_getEl(document,"indexContent").innerHTML=_4.join("\n");
@@ -169,6 +166,7 @@ return (_28?_28.scrollWidth:0)+(_29?_29.scrollWidth:0)+(_2a?_2a.scrollWidth:0);
 }
 function onPageLoad(){
 initToc();
+TocUpdateFromTopic();
 dom_getEl(document,"toctab").innerHTML=RES_CONTENTS_STR;
 if(CFG_HAS_SEARCH){
 dom_getEl(document,"searchtab").innerHTML=RES_SEARCH_STR;
@@ -182,7 +180,7 @@ dom_getEl(document,"indextab").className="tab-unselected";
 if(document.all){
 dom_getEl(document,"tabs").style.whiteSpace="normal";
 }
-if(CFG_RTL_TEXT==false){
+if(CFG_RTL_TEXT==false&&(CFG_HELP_TYPE!="tablethtml")){
 var _2b=getTabWidth();
 if(_2b>230){
 var _2c=dom_getEl(top.document,"frameset");

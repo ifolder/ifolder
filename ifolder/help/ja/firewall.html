@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="ja" lang="ja">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:28" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 12:59" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目次' title='目次' />目次</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='目次' title='目次' />目次</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> iFolderトラフィックに対するローカルファイアウォールの設定</h1>
+<h1 class="title">iFolderトラフィックに対するローカルファイアウォールの設定</h1>
 
 <p class="para">ローカルファイアウォールを使用する場合、iFolderがローカルのダイナミックポートを選択できるようにファイアウォールを設定するか、またはiFolderクライアントにローカルのスタティックポートを設定してローカル(同じコンピュータ)でMono XSP Serverと通信できるようにします。iFolderはMono XSP Webサービスを使用して、iFolderアカウントを保持するNovell iFolderエンタープライズサーバとHTTP経由で通信します。iFolderの管理者は、iFolderサービスを設定して、ユーザ環境でHTTPを使用して通信するかどうかを指定します。</p>
 <p class="para">Mono XSPはトラフィックに対して標準的なHTTPポートを使用するので、お使いのファイアウォールが、Mono XSPとNovell iFolderエンタープライズサーバ間のトラフィックをブロックすることはありません。ただし、クライアントとMono XSP間のトラフィックをブロックすると、クライアントはサーバと通信できません。ユーザはiFolderアカウントにログインして、iFolderデータを同期できなくなります。</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> ローカルダイナミックポートの使用</h2>
+<h2 class="title">ローカルダイナミックポートの使用</h2>
 
 <p class="para">お使いのコンピュータでローカルファイアウォールを使用する場合、iFolderがサーバに接続してユーザのリストとiFolderデータを同期するときは、ファイアウォールは常にiFolderとMono XSPサーバ間のローカルトラフィックを検出する必要があります。このセッションでiFolderトラフィックを許可するには［<span class="guimenu">許可</span>］を選択します。トラフィックを永続的に許可すると、再度ファイアウォールによって通知されることはなく、iFolder起動時のポップアップ警告も表示されなくなります。</p>
 <p class="para">iFolderとMono XSPとの間のトラフィックをブロックすると、ファイアウォールによってiFolderサーバとの接続が切断されるため、ファイルを同期できなくなります。iFolderは、トラフィックがファイアウォールによってブロックされたことを検出せず、iFolderサーバ上のアカウントに接続できないことだけを報告します。</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> ローカルスタティックポートの使用</h2>
+<h2 class="title">ローカルスタティックポートの使用</h2>
 
 <p class="para">必要に応じて、<span class="filename">Simias.config</span>ファイルのService ManagerセクションにWeb Service PORT Rangeパラメータを追加することで、Mono XSPサーバがこのローカルトラフィック用にスタティックポートまたは一定の範囲のポートを使用するようにできます。これにより、ファイアウォールでこのポートまたは一定の範囲のポートが開かれ、Mono XSPとの通信が可能になります。 </p>
 <p class="para"><span class="filename">Simias.config</span>ファイルは、次の場所にあります。</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">オペレーティングシステム</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Simias.configファイルの場所</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">username</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="以前" title="以前" />以前</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 

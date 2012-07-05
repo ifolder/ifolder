@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="zh-cn" lang="zh-cn">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:21" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 15:12" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,33 +30,33 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='目录' title='目录' />目录</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 
 
 <div class="sect1" id="typeguide">
 
-<h1 class="title"> 不进行同步的文件类型和大小的准则</h1>
+<h1 class="title">不进行同步的文件类型和大小的准则</h1>
 
 <p class="para">使用 iFolder 客户程序时，您的 iFolder 管理员可能会指定系统级、用户级、LDAP 组级或 iFolder 级的文件类型限制和最大文件大小限制。您的帐户可能也会限制在可用于自己拥有的 iFolder 中的数据的空间数量之内。您加入其他 iFolder 时，在服务器上占用的空间也视为被此 iFolder 的拥有者所耗用。</p>
 <p class="para">某些文件类型不适合进行同步，如操作系统文件、文件管理器创建的隐藏文件，作为已链接文件集实施的数据库等。您可以仅包括用于业务的主要的文件类型，或者排除可能与业务无关的文件，如 <span class="filename">.mp3</span> 文件。 </p>
 <div class="sect2" id="bctogsl">
 
-<h2 class="title"> 操作系统文件</h2>
+<h2 class="title">操作系统文件</h2>
 
 <p class="para">您不应将系统目录转换为 iFolder。大多数系统文件很少更改，最好保留基本系统和主要软件的映象文件，而不是尝试将那些文件与服务器上的文件同步。</p>
 </div>
 
 <div class="sect2" id="bctogyn">
 
-<h2 class="title"> 隐藏文件</h2>
+<h2 class="title">隐藏文件</h2>
 
 <p class="para">如果您的文件系统使用隐藏文件来跟踪显示首选设置，则您的管理员可能限制这些文件类型以排除它们被同步到您的系统上。通常，隐藏文件仅与创建它们的特定计算机有关，每次访问文件或目录时它们都会发生改变。您无需保留这些文件，同步它们会导致重复的文件冲突错误。 </p>
 <p class="para">例如，iFolder 自动排除两个称为 <span class="filename">thumbs.db</span> 和 <span class="filename">.DS_Store</span> 的隐藏文件管理器文件。</p>
@@ -65,7 +64,7 @@
 
 <div class="sect2" id="bctoh6r">
 
-<h2 class="title"> 数据库文件</h2>
+<h2 class="title">数据库文件</h2>
 
 <p class="para">iFolder 同步各个文件或各个文件的已更改部分；它不会将文件作为文件集来同步。如果您有作为已链接文件集实施的数据库文件，不要尝试在 iFolder 中同步它们。</p>
 <p class="para">不要尝试通过使 GroupWise 存档、超速缓存或远程目录进入 iFolder 来同步 GroupWise 数据。如果这样做，在对文件进行几次同步后 GroupWise 数据文件将会损坏。GroupWise 需要将存档中的文件作为文件集保存。</p>
@@ -77,7 +76,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 

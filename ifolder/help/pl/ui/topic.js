@@ -32,9 +32,11 @@ window.onload=onPageLoad;
 }
 function onPageLoad(){
 top.document.title=document.title;
+if(typeof (window.history.replaceState)=="function"){
+top.history.replaceState(null,window.location.href,window.location.href);
+}else{
 var _8=createSpecialHash();
 if(top.location.hash!=_8){
-if(/Konqueror|Safari|KHTML/.test(navigator.userAgent)==false){
 top.setHash(_8);
 }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="pl" lang="pl">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:38" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Spis treści' title='Spis treści' />Spis treści</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Spis treści' title='Spis treści' />Spis treści</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</h1>
+<h1 class="title">Konfigurowanie ustawień zapory lokalnej w celu umożliwienia komunikacji programu iFolder</h1>
 
 <p class="para">W przypadku używania zapory lokalnej należy tak skonfigurować zaporę, aby umożliwić programowi iFolder wybranie lokalnego portu dynamicznego lub skonfigurowanie lokalnego portu statycznego dla klienta programu iFolder do celów komunikacji lokalnej (na tym samym komputerze) z serwerem Mono® XSP Server. Program iFolder korzysta z usług webserwisu Mono XSP do komunikacji poprzez protokół HTTP z firmowymi serwerami Novell iFolder, na których użytkownik ma konta iFolder. Administrator programu iFolder konfiguruje usługi iFolder określające, czy w środowisku użytkownika do komunikacji wykorzystywany jest protokół HTTP.</p>
 <p class="para">Zapora nie blokuje ruchu między serwerem Mono XSP i serwerem firmowym Novell iFolder, ponieważ serwer Mono XSP wykorzystuje do komunikacji standardowe porty. Jeśli jednak ruch między klientem i serwerem Mono XSP zostanie zablokowany, klient nie będzie mógł komunikować się z serwerem. Nie można zalogować się do konta programu iFolder i zsynchronizować danych z iFolderu.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Korzystanie z lokalnego portu dynamicznego</h2>
+<h2 class="title">Korzystanie z lokalnego portu dynamicznego</h2>
 
 <p class="para">Jeśli na komputerze wykorzystywana jest lokalna zapora, powinna ona wykrywać lokalny ruch między programem iFolder i serwerem Mono XSP za każdym razem, gdy program iFolder łączy się z serwerem w celu zsynchronizowania listy użytkowników i danych programu iFolder. Zaznacz opcję <span class="guimenu">Zezwalaj</span>, aby umożliwić komunikację z programem iFolder dla tej sesji. Jeśli zgoda na komunikację zostanie wydana na stałe, zapora nie powinna ponownie przypominać o tym, dzięki czemu można będzie uniknąć wyskakujących alertów przy każdym uruchomieniu programu iFolder.</p>
 <p class="para">Jeśli komunikacja między programem iFolder i serwerem Mono XSP zostanie zablokowana, zapora uniemożliwi połączenie się z serwerem iFolder i nie będzie można zsynchronizować plików użytkownika. Program iFolder nie wykryje zablokowania komunikacji przez zaporę; zgłosi jedynie niemożność połączenia do konta użytkownika na serwerze iFolder.</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Korzystanie z lokalnego portu statycznego</h2>
+<h2 class="title">Korzystanie z lokalnego portu statycznego</h2>
 
 <p class="para">Opcjonalnie można dodać parametr Web Service Port Range w sekcji Service Manager pliku <span class="filename">Simias.config</span>, aby zezwolić na wykorzystanie przez serwer Mono XSP statycznego portu lub zakresu portów dla tego ruchu lokalnego. Ten port lub zakres portów może być następnie otwierany w zaporze, aby umożliwić komunikację z serwerem Mono XSP. </p>
 <p class="para">Plik <span class="filename">Simias.config</span> można znaleźć w następujących lokalizacjach:</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">System operacyjny</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Lokalizacja pliku Simias.config</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">nazwa_użytkownika</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="poprzednia" title="poprzednia" />poprzednia</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 

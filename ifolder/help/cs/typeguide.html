@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="cs" lang="cs">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:22" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,33 +30,33 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Obsah' title='Obsah' />Obsah</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
 
 <div class="sect1" id="typeguide">
 
-<h1 class="title"> Pokyny pro typy souborů a velikosti, které nejsou určeny k synchronizování</h1>
+<h1 class="title">Pokyny pro typy souborů a velikosti, které nejsou určeny k synchronizování</h1>
 
 <p class="para">Když je použit klient iFolder, váš správce aplikace iFolder může zadat omezení a maximální velikost souboru na úrovni systému, uživatele, skupiny LDAPGroup nebo složky iFolder. Váš účet může být rovněž omezen objemem prostoru, který lze používat pro data ve složkách iFolder, které vlastníte. Když jste účastníkem využívání jiných složek iFolder, prostor využitý na serveru se počítá vlastníkovi dané složky iFolder.</p>
 <p class="para">Některé typy nejsou vhodné pro synchronizaci, například soubory operačního systému, skryté soubory vytvořené správcem souborů nebo databáze, které jsou implementovány jako kolekce spojených souborů. Můžete zahrnout pouze klíčové typy souborů, použité pro vaše podnikání, nebo vyloučit soubory, které s podnikáním nijak nesouvisí, například <span class="filename">.mp3</span>. </p>
 <div class="sect2" id="bctogsl">
 
-<h2 class="title"> Soubory operačního systému</h2>
+<h2 class="title">Soubory operačního systému</h2>
 
 <p class="para">Systémové adresáře byste na složky iFolder neměli převádět. Většina systémových souborů se mění pouze občas a je lepší si uchovat soubor bitové kopie základního systému a klíčových aplikací než synchronizovat tyto soubory se serverem.</p>
 </div>
 
 <div class="sect2" id="bctogyn">
 
-<h2 class="title"> Skryté soubory</h2>
+<h2 class="title">Skryté soubory</h2>
 
 <p class="para">Pokud souborový systém používá skryté soubory pro sledování předvoleb zobrazení, správce může typy těchto souborů tak, aby je vyloučil ze synchronizování ve vašem systému. Skryté soubory jsou obvykle relevantní pouze pro zadaný počítač, na kterém byly vytvořeny a mění se vždy, když k souboru nebo adresáři přistupujete. Není nutné tyto soubory uchovávat a jejich synchronizování vede k opakovaným konfliktům souborů. </p>
 <p class="para">Aplikace iFolder automaticky například vylučuje dva skryté soubory správce souborů nazvané <span class="filename">thumbs.db</span> a <span class="filename">.DS_Store</span>.</p>
@@ -65,7 +64,7 @@
 
 <div class="sect2" id="bctoh6r">
 
-<h2 class="title"> Databázové soubory</h2>
+<h2 class="title">Databázové soubory</h2>
 
 <p class="para">Aplikace iFolder synchronizuje jednotlivé soubory nebo změněné části jednotlivých souborů; nesynchronizuje soubory jako sadu. Pokud máte databázový soubor, který je implementovaný jako kolekce spojených souborů, nesynchronizujte je ve složce iFolder.</p>
 <p class="para">Nesynchronizujte data GroupWise vytvořením složek iFolder z archivu, mezipaměti nebo vzdálených adresářů GroupWise. Pokud tak učiníte, datové soubory GroupWise se poruší po několikerém synchronizování souborů. Aplikace GroupWise vyžaduje údržbu souborů v archivu jako sady souborů.</p>
@@ -77,7 +76,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 

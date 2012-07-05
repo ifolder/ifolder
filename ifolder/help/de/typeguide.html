@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="de" lang="de">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 16:10" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,33 +30,33 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
 
 <div class="sect1" id="typeguide">
 
-<h1 class="title"> Richtlinien für nicht zu synchronisierende Dateitypen und -größen</h1>
+<h1 class="title">Richtlinien für nicht zu synchronisierende Dateitypen und -größen</h1>
 
 <p class="para">Wenn der iFolder-Client verwendet wird, kann der iFolder-Administrator Einschränkungen für den Dateityp und die maximale Dateigröße auf System-, Benutzer-. LDAP-Gruppen- und iFolder-Ordner-Ebene festlegen.   Für Ihr Konto können auch Einschränkungen bezüglich des Speicherplatzes angegeben werden, den Sie für die Daten in den iFolder-Ordnern verwenden können, deren Eigentümer Sie sind. Wenn Sie andere iFolder-Ordner benutzen, zählt der auf dem Server verwendete Speicher für den Eigentümer des betreffenden iFolder-Ordners.</p>
 <p class="para">Einige Dateitypen eignen sich nicht besonders gut für die Synchronisierung, beispielsweise Dateien von Betriebssystemen, verborgene Dateien, die von einem Datei-Manager erstellt wurden, oder Datenbanken, die als Sammlung verbundener Dateien implementiert werden. Sie können festlegen, dass nur wichtige Dateien aufgenommen werden sollen, die Sie geschäftlich verwenden, oder Dateien ausschließen, die mit hoher Wahrscheinlichkeit nichts mit Ihrer Arbeit zu tun haben, wie beispielsweise <span class="filename">.mp3</span>-Dateien. </p>
 <div class="sect2" id="bctogsl">
 
-<h2 class="title"> Betriebssystemdateien</h2>
+<h2 class="title">Betriebssystemdateien</h2>
 
 <p class="para">Systemverzeichnisse sollten nicht in iFolder-Ordner umgewandelt werden. Die meisten Systemdateien ändern sich in unregelmäßigen Abständen, sodass es besser ist, eine Image-Datei Ihres Basissystems und der wichtigsten Software zu speichern, als zu versuchen, diese Dateien auf dem Server zu synchronisieren.</p>
 </div>
 
 <div class="sect2" id="bctogyn">
 
-<h2 class="title"> Verborgene Dateien</h2>
+<h2 class="title">Verborgene Dateien</h2>
 
 <p class="para">Wenn Ihr Dateisystem verborgene Dateien zur Aufzeichnung der Anzeigeeinstellungen verwendet, kann Ihr Administrator Beschränkungen für diese Dateitypen verhängen, sodass diese von der Synchronisierung auf Ihrem System ausgenommen werden. Normalerweise sind verborgene Dateien nur für den Computer relevant, auf dem sie erstellt wurden, und sie ändern sich bei jedem Zugriff auf die Datei bzw. das Verzeichnis. Sie müssen diese Dateien nicht behalten und Ihre Synchronisierung führt zu wiederholten Fehlern aufgrund von Dateikonflikten. </p>
 <p class="para">So schließt iFolder beispielsweise automatisch zwei verborgene Dateimanager-Dateien (<span class="filename">thumbs.db</span> und <span class="filename">.DS_store</span>) aus.</p>
@@ -65,7 +64,7 @@
 
 <div class="sect2" id="bctoh6r">
 
-<h2 class="title"> Datenbankdateien</h2>
+<h2 class="title">Datenbankdateien</h2>
 
 <p class="para">iFolder synchronisiert einzelne Dateien bzw. die geänderten Teile einzelner Dateien. Dateien werden nicht als Gruppe synchronisiert. Wenn Sie eine Datenbankdatei verwenden, die als Sammlung verbundener Dateien implementiert ist, sollten Sie nicht versuchen, diese Dateien in einem iFolder-Ordner zu synchronisieren.</p>
 <p class="para">Versuchen Sie nicht, Ihre GroupWise-Daten zu synchronisieren, indem Sie das GroupWise-Archiv, den Cache oder Remote-Verzeichnisse in iFolder-Ordner umwandeln. Wenn Sie dies tun, werden die GroupWise-Datendateien fehlerhaft, nachdem die Datei einige Male synchronisiert wird. Für GroupWise müssen die Dateien im Archiv als Gruppe von Dateien beibehalten werden.</p>
@@ -77,7 +76,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 

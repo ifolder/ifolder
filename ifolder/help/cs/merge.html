@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="cs" lang="cs">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:22" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Obsah' title='Obsah' />Obsah</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="setupifolder.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
 
 <div class="sect1" id="merge">
 
-<h1 class="title"> Sloučení složek iFolder</h1>
+<h1 class="title">Sloučení složek iFolder</h1>
 
 <p class="para">Slučování vám pomůže konsolidovat data složky iFolder a minimalizovat tak přenos dat mezi serverem a klientem iFolder. Obsah složky iFolder můžete sloučit na serveru s obsahem stávající složky v místním počítači.</p>
 <div class="itemizedlist">
@@ -64,7 +63,7 @@
 
 <div class="sect2" id="bcq0ign">
 
-<h2 class="title"> Sloučení složek iFolder s normální složkou</h2>
+<h2 class="title">Sloučení složek iFolder s normální složkou</h2>
 
 <p class="para">Složku aplikace iFolder můžete sloučit s normální složkou. Můžete například sloučit obsah složky iFolder pojmenované <span class="filename">podniková</span> s normální složkou pojmenovanou <span class="filename">podniková</span>. </p>
 <p class="para">Předpokládejme, že <span class="filename">podniková</span> složka iFolder má tři podsložky: <span class="filename">hr</span>, <span class="filename">finance</span> a <span class="filename">marketing</span>. Obsah <span class="filename">podnikové</span> složky iFolder si můžete stáhnout do složky pojmenované <span class="filename">podniková</span>, která bude obsahovat pouze složky <span class="filename">hr</span> a <span class="filename">finance</span>. V tomto případě nemusíte stahovat všechny tři složky do složky <span class="filename">podniková</span> a zvyšovat tak objem přenesených dat. Místo toho můžete sloučit <span class="filename">podnikovou</span> složku iFolder s <span class="filename">podnikovou</span> složkou tak, aby funkce <span class="guimenu">Sloučit se složkou</span> inteligentně zabránila stahování podsložek <span class="filename">hr</span> a <span class="filename">finance</span> a stáhne pouze data podsložky <span class="filename">marketing</span>. Pokud jsou data v <span class="filename">podnikové</span> složce iFolder a <span class="filename">podnikové</span> normální složce odlišná, zobrazí se konflikt verzí. Konflikt můžete vyřešit ručně. Podobně, pokud se zobrazí konflikt názvu souborů, můžete jej také vyřešit ručně.</p>
@@ -82,7 +81,7 @@
 
 <div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Přesunutí stávající složky iFolder do jiného umístění</h2>
+<h2 class="title">Přesunutí stávající složky iFolder do jiného umístění</h2>
 
 <p class="para">Chcete-li přesunout stávající složku iFolder pojmenovanou <span class="filename">podniková</span> do jiného umístění v klientském počítači: </p>
 <div class="procedure">
@@ -112,7 +111,7 @@
 
 <div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Probíhá slučování migrovaných složek iFolder verze 2.<span class="replaceable">x</span> se složkami iFolder verze 3.7 nebo novější. </h2>
+<h2 class="title">Probíhá slučování migrovaných složek iFolder verze 2.<span class="replaceable">x</span> se složkami iFolder verze 3.7 nebo novější. </h2>
 
 <p class="para">Migrovanou složku iFolder 2.x lze sloučit se složkou iFolder vytvořenou na serveru iFolder 3.7 nebo novějším. Další informace o migraci najdete v části <a href="coexistmig.html" class="xref">Migrace a inovace aplikace Novell iFolder</a>. </p>
 <p class="para">Po migraci jsou složkyiFolder verze 2.<span class="replaceable">x</span> přesunuty na server iFolder 3.7 nebo novější. Migrované složky iFolder na serveru verze 3.7 nebo novějším můžete stáhnout do klientského počítače. Nicméně tyto složky iFolder se mohou v klientském počítač již vyskytovat. V takovém případě použijte funkci slučování, vyhnete se tak zbytečnému přenosu dat ze serveru na klienta. </p>
@@ -137,7 +136,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="setupifolder.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 

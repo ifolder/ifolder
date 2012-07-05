@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="fr" lang="fr">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 16:08" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Table des matières' title='Table des matières' />Table des matières</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Table des matières' title='Table des matières' />Table des matières</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Configuration des paramètres du pare-feu local pour le trafic iFolder</h1>
+<h1 class="title">Configuration des paramètres du pare-feu local pour le trafic iFolder</h1>
 
 <p class="para">Si vous utilisez un pare-feu local, vous devez le configurer de manière à permettre à iFolder de choisir un port dynamique local ou bien configurer un port statique local pour que le client iFolder puisse communiquer localement (même ordinateur) avec le serveur Mono XSP. iFolder utilise les services Web Mono XSP pour communiquer via HTTP avec les serveurs d'entreprise Novell iFolder où vous possédez des comptes iFolder. C'est l'administrateur iFolder qui configure les services iFolder qui déterminent si les communications utilisent le protocole HTTP dans votre environnement.</p>
 <p class="para">Votre pare-feu ne bloque pas le trafic entre Mono XSP et le serveur d'entreprise Novell iFolder car Mono XSP utilise les ports HTTP standard pour le trafic. Toutefois, si vous bloquez le trafic entre le client et Mono XSP, le client n'a plus aucun moyen de communication avec le serveur. Il ne vous est alors plus possible de vous loguer à votre compte iFolder et de synchroniser les données iFolder.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Utilisation d'un port dynamique local</h2>
+<h2 class="title">Utilisation d'un port dynamique local</h2>
 
 <p class="para">Si vous utilisez un pare-feu local sur votre ordinateur, il doit détecter le trafic local entre iFolder et le serveur Mono XSP lorsque iFolder contacte le serveur pour synchroniser sa liste d'utilisateurs et ses données iFolder. Sélectionnez <span class="guimenu">Autoriser</span> pour autoriser le trafic iFolder pour cette session. Si vous autorisez le trafic de manière permanente, votre pare-feu ne doit pas se souvenir de vous, et vous pouvez éviter de recevoir les alertes contextuelles au démarrage de iFolder.</p>
 <p class="para">Si vous bloquez le trafic iFolder vers Mono XSP, votre pare-feu empêche votre connexion au serveur iFolder et vous ne pouvez pas synchroniser vos fichiers. iFolder ne détecte pas que le trafic est bloqué par le pare-feu ; il signale simplement qu'il ne peut pas se connecter à votre compte sur le serveur iFolder.</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Utilisation d'un port statique local</h2>
+<h2 class="title">Utilisation d'un port statique local</h2>
 
 <p class="para">Vous pouvez éventuellement ajouter le paramètre Web Service Port Range dans la section Service Manager du fichier <span class="filename">Simias.config</span> pour autoriser le serveur Mono XSP à utiliser un port statique ou une plage de ports pour ce trafic local. Il est ensuite possible d'ouvrir ce port ou cette plage de ports dans le pare-feu pour autoriser les communications pour le serveur Mono XSP. </p>
 <p class="para">Le fichier <span class="filename">Simias.config</span> se trouve aux endroits suivants :</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Système d'exploitation</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Emplacement du fichier Simias.config</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">nom_utilisateur</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
 </div>
 

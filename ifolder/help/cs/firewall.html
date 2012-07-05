@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="cs" lang="cs">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:22" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Obsah' title='Obsah' />Obsah</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Konfigurování nastavení místní brány firewall pro provoz aplikace iFolder</h1>
+<h1 class="title">Konfigurování nastavení místní brány firewall pro provoz aplikace iFolder</h1>
 
 <p class="para">Pokud používáte místní bránu firewall, musíte ji nastavit tak, aby umožňovala aplikaci iFolder vybrat místní dynamický port nebo nakonfigurovat statický port pro klienta iFolder tak, aby komunikoval lokálně (stejný počítač) se serverem Mono XSP Server. iFolder používá webové služby Mono XSP ke komunikaci prostřednictvím protokolu HTTP s podnikovými servery Novell iFolder, kde máte účet iFolder. Správce iFolder konfiguruje služby iFolder, které určují, zda komunikace bude používat ve vašem prostředí protokol HTTP.</p>
 <p class="para">Brána firewall neblokuje provoz mezi Mono XSP a podnikovým serverem Novell iFolder, protože Mono XSP používá pro přenos standardní porty HTTP. Pokud však blokujete provoz mezi klientem a Mono XSP, klient nemůže komunikovat se serverem. Nemůžete se přihlásit k účtu iFolder a synchronizovat data iFolder.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Použití lokálního dynamického portu</h2>
+<h2 class="title">Použití lokálního dynamického portu</h2>
 
 <p class="para">Pokud ve svém počítači používáte místní bránu firewall, měla by detekovat místní provoz mezi aplikací iFolder a serverem Mono XSP vždy, když aplikace iFolder kontaktuje server pro synchronizování seznamu uživatelů a dat iFolder. Vyberte možnost <span class="guimenu">Povolit</span> a umožněte tak provoz aplikace iFolder pro tuto relaci. Pokud provoz umožníte trvale, vaše brána firewall by vás již neměla upomínat a měli byste se vyhnout zobrazování kontextových upozornění vždy při spuštění aplikace iFolder.</p>
 <p class="para">Pokud zablokujete provoz mezi aplikací iFolder a systémem Mono XSP, brána firewall zabraňuje v připojování k serveru iFolder a nemůžete tak své soubory synchronizovat. Aplikace iFolder nedetekuje, že provoz je zablokován bránou firewall; hlásí pouze, že se nelze připojit k účtu na serveru iFolder.</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Použití lokálního statického portu</h2>
+<h2 class="title">Použití lokálního statického portu</h2>
 
 <p class="para">Volitelně můžete přidat parametr Rozsah portů webové služby do části správce služeb (Service Manager) souboru <span class="filename">Simias.config</span> a umožníte tak serveru Mono XSP Server používat statický port nebo rozsah portů pro tento místní provoz. Tento port nebo rozsah portů může být v bráně firewall otevřen a umožní se tak komunikace pro Mono XSP. </p>
 <p class="para">Soubor <span class="filename">Simias.config</span> naleznete v následujících umístěních:</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Operační systém</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Umístění souboru Simias.config</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">uzivatelske_jmeno</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 

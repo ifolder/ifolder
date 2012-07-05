@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="zh-cn" lang="zh-cn">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:21" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 15:12" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='目录' title='目录' />目录</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='目录' title='目录' />目录</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> 为 iFolder 通讯配置本地防火墙设置</h1>
+<h1 class="title">为 iFolder 通讯配置本地防火墙设置</h1>
 
 <p class="para">如果您使用的是本地防火墙，则必须将您的防火墙设置为允许 iFolder 选择本地动态端口，或为 iFolder 客户端配置本地静态端口以与 Mono XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 与您拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务以确定是否在您的环境中使用 HTTP。</p>
 <p class="para">您的防火墙未阻止 Mono XSP 与 Novell iFolder Enterprise Server 之间的通讯，这是因为 Mono XSP 使用了标准的 HTTP 端口进行通讯。但是，如果您阻止客户端与 Mono XSP 之间的通讯，则客户端将无法与服务器进行通讯。您无法登录到您的 iFolder 帐户以及同步 iFolder 数据。</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> 使用本地动态端口</h2>
+<h2 class="title">使用本地动态端口</h2>
 
 <p class="para">如果在计算机上使用本地防火墙，则只要 iFolder 联系服务器同步其用户列表和 iFolder 数据时，该防火墙都应检测到 iFolder 与 Mono XSP 服务器之间的本地通讯。选择<span class="guimenu">“允许”</span>以允许此会话的 iFolder 通讯。如果您始终允许通讯，则防火墙应该不会再次提醒您，而且每次 iFolder 启动时，您都可以避免收到弹出式警报。</p>
 <p class="para">如果您阻止 iFolder 与 Mono XSP 的通讯，则您的防火墙将阻止您连接到 iFolder 服务器，而您也无法同步文件。iFolder 不会检测到通讯受防火墙阻止；它仅报告无法连接到您在 iFolder 服务器上的帐户。</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> 使用本地静态端口</h2>
+<h2 class="title">使用本地静态端口</h2>
 
 <p class="para">可以选择将万维网服务端口范围参数添加到 <span class="filename">Simias.config</span> 文件的“服务管理器”部分，以允许 Mono XSP 服务器使用静态端口或一组端口进行此本地通讯。此端口或这组端口随即可在防火墙中打开，以实现 Mono XSP 的通讯。 </p>
 <p class="para">您可以在以下位置找到 <span class="filename">Simias.config</span>：</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">操作系统</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Simias.config 文件的位置</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">username</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="上一个" title="上一个" />上一个</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 

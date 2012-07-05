@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="ru" lang="ru">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:34" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 13:05" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,33 +30,33 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Содержание' title='Содержание' />Содержание</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
 
 <div class="sect1" id="typeguide">
 
-<h1 class="title"> Рекомендации по типам и размерам не синхронизируемых файлов</h1>
+<h1 class="title">Рекомендации по типам и размерам не синхронизируемых файлов</h1>
 
 <p class="para">Когда используется клиент iFolder, администратор iFolder может ввести ограничения на типы и максимальный размер файлов на уровне системы, пользователя, группы LDAPGroup или iFolder. Для Вашей учетной записи могут быть также установлены ограничения на объем пространства, которое может использоваться для данных в папках iFolder, владельцем которых Вы являетесь. Если Вы становитесь членом других папок iFolder, пространство, потребляемое на сервере, вычитается из количества пространства владельца данной папки iFolder.</p>
 <p class="para">Некоторые типы файлов не предназначены для синхронизации, например, файлы операционной системы, скрытые файлы, созданные менеджером файлов, или базы данных, которые реализованы как набор связанных фалов. Вы можете включить в синхронизацию только основные типы файлов, относящиеся к Вашей работе, или исключить те файлы, которые не связаны к нею, например файлы <span class="filename">.mp3</span>. </p>
 <div class="sect2" id="bctogsl">
 
-<h2 class="title"> Файлы операционной системы</h2>
+<h2 class="title">Файлы операционной системы</h2>
 
 <p class="para">Вам не следует преобразовывать системные каталоги в папки iFolder. Большинство системных файлов изменяются редко, поэтому рекомендуется хранить файл образа основной системы и ключевого программного обеспечения, но не синхронизировать данные файлы с сервером.</p>
 </div>
 
 <div class="sect2" id="bctogyn">
 
-<h2 class="title"> Скрытые файлы</h2>
+<h2 class="title">Скрытые файлы</h2>
 
 <p class="para">Если файловая система использует скрытые для отображения на дисплее файлы, администратор может установить ограничение на файлы такого типа, чтобы исключить их синхронизацию в системе. Как правило, скрытые файлы относятся только к тому компьютеру, на котором они были созданы, и изменяются при каждом доступе к файлу или каталогу. Хранить данные файлы не требуется, а их синхронизация приведет к повторяющимся ошибкам конфликтов файлов. </p>
 <p class="para">Например iFolder автоматически исключает два скрытых файла менеджера файлов с именами <span class="filename">thumbs.db</span> и <span class="filename">.DS_Store</span>.</p>
@@ -65,7 +64,7 @@
 
 <div class="sect2" id="bctoh6r">
 
-<h2 class="title"> Файлы базы данных</h2>
+<h2 class="title">Файлы базы данных</h2>
 
 <p class="para">iFolder синхронизирует отдельные файлы или измененные части отдельных файлов и не выполняет синхронизацию файлов как набора. Если у Вас есть база данных, которая реализована как набор связанных файлов, не пытайтесь синхронизировать их в папке iFolder.</p>
 <p class="para">Не пытайтесь синхронизировать данные GroupWise путем преобразования архива GroupWise, кэша или удаленных каталогов в папки iFolder. В противном случае после выполнения нескольких синхронизаций файлы базы данных GroupWise станут поврежденными. Для GroupWise требуется, чтобы файлы архива обслуживались в виде набора файлов.</p>
@@ -77,7 +76,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="nameconv.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="cs" lang="cs">
@@ -6,16 +6,15 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 15:22" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Správa hesel pro zašifrované složky iFolder</title>
+<title>Správa šifrovacích klíčů pro zašifrované složky iFolder</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "managingpassphrse";
@@ -31,75 +30,75 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Obsah' title='Obsah' />Obsah</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Obsah' title='Obsah' />Obsah</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="bkmgmdj.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
 
 <div class="sect1" id="managingpassphrse">
 
-<h1 class="title"> Správa hesel pro zašifrované složky iFolder</h1>
+<h1 class="title">Správa šifrovacích klíčů pro zašifrované složky iFolder</h1>
 
-<p class="para">Zašifrovaná složka iFolder má jedinečný datový šifrovací klíč vygenerovaný při vytvoření složky iFolder. Klíč je zašifrovaný pomocí hesla zadaného uživatelem a rovněž pomocí veřejného klíče agenta obnovení. </p>
+<p class="para">Zašifrovaná složka iFolder má jedinečný datový šifrovací klíč vygenerovaný při vytvoření složky iFolder. Klíč je zašifrovaný pomocí šifrovacího klíče zadaného uživatelem a rovněž pomocí veřejného klíče agenta obnovení. </p>
 <p class="para">Agent obnovení je vybrán během procesu vytváření účtu iFolder, pokud správce aplikace iFolder zapnul zásady šifrování na serveru.</p>
-<p class="para">Pokud správce aplikace iFolder zapnul šifrování, zobrazí se během vytváření složky iFolder dialogové okno pro zadání hesla. Aplikace iFolder používá k šifrování a dešifrování dat složky iFolder na serveru iFolder jedinečný šifrovací klíč generovaný pomocí hesla. Pokud zapomenete heslo, nemáte přístup k datům složky iFolder. Pro získání přístupu k datům složky iFolder musíte obnovit své heslo.</p>
+<p class="para">Pokud správce aplikace iFolder zapnul šifrování, zobrazí se během vytváření složky iFolder dialogové okno pro zadání šifrovacího klíče. Aplikace iFolder používá k šifrování a dešifrování dat složky iFolder na serveru iFolder jedinečný šifrovací klíč generovaný pomocí uživatelem definovaného šifrovacího klíče. Pokud zapomenete šifrovací klíč, nemáte přístup k datům složky iFolder. Pro získání přístupu k datům složky iFolder musíte obnovit svůj šifrovací klíč.</p>
 <div class="sect2" id="bknig1s">
 
-<h2 class="title"> Obnovení zašifrované složky iFolder</h2>
+<h2 class="title">Obnovení zašifrované složky iFolder</h2>
 
-<p class="para">Pomocí Průvodce obnovením hesla můžete obnovit heslo a zašifrovanou složku iFolder. Chcete-li spustit Průvodce obnovením hesla, postupujte následovně:</p>
+<p class="para">Pomocí Průvodce obnovením šifrovacího klíče můžete obnovit šifrovací klíč a zašifrovanou složku iFolder. Chcete-li spustit Průvodce obnovením šifrovacího klíče, postupujte následovně:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bknk4gv">
-<p class="para">V prohlížeči iFolder spusťte průvodce klepnutím na <span class="guimenu">Zabezpečení &gt; Zapomenuté heslo</span>.</p></li>
+<p class="para">V prohlížeči iFolder spusťte průvodce klepnutím na <span class="guimenu">Zabezpečení &gt; Zapomenutý šifrovací klíč</span>.</p></li>
 <li class="step" id="bknk53e">
-<p class="para">Ze seznamu <span class="guimenu">Účet iFolder</span> vyberte účet, pro který musí být heslo obnoveno, a klepněte na tlačítko <span class="guimenu">Další</span>.</p>
-<p class="para">Pokud byla během procesu vytváření účtu iFolder jako agent obnovení vybrána možnost Výchozí nastavení serveru, zobrazí se stránka Nastavit nové heslo. Postup obnovení nového hesla naleznete v části <a href="managingpassphrse.html#bknigkn" class="xref">Obnovení hesla s agentem obnovení Výchozí nastavení serveru</a></p>
-<p class="para">Pokud jste však vybrali jiného agenta obnovení, než je Výchozí nastavení serveru, musíte při obnově hesla postupovat podle pokynů v části <a href="managingpassphrse.html#bknigq8" class="xref">Obnovení hesla s jiným agentem obnovení než Výchozí nastavení serveru</a>.</p></li></ol>
+<p class="para">Ze seznamu <span class="guimenu">Účet iFolder</span> vyberte účet, pro který musí být šifrovací klíč obnoven, a klepněte na tlačítko <span class="guimenu">Další</span>.</p>
+<p class="para">Pokud byla během procesu vytváření účtu iFolder jako agent obnovení vybrána možnost Výchozí nastavení serveru, zobrazí se stránka Nastavit nový šifrovací klíč. Postup obnovení nového šifrovacího klíče naleznete v části <a href="managingpassphrse.html#bknigkn" class="xref">Obnovení šifrovacího klíče s agentem obnovení Výchozí nastavení serveru</a></p>
+<p class="para">Pokud jste však vybrali jiného agenta obnovení, než je Výchozí nastavení serveru, musíte při obnově šifrovacího klíče postupovat podle pokynů v části <a href="managingpassphrse.html#bknigq8" class="xref">Obnovení šifrovacího klíče s jiným agentem obnovení než Výchozí nastavení serveru</a>.</p></li></ol>
 </div>
 
 <div class="sect3" id="bknigkn">
 
-<h3 class="title"> Obnovení hesla s agentem obnovení Výchozí nastavení serveru</h3>
+<h3 class="title">Obnovení šifrovacího klíče s agentem obnovení Výchozí nastavení serveru</h3>
 
-<p class="para">Pro nastavení nového hesla postupujte následovně:</p>
+<p class="para">Pro nastavení nového šifrovacího klíče postupujte následovně:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bknkrbv">
-<p class="para">Na stránce Nastavit nové heslo zadejte nové heslo do pole <span class="guimenu">Nové heslo</span>.</p></li>
+<p class="para">Na stránce Nastavit nový šifrovací klíč zadejte nový šifrovací klíč do pole <span class="guimenu">Nový šifrovací klíč</span>.</p></li>
 <li class="step" id="bknkt5g">
-<p class="para">Zadejte nové heslo znovu do pole <span class="guimenu">Potvrďte heslo</span> > <span class="guimenu"></span>.</p></li>
+<p class="para">Zadejte nový šifrovací klíč znovu do pole <span class="guimenu">Potvrdit šifrovací klíč</span> > <span class="guimenu"></span>.</p></li>
 <li class="step" id="bknkxtk">
 <p class="para">Zadejte heslo do pole <span class="guimenu">Heslo</span>, potom klepněte na tlačítko <span class="guimenu">Další</span>.</p></li>
 <li class="step" id="bknl4px">
-<p class="para">Po úspěšném dokončení obnovení hesla zavřete průvodce klepnutím na tlačítko <span class="guimenu">Dokončit</span>.</p></li></ol>
+<p class="para">Po úspěšném dokončení obnovení šifrovacího klíče zavřete průvodce klepnutím na tlačítko <span class="guimenu">Dokončit</span>.</p></li></ol>
 </div>
 
 </div>
 
 <div class="sect3" id="bknigq8">
 
-<h3 class="title"> Obnovení hesla s jiným agentem obnovení než Výchozí nastavení serveru</h3>
+<h3 class="title">Obnovení šifrovacího klíče s jiným agentem obnovení než Výchozí nastavení serveru</h3>
 
-<p class="para">Chcete-li obnovit heslo, když vybraný agent obnovení není Výchozí nastavení serveru<span class="guimenu"></span>, postupujte následovně:</p>
+<p class="para">Chcete-li obnovit šifrovací klíč, když vybraný agent obnovení není Výchozí nastavení serveru<span class="guimenu"></span>, postupujte následovně:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bknihtk">
-<p class="para">Na uvítací stránce průvodce jsou zobrazeny informace o údajích, které potřebujete k obnovení hesla. Klepnutím na tlačítko <span class="guimenu">Další</span> zobrazte stránku Mechanismus obnovení hesla.</p></li>
+<p class="para">Na uvítací stránce průvodce jsou zobrazeny informace o údajích, které potřebujete k obnovení šifrovacího klíče. Klepnutím na tlačítko <span class="guimenu">Další</span> zobrazte stránku Mechanismus obnovení šifrovacího klíče.</p></li>
 <li class="step" id="bknihtm">
-<p class="para">Průvodce obsahuje tři metody, které lze použít k obnovení hesla:</p>
+<p class="para">Průvodce obsahuje tři metody, které lze použít k obnovení šifrovacího klíče:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <div class="formalpara" id="bknijt2">
                     <p class="title"><em class="title">Pomocí tajného souboru a příslušného hesla:</em>
-                    K obnovení hesla jsou použity tajný soubor a jeho heslo. Pokud máte k dispozici tajný soubor a jeho heslo, můžete pomocí průvodce zadat umístění tajného souboru a jeho heslo. Postup pro obnovení hesla pomocí tajného souboru naleznete v části <a href="managingpassphrse.html#bknilk4" class="xref">Obnovení hesla pomocí tajného souboru</a>.</p>
+                    K obnovení šifrovacího klíče jsou použity tajný soubor a jeho heslo. Pokud máte k dispozici tajný soubor a jeho heslo, můžete pomocí průvodce zadat umístění tajného souboru a jeho heslo. Postup pro obnovení hesla pomocí tajného souboru naleznete v části <a href="managingpassphrse.html#bknilk4" class="xref">Obnovení šifrovacího klíče pomocí tajného souboru</a>.</p>
                   </div>
 
 <div class="note">
@@ -108,67 +107,67 @@
 <li class="listitem">
 <div class="formalpara" id="bknijt3">
                     <p class="title"><em class="title">Pomocí nového datového souboru:</em>
-                    K obnovení hesla lze rovněž použít nový datový soubor. Nový datový soubor můžete získat od správce po dokončení operace exportu starého datového souboru. Postup pro obnovení hesla pomocí nového datového souboru naleznete v části <a href="managingpassphrse.html#bknim3f" class="xref">Obnovení hesla pomocí nového datového souboru</a>. </p>
+                    K obnovení šifrovacího klíče lze rovněž použít nový datový soubor. Nový datový soubor můžete získat od správce po dokončení operace exportu starého datového souboru. Postup pro obnovení šifrovacího klíče pomocí nového datového souboru naleznete v části <a href="managingpassphrse.html#bknim3f" class="xref">Obnovení šifrovacího klíče pomocí nového datového souboru</a>. </p>
                   </div>
 </li>
 <li class="listitem">
 <div class="formalpara" id="bkninnm">
                     <p class="title"><em class="title">Exportem starého datového souboru:</em>
-                    Pokud nemáte k dispozici tajný soubor nebo nový datový soubor, můžete pomocí průvodce exportovat starý datový soubor a potom jej odeslat e-mailem správci. Až vám správce pošle zpět nový datový soubor, můžete pomocí průvodce obnovit své heslo. Postup pro export starého datového souboru naleznete v části <a href="managingpassphrse.html#bknim8d" class="xref">Obnovení hesla pomocí exportovaného souboru</a>.</p>
+                    Pokud nemáte k dispozici tajný soubor nebo nový datový soubor, můžete pomocí průvodce exportovat starý datový soubor a potom jej odeslat e-mailem správci. Až vám správce pošle zpět nový datový soubor, můžete pomocí průvodce obnovit svůj šifrovací klíč. Postup pro export starého datového souboru naleznete v části <a href="managingpassphrse.html#bknim8d" class="xref">Obnovení šifrovacího klíče pomocí exportovaného souboru</a>.</p>
                   </div>
 </li></ul></div>
 </li></ol>
 </div>
 
 <p class="para">Následující tabulka obsahuje souhrn rozhodnutí, která učiníte.</p>
-<div class="table" id="bknihtq"><p class="title"><em class="num">Tabulka 6 </em>Nastavení průvodce obnovením hesla</p>
-<table class="topbot-lines">
+<div class="table" id="bknihtq"><p class="title"><em class="num">Tabulka 6 </em>Nastavení průvodce obnovením šifrovacího klíče</p>
+<table class="topbot" width="100%"><col width="50%" /><col width="50%" />
                 
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bknihtr"></a>
+<tr class="headerrow" id="bknihtr"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Nastavení</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Popis</p></th>
 </tr>
               
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihts"></a>
+<tr class="oddrow" id="bknihts"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Seznam účtů iFolder</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Zobrazuje seznam nakonfigurovaných účtů iFolder. Ve výchozím nastavení je vybrán první přihlášený účet.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtt"></a>
+<tr class="evenrow" id="bknihtt"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Umístění tajného souboru</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Udává umístění souboru soukromého klíče certifikátu, který lze získat od správce aplikace iFolder.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtu"></a>
+<tr class="oddrow" id="bknihtu"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Tajné heslo</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Představuje heslo k tajnému souboru klíče.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtv"></a>
+<tr class="evenrow" id="bknihtv"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Jednorázové heslo</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Představuje heslo, které použije správce pro zašifrování nového datového souboru.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtw"></a>
+<tr class="oddrow" id="bknihtw"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Umístění nového datového souboru</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Udává umístění dešifrovaného souboru klíče. Nový datový soubor lze získat od správce aplikace iFolder po provedení operace exportu starého datového souboru.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtx"></a>
+<tr class="evenrow" id="bknihtx"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Umístění pro uložení starého datového souboru</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Udává umístění pro uložení exportovaného souboru klíče. Po exportování starého datového souboru jej můžete odeslat e-mailem správci. Správce vám následně pošle nový datový soubor.</p></td>
 </tr>
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihty"></a>
-<p class="para">Nové heslo</p></td>
+<tr class="oddrow" id="bknihty"><td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Nový šifrovací klíč</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Představuje nové zadané heslo, pomocí kterého se zašifruje jedinečný datový šifrovací klíč, který je automaticky vygenerován během vytváření složky iFolder.</p></td>
+<p class="para">Představuje nový zadaný šifrovací klíč, pomocí kterého se zašifruje jedinečný datový šifrovací klíč, který je automaticky vygenerován během vytváření složky iFolder.</p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bknihtz"></a>
-<p class="para">Potvrďte heslo</p></td>
+<tr class="evenrow" id="bknihtz"><td align="left" valign="top" colspan="1" rowspan="1">
+<p class="para">Potvrdit šifrovací klíč</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Představuje nové heslo, které je třeba znovu zadat.</p></td>
+<p class="para">Představuje nový šifrovací klíč, který je třeba znovu zadat.</p></td>
 </tr></table>
 </div>
 
@@ -176,9 +175,9 @@
 
 <div class="sect3" id="bknilk4">
 
-<h3 class="title"> Obnovení hesla pomocí tajného souboru</h3>
+<h3 class="title">Obnovení šifrovacího klíče pomocí tajného souboru</h3>
 
-<p class="para">Chcete-li obnovit heslo pomocí tajného souboru, postupujte následovně:</p>
+<p class="para">Chcete-li obnovit šifrovací klíč pomocí tajného souboru, postupujte následovně:</p>
 <div class="orderedlist">
 <ol class="orderedlist">
             
@@ -198,18 +197,18 @@
               </div>
 
 <div class="formalpara" id="bknm4im">
-                <p class="title"><em class="title">Nové heslo:</em>
-                Zadejte nové heslo.</p>
+                <p class="title"><em class="title">Nový šifrovací klíč:</em>
+                Zadejte nový šifrovací klíč.</p>
               </div>
 
 <div class="formalpara" id="bknm4in">
-                <p class="title"><em class="title">Potvrďte heslo</em>
-                Zadejte znovu nové heslo.</p>
+                <p class="title"><em class="title">Potvrďte šifrovací klíč</em>
+                Zadejte znovu nový šifrovací klíč.</p>
               </div>
 </li>
             
 <li class="listitem">
-<p class="listitem">Klepnutím na tlačítko <span class="guimenu">Další</span> obnovte heslo.</p></li>
+<p class="listitem">Klepnutím na tlačítko <span class="guimenu">Další</span> obnovte šifrovací klíč.</p></li>
             
 <li class="listitem">
 <p class="listitem">Zavřete průvodce klepnutím na tlačítko <span class="guimenu">Dokončit</span>.</p></li>
@@ -222,9 +221,9 @@
 
 <div class="sect3" id="bknim3f">
 
-<h3 class="title"> Obnovení hesla pomocí nového datového souboru</h3>
+<h3 class="title">Obnovení šifrovacího klíče pomocí nového datového souboru</h3>
 
-<p class="para">Chcete-li obnovit heslo pomocí nového datového souboru, postupujte následovně:</p>
+<p class="para">Chcete-li obnovit šifrovací klíč pomocí nového datového souboru, postupujte následovně:</p>
 <div class="orderedlist">
 <ol class="orderedlist">
             
@@ -241,13 +240,13 @@
 <p class="listitem">Do pole <span class="guimenu">Jednorázové heslo</span> zadejte heslo, pomocí kterého správce šifruje nový datový soubor.</p></li>
             
 <li class="listitem">
-<p class="listitem">Do pole <span class="guimenu">Nové heslo</span> zadejte nové heslo.</p></li>
+<p class="listitem">Do pole <span class="guimenu">Nový šifrovací klíč</span> zadejte nový šifrovací klíč.</p></li>
             
 <li class="listitem">
-<p class="listitem"> Do pole <span class="guimenu">Potvrďte heslo</span> znovu zadejte nové heslo.</p></li>
+<p class="listitem"> Do pole <span class="guimenu">Potvrďte šifrovací klíč</span> znovu zadejte nový šifrovací klíč.</p></li>
             
 <li class="listitem">
-<p class="listitem">Klepnutím na tlačítko <span class="guimenu">Další</span> obnovte heslo.</p></li>
+<p class="listitem">Klepnutím na tlačítko <span class="guimenu">Další</span> obnovte šifrovací klíč.</p></li>
             
 <li class="listitem">
 <p class="listitem">Zavřete průvodce klepnutím na tlačítko <span class="guimenu">Dokončit</span>.</p></li>
@@ -257,9 +256,9 @@
 
 <div class="sect3" id="bknim8d">
 
-<h3 class="title"> Obnovení hesla pomocí exportovaného souboru</h3>
+<h3 class="title">Obnovení šifrovacího klíče pomocí exportovaného souboru</h3>
 
-<p class="para">Chcete-li obnovit heslo, když nemáte tajný soubor ani nový datový soubor, postupujte následovně:</p>
+<p class="para">Chcete-li obnovit šifrovací klíč, když nemáte tajný soubor ani nový datový soubor, postupujte následovně:</p>
 <div class="orderedlist">
 <ol class="orderedlist">
             
@@ -279,7 +278,7 @@
 <p class="listitem">Starý datový soubor odešlete e-mailem správci aplikace iFolder s požadavkem na nový datový soubor.</p></li>
             
 <li class="listitem">
-<p class="listitem">Až obdržíte nový datový soubor, obnovte své heslo podle pokynů v části <a href="managingpassphrse.html#bknim3f" class="xref">Obnovení hesla pomocí nového datového souboru</a>. </p></li>
+<p class="listitem">Až obdržíte nový datový soubor, obnovte svůj šifrovací klíč podle pokynů v části <a href="managingpassphrse.html#bknim3f" class="xref">Obnovení šifrovacího klíče pomocí nového datového souboru</a>. </p></li>
           </ol></div>
 
 </div>
@@ -288,28 +287,28 @@
 
 <div class="sect2" id="bkmh0g8">
 
-<h2 class="title"> Změna hesla</h2>
+<h2 class="title">Změna šifrovacího klíče</h2>
 
-<p class="para">Z bezpečnostních důvodů je nutné heslo pravidelně měnit. Heslo můžete obnovit pomocí jednorázového hesla odeslaného agentem obnovení.</p>
+<p class="para">Z bezpečnostních důvodů je nutné šifrovací klíč pravidelně měnit. Šifrovací klíč můžete obnovit pomocí jednorázového šifrovacího klíče odeslaného agentem obnovení.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bkmh1hl">
-<p class="para">V prohlížeči iFolder klepněte na položku <span class="guimenu">Zabezpečení &gt; Změnit heslo</span>.</p></li>
+<p class="para">V prohlížeči iFolder klepněte na položku <span class="guimenu">Zabezpečení &gt; Změna šifrovacího klíče</span>.</p></li>
 <li class="step" id="bkmh1of">
-<p class="para">V okně <span class="guimenu">Změnit heslo</span> vyberte účet iFolder, pro který chcete heslo obnovit a zadejte následující údaje:</p>
+<p class="para">V okně <span class="guimenu">Změna šifrovacího klíče</span> vyberte účet iFolder, pro který chcete šifrovací klíč obnovit a zadejte následující údaje:</p>
 <div class="formalpara" id="bkmh1ww">
-              <p class="title"><em class="title">Zadejte heslo:</em>
-              Zadejte své aktuální heslo.</p>
+              <p class="title"><em class="title">Zadejte aktuální šifrovací klíč:</em>
+              Zadejte svůj aktuální šifrovací klíč.</p>
             </div>
 
 <div class="formalpara" id="bkmh318">
-              <p class="title"><em class="title">Zadejte nové heslo:</em>
-              Zadejte nové heslo, které chcete nastavit pro aktuální účet iFolder.</p>
+              <p class="title"><em class="title">Zadejte nový šifrovací klíč:</em>
+              Zadejte nový šifrovací klíč, který chcete nastavit pro aktuální účet iFolder.</p>
             </div>
 
 <div class="formalpara" id="bkmh319">
-              <p class="title"><em class="title">Zadejte heslo znovu:</em>
-              Zadejte nové heslo znovu pro potvrzení.</p>
+              <p class="title"><em class="title">Potvrdit šifrovací klíč:</em>
+              Zadejte nový šifrovací klíč znovu pro potvrzení.</p>
             </div>
 
 <div class="formalpara" id="bkmh31a">
@@ -318,7 +317,7 @@
             </div>
 </li>
 <li class="step" id="bkmh2t3">
-<p class="para">Klepněte na možnost <span class="guimenu">Obnovit</span>.</p></li></ol>
+<p class="para">Klepněte na možnost <span class="guimenu">Změnit</span>.</p></li></ol>
 </div>
 
 </div>
@@ -329,7 +328,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="propifolders.html" class="nav"><img src="ui/images/prev.png" alt="Předchozí" title="Předchozí" />Předchozí</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="bkmgmdj.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 

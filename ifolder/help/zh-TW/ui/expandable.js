@@ -111,6 +111,7 @@ if(hasClass(_21[i],"collapsible")==true){
 processExpandableSection(_21[i]);
 }
 }
+self.focus();
 }
 _E_LDRS=Array();
 function callExpandableLoaders(){

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="de" lang="de">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, July 13, 2011 16:10" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,22 +30,22 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Inhaltsverzeichnis' title='Inhaltsverzeichnis' />Inhaltsverzeichnis</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Konfigurieren von lokalen Firewall-Einstellungen für den iFolder-Verkehr</h1>
+<h1 class="title">Konfigurieren von lokalen Firewall-Einstellungen für den iFolder-Verkehr</h1>
 
-<p class="para">Wenn Sie eine lokale Firewall verwenden, müssen Sie die Firewall so einstellen, dass iFolder einen lokalen dynamischen Port auswählen oder einen lokalen statischen Port konfigurieren kann, damit der iFolder-Client lokal (auf demselben Computer) mit Mono XSP Server kommunizieren kann. iFolder verwendet Mono XSP-Webdienste zur HTTP-Kommunikation  mit den Novell iFolder-Enterprise-Servern, auf denen Sie iFolder-Konten besitzen. Der iFolder-Administrator konfiguriert iFolder-Dienste, mit denen bestimmt wird, ob für die Kommunikation in Ihrer Umgebung HTTP verwendet wird.</p>
+<p class="para">Wenn Sie eine lokale Firewall verwenden, müssen Sie die Firewall so einstellen, dass iFolder einen lokalen dynamischen Port auswählen oder einen lokalen statischen Port konfigurieren kann, damit der iFolder-Client lokal (auf demselben Computer) mit Mono XSP Server kommunizieren kann. iFolder verwendet Mono XSP-Webdienste zur HTTP-Kommunikation mit den Novell iFolder-Enterprise-Servern, auf denen Sie iFolder-Konten besitzen. Der iFolder-Administrator konfiguriert iFolder-Dienste, mit denen bestimmt wird, ob für die Kommunikation in Ihrer Umgebung HTTP verwendet wird.</p>
 <p class="para">Ihre Firewall blockiert den Datenverkehr zwischen Mono XSP und dem Novell iFolder-Enterprise-Server nicht, da Mono XSP die HTTP-Standardports für den Datenverkehr verwendet.  Wenn Sie jedoch den Datenverkehr zwischen dem Client und Mono-XSP blockieren, kann der Client nicht mit dem Server kommunizieren. Sie können sich nicht an Ihrem iFolder-Konto anmelden und iFolder-Daten synchronisieren.</p>
 <p class="para">Zunächst wird mit der iFolder-Konfiguration kein bestimmter Port für die Kommunikation zwischen Client und Mono XSP angegeben. Wenn iFolder zum ersten Mal ausgeführt wird, öffnet es einen verfügbaren lokalen Port zum Abfragen von Anforderungen von Mono XSP und zum Senden von Daten an den Server über Mono XSP.  Die Portnummer wird in eine Konfigurationsdatei geschrieben und dieser Port wird anschließend verwendet, es sei denn, der Port ist nicht verfügbar, wenn iFolder gestartet wird. Wenn der Port von einer anderen Anwendung verwendet wird, wählt iFolder einen anderen verfügbaren Port aus, konfiguriert den Port in der Konfigurationsdatei neu und verwendet den Port daraufhin. Wenn iFolder beispielsweise inaktiv ist und eine andere Anwendung den Port verwendet, muss iFolder beim Neustart einen anderen zu verwendenden Port auswählen und konfigurieren.</p>
 <div class="itemizedlist">
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Verwenden eines lokalen dynamischen Ports</h2>
+<h2 class="title">Verwenden eines lokalen dynamischen Ports</h2>
 
 <p class="para">Wenn Sie auf Ihrem Computer eine lokale Firewall verwenden, muss die Firewall den lokalen Datenverkehr zwischen dem iFolder-Server und dem Mono XSP-Server jedes Mal erfassen, wenn iFolder Kontakt mit dem Server aufnimmt, damit die Liste der Benutzer und die iFolder-Daten synchronisiert werden. Wählen Sie <span class="guimenu">Zulassen</span> aus, um den iFolder-Datenverkehr für diese Sitzung zuzulassen. Wenn Sie den Datenverkehr dauerhaft zulassen, sollte Sie Ihre Firewall nicht erneut erinnern. Auf diese Weise vermeiden Sie Popup-Meldungen beim Start von iFolder.</p>
 <p class="para">Wenn Sie den iFolder-zu-Mono XSP-Datenverkehr blockieren, hindert Sie Ihre Firewall daran, eine Verbindung zum iFolder-Server herzustellen und Sie können Ihre Dateien nicht synchronisieren. iFolder erkennt nicht, dass der Datenverkehr von der Firewall blockiert wird. iFolder meldet lediglich, dass keine Verbindung zu Ihrem Konto auf dem iFolder-Server hergestellt werden kann.</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Verwenden eines lokalen statischen Ports</h2>
+<h2 class="title">Verwenden eines lokalen statischen Ports</h2>
 
 <p class="para">Sie können den Parameter des Bereichs für den Port des Webdiensts optional im Abschnitt "Service Manager" der Datei <span class="filename">Simias.config</span> hinzufügen, um einen statischen Port oder einen Portbereich für diesen lokalen Datenverkehr zu verwenden.  Dieser Port bzw. Portbereich kann anschließend in der Firewall geöffnet werden, damit die Kommunikation für Mono-XSP möglich ist. </p>
 <p class="para">Sie können <span class="filename">Simias.config</span> an den folgenden Speicherorten finden:</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Betriebssystem</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Speicherort der Datei Simias.config</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">Benutzername</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="vorherig" title="vorherig" />vorherig</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 

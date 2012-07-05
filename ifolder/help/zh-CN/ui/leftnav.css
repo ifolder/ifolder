@@ -89,7 +89,7 @@ img {
 	padding-top:50px;
 }
 #index, #search, #noscript { 
-  margin:60px 0px 0px 5px;
+  margin:85px 0px 0px 5px;
   padding:0px 0px 0px 0px;
 }
 #searchform, #indexform { 
@@ -98,7 +98,7 @@ img {
 	position:relative;
 	background-color:#ffffff;
 }
-#searchContent, #indexContent { margin:75px 0px 0px 5px; }
+#searchContent, #indexContent { margin:80px 0px 0px 5px; }
 #searchform input, #indexform input { font-size:11px; }
 input.field { padding:0px 0px 0px 1px; }
 #searchform input.field {	width:130px; }

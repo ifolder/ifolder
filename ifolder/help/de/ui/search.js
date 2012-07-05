@@ -325,9 +325,6 @@ co=0;
 return true;
 }
 function get_xml(){
-if(document.implementation&&document.implementation.createDocument){
-xmldoc.normalize();
-}
 pages=xmldoc.getElementsByTagName(xml_pages);
 for(c=0;c<pages.length;c++){
 rs=pages[c];

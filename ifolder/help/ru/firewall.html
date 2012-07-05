@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
 
 <!-- saved from url=(0014)about:internet -->
 <html xml:lang="ru" lang="ru">
@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Monday, July 18, 2011 13:34" />
-<meta name="Content-Date" content="Mon, 29 Jun 1911 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Monday, May 28, 2012 13:05" />
+<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -31,20 +30,20 @@
 
 <noscript>
   <div class='nav'>
-    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.gif' alt='Содержание' title='Содержание' />Содержание</a>
+    <a id='tocref' href='bookinfo.html' class='nav'><img src='ui/images/root2.png' alt='Содержание' title='Содержание' />Содержание</a>
   </div>
 </noscript>
 
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Конфигурирование параметров локального брандмауэра для трафика iFolder</h1>
+<h1 class="title">Конфигурирование параметров локального брандмауэра для трафика iFolder</h1>
 
 <p class="para">При использовании локального брандмауэра Вы должны настроить брандмауэр так, чтобы разрешить iFolder выбрать локальный динамический порт, или настройте локальный статический порт клиента iFolder для локального взаимодействия (на одном и том же компьютере) с сервером Mono XSP. Клиент iFolder использует веб-сервисы Mono XSP для взаимодействия по протоколу HTTP с серверами Novell iFolder Enterprise Server, на которых у пользователя есть учетные записи. Администратор iFolder конфигурирует сервисы iFolder, определяя, используется ли при взаимодействиях протокол HTTP в Вашей среде.</p>
 <p class="para">Брандмауэр не блокирует трафик между сервером Mono XSP и сервером Novell iFolder Enterprise Server, поскольку Mono XSP использует для трафика стандартные порты HTTP. При этом, если обмен трафиком между клиентом и Mono XSP заблокирован, клиент не сможет обмениваться данными с сервером. Пользователь не сможет выполнить вход с помощью учетной записи iFolder и синхронизировать данные iFolder.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Использование локального динамического порта</h2>
+<h2 class="title">Использование локального динамического порта</h2>
 
 <p class="para">Если на Вашем компьютере используется локальный брандмауэр, он должен обнаружить локальный трафик между iFolder и сервером Mono XSP, возникающий при синхронизации списка пользователей и данных iFolder между клиентом iFolder и сервером. Выберите <span class="guimenu">Разрешить</span>, чтобы разрешить трафик iFolder для данного сеанса. Если разрешить трафик на постоянной основе, Ваш брандмауэр не будет выдавать повторные напоминания и при запуске клиента iFolder не будет отображаться всплывающее предупреждение.</p>
 <p class="para">Если заблокировать трафик между iFolder и Mono XSP, установление соединения с сервером iFolder будет запрещаться брандмауэром и синхронизация файлов будет невозможна. iFolder не может определить, что трафик заблокирован брандмауэром, поэтому будут появляться сообщения о невозможности подключения к учетной записи на сервере iFolder.</p>
@@ -70,27 +69,27 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Использование локального статического порта</h2>
+<h2 class="title">Использование локального статического порта</h2>
 
 <p class="para">При необходимости можно добавить параметр "Web Service Port Range" (Диапазон портов веб-сервиса) в раздел "Service Manager" (Менеджер сервиса) конфигурационного файла <span class="filename">Simias.config</span>, чтобы разрешить серверу Mono-XSP использовать статический порт или диапазон портов для данного локального трафика. Этот порт или диапазон портов может затем быть открыт в брандмауэре для разрешения взаимодействия с сервером Mono-XSP. </p>
 <p class="para">Конфигурационный файл <span class="filename">Simias.config</span> может располагаться в следующих местах:</p>
 <div class="informaltable">
-<table class="topbot-lines">
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
-<tr class="headerrow"><th align="left" valign="top" colspan="1" rowspan="1" scope="col"><a name="bwejkc4"></a>
+<tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Операционная система</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Расположение конфигурационного файла Simias</p></th>
 </tr>
             
-<tr class="oddrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejkc5"></a>
+<tr class="oddrow" id="bwejkc5"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Linux</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
                     <span class="filename">/home/<span class="replaceable">имя_пользователя</span>/.local/share/simias/Simias.config</span>
                   </p></td>
 </tr>
-<tr class="evenrow"><td align="left" valign="top" colspan="1" rowspan="1"><a name="bwejlap"></a>
+<tr class="evenrow" id="bwejlap"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Windows</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">
@@ -149,7 +148,7 @@
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="Назад" title="Назад" />Назад</a>
-  <img src="ui/images/virt_dot-line.gif" alt="" />
+  <img src="ui/images/virt_dot-line.png" alt="" />
   <a href="virusscan.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
