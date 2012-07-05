@@ -986,7 +986,7 @@ Naozaj chcete ukončiť aplikáciu ?</value>
     <value>Používateľ {0}  sa pridal k priečinku iFolder „{1}“.  Zoznam členov priečinka iFolder zobrazíte kliknutím sem.</value>
   </data>
   <data name="RememberPasswdCheckbox">
-    <value>&amp;Zapamätať heslo v tomto počítači</value>
+    <value>Zapamätať heslo v to&amp;mto počítači</value>
   </data>
   <data name="subscriptionTitle">
     <value>Nový priečinok „{0}“</value>
@@ -1084,9 +1084,6 @@ Naozaj chcete ukončiť aplikáciu ?</value>
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
-  </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>Synchronizácii zabránila politika obmedzenia typu súboru: {0}</value>
