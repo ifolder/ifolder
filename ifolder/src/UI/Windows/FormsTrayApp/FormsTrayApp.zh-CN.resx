@@ -635,7 +635,7 @@
     <value>可用： </value>
   </data>
   <data name="SharableText">
-    <value>常规(&amp;R)</value>
+    <value>常规(&amp;G)</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>iFolder 服务正在关闭...</value>
@@ -986,7 +986,7 @@
     <value>{0} 已加入 iFolder“{1}”。请单击此处查看 iFolder 的成员列表。</value>
   </data>
   <data name="RememberPasswdCheckbox">
-    <value>在此计算机上记住口令(&amp;R)</value>
+    <value>在此计算机上记住口令(&amp;M)</value>
   </data>
   <data name="subscriptionTitle">
     <value>新建 iFolder“{0}”</value>
@@ -1084,9 +1084,6 @@
   </data>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
-  </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
   </data>
   <data name="policyTypeFailure">
     <value>文件类型限制策略阻止同步：{0}</value>
