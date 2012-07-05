@@ -235,7 +235,7 @@
     <value>Nelze zapisovat soubory do složky. Zkontrolujte oprávnění k místní složce.</value>
   </data>
   <data name="BrowseText">
-    <value>&amp;Prohlížet</value>
+    <value>&amp;Procházet</value>
   </data>
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -382,7 +382,7 @@
     <value>menuTools</value>
   </data>
   <data name="ResetTitle">
-    <value>Obnovení hesla</value>
+    <value>Obnovení šifrovacího klíče</value>
   </data>
   <data name="menuItem1.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -409,10 +409,10 @@
     <value>System.Windows.Forms.ContextMenu, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="IsPassphraseSetException">
-    <value>Heslo není možné zkontrolovat. </value>
+    <value>Šifrovací klíč není možné zkontrolovat. </value>
   </data>
   <data name="VerifyPP">
-    <value>Ověření hesla</value>
+    <value>Ověření šifrovacího klíče</value>
   </data>
   <data name="ServerNameTextbox">
     <value>&amp;Adresa serveru</value>
@@ -424,13 +424,13 @@
     <value>Složky iFolder</value>
   </data>
   <data name="ResetSuccess">
-    <value>Heslo úspěšně obnoveno </value>
+    <value>Šifrovací klíč byl úspěšně obnoven. </value>
   </data>
   <data name="subscriptionMessage">
     <value>{0} vás pozval k účasti na sdílení složky iFolder. Klepnutím na tento odkaz nastavíte složku iFolder.</value>
   </data>
   <data name="InvalidPPText">
-    <value>Zadané heslo je neplatné.</value>
+    <value>Zadaný šifrovací klíč je neplatný.</value>
   </data>
   <data name="YesText">
     <value>Ano</value>
@@ -460,7 +460,7 @@
     <value>Chcete inovovat klienta iFolder na {0}? Klepnete-li na tlačítko Ano, bude klient automaticky ukončen.</value>
   </data>
   <data name="InvalidCurrentPPText">
-    <value>Zadané heslo je neplatné.</value>
+    <value>Zadaný šifrovací klíč je neplatný.</value>
   </data>
   <data name="menuPreferences.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -493,7 +493,7 @@
     <value>Dokončená synchronizace: {0}</value>
   </data>
   <data name="PassStoreErr">
-    <value>Heslo není možné uložit</value>
+    <value>Šifrovací klíč není možné uložit</value>
   </data>
   <data name="$this.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -526,7 +526,7 @@
     <value>Synchronizační protokol obsahuje informace, které se týkají souborů, které nejsou synchronizovány.</value>
   </data>
   <data name="TypeRetypeMisMatch">
-    <value>Zadané heslo a zopakované heslo se neshoduje</value>
+    <value>Zadaný šifrovací klíč a potvrzený šifrovací klíč se neshodují</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -541,7 +541,7 @@
     <value>True</value>
   </data>
   <data name="NoLoggedInDomainsText">
-    <value>Chcete-li změnit heslo, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu.</value>
+    <value>Chcete-li změnit šifrovací klíč, musíte být přihlášeni k účtu. Přihlaste se a zkuste to znovu.</value>
   </data>
   <data name="AccWizardText">
     <value>Průvodce vytvoření účtu iFolder</value>
@@ -629,13 +629,13 @@
     <value>Private</value>
   </data>
   <data name="SetPassphraseSuccess">
-    <value>Heslo bylo úspěšně nastaveno. </value>
+    <value>Šifrovací klíč byl úspěšně nastaven. </value>
   </data>
   <data name="Available.Text">
     <value>Dostupné: </value>
   </data>
   <data name="SharableText">
-    <value>&amp;Pravidelný</value>
+    <value>&amp;Běžné</value>
   </data>
   <data name="iFolderServicesStopping">
     <value>Probíhá ukončování služeb iFolder...</value>
@@ -728,7 +728,7 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Tento průvodce vás provede migrací vašeho účtu iFolder na 3.x.</value>
   </data>
   <data name="RememberPassPhrase">
-    <value>&amp;Zapamatovat heslo na tomto počítači</value>
+    <value>&amp;Zapamatovat šifrovací klíč na tomto počítači</value>
   </data>
   <data name="menuEventLogReader.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -770,7 +770,7 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Probíhá dokončení pomocníka migrací složky iFolder</value>
   </data>
   <data name="ValidatePPError">
-    <value>Nelze ověřit heslo</value>
+    <value>Nelze ověřit šifrovací klíč</value>
   </data>
   <data name="menuHideTrayIcon.Shortcut" type="System.Windows.Forms.Shortcut, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -794,7 +794,7 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Složka se zadaným názvem již existuje...</value>
   </data>
   <data name="ClickConnect">
-    <value>Klepněte na tlačítko Připojit pro potvrzení spojení s doménou.</value>
+    <value>Pokračujte klepnutím na tlačítko Připojit.</value>
   </data>
   <data name="ErrDirCreate">
     <value>Chyba při vytváření klienta</value>
@@ -923,10 +923,10 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Private</value>
   </data>
   <data name="ReTypePassPhrase">
-    <value>Opakujte heslo:</value>
+    <value>Potvrdit šifrovací klíč:</value>
   </data>
   <data name="ResetError">
-    <value>Chyba při změně hesla</value>
+    <value>Chyba při změně šifrovacího klíče</value>
   </data>
   <data name="$this.Icon" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -1085,9 +1085,6 @@ Chcete opravdu aplikaci ukončit ?</value>
   <data name="menuSeparator1.Visible" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
-  </data>
   <data name="policyTypeFailure">
     <value>Zásady omezující typy souborů zabránily synchronizaci: {0}</value>
   </data>
@@ -1107,10 +1104,10 @@ Chcete opravdu aplikaci ukončit ?</value>
     <value>Zašifrováno</value>
   </data>
   <data name="EncryptedText">
-    <value>&amp;Zašifrováno</value>
+    <value>Ši&amp;frování</value>
   </data>
   <data name="EnterPassPhrase">
-    <value>Zadejte heslo:</value>
+    <value>Zadejte šifrovací klíč:</value>
   </data>
   <data name="CompletionPageWT">
     <value>Dokončení průvodce pozvání ke službě iFolder</value>
