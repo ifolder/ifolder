@@ -142,7 +142,7 @@
     <value>Čekání na připojení</value>
   </data>
   <data name="singleWizPageFirst" xml:space="preserve">
-    <value>Heslo se obnovuje pomocí tajného souboru a jeho hesla.</value>
+    <value>Šifrovací klíč se obnovuje pomocí tajného souboru a jeho hesla.</value>
   </data>
   <data name="cannotShareMessage" xml:space="preserve">
     <value>Zašifrovanou složku iFolder nelze sdílet. Sdílet lze pouze běžné složky.</value>
@@ -166,7 +166,7 @@
     <value>Spuštěná synchronizace: {0}</value>
   </data>
   <data name="confirmPassphrase" xml:space="preserve">
-    <value>Potvrdit heslo:</value>
+    <value>Potvrdit šifrovací klíč:</value>
   </data>
   <data name="diskSpaceUsed" xml:space="preserve">
     <value>Využité místo na disku</value>
@@ -244,13 +244,13 @@
     <value>Položky protokolu byly vymazány.</value>
   </data>
   <data name="wizardText" xml:space="preserve">
-    <value>Průvodce obnovením hesla</value>
+    <value>Průvodce obnovením šifrovacího klíče</value>
   </data>
   <data name="wizardName" xml:space="preserve">
     <value>passphraseRecoveryWizard</value>
   </data>
   <data name="infoPageTitle" xml:space="preserve">
-    <value>Vítá vás průvodce obnovením hesla</value>
+    <value>Vítá vás průvodce obnovením šifrovacího klíče</value>
   </data>
   <data name="pathInStoreError" xml:space="preserve">
     <value>Zvolené umístění je uvnitř datové složky iFolder. Vyberte jiné umístění a opakujte akci.</value>
@@ -259,7 +259,7 @@
     <value>Odstraňování souboru:{0}</value>
   </data>
   <data name="infoPageFirst" xml:space="preserve">
-    <value>Chcete-li obnovit ztracené heslo, potřebujete tajný soubor (soukromý klíč certifikátu) a heslo k němu, nebo datový soubor od správce.</value>
+    <value>Chcete-li obnovit ztracený šifrovací klíč, potřebujete tajný soubor (soukromý klíč certifikátu) a heslo k němu, nebo datový soubor od správce.</value>
   </data>
   <data name="localFile" xml:space="preserve">
     <value>Nalezené změny v souboru: {0}</value>
@@ -292,7 +292,7 @@
     <value>Odstraňování na serveru: {0}</value>
   </data>
   <data name="importErrorMesg" xml:space="preserve">
-    <value>Heslo nelze obnovit. Opakujte akci.</value>
+    <value>Šifrovací klíč nelze obnovit. Opakujte akci.</value>
   </data>
   <data name="finishText" xml:space="preserve">
     <value>Dokončit</value>
@@ -337,10 +337,10 @@
     <value>Synchronizace adresáře: {0}</value>
   </data>
   <data name="selectionPageOne" xml:space="preserve">
-    <value>Vyberte možnost pro obnovení vašeho hesla.</value>
+    <value>Vyberte možnost pro obnovení vašeho šifrovacího klíče.</value>
   </data>
   <data name="noPassphrase" xml:space="preserve">
-    <value>Heslo není zadáno.</value>
+    <value>Šifrovací klíč není zadán.</value>
   </data>
   <data name="exitMessage" xml:space="preserve">
     <value>Pokud ukončíte aplikaci Novell iFolder, změny ve vaší složce iFolder nebudou nadále sledovány. Až se příště přihlásíte, aplikace Novell iFolder vyrovná případné rozdíly mezi vaší složkou iFolder a serverem.</value>
@@ -349,7 +349,7 @@
     <value>Zašifrováno</value>
   </data>
   <data name="setNewPassphraseTitle" xml:space="preserve">
-    <value>Nastavit nové heslo</value>
+    <value>Nastavit nový šifrovací klíč</value>
   </data>
   <data name="statusSyncingItems" xml:space="preserve">
     <value>{0} položek k synchronizaci</value>
@@ -391,7 +391,7 @@
     <value>Neplatné umístění</value>
   </data>
   <data name="domainSelectionFirst" xml:space="preserve">
-    <value>Vyberte účet, pro který je nutné obnovit heslo.</value>
+    <value>Vyberte účet, pro který je nutné obnovit šifrovací klíč.</value>
   </data>
   <data name="browseText" xml:space="preserve">
     <value>P&amp;rocházet</value>
@@ -424,7 +424,7 @@
     <value>&amp;Umístění tajného souboru: </value>
   </data>
   <data name="selectionPageTitle" xml:space="preserve">
-    <value>Zvolte krok obnovení hesla</value>
+    <value>Zvolte krok obnovení šifrovacího klíče</value>
   </data>
   <data name="selectionPageThird" xml:space="preserve">
     <value>Mám nový &amp;datový soubor odeslaný správcem.</value>
@@ -448,7 +448,7 @@
     <value>Vlastník</value>
   </data>
   <data name="passphraseNotSet" xml:space="preserve">
-    <value>Pro tento účet není nastaveno heslo.</value>
+    <value>Pro tento účet není nastaven šifrovací klíč.</value>
   </data>
   <data name="emailPageFirst" xml:space="preserve">
     <value>Zašifrovaný soubor klíče byl úspěšně exportován.</value>
@@ -457,13 +457,13 @@
     <value>EmailPage</value>
   </data>
   <data name="finalPageTitle" xml:space="preserve">
-    <value>Heslo bylo úspěšně obnoveno.</value>
+    <value>Šifrovací klíč byl úspěšně obnoven.</value>
   </data>
   <data name="removeTitle" xml:space="preserve">
     <value>Odstranit složku iFolder</value>
   </data>
   <data name="finalPageFirst" xml:space="preserve">
-    <value>Gratulujeme!! Úspěšně jste obnovili heslo. Nyní můžete pro přístup ke svým datům používat nové heslo.</value>
+    <value>Gratulujeme!! Úspěšně jste obnovili šifrovací klíč. Nyní můžete pro přístup ke svým datům používat nový šifrovací klíč.</value>
   </data>
   <data name="backText" xml:space="preserve">
     <value>&amp;Zpět</value>
@@ -517,7 +517,7 @@
     <value>Složka s tímto názvem již existuje.</value>
   </data>
   <data name="passphraseNotEqualError" xml:space="preserve">
-    <value>Hodnoty v polích pro nové heslo a pro potvrzení hesla se neshodují.</value>
+    <value>Hodnoty v polích pro nový šifrovací klíč a pro potvrzení šifrovacího klíče se neshodují.</value>
   </data>
   <data name="errorTitle" xml:space="preserve">
     <value>Chyba složky iFolder</value>
@@ -538,10 +538,10 @@
     <value>Odstranit</value>
   </data>
   <data name="resetPassphraseError" xml:space="preserve">
-    <value>Obnovení hesla se nezdařilo.</value>
+    <value>Obnovení šifrovacího klíče se nezdařilo.</value>
   </data>
   <data name="emailPageSecond" xml:space="preserve">
-    <value>Odešlete tento soubor správci, který soubor klíče dešifruje a odešle vám jej zpět. Pomocí dešifrovaného souboru klíče potom můžete obnovit své heslo pomocí druhé možnosti v průvodci.</value>
+    <value>Odešlete tento soubor správci, který soubor klíče dešifruje a odešle vám jej zpět. Pomocí dešifrovaného souboru klíče potom můžete obnovit svůj šifrovací klíč pomocí druhé možnosti v průvodci.</value>
   </data>
   <data name="oldDataFileError" xml:space="preserve">
     <value>Zadejte umístění souboru XML.</value>
@@ -589,13 +589,13 @@
     <value>Vybrané umístění zahrnuje složku Program Files. Složka Program Files nemůže obsahovat složku iFolder. Vyberte jiné umístění a opakujte akci.</value>
   </data>
   <data name="passphraseNotSetHeading" xml:space="preserve">
-    <value>Heslo není nastaveno.</value>
+    <value>Šifrovací klíč není nastaven.</value>
   </data>
   <data name="importPageName" xml:space="preserve">
     <value>ImportPage</value>
   </data>
   <data name="recoveryError" xml:space="preserve">
-    <value>Heslo nelze obnovit. Byli jste odhlášeni z účtu. Přihlaste se a opakujte akci.</value>
+    <value>Šifrovací klíč nelze obnovit. Byli jste odhlášeni z účtu. Přihlaste se a opakujte akci.</value>
   </data>
   <data name="newDataFileError" xml:space="preserve">
     <value>Umístění nového datového souboru je neplatné.</value>
@@ -607,7 +607,7 @@
     <value>Položky protokolu byly vymazány.</value>
   </data>
   <data name="infoPageSecond" xml:space="preserve">
-    <value>Pokud tyto parametry nemáte, můžete pomocí tohoto průvodce exportovat starý datový soubor a poslat jej správci. Správce soubor dešifruje a odešle vám jej zpět. Pomocí tohoto nového datového souboru pak můžete obnovit své heslo.</value>
+    <value>Pokud tyto parametry nemáte, můžete pomocí tohoto průvodce exportovat starý datový soubor a poslat jej správci. Správce soubor dešifruje a odešle vám jej zpět. Pomocí tohoto nového datového souboru pak můžete obnovit svůj šifrovací klíč.</value>
   </data>
   <data name="preSync" xml:space="preserve">
     <value>Kontrola změn</value>
@@ -616,7 +616,7 @@
     <value>Pokračujte klepnutím na tlačítko Další.</value>
   </data>
   <data name="importPageFirstLine" xml:space="preserve">
-    <value>Heslo se obnovuje pomocí dešifrovaného souboru klíče.</value>
+    <value>Šifrovací klíč se obnovuje pomocí dešifrovaného souboru klíče.</value>
   </data>
   <data name="statusSyncing" xml:space="preserve">
     <value>Synchronizace</value>
@@ -649,7 +649,7 @@
     <value>Klepněte na tlačítko OK, chcete-li provést sloučení, nebo klepněte na tlačítko Storno a vyberte jiné umístění.</value>
   </data>
   <data name="newPassphrase" xml:space="preserve">
-    <value>N&amp;ové heslo:</value>
+    <value>N&amp;ový šifrovací klíč:</value>
   </data>
   <data name="back" xml:space="preserve">
     <value>zpět</value>

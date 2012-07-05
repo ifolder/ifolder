@@ -101,7 +101,7 @@
     <value>False</value>
   </data>
   <data name="$this.Text">
-    <value>Potvzení hesla</value>
+    <value>Potvzení šifrovací klíče</value>
   </data>
   <data name="savePassphrase.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>109, 104</value>
@@ -125,7 +125,7 @@
     <value>Standard</value>
   </data>
   <data name="savePassphrase.Text">
-    <value>Z&amp;apamatovat si heslo pro tento počítač</value>
+    <value>Z&amp;apamatovat si šifrovací klíč pro tento počítač</value>
   </data>
   <data name="$this.AutoScaleBaseSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>5, 13</value>
@@ -266,7 +266,7 @@
     <value>Private</value>
   </data>
   <data name="savePassphrase.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>240, 20</value>
+    <value>290, 18</value>
   </data>
   <data name="pictureBox1.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -287,7 +287,7 @@
     <value>True</value>
   </data>
   <data name="lblPassphrase.Text">
-    <value>Za&amp;dejte heslo:</value>
+    <value>Za&amp;dejte šifrovací klíč:</value>
   </data>
   <data name="savePassphrase.ImageIndex" type="System.Int32, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>-1</value>
@@ -358,8 +358,8 @@
   <data name="Passphrase.Location" type="System.Drawing.Point, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>109, 76</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>0, 0</value>
   </data>
   <data name="btnOk.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
@@ -789,9 +789,6 @@
   </data>
   <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
-  </data>
-  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>0, 0</value>
   </data>
   <data name="$this.DefaultModifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>

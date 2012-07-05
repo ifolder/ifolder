@@ -488,7 +488,7 @@
     <value>172, 20</value>
   </data>
   <data name="retypePassphraseLabel.Text">
-    <value>Opakujte heslo</value>
+    <value>Potvrdit šifrovací klíč</value>
   </data>
   <data name="retypePassphraseLabel.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -527,7 +527,7 @@
     <value>Inherit</value>
   </data>
   <data name="ImportKeysSuccess">
-    <value>Úspěšně importované klíče. Můžete použít nové heslo.</value>
+    <value>Úspěšně importované klíče. Můžete použít nový šifrovací klíč.</value>
   </data>
   <data name="label1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>
@@ -674,7 +674,7 @@
     <value>Private</value>
   </data>
   <data name="oneTimePassphraseLabel.Text">
-    <value>Jednorázové heslo:</value>
+    <value>Jednorázové šifrovací klíč:</value>
   </data>
   <data name="$this.AutoScrollMargin" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>0, 0</value>
@@ -884,7 +884,7 @@
     <value>$this</value>
   </data>
   <data name="passPhraseLabel.Text">
-    <value>Nové heslo:</value>
+    <value>Nový šifrovací klíč:</value>
   </data>
   <data name="label1.Modifiers" type="System.CodeDom.MemberAttributes, System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Private</value>
@@ -1037,10 +1037,7 @@
     <value>Private</value>
   </data>
   <data name="oneTimePassphraseLabel.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>120, 20</value>
-  </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
+    <value>140, 20</value>
   </data>
   <data name="retypePassphrase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
@@ -1133,7 +1130,7 @@
     <value>32767</value>
   </data>
   <data name="BrowseButton.Text">
-    <value>&amp;Prohlížet</value>
+    <value>&amp;Procházet</value>
   </data>
   <data name="waterMark.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Top, Left</value>

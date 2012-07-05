@@ -673,9 +673,6 @@
   <data name="btnHelp.Font" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
-  <data name="ssl.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value />
-  </data>
   <data name="ok.Enabled" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </data>
@@ -2080,7 +2077,7 @@
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>144, 16</value>
   </data>
-  <data name="available.ToolTip">
+  <data name="ssl.AccessibleName" type="System.Resources.ResXNullRef, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value />
   </data>
   <data name="lblLocation.ToolTip">
@@ -2371,8 +2368,8 @@
   <data name="btnHelp.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>Inherit</value>
   </data>
-  <data name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>Invariant Language (Invariant Country)</value>
+  <data name="available.ToolTip">
+    <value />
   </data>
   <data name="usedUnits.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>None</value>
@@ -3392,7 +3389,7 @@
     <value>False</value>
   </data>
   <data name="menuFullControl.Text">
-    <value>Uplné řízení</value>
+    <value>Plná práva</value>
   </data>
   <data name="usedUnits.AutoSize" type="System.Boolean, mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -3999,7 +3996,7 @@
     <value>tabGeneral</value>
   </data>
   <data name="Admin">
-    <value>Uplné řízení</value>
+    <value>Plná práva</value>
   </data>
   <data name="&gt;&gt;syncNow.Parent">
     <value>groupBox1</value>
