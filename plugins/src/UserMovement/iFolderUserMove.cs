@@ -791,17 +791,28 @@ namespace Simias.UserMovement
 								foreach (ShallowNode sn2 in FileList)
 								{
 									Node fileNode = c.GetNodeByID(sn2.ID);
-									Property property = fileNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
-									if (property != null)
+									if(fileNode != null)
 									{
-										string filePath = property.Value.ToString();
-										string fullPath = Path.Combine(UnManagedPath, filePath);;
-										if( !File.Exists( fullPath) )
+										Property property = fileNode.Properties.GetSingleProperty(PropertyTags.FileSystemPath);
+										if (property != null)
 										{
-											// File entry in nodelist is not present in actual path so this user cannot be moved.
-											log.Debug("Error: UserMove: {0} missing from filesystem, so usermove cannot be initatied for the user",fullPath);
-											missingFile++;
+											string filePath = property.Value.ToString();
+											string fullPath = Path.Combine(UnManagedPath, filePath);;
+											if( !File.Exists( fullPath) )
+											{
+												// File entry in nodelist is not present in actual path so this user cannot be moved.
+												log.Debug("UserMoveError: {0} missing from filesystem, so usermove cannot be initatied for the user",fullPath);
+												missingFile++;
+											}
 										}
+										else
+										{
+											log.Debug("UserMoveError:missing property for node {0}", fileNode.Name);
+										}
+									}
+									else
+									{
+										log.Debug("UserMoveError:missing Node for ID {0}-{1}", sn2.ID, sn2.Name);
 									}
 								}	
 							}
@@ -887,28 +898,28 @@ namespace Simias.UserMovement
         	                }
                 	        catch(Exception ex)
                         	{
-					if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
-					{
-						if( retrycount < 3)
-						{
-							Thread.Sleep(1000);
-							smConn.ClearConnection();
-							smConn = new SimiasConnection(domainID, UserID, SimiasConnection.AuthType.PPK, NewServer);
-							svc = new SimiasWebService();
-							svc.Url = NewServer.PublicUrl;
-							smConn.Authenticate ();
-							smConn.InitializeWebClient(svc, "Simias.asmx");
-							continue;
-						}
-					}
-					else
-					{
+								if(ex.Message.IndexOf("401") >= 0 || ex.Message.IndexOf("Unauthorized") >= 0)
+								{
+									if( retrycount < 3)
+									{
+										Thread.Sleep(1000);
+										smConn.ClearConnection();
+										smConn = new SimiasConnection(domainID, UserID, SimiasConnection.AuthType.PPK, NewServer);
+										svc = new SimiasWebService();
+										svc.Url = NewServer.PublicUrl;
+										smConn.Authenticate ();
+										smConn.InitializeWebClient(svc, "Simias.asmx");
+										continue;
+									}
+								}
+								else
+								{
 
 		                                smConn.ClearConnection();
 		      	                        log.Debug("MoveiFolderData: Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace);
 	                	                throw new Exception(String.Format("Exception in remote downloadiFolder method: {0} {1}", ex.Message, ex.StackTrace));
-	        	                }
-				}
+		                        }
+							}
 				break;
 			}
                         if( status == true )
