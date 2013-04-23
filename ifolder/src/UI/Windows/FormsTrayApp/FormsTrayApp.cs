@@ -1627,13 +1627,13 @@ namespace Novell.FormsTrayApp
                 string message = null;
                 switch (syncEventArgs.Action)
                 {
-                    case Action.StartLocalSync:
+                    case Simias.Client.Event.Action.StartLocalSync:
                         if (!syncEventArgs.Name.StartsWith("POBox:"))
                         {
                             message = string.Format(resourceManager.GetString("localSync"), syncEventArgs.Name);
                         }
                         break;
-                    case Action.StartSync:
+                    case Simias.Client.Event.Action.StartSync:
                         {
                             currentSyncCollectionName = syncEventArgs.Name;
                             errorSyncingCurrentCollection = false;
@@ -1648,7 +1648,7 @@ namespace Novell.FormsTrayApp
                             }
                             break;
                         }
-                    case Action.StopSync:
+                    case Simias.Client.Event.Action.StopSync:
                         {
                             // Stop the icon animation.
                             syncAnimateTimer.Stop();

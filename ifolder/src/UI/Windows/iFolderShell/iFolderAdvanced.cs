@@ -2252,11 +2252,11 @@ namespace Novell.iFolderCom
 				SyncSize syncSize = ifWebService.CalculateSyncSize(currentiFolder.ID);
 				objectCount.Text = syncSize.SyncNodeCount.ToString();
 
-				if (collectionSyncEventArgs.Action.Equals(Action.StartSync))
+				if (collectionSyncEventArgs.Action.Equals(Simias.Client.Event.Action.StartSync))
 				{
 					startSync = true;
 				}
-				else if ((collectionSyncEventArgs.Action == Action.StopSync) && collectionSyncEventArgs.Connected)
+                else if ((collectionSyncEventArgs.Action == Simias.Client.Event.Action.StopSync) && collectionSyncEventArgs.Connected)
 				{
 					lastSync.Text = ifWebService.GetMinimaliFolder(currentiFolder.ID,1).LastSyncTime;
 				}
