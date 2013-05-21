@@ -71,6 +71,13 @@ namespace Novell.iFolder.Web
 			this.AvailableSpace = ( spaceAvailable < 0 ) ? 0 : spaceAvailable;
 		}
 
+		private DiskSpace(long spaceUsed, long limit, long spaceAvail)
+		{
+			this.UsedSpace = spaceUsed;
+			this.Limit = limit;
+
+			this.AvailableSpace = spaceAvail;
+		}
 
 		/// <summary>
 		/// WebMethod that gets the DiskSpaceQuota for a given member
@@ -132,10 +139,11 @@ namespace Novell.iFolder.Web
 		public static DiskSpace GetiFolderDiskSpace( string iFolderID )
 		{
 			long limit;
+			long avail;
 
 			Simias.DomainServices.DomainAgent da = new Simias.DomainServices.DomainAgent();
-			long spaceUsed = da.GetDomainDiskSpaceForCollection( iFolderID, out limit );
-			return new DiskSpace( spaceUsed, limit );
+			long spaceUsed = da.GetDomainDiskSpaceForCollection( iFolderID, out limit, out avail );
+			return new DiskSpace( spaceUsed, limit, avail );
 		}
 
 
