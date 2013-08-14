@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormsTrayApp", "FormsTrayApp.csproj", "{8EFF791C-2C5B-42BC-B0C5-851FD2B6BE72}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5E804109-1D93-4B40-B39A-CDBDF4446ED1} = {5E804109-1D93-4B40-B39A-CDBDF4446ED1}
@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iFolderComponent", "..\iFol
 		{5E804109-1D93-4B40-B39A-CDBDF4446ED1} = {5E804109-1D93-4B40-B39A-CDBDF4446ED1}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iFolderShell", "..\iFolderShell\iFolderShell\iFolderShell.vcproj", "{74BB01BE-615C-410D-9502-A8DC5760BA22}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iFolderShell", "..\iFolderShell\iFolderShell\iFolderShell.vcxproj", "{74BB01BE-615C-410D-9502-A8DC5760BA22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novell.iFolder.Web", "..\..\..\common\WebService\Novell.iFolder.Web.csproj", "{9138D2DD-53AF-4631-974A-36F017202F49}"
 EndProject
@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novell.iFolder", "..\..\..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iFolderWebService", "..\..\..\common\WebService\iFolderWebService.csproj", "{AC89F1D3-92AE-491E-A5EB-DEB2DC438EFA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iFolderShellRes", "..\iFolderShell\iFolderShell\iFolderShellRes\iFolderShellRes.vcproj", "{E295891C-3308-455D-963A-A1EF8C68F01E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iFolderShellRes", "..\iFolderShell\iFolderShell\iFolderShellRes\iFolderShellRes.vcxproj", "{E295891C-3308-455D-963A-A1EF8C68F01E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyRecovery", "..\KeyRecovery\KeyRecovery.csproj", "{6776A48D-FBA2-4545-B3DC-E8B95F7BE773}"
 EndProject

@@ -1071,7 +1071,7 @@ namespace Novell.FormsTrayApp
 
 				switch (syncEventArgs.Action)
 				{
-					case Action.StartLocalSync:
+                    case Simias.Client.Event.Action.StartLocalSync:
 					{
                         if (!syncEventArgs.Name.StartsWith("POBox:"))
 						{
@@ -1099,7 +1099,7 @@ namespace Novell.FormsTrayApp
 						}
 						break;
 					}
-					case Action.StartSync:
+                    case Simias.Client.Event.Action.StartSync:
 					{
                         this.MenuRevert.Enabled = false;
                         this.menuActionRevert.Enabled = false;
@@ -1133,7 +1133,7 @@ namespace Novell.FormsTrayApp
 						}
 						break;
 					}
-                    case Action.NoPassphrase:
+                    case Simias.Client.Event.Action.NoPassphrase:
 					{
 						lock(ht)
 						{
@@ -1174,7 +1174,7 @@ namespace Novell.FormsTrayApp
 
 						break;
 					}
-					case Action.StopSync:
+                    case Simias.Client.Event.Action.StopSync:
 					{
 						lock(ht)
 						{
@@ -1232,8 +1232,8 @@ namespace Novell.FormsTrayApp
 
 						break;
 					}
-                    
-                    case Action.DisabledSync:
+
+                    case Simias.Client.Event.Action.DisabledSync:
                     {
                         lock (ht)
                         {
