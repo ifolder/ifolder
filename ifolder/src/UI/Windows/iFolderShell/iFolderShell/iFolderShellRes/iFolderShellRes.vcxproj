@@ -149,7 +149,7 @@ copy $(TargetDir)$(TargetFileName) C:\iFolder_stage
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <Version>3.7.1.3</Version>
+      <Version>3.9.2.0</Version>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

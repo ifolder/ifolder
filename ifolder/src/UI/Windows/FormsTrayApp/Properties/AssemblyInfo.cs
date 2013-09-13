@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Novell iFolder Windows Client")]
-[assembly: AssemblyDescription("Windows client for XP and Vista")]
+[assembly: AssemblyDescription("Windows client")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Novell Inc")]
 [assembly: AssemblyProduct("Novell iFolder")]
-[assembly: AssemblyCopyright("Copyright ©  2009")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("iFolder")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.9.1.0")]
-[assembly: AssemblyFileVersion("3.9.1.0")]
+[assembly: AssemblyVersion("3.9.2.0")]
+[assembly: AssemblyFileVersion("3.9.2.0")]

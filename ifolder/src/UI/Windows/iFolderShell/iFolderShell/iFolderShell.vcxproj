@@ -165,7 +165,7 @@ if exist $(OutDir)$(TargetName).pdb copy $(OutDir)$(TargetName).pdb C:\iFolder_s
     <Link>
       <AdditionalDependencies>comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)iFolderShell.dll</OutputFile>
-      <Version>3.7.1.3</Version>
+      <Version>3.9.2.0</Version>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>iFolderShell.Def</ModuleDefinitionFile>
       <AssemblyLinkResource>$(TargetDir)iFolderShell.res;%(AssemblyLinkResource)</AssemblyLinkResource>
