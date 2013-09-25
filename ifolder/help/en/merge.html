@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, February 01, 2012 11:55" />
-<meta name="Content-Date" content="Mon, 01 Feb 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, September 18, 2013 13:47" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -44,7 +43,7 @@
 
 <div class="sect1" id="merge">
 
-<h1 class="title"> Merging iFolders</h1>
+<h1 class="title">Merging iFolders</h1>
 
 <p class="para">Merge helps you consolidate the iFolder data and minimize the data transfer between iFolder server and client. You can merge the content in an iFolder on the server with the content on an existing local machine folder content.</p>
 <div class="itemizedlist">
@@ -64,7 +63,7 @@
 
 <div class="sect2" id="bcq0ign">
 
-<h2 class="title"> iFolder-to-Folder Merge</h2>
+<h2 class="title">iFolder-to-Folder Merge</h2>
 
 <p class="para">You can merge an iFolder and a normal folder with the same name. For example, you can merge the content of an iFolder named <span class="filename">corporate</span> with that of a normal folder named <span class="filename">corporate</span>. </p>
 <p class="para">Assume that the <span class="filename">corporate</span> iFolder has three sub folders: <span class="filename">hr</span>, <span class="filename">finance,</span> and <span class="filename">marketing</span>. You want to download the content of <span class="filename">corporate</span> iFolder to the folder named <span class="filename">corporate,</span> which contains only the <span class="filename">hr</span> and <span class="filename">finance</span> folders. In this case, you don’t need to download all the three folders to <span class="filename">the corporate</span> folder and increase the transfer rate. Instead, you can merge the <span class="filename">corporate</span> iFolder to <span class="filename">the corporate</span> folder so that the <span class="guimenu">Merge to folder</span> feature intelligently avoids downloading the sub folders <span class="filename">hr</span> and <span class="filename">finance</span>, and downloads only <span class="filename">marketing</span> sub folder. If the data in the <span class="filename">corporate</span> iFolder and <span class="filename">corporate</span> folder is different, a version conflict is displayed. You can resolve the conflicts manually. Similarly, if filename conflict is displayed, you can resolve it manually.</p>
@@ -82,7 +81,7 @@
 
 <div class="sect2" id="bcq0kks">
 
-<h2 class="title"> Moving Existing iFolders to Different Locations</h2>
+<h2 class="title">Moving Existing iFolders to Different Locations</h2>
 
 <p class="para">To move an existing iFolder named <span class="filename">corporate</span> to a different location on the client machine: </p>
 <div class="procedure">
@@ -112,7 +111,7 @@
 
 <div class="sect2" id="bcq0l8i">
 
-<h2 class="title"> Merging Migrated 2.<span class="replaceable">x</span> iFolders with 3.7 or later iFolders </h2>
+<h2 class="title">Merging Migrated 2.<span class="replaceable">x</span> iFolders with 3.7 or later iFolders </h2>
 
 <p class="para">You can merge a migrated 2.x iFolder with an iFolder created in iFolder 3.7 or later server. For more information on migration, see <a href="coexistmig.html" class="xref">Novell iFolder Migration And Upgrade</a>. </p>
 <p class="para">After migration, the 2.<span class="replaceable">x</span> iFolders are moved to the iFolder 3.7 or later server. You can choose to download the migrated iFolders on the 3.7 or later server to the client machine. However, those iFolders might already exist on the client machine. If this is the case, use the merge functionality to avoid unnecessary data transfer from server to the client. </p>

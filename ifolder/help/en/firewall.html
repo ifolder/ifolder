@@ -6,10 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="en" />
-<meta name="Generator" content="Novell Documentation" />
-<meta name="Generation-Date" content="Wednesday, February 01, 2012 11:55" />
-<meta name="Content-Date" content="Mon, 01 Feb 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2010" />
+<meta name="Generation-Date" content="Wednesday, September 18, 2013 13:47" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -44,7 +43,7 @@
 
 <div class="sect1" id="firewall">
 
-<h1 class="title"> Configuring Local Firewall Settings for iFolder Traffic</h1>
+<h1 class="title">Configuring Local Firewall Settings for iFolder Traffic</h1>
 
 <p class="para">If you use a local firewall, you must set your firewall to allow iFolder to choose a local dynamic port or configure a local static port for the iFolder client to communicate locally (the same computer) with Mono XSP Server. iFolder uses Mono XSP Web services to communicate via HTTP with the Novell iFolder enterprise servers where you have iFolder accounts. The iFolder administrator configures iFolder services that determine whether communications use HTTP in your environment.</p>
 <p class="para">Your firewall does not block traffic between Mono XSP and the Novell iFolder enterprise server because Mono XSP uses the standard HTTP ports for traffic. However, if you block the traffic between the client and Mono XSP, the client cannot communicate with the server. You cannot log in to your iFolder account and synchronize iFolder data.</p>
@@ -62,7 +61,7 @@
 
 <div class="sect2" id="bctnqjo">
 
-<h2 class="title"> Using a Local Dynamic Port</h2>
+<h2 class="title">Using a Local Dynamic Port</h2>
 
 <p class="para">If you use a local firewall on your computer, the firewall should detect the local traffic between the iFolder and Mono XSP server whenever iFolder contacts the server to synchronize its list of users and iFolder data. Select <span class="guimenu">Allow</span> to permit the iFolder traffic for this session. If you allow the traffic permanently, your firewall should not remind you again, and you can avoid receiving the pop-up alerts whenever iFolder starts.</p>
 <p class="para">If you block the iFolder-to-Mono XSP traffic, your firewall prevents you from connecting with the iFolder server and you cannot synchronize your files. iFolder does not detect that traffic is blocked by the firewall; it reports only that it cannot connect to your account on the iFolder server.</p>
@@ -70,12 +69,12 @@
 
 <div class="sect2" id="bctnqjp">
 
-<h2 class="title"> Using a Local Static Port</h2>
+<h2 class="title">Using a Local Static Port</h2>
 
 <p class="para">You can optionally add the Web Service Port Range parameter in the Service Manager section of the <span class="filename">Simias.config</span> file to allow Mono XSP Server to use a static port or a range of ports for this local traffic. This port or range of ports can then be opened in the firewall to allow communications for Mono XSP. </p>
 <p class="para">You can find <span class="filename">Simias.config</span> in the following locations:</p>
 <div class="informaltable">
-<table class="topbot"><col width="1905*" /><col width="8097*" />
+<table class="topbot" width="95%"><col width="19%" /><col width="81%" />
               
 <tr class="headerrow" id="bwejkc4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Operating System</p></th>
