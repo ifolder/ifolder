@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoAccountCreator", "AutoAccountCreator\AutoAccountCreator.csproj", "{02AA77ED-4C75-4996-A597-81E699C2E83C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedConflictResolution", "EnhancedConflictResolution\EnhancedConflictResolution.csproj", "{E4BE325D-A939-4D9B-8012-698E703E253B}"
@@ -9,20 +9,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedMenuItems", "Enhanc
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Release|Win32 = Release|Win32
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|Win32.ActiveCfg = Release|x86
-		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|Win32.Build.0 = Release|x86
+		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|x64.ActiveCfg = Release|x64
 		{02AA77ED-4C75-4996-A597-81E699C2E83C}.Release|x64.Build.0 = Release|x64
-		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|Win32.ActiveCfg = Release|x86
-		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|Win32.Build.0 = Release|x86
+		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|x64.ActiveCfg = Release|x64
 		{E4BE325D-A939-4D9B-8012-698E703E253B}.Release|x64.Build.0 = Release|x64
-		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|Win32.ActiveCfg = Release|x86
-		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|Win32.Build.0 = Release|x86
+		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|x64.ActiveCfg = Release|x64
 		{AD7D9A32-F632-42E0-90E7-DD8A75B6492F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
