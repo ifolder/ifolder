@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,19 +40,20 @@
   <a href="bbbcabq.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="deleting">
 
 <h1 class="title">iFolder törlése</h1>
 
-<p class="para">Ha töröl egy iFolder mappát a gyűjteményből, akkor az iFolder helyi másolata és az iFolder tartalma törlődik. A törlés az iFolder megosztási kapcsolatait is befolyásolhatja, attól függően, hogy milyen hozzáférési jogosultsága van hozzá. </p>
-<p class="para">Lehetősége van arra, hogy törölje annak az iFolder mappának a helyi példányát, amely azzal az LDAP-csoporttal van megosztva, amelynek Ön a tagja. Tagságát azonban nem szüntetheti meg az adott iFolder mappában.</p>
-<p class="para">Az alábbi táblázatban össze van foglalva a megosztási kapcsolatra és a tag iFolder mappákra gyakorolt hatás annak függvényében, hogy az iFolder mappát törlő felhasználónak milyen hozzáférési jogosultsága van.</p>
-<div class="table" id="b403b0h"><p class="title"><em class="num">Táblázat 7 </em>Mire kell számítani iFolder mappa törlésekor?</p>
+<p class="para">Ha töröl egy iFolder-mappát a gyűjteményből, akkor az iFolder helyi másolata és az iFolder tartalma törlődik. A törlés az iFolder megosztási kapcsolatait is befolyásolhatja, attól függően, hogy milyen hozzáférési jogosultsága van hozzá. </p>
+<p class="para">Lehetősége van arra, hogy törölje annak az iFolder-mappának a helyi példányát, amely azzal az LDAP-csoporttal van megosztva, amelynek Ön a tagja. Tagságát azonban nem szüntetheti meg az adott iFolder-mappában.</p>
+<p class="para">Az alábbi táblázatban össze van foglalva a megosztási kapcsolatra és a tag iFolder-mappákra gyakorolt hatás annak függvényében, hogy az iFolder-mappát törlő felhasználónak milyen hozzáférési jogosultsága van.</p>
+<div class="table" id="b403b0h"><p class="title"><em class="num">Táblázat 7 </em>Mire kell számítani iFolder-mappa törlésekor?</p>
 <table class="rowseps" width="100%"><col width="25%" /><col width="25%" /><col width="25%" /><col width="25%" />
             
 <tr class="headerrow" id="b403cby"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Az iFolder mappát törlő felhasználó hozzáférési jogosultsága</p></th>
+<p class="para">Az iFolder-mappát törlő felhasználó hozzáférési jogosultsága</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Megosztási kapcsolat</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
@@ -99,12 +100,12 @@
 </tr></table>
 </div>
 
-<p class="para">Az alábbi táblázatban össze van foglalva a megosztási kapcsolatra és a tag iFolder mappákra gyakorolt hatás annak függvényében, hogy az iFolder mappát törlő LDAP-csoporttagnak milyen hozzáférési jogosultsága van.</p>
-<div class="table" id="bcx7q0q"><p class="title"><em class="num">Táblázat 8 </em>Mire kell számítani, amikor egy LDAP-csoporttag törli az egyik iFolder mappát?</p>
+<p class="para">Az alábbi táblázatban össze van foglalva a megosztási kapcsolatra és a tag iFolder-mappákra gyakorolt hatás annak függvényében, hogy az iFolder-mappát törlő LDAP-csoporttagnak milyen hozzáférési jogosultsága van.</p>
+<div class="table" id="bcx7q0q"><p class="title"><em class="num">Táblázat 8 </em>Mire kell számítani, amikor egy LDAP-csoporttag törli az egyik iFolder-mappát?</p>
 <table class="topbot" width="100%"><col width="25%" /><col width="25%" /><col width="25%" /><col width="25%" />
             
 <tr class="headerrow" id="bcx7tk4"><th align="left" valign="top" colspan="1" rowspan="1" scope="col">
-<p class="para">Az iFolder mappát törlő LDAP-csoporttag hozzáférési jogosultsága</p></th>
+<p class="para">Az iFolder-mappát törlő LDAP-csoporttag hozzáférési jogosultsága</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
 <p class="para">Megosztási kapcsolat</p></th>
 <th align="left" valign="top" colspan="1" rowspan="1" scope="col">
@@ -127,7 +128,7 @@
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Nincs hatás</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Nem törölheti az iFolder mappát a kiszolgálóról</p></td>
+<p class="para">Nem törölheti az iFolder-mappát a kiszolgálóról</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Az iFolder helyi másolatát a rendszer normál mappává alakítja vissza</p></td>
 </tr>
@@ -136,7 +137,7 @@
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Nem szüntetheti meg a megosztási kapcsolatot</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Nem törölheti az iFolder mappát a kiszolgálóról</p></td>
+<p class="para">Nem törölheti az iFolder-mappát a kiszolgálóról</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Az iFolder helyi másolatát a rendszer normál mappává alakítja vissza</p></td>
 </tr>
@@ -145,7 +146,7 @@
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Nem szüntetheti meg a megosztási kapcsolatot</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Nem törölheti az iFolder mappát a kiszolgálóról</p></td>
+<p class="para">Nem törölheti az iFolder-mappát a kiszolgálóról</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Az iFolder helyi másolatát a rendszer normál mappává alakítja vissza</p></td>
 </tr></table>
@@ -155,14 +156,14 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bq8ubrz">
-<p class="para">Egy fájlkezelőben vagy az iFolder-böngészőben navigáljon a törölni kívánt iFolder mappához.</p></li>
+<p class="para">Egy fájlkezelőben vagy az iFolder-böngészőben navigáljon a törölni kívánt iFolder-mappához.</p></li>
 <li class="step" id="bq8u9b1">
-<p class="para">Kattintson jobb gombbal az iFolder mappára, majd a <span class="guimenu">Törlés</span> gombra.</p></li></ol>
+<p class="para">Kattintson jobb gombbal az iFolder-mappára, majd a <span class="guimenu">Törlés</span> gombra.</p></li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="bbb7rj2.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

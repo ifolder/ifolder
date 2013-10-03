@@ -76,39 +76,52 @@ _1a=_1a.nextSibling;
 }
 return _1a;
 }
-function processExpandableSection(_1b){
-var _1c=firstChildElement(_1b.parentNode);
-if(_1c){
-addClass(_1c,"expanded");
-var _1d=addFirstChildElement(_1c,"span");
-_1c.onclick=x_toggle;
-x_switch(_1c);
-}
-}
 function x_toggle(){
 x_switch(this);
 }
-function x_switch(_1e){
-var _1f=siblingElement(_1e);
-if(_1f!=null){
-if(hasClass(_1e,"expanded")==true){
-replaceClass(_1e,"expanded","collapsed");
-_1f.style.display="none";
+function x_switch(_1b){
+var _1c=siblingElement(_1b);
+if(_1c!=null){
+if(hasClass(_1b.parentNode,"expanded")==true){
+replaceClass(_1b.parentNode,"expanded","collapsed");
 }else{
-replaceClass(_1e,"collapsed","expanded");
-_1f.style.display="block";
+replaceClass(_1b.parentNode,"collapsed","expanded");
 }
 }
+}
+function hasDescendantWithID(_1d,_1e){
+if(_1e&&_1d){
+var _1f=document.getElementById(_1e);
+while(_1f){
+if(_1f==_1d){
+return true;
+}
+_1f=_1f.parentNode;
+}
+}
+return false;
 }
 function autoInit_collapsed_sections(){
-var _20=document.getElementsByTagName("span");
-var _21=new Array();
-for(var i=0;i<_20.length;i++){
-_21[i]=_20[i];
-}
+var _20=location.hash?location.hash.substring(1):null;
+var _21=document.getElementsByTagName("span");
+var _22=new Array();
 for(var i=0;i<_21.length;i++){
 if(hasClass(_21[i],"collapsible")==true){
-processExpandableSection(_21[i]);
+_22.push(_21[i]);
+}
+}
+for(var i=0;i<_22.length;i++){
+var _24=_22[i];
+var _25=_22[i].parentNode;
+var _26=firstChildElement(_25);
+if(_26){
+addClass(_26,"exp_title");
+addClass(_25,"expanded");
+addFirstChildElement(_26,"span");
+_26.onclick=x_toggle;
+if(hasDescendantWithID(_25,_20)==false){
+x_switch(_26);
+}
 }
 }
 self.focus();
@@ -116,18 +129,18 @@ self.focus();
 _E_LDRS=Array();
 function callExpandableLoaders(){
 for(var i=0;i<_E_LDRS.length;i++){
-var _24=_E_LDRS[i];
-if(_24!=callExpandableLoaders){
-_24();
+var _28=_E_LDRS[i];
+if(_28!=callExpandableLoaders){
+_28();
 }
 }
 }
-function addExpandableLoader(_25){
+function addExpandableLoader(_29){
 if(window.onload&&window.onload!=callExpandableLoaders){
 _E_LDRS[_E_LDRS.length]=window.onload;
 }
 window.onload=callExpandableLoaders;
-_E_LDRS[_E_LDRS.length]=_25;
+_E_LDRS[_E_LDRS.length]=_29;
 }
 addExpandableLoader(autoInit_collapsed_sections);
 

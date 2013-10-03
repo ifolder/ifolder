@@ -6,15 +6,15 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>iFolder mappák összefésülése</title>
+<title>iFolder-mappák összefésülése</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "merge";
@@ -40,56 +40,48 @@
   <a href="setupifolder.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
-<h1 class="title">iFolder mappák összefésülése</h1>
+<h1 class="title">iFolder-mappák összefésülése</h1>
 
-<p class="para">Az összefésülési funkcióval egyszerűbben egyesítheti az iFolder mappákban tárolt adatokat, és minimálisra csökkentheti az iFolder-kiszolgáló és az ügyfél közötti adatforgalmat. A kiszolgálón tárolt iFolder mappa tartalmát összefésülheti a helyi számítógép egyik meglévő mappájának tartalmával.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">iFolder és normál mappa összefésülése</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Meglévő iFolder mappák áthelyezése</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Áthelyezett 2.x verziójú iFolder mappák összefésülése 3.7-es vagy újabb verziójú iFolder mappákkal</a>
-          </p></li></ul></div>
-
+<p class="para">Az összefésülési funkcióval egyszerűbben egyesítheti az iFolder-mappákban tárolt adatokat, és minimálisra csökkentheti az iFolder-kiszolgáló és az ügyfél közötti adatforgalmat. A kiszolgálón tárolt iFolder-mappa tartalmát összefésülheti a helyi számítógép egyik meglévő mappájának tartalmával.</p>
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">iFolder és normál mappa összefésülése</h2>
 
-<p class="para">Lehetőség van arra, hogy egy iFolder mappát és egy azonos nevű normál mappát összefésüljön. Például összefésülheti egy <span class="filename">vallalati</span> nevű iFolder mappa tartalmát egy <span class="filename">vallalati</span> nevű normál mappáéval. </p>
-<p class="para">Tegyük fel, hogy a <span class="filename">vallalati</span> iFolder mappa három almappát tartalmaz: <span class="filename">hr</span>, <span class="filename">penzugy</span> és <span class="filename">marketing</span>. A <span class="filename">vallalati</span> iFolder mappa tartalmát szeretné letölteni a <span class="filename">vallalati</span> nevű mappába, amely csak a <span class="filename">hr</span> és a <span class="filename">penzugy</span> almappákat tartalmazza. Ebben az esetben nem szükséges, hogy mindhárom mappát letöltse a <span class="filename">vallalati</span> mappába, és növelje az átvitt adatmennyiséget. Ehelyett a <span class="filename">vallalati</span> iFolder mappát összefésülheti a <span class="filename">vallalati</span> mappával, így az <span class="guimenu">Összefésülés mappával</span> funkció intelligensen kikerüli a <span class="filename">hr</span> és a <span class="filename">penzugy</span> mappák letöltését, és csak a <span class="filename">marketing</span> almappát tölti le. Ha a <span class="filename">vallalati</span> iFolder mappa és a <span class="filename">vallalati</span> mappa tartalma eltérő, verzióütközésre figyelmeztet a megjelenő üzenet. Az ütközéseket manuálisan lehet feloldani. Hasonló módon, a fájlnevek ütközése esetén szintén manuálisan végezhető el a feloldás.</p>
-<p class="para">Ha a kiszolgálón tárolt iFolder mappa tartalmát szeretné összefésülni a helyi számítógép egyik meglévő mappájának tartalmával:</p>
+<span class="collapsible">
+
+<p class="para">Lehetőség van arra, hogy egy iFolder-mappát és egy azonos nevű normál mappát összefésüljön. Például összefésülheti egy <span class="filename">vallalati</span> nevű iFolder-mappa tartalmát egy <span class="filename">vallalati</span> nevű normál mappáéval. </p>
+<p class="para">Tegyük fel, hogy a <span class="filename">vallalati</span> iFolder-mappa három almappát tartalmaz: <span class="filename">hr</span>, <span class="filename">penzugy</span> és <span class="filename">marketing</span>. A <span class="filename">vallalati</span> iFolder-mappa tartalmát szeretné letölteni a <span class="filename">vallalati</span> nevű mappába, amely csak a <span class="filename">hr</span> és a <span class="filename">penzugy</span> almappákat tartalmazza. Ebben az esetben nem szükséges, hogy mindhárom mappát letöltse a <span class="filename">vallalati</span> mappába, és növelje az átvitt adatmennyiséget. Ehelyett a <span class="filename">vallalati</span> iFolder-mappát összefésülheti a <span class="filename">vallalati</span> mappával, így az <span class="guimenu">Összefésülés mappával</span> funkció intelligensen kikerüli a <span class="filename">hr</span> és a <span class="filename">penzugy</span> mappák letöltését, és csak a <span class="filename">marketing</span> almappát tölti le. Ha a <span class="filename">vallalati</span> iFolder-mappa és a <span class="filename">vallalati</span> mappa tartalma eltérő, verzióütközésre figyelmeztet a megjelenő üzenet. Az ütközéseket manuálisan lehet feloldani. Hasonló módon, a fájlnevek ütközése esetén szintén manuálisan végezhető el a feloldás.</p>
+<p class="para">Ha a kiszolgálón tárolt iFolder-mappa tartalmát szeretné összefésülni a helyi számítógép egyik meglévő mappájának tartalmával:</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr3w0i">
-<p class="para">Kattintson az iFolder-böngészőben a kívánt iFolder mappára a jobb gombbal a kijelölt kiszolgálón található iFolder mappák listájában, és válassza az <span class="guimenu">Összefésülés mappával</span> parancsot.</p></li>
+<p class="para">Kattintson az iFolder-böngészőben a kívánt iFolder-mappára a jobb gombbal a kijelölt kiszolgálón található iFolder-mappák listájában, és válassza az <span class="guimenu">Összefésülés mappával</span> parancsot.</p></li>
 <li class="step" id="bcr4m9d">
 <p class="para">Tallózással jelölje ki a mappát, és kattintson az <span class="guimenu">OK</span> gombra.</p></li></ol>
 </div>
 
-<p class="para">Ekkor a program összehasonlítja e két mappa tartalmát, és a mappában nem található fájlok letöltődnek az iFolder mappából. Azok a fájlok, amelyek nem szerepelnek az iFolder mappában, de a mappában igen, feltöltődnek.</p>
+<p class="para">Ekkor a program összehasonlítja e két mappa tartalmát, és a mappában nem található fájlok letöltődnek az iFolder-mappából. Azok a fájlok, amelyek nem szerepelnek az iFolder-mappában, de a mappában igen, feltöltődnek.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
-<h2 class="title">Meglévő iFolder mappák áthelyezése</h2>
+<h2 class="title">Meglévő iFolder-mappák áthelyezése</h2>
+
+<span class="collapsible">
 
 <p class="para">Meglévő <span class="filename">vallalati</span> nevű mappa áthelyezése az ügyfélgépen: </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr4vli">
-<p class="para">Alakítsa a <span class="filename">vallalati</span> iFolder mappát normál mappává.</p>
+<p class="para">Alakítsa a <span class="filename">vallalati</span> iFolder-mappát normál mappává.</p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Az iFolder mappát nem szabad törölnie a kiszolgálón.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Az iFolder-mappát nem szabad törölnie a kiszolgálón.</p></div>
 
 <p class="para">További információkért lásd: <a href="reverting.html" class="xref">iFolder visszaalakítása normál mappává</a>.</p></li>
 <li class="step" id="bcr4vww">
@@ -98,41 +90,47 @@
 <p class="para"><em class="title">FONTOS:</em>Az áthelyezés során nem szabad megváltoztatnia a mappa nevét.</p></div>
 </li>
 <li class="step" id="bcr4w5o">
-<p class="para">Jelölje ki az iFolder-böngésző ablakában a kiszolgálón található <span class="filename">vallalati</span> iFolder mappát, és válassza az <span class="guimenu">Összefésülés mappával</span> parancsot.</p></li>
+<p class="para">Jelölje ki az iFolder-böngésző ablakában a kiszolgálón található <span class="filename">vallalati</span> iFolder-mappát, és válassza az <span class="guimenu">Összefésülés mappával</span> parancsot.</p></li>
 <li class="step" id="bcr4y94">
 <p class="para">Jelölje ki a helyi számítógépen a <span class="filename">vallalati</span> mappát, és a tartalom összefésüléséhez kattintson az <span class="guimenu">OK</span> gombra.</p>
 <div class="note">
-<p class="para"><em class="title">MEGJEGYZÉS:</em>Ha az <span class="guimenu">Összefésülés mappába</span> funkció helyett az <span class="guimenu">Azonnali szinkronizálás</span> funkciót használja (a lépéseket lásd: <a href="movelocation.html" class="xref">iFolder áthelyezése</a>), a program ellenőrzi a kiszolgálón tárolt iFolder mappában található összes adatot, és minden adatot szinkronizál. Ilyen módon növekszik az adatátvitelhez szükséges idő. Más szóval az <span class="guimenu">Összefésülés mappával</span> funkció segítségével minimálisra csökkenthető az adatátvitel, hiszen ez csak egyesíti az iFolder mappa és a normál mappa tartalmát.</p></div>
+<p class="para"><em class="title">MEGJEGYZÉS:</em>Ha az <span class="guimenu">Összefésülés mappába</span> funkció helyett az <span class="guimenu">Azonnali szinkronizálás</span> funkciót használja (a lépéseket lásd: <a href="movelocation.html" class="xref">iFolder áthelyezése</a>), a program ellenőrzi a kiszolgálón tárolt iFolder-mappában található összes adatot, és minden adatot szinkronizál. Ilyen módon növekszik az adatátvitelhez szükséges idő. Más szóval az <span class="guimenu">Összefésülés mappával</span> funkció segítségével minimálisra csökkenthető az adatátvitel, hiszen ez csak egyesíti az iFolder-mappa és a normál mappa tartalmát.</p></div>
 
 <p class="para">Az összefésüléssel kapcsolatos további tudnivalók: <a href="merge.html#bcq0ign" class="xref">iFolder és normál mappa összefésülése</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
-<h2 class="title">Áthelyezett 2.<span class="replaceable">x</span> verziójú iFolder mappák összefésülése 3.7-es vagy újabb verziójú iFolder mappákkal </h2>
+<h2 class="title">Áthelyezett 2.<span class="replaceable">x</span> verziójú iFolder-mappák összefésülése 3.7-es vagy újabb verziójú iFolder-mappákkal </h2>
 
-<p class="para">Egy áthelyezett 2.x verziójú iFolder mappát összefésülhet egy a 3.7-es vagy újabb iFolder kiszolgálóval létrehozott iFolder mappával. Az áttelepítéssel kapcsolatos további tudnivalók: <a href="coexistmig.html" class="xref">A Novell iFolder áttelepítése és frissítése</a>. </p>
-<p class="para">Áttelepítés után a 2.<span class="replaceable">x</span> verziójú iFolder mappákat a rendszer a 3.7-es vagy újabb verziójú iFolder kiszolgálóra helyezi át. Lehetősége van arra, hogy letöltse a 3.7-es vagy újabb verziójú kiszolgálón lévő áthelyezett iFolder mappákat az ügyfélszámítógépre. Ezek az iFolder mappák azonban már szerepelhetnek az ügyfélgépen. Ebben az esetben az összefésülési funkcióval elkerülhető a kiszolgáló és az ügyfél közötti fölösleges adatforgalom. </p>
-<p class="para">Áthelyezett 2.<span class="replaceable">x</span> verziójú iFolder mappák 3.7-es vagy újabb iFolder mappákkal való összefésüléséhez</p>
+<span class="collapsible">
+
+<p class="para">Egy áthelyezett 2.x verziójú iFolder-mappát összefésülhet egy a 3.7-es vagy újabb iFolder kiszolgálóval létrehozott iFolder-mappával. Az áttelepítéssel kapcsolatos további tudnivalók: <a href="coexistmig.html" class="xref">A Novell iFolder áttelepítése és frissítése</a>. </p>
+<p class="para">Áttelepítés után a 2.<span class="replaceable">x</span> verziójú iFolder-mappákat a rendszer a 3.7-es vagy újabb verziójú iFolder kiszolgálóra helyezi át. Lehetősége van arra, hogy letöltse a 3.7-es vagy újabb verziójú kiszolgálón lévő áthelyezett iFolder-mappákat az ügyfélszámítógépre. Ezek az iFolder-mappák azonban már szerepelhetnek az ügyfélgépen. Ebben az esetben az összefésülési funkcióval elkerülhető a kiszolgáló és az ügyfél közötti fölösleges adatforgalom. </p>
+<p class="para">Áthelyezett 2.<span class="replaceable">x</span> verziójú iFolder-mappák 3.7-es vagy újabb iFolder-mappákkal való összefésüléséhez</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcr6eex">
-<p class="para">helyezze át a 2.<span class="replaceable">x</span> verziójú iFolder mappákat a 3.7-es vagy újabb verziójú iFolder-kiszolgálóra.</p></li>
+<p class="para">helyezze át a 2.<span class="replaceable">x</span> verziójú iFolder-mappákat a 3.7-es vagy újabb verziójú iFolder-kiszolgálóra.</p></li>
 <li class="step" id="bcr6f1n">
-<p class="para">Alakítsa át a helyi számítógépen található 2.<span class="replaceable">x</span> verziójú iFolder mappákat normál mappákká.</p></li>
+<p class="para">Alakítsa át a helyi számítógépen található 2.<span class="replaceable">x</span> verziójú iFolder-mappákat normál mappákká.</p></li>
 <li class="step" id="bcr6f5l">
-<p class="para">Mindegyik iFolder mappához jelölje ki a kiszolgálói példányt, és válassza az <span class="replaceable">Összefésülés mappával</span> lehetőséget.</p></li>
+<p class="para">Mindegyik iFolder-mappához jelölje ki a kiszolgálói példányt, és válassza az <span class="replaceable">Összefésülés mappával</span> lehetőséget.</p></li>
 <li class="step" id="bcr6is8">
 <p class="para">A tartalom összefésüléséhez jelölje ki a normál mappát, és kattintson az <span class="guimenu">OK</span> gombra.</p></li></ol>
 </div>
 
-</div>
+</span>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="viewhide.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

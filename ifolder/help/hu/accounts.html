@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,12 +40,13 @@
   <a href="login.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="accounts">
 
 <h1 class="title">iFolder-fiók konfigurálása</h1>
 
-<p class="para">Új fiókot az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> használatával lehet hozzáadni és konfigurálni. Mielőtt iFolder mappákat hozhatna létre, illetve megoszthatná a rendszeren tárolt iFolder mappákat, legalább egy iFolder-fiókot létre kell hoznia. Az iFolder-kiszolgálóhoz egyszerre csak egy fiókkal csatlakozhat. Ha több iFolder-kiszolgálóhoz kíván csatlakozni, konfiguráljon több fiókot. Külön-külön bejelentkezhet az egyes fiókokba, de egyszerre több fiókba is be lehet jelentkezve.</p>
+<p class="para">Új fiókot az <span class="guimenu">iFolder fiók-létrehozási varázsló</span> használatával lehet hozzáadni és konfigurálni. Mielőtt iFolder-mappákat hozhatna létre, illetve megoszthatná a rendszeren tárolt iFolder-mappákat, legalább egy iFolder-fiókot létre kell hoznia. Az iFolder-kiszolgálóhoz egyszerre csak egy fiókkal csatlakozhat. Ha több iFolder-kiszolgálóhoz kíván csatlakozni, konfiguráljon több fiókot. Külön-külön bejelentkezhet az egyes fiókokba, de egyszerre több fiókba is be lehet jelentkezve.</p>
 <p class="para">A több bejelentkezési identitással rendelkező felhasználók ugyanazon a számítógépen több iFolder-fiókkal is rendelkezhetnek. Amikor első alkalommal indítja el az iFolder szolgáltatást az aktuális bejelentkezési identitással, az iFolder kéri egy iFolder-fiók beállítását.</p>
 <div class="important">
 <p class="para"><em class="title">FONTOS:</em>Az iFolder 3.7-es és újabb verzióiban új funkció jelenik meg, a fiókok automatikus létrehozása, amely megkönnyíti az iFolder rendszergazdájának, hogy az Ön számára fiókot hozzon létre, illetve konfiguráljon. Ha az iFolder rendszergazdája engedélyezte a fiókok automatikus létrehozását, nem szükséges saját magának fiókot konfigurálnia. Amikor első alkalommal indítja el az iFolder ügyfelet, a rendszer jelszó megadását kéri. Adja meg a jelszavát, és fejezze be a fiók konfigurálását.</p></div>
@@ -87,12 +88,12 @@
 <tr class="evenrow" id="bvibwiq"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Legyen ez az alapértelmezett kiszolgálóm</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Ha több kiszolgáló is csatlakozik a fiókjához, jelölje be a <span class="guimenu">Legyen ez az alapértelmezett kiszolgálóm</span> jelölőnégyzetet, így beállíthatja alapértelmezettként a kiszolgálók legördülő listáján kijelölt kiszolgálót arra az esetre, ha létrehoz vagy feltölt egy iFolder mappát.</p></td>
+<p class="para">Ha több kiszolgáló is csatlakozik a fiókjához, jelölje be a <span class="guimenu">Legyen ez az alapértelmezett kiszolgálóm</span> jelölőnégyzetet, így beállíthatja alapértelmezettként a kiszolgálók legördülő listáján kijelölt kiszolgálót arra az esetre, ha létrehoz vagy feltölt egy iFolder-mappát.</p></td>
 </tr>
 <tr class="oddrow" id="bvibwim"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Felhasználónév</p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Adja meg a fiók felhasználóazonosítóját.  Az iFolder rendszergazdája dönti el, hogy itt a hálózati felhasználóazonosítót (az LDAP közös nevet) vagy az e-mail címet kell-e megadni.</p>
+<p class="para">Adja meg a fiók felhasználóazonosítóját. Az iFolder rendszergazdája dönti el, hogy itt a hálózati felhasználóazonosítót (az LDAP közös nevet) vagy az e-mail címet kell-e megadni.</p>
 <p class="para">Tegyük fel, hogy Ön Kovács János, a felhasználóazonosítója kovacsj, e-mail címe kovacs.janos@pelda.com<span class="literal"></span>. A rendszergazda megad egy beállítást a kiszolgálón, és ez határozza meg, hogy az melyik formátumot fogadja el hitelesítés céljából a <span class="guimenu">Felhasználónév</span> mezőben.</p></td>
 </tr>
 <tr class="evenrow" id="bvibwin"><td align="left" valign="top" colspan="1" rowspan="1">
@@ -124,28 +125,28 @@
 <li class="step" id="bkcapke">
 <p class="para">Válassza ki a megfelelő helyreállítási ügynököt a legördülő listából, és kattintson az <span class="guimenu">OK</span> gombra.</p></li>
 <li class="step" id="bbba119">
-<p class="para">Adja meg a helyet, ahol az alapértelmezett iFolder mappát létre kívánja hozni. </p>
-<p class="para">Az alapértelmezett iFolder mappa helye alapértelmezés szerint a <span class="filename">&lt;felhasználó kezdőkönyvtára&gt;/ifolder/kiszolgáló_neve/felhasználónév</span>. </p></li>
+<p class="para">Adja meg a helyet, ahol az alapértelmezett iFolder-mappát létre kívánja hozni. </p>
+<p class="para">Az alapértelmezett iFolder-mappa helye alapértelmezés szerint a <span class="filename">&lt;felhasználó kezdőkönyvtára&gt;/ifolder/kiszolgáló_neve/felhasználónév</span>. </p></li>
 <li class="step" id="bctnqjm">
-<p class="para">Válassza ki, hogy milyen típusú alapértelmezett iFolder mappát kíván létrehozni. Ha a <span class="guimenu">Titkosítás</span> lehetőséget választja, a program kéri a hozzáférési kódot. </p>
+<p class="para">Válassza ki, hogy milyen típusú alapértelmezett iFolder-mappát kíván létrehozni. Ha a <span class="guimenu">Titkosítás</span> lehetőséget választja, a program kéri a hozzáférési kódot. </p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Csak normál iFolder mappákat lehet megosztani. Titkosított iFolder mappákat nem lehet megosztani.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Csak normál iFolder-mappákat lehet megosztani. Titkosított iFolder-mappákat nem lehet megosztani.</p></div>
 
-<p class="para">Ha az iFolder rendszergazdája nem engedélyezte a titkosítást az Ön aktuális fiókja számára, Ön csak normál iFolder mappákat tud létrehozni. Ha a titkosítás engedélyezve van, alapértelmezés szerint a <span class="guimenu">Normál</span> beállítás van megadva. </p></li>
+<p class="para">Ha az iFolder rendszergazdája nem engedélyezte a titkosítást az Ön aktuális fiókja számára, Ön csak normál iFolder-mappákat tud létrehozni. Ha a titkosítás engedélyezve van, alapértelmezés szerint a <span class="guimenu">Normál</span> beállítás van megadva. </p></li>
 <li class="step" id="bft4h62">
-<p class="para">A létrehozandó iFolder mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
-<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
-<p class="para">Ha eltávolítja az alapértelmezett iFolder mappát a kiszolgálóról, amikor legközelebb a fiók konfigurálását végzi egy nem vékony ügyfélről, az iFolder kéri az alapértelmezett iFolder mappa létrehozását. </p>
-<p class="para">Ha a helyi számítógépről távolítja el az alapértelmezett iFolder mappát, a fiók következő konfigurálásakor az iFolder az alapértelmezett iFolder mappa letöltését kéri.</p></li>
+<p class="para">A létrehozandó iFolder-mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
+<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder-mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder-mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
+<p class="para">Ha eltávolítja az alapértelmezett iFolder-mappát a kiszolgálóról, amikor legközelebb a fiók konfigurálását végzi egy nem vékony ügyfélről, az iFolder kéri az alapértelmezett iFolder-mappa létrehozását. </p>
+<p class="para">Ha a helyi számítógépről távolítja el az alapértelmezett iFolder-mappát, a fiók következő konfigurálásakor az iFolder az alapértelmezett iFolder-mappa letöltését kéri.</p></li>
 <li class="step" id="bctnqjn">
-<p class="para">Ha már beállított egy alapértelmezett iFolder mappát, letöltheti a helyi számítógépre.</p>
-<p class="para">Töltse le az alapértelmezett iFolder mappát, és a folytatáshoz kattintson a <span class="guimenu">Tovább</span> gombra.</p></li>
+<p class="para">Ha már beállított egy alapértelmezett iFolder-mappát, letöltheti a helyi számítógépre.</p>
+<p class="para">Töltse le az alapértelmezett iFolder-mappát, és a folytatáshoz kattintson a <span class="guimenu">Tovább</span> gombra.</p></li>
 <li class="step" id="bk84xbh">
-<p class="para">Ha a rendszeren már létezik az alapértelmezett iFolder mappával azonos nevű mappa, összefésülheti a két mappát, vagy letöltheti az alapértelmezett iFolder mappát egy másik helyre.</p>
-<p class="para">A két mappa összefésüléséhez kattintson az <span class="guimenu">OK</span> gombra. A <span class="guimenu">Mégse</span> gombra kattintva letöltheti az alapértelmezett iFolder mappát egy másik helyre.</p></li>
+<p class="para">Ha a rendszeren már létezik az alapértelmezett iFolder-mappával azonos nevű mappa, összefésülheti a két mappát, vagy letöltheti az alapértelmezett iFolder-mappát egy másik helyre.</p>
+<p class="para">A két mappa összefésüléséhez kattintson az <span class="guimenu">OK</span> gombra. A <span class="guimenu">Mégse</span> gombra kattintva letöltheti az alapértelmezett iFolder-mappát egy másik helyre.</p></li>
 <li class="step" id="b407oqi">
 <p class="para">Az iFolder fiók-létrehozási varázsló bezárásához kattintson a <span class="guimenu">Befejezés</span> gombra.</p>
-<p class="para">Az iFolder szolgáltatás szinkronizálja a megadott fiók felhasználólistáját, és azonosítja a letöltésre rendelkezésre álló iFolder mappákat. Ez a kezdeti letöltés a fiókhoz tartozó felhasználólista hosszától függően eltarthat néhány másodperctől kezdve akár több percig is. </p></li>
+<p class="para">Az iFolder szolgáltatás szinkronizálja a megadott fiók felhasználólistáját, és azonosítja a letöltésre rendelkezésre álló iFolder-mappákat. Ez a kezdeti letöltés a fiókhoz tartozó felhasználólista hosszától függően eltarthat néhány másodperctől kezdve akár több percig is. </p></li>
 <li class="step" id="b2m64i3">
 <p class="para">Ellenőrizze, hogy a beállított fiók megjelenik-e a fiókok listájában.</p>
 <div class="substeps">
@@ -159,20 +160,20 @@
 </div>
 </li>
 <li class="step" id="bvwsa5n">
-<p class="para">Adja meg a fiók iFolder mappáinak beállításait a következő módszerek valamelyikével:</p>
+<p class="para">Adja meg a fiók iFolder-mappáinak beállításait a következő módszerek valamelyikével:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Kattintson jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">iFolder mappák</span> parancsát. Ennek hatására megnyílik az iFolder tallózó. Folytassa a következővel: <a href="createifolder.html" class="xref">iFolder mappa létrehozása és feltöltése</a>.</p></li>
+<p class="listitem">Kattintson jobb gombbal az <span class="guimenu">iFolder szolgáltatás</span> ikonjára az értesítési területen, majd válassza a helyi menü <span class="guimenu">iFolder-mappák</span> parancsát. Ennek hatására megnyílik az iFolder tallózó. Folytassa a következővel: <a href="createifolder.html" class="xref">iFolder-mappa létrehozása és feltöltése</a>.</p></li>
 <li class="listitem">
-<p class="listitem">Ha ehhez a fiókhoz tartozó iFolder mappák rendelkezésre állnak letöltésre a kiszolgálóról, azok felsorolása az iFolder mappák a következőn: &lt;<span class="replaceable">iFolder kiszolgáló neve</span> &gt; területen található. A letöltési ikon <img src="images/if3_download.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> jelzi, hogy az iFolder mappa elérhető letöltésre. Folytassa a következővel: <a href="setupifolder.html" class="xref">Elérhető iFolder mappa letöltése</a>.
+<p class="listitem">Ha ehhez a fiókhoz tartozó iFolder-mappák rendelkezésre állnak letöltésre a kiszolgálóról, azok felsorolása az iFolder-mappák a következőn: &lt;<span class="replaceable">iFolder kiszolgáló neve</span> &gt; területen található. A letöltési ikon <img src="images/if3_download.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> jelzi, hogy az iFolder-mappa elérhető letöltésre. Folytassa a következővel: <a href="setupifolder.html" class="xref">Elérhető iFolder-mappa letöltése</a>.
       </p></li></ul></div>
 </li></ol>
 </div>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

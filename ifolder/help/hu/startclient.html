@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,18 +40,19 @@
   <a href="accounts.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="startclient">
 
 <h1 class="title">Az iFolder ügyfél elindítása</h1>
 
-<p class="para">Amikor fut az iFolder szolgáltatás, az asztal értesítési területén egy <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikon látható. Az iFolder beépül az asztali munkakörnyezetbe. Az iFolder mappákon az iFolder embléma (zöld „i” betű) <img src="images/ifolder32.png" alt="iFolder ikon " title="iFolder ikon " class="inline" />  jelenik meg a fájlkezelőkben, az asztalon, illetve az iFolder-böngészőben való megjelenítéskor. A titkosított iFolder mappát az <img src="images/ifolder_encrypted_fold.png" alt="iFolder ikon " title="iFolder ikon " class="inline" />  embléma (zárolt mappa) jelzi.
+<p class="para">Amikor fut az iFolder szolgáltatás, az asztal értesítési területén egy <span class="guimenu">iFolder szolgáltatás</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikon látható. Az iFolder beépül az asztali munkakörnyezetbe. Az iFolder-mappákon az iFolder embléma (zöld „i” betű) <img src="images/ifolder32.png" alt="iFolder ikon " title="iFolder ikon " class="inline" /> jelenik meg a fájlkezelőkben, az asztalon, illetve az iFolder-böngészőben való megjelenítéskor. A titkosított iFolder-mappát az <img src="images/ifolder_encrypted_fold.png" alt="iFolder ikon " title="iFolder ikon " class="inline" /> embléma (zárolt mappa) jelzi.
   </p>
 <div class="important">
 <p class="para"><em class="title">FONTOS:</em>A tálca értesítési területének engedélyezve kell lennie ahhoz, hogy megjelenhessen az <span class="guimenu">iFolder szolgáltatás</span> ikon, amikor fut az iFolder szolgáltatás. </p></div>
 
-<p class="para">A helyi iFolder mappákban található fájlokkal bármikor lehet helyben dolgozni. Amikor fut az iFolder ügyfél, naplózza a helyi iFolder adatokon munka közben végzett változtatásokat. Ha úgy végez változtatást a helyi iFolder-adatokon, hogy közben nem fut az iFolder, a következő indításkor az iFolder azonosítja és naplózza a különbségeket.</p>
-<p class="para">Amikor nem fut az iFolder szolgáltatás, az iFolder mappák a fájlkezelőben vagy az asztalon jeleníthetők meg. Az iFolder mappa hely példányában hozzáférhet a fájlokhoz, de nem tudja kezelni az iFolder mappákat. Ezen kívül az iFolder mappák létrehozásához vagy a fájlok szinkronizálásához be kell jelentkeznie egy fiókba.</p>
+<p class="para">A helyi iFolder-mappákban található fájlokkal bármikor lehet helyben dolgozni. Amikor fut az iFolder ügyfél, naplózza a helyi iFolder adatokon munka közben végzett változtatásokat. Ha úgy végez változtatást a helyi iFolder-adatokon, hogy közben nem fut az iFolder, a következő indításkor az iFolder azonosítja és naplózza a különbségeket.</p>
+<p class="para">Amikor nem fut az iFolder szolgáltatás, az iFolder-mappák a fájlkezelőben vagy az asztalon jeleníthetők meg. Az iFolder-mappa hely példányában hozzáférhet a fájlokhoz, de nem tudja kezelni az iFolder-mappákat. Ezen kívül az iFolder-mappák létrehozásához vagy a fájlok szinkronizálásához be kell jelentkeznie egy fiókba.</p>
 <div class="note">
 <p class="para"><em class="title">MEGJEGYZÉS:</em>A fiók létrehozása során a felhasználó bejelentkezése SSL használatával történik. Amikor a rendszer kéri a kiszolgáló tanúsítványának elfogadását, érvényesítenie kell a tanúsítványt, és el kell fogadnia ahhoz, hogy sikeresen létrejöhessen a csatlakozás.</p></div>
 
@@ -59,6 +60,8 @@
 <div class="sect2" id="b4064a7">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -102,7 +105,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw187q5">
-<p class="para">Jelentkezzen be a számítógépre azzal a helyi Linux-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Linux-felhasználói identitással, amelyet használni szeretne az iFolder-mappák létrehozása közben.</p></li>
 <li class="step" id="bw18fdr">
 <p class="para">Indítsa el az iFolder programot a következő módszerek valamelyikével:</p>
 <div class="itemizedlist">
@@ -118,11 +121,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b406cyo">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -171,18 +178,22 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fxw">
-<p class="para">Jelentkezzen be a számítógépre azzal a helyi Windows-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Windows-felhasználói identitással, amelyet használni szeretne az iFolder-mappák létrehozása közben.</p></li>
 <li class="step" id="bw08fxx">
 <p class="para">Ha a sikeres bejelentkezést követően nem indul el automatikusan az iFolder, indítsa el úgy, hogy a <span class="menuchoice"><span class="guimenu">Start</span> > <span class="guimenu">Programok</span> > <span class="guimenu">iFolder 3</span></span> csoportban az <span class="guimenu">iFolder 3 ügyfél</span> alkalmazásra kattint. </p></li></ol>
 </div>
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b406d69">
 
 <h2 class="title">Macintosh operációs rendszerekhez</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -228,7 +239,7 @@
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bw08fy1">
-<p class="para">Jelentkezzen be a számítógépre azzal a helyi Macintosh-felhasználói identitással, amelyet használni szeretne az iFolder mappák létrehozása közben.</p></li>
+<p class="para">Jelentkezzen be a számítógépre azzal a helyi Macintosh-felhasználói identitással, amelyet használni szeretne az iFolder-mappák létrehozása közben.</p></li>
 <li class="step" id="bw08fy2">
 <p class="para">Indítsa el az iFolder programot a következő módszerek valamelyikével: </p>
 <div class="itemizedlist">
@@ -246,11 +257,13 @@
 
 </div>
 
-</div>
+</span>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

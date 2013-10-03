@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,18 +40,19 @@
   <a href="delacct.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="virusscan">
 
 <h1 class="title">A helyi vírusellenőrző beállítása az iFolder-forgalomhoz</h1>
 
 <p class="para">Ha használ vírusellenőrző programot, zárja ki az ellenőrzésből a <span class="filename">..\simias\WorkArea\</span> könyvtárat. A <span class="filename">..\simias\WorkArea\</span> könyvtár a Windows rendszerben például a következő helyen található: <span class="filename">c:\documents and settings\<span class="replaceable">felhasználónév</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
-<p class="para">A <span class="filename">..\simias\WorkArea\</span> könyvtárba helyezi az iFolder a fájlokat a kiszolgálóról való letöltésre.  Ha valamelyik iFolder fájl vírussal fertőzött, és a vírusellenőrző észleli ezt a vírust, miközben a fájl a <span class="filename">.\simias\WorkArea</span> könyvtárban van, a vírusellenőrző üzenetet jelenít meg, amelyben közli, hogy vírust talált, a fájlt karanténba zárja, majd az iFolder ismételten megkísérli a szinkronizálást. </p>
-<p class="para">A WorkArea kihagyása az ellenőrzésből lehetőséget ad a szinkronizálás befejezésére. A fertőzött fájl sikeresen letöltődik, és a helyi iFolder mappába kerül. Ezután a vírusellenőrző észleli a fertőzött fájlt az iFolder mappában, és a karanténba helyezi át, megvédve ezáltal a számítógépet a fertőzéstől. Az iFolder észleli a fájl törlését, és a következő szinkronizálás elkezdésekor az iFolder törli a fájlt a kiszolgálón és a tagszámítógépeken. </p>
+<p class="para">A <span class="filename">..\simias\WorkArea\</span> könyvtárba helyezi az iFolder a fájlokat a kiszolgálóról való letöltésre. Ha valamelyik iFolder fájl vírussal fertőzött, és a vírusellenőrző észleli ezt a vírust, miközben a fájl a <span class="filename">.\simias\WorkArea</span> könyvtárban van, a vírusellenőrző üzenetet jelenít meg, amelyben közli, hogy vírust talált, a fájlt karanténba zárja, majd az iFolder ismételten megkísérli a szinkronizálást. </p>
+<p class="para">A WorkArea kihagyása az ellenőrzésből lehetőséget ad a szinkronizálás befejezésére. A fertőzött fájl sikeresen letöltődik, és a helyi iFolder-mappába kerül. Ezután a vírusellenőrző észleli a fertőzött fájlt az iFolder-mappában, és a karanténba helyezi át, megvédve ezáltal a számítógépet a fertőzéstől. Az iFolder észleli a fájl törlését, és a következő szinkronizálás elkezdésekor az iFolder törli a fájlt a kiszolgálón és a tagszámítógépeken. </p>
 <p class="para">Ha azonban a fájl letöltési helyén az iFolder csak olvasható, akkor a helyi törlés nem terjed ki a kiszolgálóra és a többi tagszámítógépre. A vírust máshol kell észlelni, ahol az engedélyek lehetővé teszik a változások szinkronizálását. A felhasználót a vírusellenőrzője valószínűleg tájékoztatja a vírusról, ezért neki kell tájékoztatnia a többi iFolder tagot is a vírusról.</p>
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="firewall.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

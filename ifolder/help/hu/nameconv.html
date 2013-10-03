@@ -6,15 +6,15 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>Az iFolder mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</title>
+<title>Az iFolder-mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "nameconv";
@@ -40,33 +40,34 @@
   <a href="ificons.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="nameconv">
 
-<h1 class="title">Az iFolder mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</h1>
+<h1 class="title">Az iFolder-mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</h1>
 
-<p class="para">Az iFolder ügyfél a Linux és a Windows fájlrendszerek korlátozásait is figyelembe vevő elnevezési konvenciókat tesz kötelezővé.  Ahhoz, hogy egy iFolder mappát, mappát vagy fájlt szinkronizálni lehessen, annak meg kell felelnie az elnevezési konvencióknak.</p>
-<p class="para">Tartsa be a következő elnevezési konvenciókat az iFolder mappák és a bennük található fájlok és mappák elnevezésekor:</p>
+<p class="para">Az iFolder ügyfél a Linux- és a Windows-fájlrendszerek korlátozásait is figyelembe vevő elnevezési konvenciókat tesz kötelezővé. Ahhoz, hogy egy iFolder-mappát, mappát vagy fájlt szinkronizálni lehessen, annak meg kell felelnie az elnevezési konvencióknak.</p>
+<p class="para">Tartsa be a következő elnevezési konvenciókat az iFolder-mappák és a bennük található fájlok és mappák elnevezésekor:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">Az iFolder az UTF-8 kódolású <a href="http://www.unicode.org" class="ulink">Unicode<sup class="superscript">*</sup></a> karakterkészletet támogatja. </p></li>
 <li class="listitem">
-<p class="listitem">Ne használja az alábbi – érvénytelen – karaktereket az iFolder mappák és a bennük található mappák és fájlok nevében:</p><pre class="screen">
+<p class="listitem">Ne használja az alábbi – érvénytelen – karaktereket az iFolder-mappák és a bennük található mappák és fájlok nevében:</p><pre class="screen">
 \/:*?"&lt;&gt;|;
 </pre>
 <p class="listitem">Ha a fájl vagy a mappa nevében az érvénytelen karakterek vannak, az iFolder névütközést idéz elő. Ahhoz, hogy a fájlt vagy mappát szinkronizálni lehessen, az ütközést fel kell oldani.</p></li>
 <li class="listitem">
 <p class="listitem">Az elérési út egyes elemeinek maximális hosszúságát az ügyfél fájlrendszere határozza meg. Fájlnevek esetén a maximális hosszba a pont (.) és a kiterjesztés is beleszámít. </p>
-<p class="listitem">Amikor egy olyan iFolder mappát próbál letölteni vagy szinkronizálni, amelynél a név hosszúsága meghaladja a fájlrendszerben támogatott maximumot, az iFolder hibaüzenetet jelenít meg.</p></li>
+<p class="listitem">Amikor egy olyan iFolder-mappát próbál letölteni vagy szinkronizálni, amelynél a név hosszúsága meghaladja a fájlrendszerben támogatott maximumot, az iFolder hibaüzenetet jelenít meg.</p></li>
 <li class="listitem">
-<p class="listitem">Az iFolder mappák, a mappák és a fájlok nevében nincs megkülönböztetve a kis-és nagybetű, de a kis- és nagybetűk megmaradnak. Ha vannak olyan fájlnevek, amelyek csak abban különböznek, hogy egyes karakterek az egyikben nagybetűvel, a másikban kisbetűvel vannak írva, akkor az iFolder névütközést idéz elő. Ahhoz, hogy a fájlt vagy mappát szinkronizálni lehessen, az ütközést fel kell oldani.</p></li>
+<p class="listitem">Az iFolder-mappák, a mappák és a fájlok nevében nincs megkülönböztetve a kis-és nagybetű, de a kis- és nagybetűk megmaradnak. Ha vannak olyan fájlnevek, amelyek csak abban különböznek, hogy egyes karakterek az egyikben nagybetűvel, a másikban kisbetűvel vannak írva, akkor az iFolder névütközést idéz elő. Ahhoz, hogy a fájlt vagy mappát szinkronizálni lehessen, az ütközést fel kell oldani.</p></li>
 <li class="listitem">
-<p class="listitem">Ha FAT32 fájlrendszerben, Linux rendszeren hoz létre iFolder mappákat, kerülje a fájlok csupa nagybetűvel való elnevezését. A Linux VFAT, illetve FAT32 fájlkezelése az összes az MS-DOS 8+3 fájlformátumnak megfelelő és csupa nagybetűből álló fájlnevet csupa kisbetűből állóvá módosítja. Ha az iFolder mappa csak olvasható hozzáférési jogosultságú, akkor ez szinkronizálási problémákhoz vezet az adott fájloknál.</p></li></ul></div>
+<p class="listitem">Ha FAT32 fájlrendszerben, Linux rendszeren hoz létre iFolder-mappákat, kerülje a fájlok csupa nagybetűvel való elnevezését. A Linux VFAT, illetve FAT32 fájlkezelése az összes az MS-DOS 8+3 fájlformátumnak megfelelő és csupa nagybetűből álló fájlnevet csupa kisbetűből állóvá módosítja. Ha az iFolder-mappa csak olvasható hozzáférési jogosultságú, akkor ez szinkronizálási problémákhoz vezet az adott fájloknál.</p></li></ul></div>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="typeguide.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

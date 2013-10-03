@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,36 +40,32 @@
   <a href="virusscan.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
 <h1 class="title">A helyi tűzfal beállítása az iFolder-forgalomhoz</h1>
 
 <p class="para">Ha helyi tűzfalat használ, úgy kell beállítania, hogy az iFolder választhassa a helyi dinamikus portot, vagy be kell állítania egy helyi statikus portot, amelyen az iFolder-ügyfél helyben (ugyanazon a számítógépen) kommunikálhat a Mono XSP kiszolgálóval. Az iFolder a Mono XSP webszolgáltatásokat használja az azokkal a vállalati kiszolgálókkal történő, HTTP protokollon keresztüli kommunikációhoz, ahol az iFolder-fiókok vannak. Az iFolder rendszergazda állítja be azokat az iFolder szolgáltatásokat, amelyek meghatározzák, hogy a kommunikáció a HTTP protokollt használja az adott környezetben.</p>
-<p class="para">A tűzfal nem blokkolja a Mono XSP és a Novell iFolder vállalati kiszolgáló közti forgalmat, mert a Mono XSP a szabványos HTTP-portokat használja a forgalom lebonyolítására.  Ha azonban az ügyfél és a Mono XSP közötti forgalom blokkolva van, az ügyfél nem tud kommunikálni a kiszolgálóval.  Nem tud bejelentkezni az iFolder-fiókra, és nem tudja szinkronizálni az iFolder-adatokat.</p>
-<p class="para">Az iFolder-beállításokban eredetileg nincs megadva, hogy a rendszer mely portot használja az ügyfél és a Mono XSP közötti kommunikációra. Amikor az iFolder először fut, megnyit egy elérhető helyi portot a Mono XSP-től érkező kérések figyelése és a Mono XSP-n keresztül a kiszolgálóra való adatküldés céljából.  A portszámot egy konfigurációs fájlba írja, és innentől kezdve ezt a portot használja, kivéve ha nem érhető el a port, amikor elindul az iFolder. Ha a portot egy másik alkalmazás használja, az iFolder egy másik elérhető portot választ, a konfigurációs fájlba beleírja az új portot, és ezek után az új portot használja. Ha például az iFolder nem működik, és egy másik alkalmazás kezdi használni a portot, akkor az iFolder programnak az elindulás után választania kell egy másik portot és konfigurálnia kell.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Helyi dinamikus port használata</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Helyi statikus port használata</a>
-          </p></li></ul></div>
-
+<p class="para">A tűzfal nem blokkolja a Mono XSP és a Novell iFolder vállalati kiszolgáló közti forgalmat, mert a Mono XSP a szabványos HTTP-portokat használja a forgalom lebonyolítására. Ha azonban az ügyfél és a Mono XSP közötti forgalom blokkolva van, az ügyfél nem tud kommunikálni a kiszolgálóval. Nem tud bejelentkezni az iFolder-fiókra, és nem tudja szinkronizálni az iFolder-adatokat.</p>
+<p class="para">Az iFolder-beállításokban eredetileg nincs megadva, hogy a rendszer mely portot használja az ügyfél és a Mono XSP közötti kommunikációra. Amikor az iFolder először fut, megnyit egy elérhető helyi portot a Mono XSP-től érkező kérések figyelése és a Mono XSP-n keresztül a kiszolgálóra való adatküldés céljából. A portszámot egy konfigurációs fájlba írja, és innentől kezdve ezt a portot használja, kivéve ha nem érhető el a port, amikor elindul az iFolder. Ha a portot egy másik alkalmazás használja, az iFolder egy másik elérhető portot választ, a konfigurációs fájlba beleírja az új portot, és ezek után az új portot használja. Ha például az iFolder nem működik, és egy másik alkalmazás kezdi használni a portot, akkor az iFolder programnak az elindulás után választania kell egy másik portot és konfigurálnia kell.</p>
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Helyi dinamikus port használata</h2>
 
+<span class="collapsible">
+
 <p class="para">Ha a számítógépén helyi tűzfalat használ, akkor a tűzfal észleli a Mono XSP kiszolgáló és az iFolder közötti helyi forgalmat, amikor az iFolder kapcsolatot létesít a kiszolgálóval a felhasználók listájának és az iFolder-adatoknak a szinkronizálása végett. Válassza az <span class="guimenu">Engedélyezés</span> lehetőséget, ha erre a munkamenetre engedélyezni kívánja az iFolder-forgalmat. Ha a forgalmat állandó módon engedélyezi, akkor a tűzfal nem emlékeztet többé, így az iFolder indulásakor nem kap többé előugró üzenetben értesítést.</p>
 <p class="para">Ha azonban blokkolja az iFolder és a Mono XSP közötti forgalmat, a tűzfal megakadályozza a kapcsolódást az iFolder kiszolgálóhoz, és nem fogja tudni szinkronizálni a fájljait. Az iFolder nem észleli, hogy a forgalmat a tűzfal blokkolja, csak annyit jelent, hogy nem tud kapcsolódni az iFolder kiszolgálón található fiókhoz.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Helyi statikus port használata</h2>
+
+<span class="collapsible">
 
 <p class="para">A <span class="filename">Simias.config</span> fájl Service Manager szakaszában meg lehet adni a Web Service Port Range paraméter értékét, ez lehetővé teszi, hogy a Mono XSP kiszolgáló a helyi forgalomhoz statikus portot vagy porttartományt használjon. Ezután a tűzfalon meg lehet nyitni ezt a portot vagy porttartományt a Mono XSP kommunikációjának engedélyezésére. </p>
 <p class="para">A <span class="filename">Simias.config</span> fájl a következő helyeken található:</p>
@@ -129,7 +125,7 @@
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234</span>" /&gt;
 </pre></li>
 <li class="listitem">
-<p class="listitem">Adjon meg egy porttartományt (például "1234-1236"), ekkor a rendszer a tartományban található egyik portot használja majd.  Például:</p><pre class="screen">
+<p class="listitem">Adjon meg egy porttartományt (például "1234-1236"), ekkor a rendszer a tartományban található egyik portot használja majd. Például:</p><pre class="screen">
 &lt;setting name="WebServicePortRange" value="<span class="replaceable">1234-1236</span>" /&gt;
 </pre></li></ul></div>
 </li></ol>
@@ -140,11 +136,13 @@
 <p class="para">További információkért lásd: <a href="startclient.html" class="xref">Az iFolder ügyfél elindítása</a>.</p></li></ol>
 </div>
 
-</div>
+</span>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

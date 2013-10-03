@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,39 +40,52 @@
   <a href="nameconv.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
 <h1 class="title">Irányelvek – nem szinkronizálandó fájlméretek és fájltípusok</h1>
 
-<p class="para">Ha az iFolder ügyfelet a Novell iFolder verziójával használják, akkor az iFolder rendszergazdája megadhat fájltípusra, illetve maximális fájlméretre vonatkozó megszorításokat a rendszer, a felhasználó, az LDAP-csoport vagy az iFolder mappák szintjén.   A fiókra megszorítás vonatkozhat abban a tekintetben is, hogy mennyi területet használhat azokban az iFolder mappákban, amelyeknek a felhasználó a tulajdonosa. Ha más iFolder mappákban is részt vesz a felhasználó, akkor a kiszolgálón elfoglalt hely az adott iFolder mappa tulajdonosának helykvótájából vonódik le.</p>
+<p class="para">Ha az iFolder ügyfelet a Novell iFolder verziójával használják, akkor az iFolder rendszergazdája megadhat fájltípusra, illetve maximális fájlméretre vonatkozó megszorításokat a rendszer, a felhasználó, az LDAP-csoport vagy az iFolder-mappák szintjén. A fiókra megszorítás vonatkozhat abban a tekintetben is, hogy mennyi területet használhat azokban az iFolder-mappákban, amelyeknek a felhasználó a tulajdonosa. Ha más iFolder-mappákban is részt vesz a felhasználó, akkor a kiszolgálón elfoglalt hely az adott iFolder-mappa tulajdonosának helykvótájából vonódik le.</p>
 <p class="para">Egyes fájltípusokat nem érdemes szinkronizálni, így például az operációs rendszer fájljait, a fájlkezelők által létrehozott rejtett fájlokat, vagy az olyan adatbázisokat, amelyek egymással összekapcsolt fájlokként vannak megvalósítva. Azt is megteheti, hogy a szinkronizálandó fájltípusok közé csak a vállalati tevékenységhez kapcsolódó fájltípusokat veszi fel, vagy kizárja a vállalati tevékenységhez nem kapcsolódó fájlokat, például az <span class="filename">.mp3</span> fájlokat. </p>
 <div class="sect2" id="bctogsl">
 
 <h2 class="title">Az operációs rendszer fájljai</h2>
 
-<p class="para">Rendszerkönyvtárakat ne alakítson át iFolder mappákká. A rendszerfájlok többsége nem változik gyakran, és jobb az alaprendszerről és a legfontosabb programokról megőrizni egy lemezképet, mint megpróbálni szinkronizálni a fájlokat a kiszolgálóra.</p>
+<span class="collapsible">
+
+<p class="para">Rendszerkönyvtárakat ne alakítson át iFolder-mappákká. A rendszerfájlok többsége nem változik gyakran, és jobb az alaprendszerről és a legfontosabb programokról megőrizni egy lemezképet, mint megpróbálni szinkronizálni a fájlokat a kiszolgálóra.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Rejtett fájlok</h2>
 
+<span class="collapsible">
+
 <p class="para">Ha a fájlrendszer a megjelenítési beállítások nyomon követésére rejtett fájlokat használ, akkor lehet, hogy a rendszergazda kizárja ezeket a fájltípusokat a szinkronizálásból. A rejtett fájlok általában csak azon a számítógépen relevánsak, amelyiken létrejöttek, és minden alkalommal módosulnak, amikor a fájlhoz vagy a könyvtárhoz hozzáférés történik. Ezeket a fájlokat nem szükséges megőrizni, szinkronizálásuk gyakori fájlütközési hibákhoz vezet. </p>
 <p class="para">Az iFolder például automatikusan kizár két rejtett fájlkezelő fájlt, a <span class="filename">thumbs.db</span> és a <span class="filename">.DS_Store</span> fájlt.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Adatbázisfájlok</h2>
 
+<span class="collapsible">
+
 <p class="para">Az iFolder az egyes fájlokat vagy az egyes fájlok módosult részeit szinkronizálja, nem szinkronizálja a fájlokat fájlok együtteseként. Összekapcsolt fájlok segítségével magvalósított adatbázist ne próbáljon meg szinkronizálni az iFolder segítségével.</p>
-<p class="para">Ne próbálja meg szinkronizálni a GroupWise-adatokat úgy, hogy a GroupWise archívumából, gyorsítótárából vagy távoli könyvtáraiból iFolder mappákat hoz létre. Ha ezt teszi, akkor a GroupWise adatfájlok néhány szinkronizálás után megsérülnek. A GroupWise megfelelő működéséhez az archívumban lévő fájlokat a fájlok együtteseként kell fenntartani.</p>
-</div>
+<p class="para">Ne próbálja meg szinkronizálni a GroupWise-adatokat úgy, hogy a GroupWise archívumából, gyorsítótárából vagy távoli könyvtáraiból iFolder-mappákat hoz létre. Ha ezt teszi, akkor a GroupWise adatfájlok néhány szinkronizálás után megsérülnek. A GroupWise megfelelő működéséhez az archívumban lévő fájlokat a fájlok együtteseként kell fenntartani.</p>
+</span>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>

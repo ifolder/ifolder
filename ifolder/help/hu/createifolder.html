@@ -6,15 +6,15 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="hu" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:17" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
 </style>
 
-<title>iFolder mappa létrehozása és feltöltése</title>
+<title>iFolder-mappa létrehozása és feltöltése</title>
 <script type="text/javascript">
 <!--//--><![CDATA[//><!--
   var thisId = "createifolder";
@@ -40,67 +40,51 @@
   <a href="sharewith.html" class="nav">&nbsp;következő<img src="ui/images/next.png" alt="következő" title="következő" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
-<h1 class="title">iFolder mappa létrehozása és feltöltése</h1>
+<h1 class="title">iFolder-mappa létrehozása és feltöltése</h1>
 
 <p class="para">iFolder az alább irányelveknek megfelelő, már meglévő mappából hozható létre konvertálással. </p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-            <a href="locguide.html" class="xref">Irányelvek az iFolder mappák helyéhez és használatához</a>
+            <a href="locguide.html" class="xref">Irányelvek az iFolder-mappák helyéhez és használatához</a>
           </p></li>
 <li class="listitem">
 <p class="listitem">
-            <a href="nameconv.html" class="xref">Az iFolder mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</a>
+            <a href="nameconv.html" class="xref">Az iFolder-mappákra, és a bennük található mappákra és fájlokra vonatkozó elnevezési konvenciók</a>
           </p></li></ul></div>
 
 <p class="para">Ha a mappa nem létezik, tallózás segítségével a kívánt helyre lehet navigálni, és az új mappát létre lehet hozni a folyamat részeként. </p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Csak normál iFolder mappákat lehet megosztani. Titkosított iFolder mappákat nem lehet megosztani.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Csak normál iFolder-mappákat lehet megosztani. Titkosított iFolder-mappákat nem lehet megosztani.</p></div>
 
-<p class="para">Az iFolder mappán belül bármilyen alkönyvtárstruktúra létrehozható, a személyes vagy a vállalati munkavégzési szokásoknak megfelelően. Az alkönyvtárstruktúra minden tag iFolder mappa esetében állandó. Az egyes munkaállomások megadhatnak más és más szülőkönyvtárat a megosztott iFolder mappához.</p>
-<p class="para">Amikor Ön túllépi az egyes felhasználók által létrehozható iFolder mappák maximális számát, az iFolder hibaüzenetet jelenít meg. Ha például a rendszergazda az <span class="guimenu">iFolder mappák felhasználónkénti száma</span> házirendet 10-es értékre állította be, és Ön megpróbál létrehozni egy tizenegyedik iFolder mappát, az iFolder értesítést ad a házirend megsértéséről.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh operációs rendszerekhez</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">iFolder mappák létrehozása FAT32 csatlakozási ponton (Linux)</a>
-          </p></li></ul></div>
-
+<p class="para">Az iFolder-mappán belül bármilyen alkönyvtárstruktúra létrehozható, a személyes vagy a vállalati munkavégzési szokásoknak megfelelően. Az alkönyvtárstruktúra minden tag iFolder-mappa esetében állandó. Az egyes munkaállomások megadhatnak más és más szülőkönyvtárat a megosztott iFolder-mappához.</p>
+<p class="para">Amikor Ön túllépi az egyes felhasználók által létrehozható iFolder-mappák maximális számát, az iFolder hibaüzenetet jelenít meg. Ha például a rendszergazda az <span class="guimenu">iFolder-mappák felhasználónkénti száma</span> házirendet 10-es értékre állította be, és Ön megpróbál létrehozni egy tizenegyedik iFolder-mappát, az iFolder értesítést ad a házirend megsértéséről.</p>
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
 
-<p class="para">iFolder mappákat létre lehet hozni fájlkezelővel vagy az iFolder-böngészővel, amely az ügyfélalkalmazásból érhető el. Az alábbi módszerekkel lehet iFolder mappát létrehozni:</p>
+<span class="collapsible">
+
+<p class="para">iFolder-mappákat létre lehet hozni fájlkezelővel vagy az iFolder-böngészővel, amely az ügyfélalkalmazásból érhető el. Az alábbi módszerekkel lehet iFolder-mappát létrehozni:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkq96" class="xref">iFolder mappák létrehozása az iFolder böngészőben</a>
+              <a href="createifolder.html#bbrkq96" class="xref">iFolder-mappák létrehozása az iFolder böngészőben</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkqnw" class="xref">iFolder mappák létrehozása a fájlkezelőben</a>
+              <a href="createifolder.html#bbrkqnw" class="xref">iFolder-mappák létrehozása a fájlkezelőben</a>
             </p></li></ul></div>
 
 <div class="sect3" id="bbrkq96">
 
-<h3 class="title">iFolder mappák létrehozása az iFolder böngészőben</h3>
+<h3 class="title">iFolder-mappák létrehozása az iFolder böngészőben</h3>
 
 <div class="procedure">
 <ol class="steps">
@@ -112,18 +96,18 @@
 <p class="listitem">Kattintson az <span class="guimenu">iFolder szolgáltatások</span> ikonjára <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja " title="iFolder alkalmazás ikonja " class="inline" />.
         </p></li>
 <li class="listitem">
-<p class="listitem">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span> ikonjára <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" />, és válassza az <span class="guimenu">iFolder mappák</span> parancsot.
+<p class="listitem">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span> ikonjára <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" />, és válassza az <span class="guimenu">iFolder-mappák</span> parancsot.
         </p></li></ul></div>
 </li>
 <li class="step" id="bv2gxbv">
 <p class="para">Kattintson az <span class="guimenu">iFolder létrehozása</span> elemre.</p></li>
 <li class="step" id="bv2gwvt">
-<p class="para">A <span class="guimenu">További lehetőségek</span> alatt jelölje ki azt az <span class="guimenu">iFolder-fiókot</span>, amelyet használni szeretne ehhez az iFolder mappához.</p>
+<p class="para">A <span class="guimenu">További lehetőségek</span> alatt jelölje ki azt az <span class="guimenu">iFolder-fiókot</span>, amelyet használni szeretne ehhez az iFolder-mappához.</p>
 <p class="para">Ha több iFolder-fiókja is van, az alapértelmezett fiók van a lista első helyén. A legördülő lista használatával választhat másik fiókot.</p></li>
 <li class="step" id="bv2guwr">
-<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder mappát.</p></li>
+<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder-mappát.</p></li>
 <li class="step" id="bv2gv55">
-<p class="para">Az alábbi módszerek egyikével válassza ki azt a normál mappát, amelyet iFolder mappává szeretne alakítani:</p>
+<p class="para">Az alábbi módszerek egyikével válassza ki azt a normál mappát, amelyet iFolder-mappává szeretne alakítani:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -132,28 +116,28 @@
 <p class="listitem">Ha a normál mappa nem létezik, a létrehozáshoz kattintson a <span class="guimenu">Mappa létrehozása</span> elemre, jelölje ki az újonnan létrehozott mappát, majd kattintson a <span class="guimenu">Hozzáadás</span> gombra.</p></li></ul></div>
 </li>
 <li class="step" id="b93crcv">
-<p class="para">A megadott lehetőségek közül adja meg az iFolder mappa <span class="guimenu">Típus</span> beállítását. Eldöntheti, hogy titkosított iFolder mappát vagy normál típusút hoz létre.</p>
+<p class="para">A megadott lehetőségek közül adja meg az iFolder-mappa <span class="guimenu">Típus</span> beállítását. Eldöntheti, hogy titkosított iFolder-mappát vagy normál típusút hoz létre.</p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder-mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder-mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a titkosítási funkciót.</p>
+<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a titkosítási funkciót.</p>
 <p class="listitem">Ha a bejelentkezési munkamenetben nem állította be a hozzáférési kódot, a <span class="guimenu">Hozzáférési kód titkosítása</span> beállítás megadásakor a program kéri a hozzáférési kód beírását. Adja meg a hozzáférési kódot a Hozzáférési kód párbeszédpanelen.</p></li>
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a megosztást. </p>
-<p class="listitem">Az iFolder szolgáltatás a megosztott iFolder mappák elérhetőségét az értesítési területen megjelenített szövegbuborékok formájában közli. A megosztási felhasználók ekkor az üzenetre kattintva beállíthatják az iFolder mappát, vagy pedig bezárhatják az üzenetet, és dönthetnek az iFolder mappa későbbi letöltése mellett.</p></li></ul></div>
+<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a megosztást. </p>
+<p class="listitem">Az iFolder szolgáltatás a megosztott iFolder-mappák elérhetőségét az értesítési területen megjelenített szövegbuborékok formájában közli. A megosztási felhasználók ekkor az üzenetre kattintva beállíthatják az iFolder-mappát, vagy pedig bezárhatják az üzenetet, és dönthetnek az iFolder-mappa későbbi letöltése mellett.</p></li></ul></div>
 </li>
 <li class="step" id="bfkhncz">
-<p class="para">A létrehozandó iFolder mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
-<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
+<p class="para">A létrehozandó iFolder-mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
+<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder-mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder-mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
 <div class="note">
-<p class="para"><em class="title">MEGJEGYZÉS:</em>A kijelölt iFolder mappára vonatkozóan a biztonságos szinkronizálást a számítógépen is engedélyezheti, ha az iFolder fő ablakában a jobb gombbal az iFolder mappára kattint, és a Tulajdonságok parancsot választja. Ehhez kattintson a jobb gombbal az iFolder mappára, válassza a <span class="guimenu">Tulajdonságok</span> parancsát, majd az Általános lapon jelölje be a <span class="guimenu">Biztonságos szinkronizálás</span> jelölőnégyzetet.</p></div>
+<p class="para"><em class="title">MEGJEGYZÉS:</em>A kijelölt iFolder-mappára vonatkozóan a biztonságos szinkronizálást a számítógépen is engedélyezheti, ha az iFolder fő ablakában a jobb gombbal az iFolder-mappára kattint, és a Tulajdonságok parancsot választja. Ehhez kattintson a jobb gombbal az iFolder-mappára, válassza a <span class="guimenu">Tulajdonságok</span> parancsát, majd az Általános lapon jelölje be a <span class="guimenu">Biztonságos szinkronizálás</span> jelölőnégyzetet.</p></div>
 </li>
 <li class="step" id="bwb5ss4">
 <p class="para">Kattintson az <span class="guimenu">OK</span> gombra.</p>
-<p class="para">Az iFolder mappa megjelenik <span class="guimenu">A számítógépen található iFolder mappák</span> listában.</p></li>
+<p class="para">Az iFolder-mappa megjelenik <span class="guimenu">A számítógépen található iFolder-mappák</span> listában.</p></li>
 <li class="step" id="bwb5tng">
 <p class="para">Ha megjelenik az <span class="guimenu">iFolder létrehozva</span> üzenet, tegye az alábbiak egyikét:</p>
 <div class="itemizedlist">
@@ -170,20 +154,20 @@
 
 <div class="sect3" id="bbrkqnw">
 
-<h3 class="title">iFolder mappák létrehozása a fájlkezelőben</h3>
+<h3 class="title">iFolder-mappák létrehozása a fájlkezelőben</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bq6lwlg">
-<p class="para">A fájlkezelő segítségével navigáljon ahhoz a mappához, amelyet iFolder mappává szeretne alakítani, majd jelölje ki a mappát.</p></li>
+<p class="para">A fájlkezelő segítségével navigáljon ahhoz a mappához, amelyet iFolder-mappává szeretne alakítani, majd jelölje ki a mappát.</p></li>
 <li class="step" id="bq6lwlh">
 <p class="para">Használja az alábbi módszerek egyikét:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Kattintson a jobb gombbal a mappa ikonjára, majd kattintson az <span class="guimenu">Átalakítás iFolder mappává</span> gombra.</p></li>
+<p class="listitem">Kattintson a jobb gombbal a mappa ikonjára, majd kattintson az <span class="guimenu">Átalakítás iFolder-mappává</span> gombra.</p></li>
 <li class="listitem">
-<p class="listitem">Az eszköztáron kattintson a következőkre: <span class="menuchoice"><span class="guimenu">Fájl</span> > <span class="guimenu">Átalakítás iFolder mappává</span></span>.</p></li></ul></div>
+<p class="listitem">Az eszköztáron válassza a <span class="menuchoice"><span class="guimenu">Fájl</span> > <span class="guimenu">Átalakítás iFolder-mappává</span></span> lehetőséget.</p></li></ul></div>
 
 <p class="para">A mappaikon <img src="images/folder_16.png" alt="mappaikon" title="mappaikon" class="inline" /> iFolder emblémával <img src="images/ifolder32.png" alt="iFolder ikon" title="iFolder ikon" class="inline" /> (zöld „i” betű) átfedett mappává változik.
       </p></li>
@@ -201,27 +185,31 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
 
-<p class="para">iFolder mappákat létre lehet hozni fájlkezelővel vagy az iFolder-böngészővel, amely az ügyfélalkalmazásból érhető el. Az alábbi módszerekkel lehet iFolder mappát létrehozni:</p>
+<span class="collapsible">
+
+<p class="para">iFolder-mappákat létre lehet hozni fájlkezelővel vagy az iFolder-böngészővel, amely az ügyfélalkalmazásból érhető el. Az alábbi módszerekkel lehet iFolder-mappát létrehozni:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkmqg" class="xref">iFolder mappák létrehozása az iFolder böngészőben</a>
+              <a href="createifolder.html#bbrkmqg" class="xref">iFolder-mappák létrehozása az iFolder böngészőben</a>
             </p></li>
 <li class="listitem">
 <p class="listitem">
-              <a href="createifolder.html#bbrkln6" class="xref">iFolder mappák létrehozása a fájlkezelőben</a>
+              <a href="createifolder.html#bbrkln6" class="xref">iFolder-mappák létrehozása a fájlkezelőben</a>
             </p></li></ul></div>
 
 <div class="sect3" id="bbrkmqg">
 
-<h3 class="title">iFolder mappák létrehozása az iFolder böngészőben</h3>
+<h3 class="title">iFolder-mappák létrehozása az iFolder böngészőben</h3>
 
 <div class="procedure">
 <ol class="steps">
@@ -233,18 +221,18 @@
 <p class="listitem">Kattintson az <span class="guimenu">iFolder szolgáltatások</span> <img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja" title="iFolder alkalmazás ikonja" class="inline" /> ikonjára.
         </p></li>
 <li class="listitem">
-<p class="listitem">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span><img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja " title="iFolder alkalmazás ikonja " class="inline" /> ikonjára, és válassza az <span class="guimenu">iFolder mappák</span> parancsot.
+<p class="listitem">Kattintson a jobb gombbal az <span class="guimenu">iFolder szolgáltatások</span><img src="images/ifolder22.png" alt="iFolder alkalmazás ikonja " title="iFolder alkalmazás ikonja " class="inline" /> ikonjára, és válassza az <span class="guimenu">iFolder-mappák</span> parancsot.
         </p></li></ul></div>
 </li>
 <li class="step" id="bbrkn5v">
 <p class="para">Kattintson az <span class="guimenu">iFolder létrehozása</span> elemre.</p></li>
 <li class="step" id="bbrknbe">
-<p class="para">A legördülő lista segítségével jelölje ki azt az iFolder-fiókot, amelyet használni szeretne ehhez az iFolder mappához.</p>
+<p class="para">A legördülő lista segítségével jelölje ki azt az iFolder-fiókot, amelyet használni szeretne ehhez az iFolder-mappához.</p>
 <p class="para">Ha több iFolder-fiókja is van, az alapértelmezett fiók van a lista első helyén. A legördülő lista használatával választhat másik fiókot.</p></li>
 <li class="step" id="bbrknpo">
-<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder mappát.</p></li>
+<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder-mappát.</p></li>
 <li class="step" id="bbrknvw">
-<p class="para">Az alábbi módszerek egyikével válassza ki azt a normál mappát, amelyet iFolder mappává szeretne alakítani:</p>
+<p class="para">Az alábbi módszerek egyikével válassza ki azt a normál mappát, amelyet iFolder-mappává szeretne alakítani:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -253,31 +241,31 @@
 <p class="listitem">Ha a normál mappa nem létezik, a létrehozáshoz kattintson az <span class="guimenu">Új mappa létrehozása</span> elemre, és jelölje ki az újonnan létrehozott mappát.</p></li></ul></div>
 </li>
 <li class="step" id="bbrko5o">
-<p class="para">A következő lehetőségek közül válassza ki az iFolder mappa típusát.</p>
+<p class="para">A következő lehetőségek közül válassza ki az iFolder-mappa típusát.</p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder-mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder-mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a titkosítási funkciót.</p>
-<p class="listitem">Ha a rendszergazda <span class="emphasis">engedélyezte</span> a titkosítási házirendet, Ön titkosított és megosztott iFolder mappákat is létrehozhat. </p>
+<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a titkosítási funkciót.</p>
+<p class="listitem">Ha a rendszergazda <span class="emphasis">engedélyezte</span> a titkosítási házirendet, Ön titkosított és megosztott iFolder-mappákat is létrehozhat. </p>
 <p class="listitem">Ha a bejelentkezési munkamenetben nem állította be a hozzáférési kódot, a <span class="guimenu">Hozzáférési kód titkosítása</span> beállítás megadásakor a program kéri a hozzáférési kód beírását.</p></li>
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a megosztást. </p>
+<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a megosztást. </p>
 <div class="note">
-<p class="para"><em class="title">MEGJEGYZÉS:</em>Amikor Ön iFolder mappáját megosztja más iFolder-felhasználókkal, az iFolder szolgáltatás a megosztott iFolder mappák elérhetőségét az értesítési területen megjelenített szövegbuborékok formájában közli. A megosztási felhasználók ekkor az üzenetre kattintva beállíthatják az iFolder mappát, vagy pedig bezárhatják az üzenetet, és később tölthetik le az iFolder mappát.</p></div>
+<p class="para"><em class="title">MEGJEGYZÉS:</em>Amikor Ön iFolder-mappáját megosztja más iFolder-felhasználókkal, az iFolder szolgáltatás a megosztott iFolder-mappák elérhetőségét az értesítési területen megjelenített szövegbuborékok formájában közli. A megosztási felhasználók ekkor az üzenetre kattintva beállíthatják az iFolder-mappát, vagy pedig bezárhatják az üzenetet, és később tölthetik le az iFolder-mappát.</p></div>
 </li></ul></div>
 </li>
 <li class="step" id="bfq5bu3">
-<p class="para">A létrehozandó iFolder mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
-<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
+<p class="para">A létrehozandó iFolder-mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
+<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder-mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder-mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p>
 <div class="note">
-<p class="para"><em class="title">MEGJEGYZÉS:</em>A kijelölt iFolder mappára vonatkozóan a biztonságos szinkronizálást a számítógépen is engedélyezheti, ha az iFolder fő ablakában a jobb gombbal az iFolder mappára kattint, és a Tulajdonságok parancsot választja. Ehhez kattintson a jobb gombbal az iFolder mappára, válassza a <span class="guimenu">Tulajdonságok</span> parancsát, majd az Általános lapon jelölje be a <span class="guimenu">Biztonságos szinkronizálás</span> jelölőnégyzetet.</p></div>
+<p class="para"><em class="title">MEGJEGYZÉS:</em>A kijelölt iFolder-mappára vonatkozóan a biztonságos szinkronizálást a számítógépen is engedélyezheti, ha az iFolder fő ablakában a jobb gombbal az iFolder-mappára kattint, és a Tulajdonságok parancsot választja. Ehhez kattintson a jobb gombbal az iFolder-mappára, válassza a <span class="guimenu">Tulajdonságok</span> parancsát, majd az Általános lapon jelölje be a <span class="guimenu">Biztonságos szinkronizálás</span> jelölőnégyzetet.</p></div>
 </li>
 <li class="step" id="bbrkofc">
 <p class="para">Kattintson az <span class="guimenu">OK</span> gombra.</p>
-<p class="para">Az iFolder mappa megjelenik <span class="guimenu">A számítógépen található iFolder mappák</span> listában.</p></li>
+<p class="para">Az iFolder-mappa megjelenik <span class="guimenu">A számítógépen található iFolder-mappák</span> listában.</p></li>
 <li class="step" id="bbrkoum">
 <p class="para">Ha megjelenik az <span class="guimenu">iFolder létrehozva</span> üzenet, tegye az alábbiak egyikét:</p>
 <div class="itemizedlist">
@@ -294,20 +282,20 @@
 
 <div class="sect3" id="bbrkln6">
 
-<h3 class="title">iFolder mappák létrehozása a fájlkezelőben</h3>
+<h3 class="title">iFolder-mappák létrehozása a fájlkezelőben</h3>
 
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbrklt7">
-<p class="para">A fájlkezelő segítségével navigáljon ahhoz a mappához, amelyet iFolder mappává szeretne alakítani, majd jelölje ki a mappát.</p></li>
+<p class="para">A fájlkezelő segítségével navigáljon ahhoz a mappához, amelyet iFolder-mappává szeretne alakítani, majd jelölje ki a mappát.</p></li>
 <li class="step" id="bbrklxp">
 <p class="para">Használja az alábbi módszerek egyikét:</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Kattintson a jobb gombbal a mappa ikonjára, majd kattintson az <span class="guimenu">Átalakítás iFolder mappává</span> gombra.</p></li>
+<p class="listitem">Kattintson a jobb gombbal a mappa ikonjára, majd kattintson az <span class="guimenu">Átalakítás iFolder-mappává</span> gombra.</p></li>
 <li class="listitem">
-<p class="listitem">Az eszköztáron kattintson a következőkre: <span class="menuchoice"><span class="guimenu">Fájl</span> > <span class="guimenu">Átalakítás iFolder mappává</span></span>.</p></li></ul></div>
+<p class="listitem">Az eszköztáron válassza a <span class="menuchoice"><span class="guimenu">Fájl</span> > <span class="guimenu">Átalakítás iFolder-mappává</span></span> lehetőséget.</p></li></ul></div>
 
 <p class="para">A mappaikon <img src="images/if3_folder.png" alt="iFolder ikon " title="iFolder ikon " class="inline" /> iFolder emblémával (zöld „i” betű) átfedett mappává változik.
       </p></li>
@@ -325,13 +313,17 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh operációs rendszerekhez</h2>
 
-<p class="para">iFolder mappákat az iFolder-böngészőből hozhat létre, amely megtalálható az ügyfél alkalmazásban.</p>
+<span class="collapsible">
+
+<p class="para">iFolder-mappákat az iFolder-böngészőből hozhat létre, amely megtalálható az ügyfél alkalmazásban.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bctqam6">
@@ -346,43 +338,47 @@
 <p class="listitem">Kattintson a menüsávon a <span class="guimenu">Fájl &gt; Új</span> parancsra</p></li></ul></div>
 </li>
 <li class="step" id="bctqam9">
-<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder mappát.</p></li>
+<p class="para">A böngészőben navigáljon abba a könyvtárba, amelyben létre szeretné hozni az iFolder-mappát.</p></li>
 <li class="step" id="bctqama">
-<p class="para">Válassza ki a normál mappát, amelyet iFolder mappává kíván alakítani, és kattintson a <span class="guimenu">Megnyitás</span> gombra.</p></li>
+<p class="para">Válassza ki a normál mappát, amelyet iFolder-mappává kíván alakítani, és kattintson a <span class="guimenu">Megnyitás</span> gombra.</p></li>
 <li class="step" id="bfq5e1a">
-<p class="para">A következő lehetőségek közül válassza ki az iFolder mappa típusát.</p>
+<p class="para">A következő lehetőségek közül válassza ki az iFolder-mappa típusát.</p>
 <div class="important">
-<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
+<p class="para"><em class="title">FONTOS:</em>Csak akkor hozhat létre titkosított iFolder-mappákat, ha az iFolder rendszergazda <span class="guimenu">engedélyezte</span> a titkosítási házirendet. Amennyiben nem engedélyezte, csak normál iFolder-mappákat lehet létrehozni, és ez az alapértelmezett beállítás. Ebben az esetben a <span class="guimenu">Típus</span> beállításnál a két lehetőség egyike sem használható.</p></div>
 
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a titkosítási funkciót.</p>
-<p class="listitem">Ha a rendszergazda <span class="emphasis">engedélyezte</span> a titkosítási házirendet, Ön titkosított és megosztott iFolder mappákat is létrehozhat. </p>
+<p class="listitem">Válassza a <span class="guimenu">Hozzáférési kód titkosítása</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a titkosítási funkciót.</p>
+<p class="listitem">Ha a rendszergazda <span class="emphasis">engedélyezte</span> a titkosítási házirendet, Ön titkosított és megosztott iFolder-mappákat is létrehozhat. </p>
 <p class="listitem">Ha a bejelentkezési munkamenetben nem állította be a hozzáférési kódot, a <span class="guimenu">Hozzáférési kód</span>  > <span class="guimenu">titkosítása</span> beállítás megadásakor a program kéri a hozzáférési kód beírását.</p></li>
 <li class="listitem">
-<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder mappához engedélyezni kívánja a megosztást. </p></li></ul></div>
+<p class="listitem">Válassza a <span class="guimenu">Normál</span> lehetőséget, ha a kijelölt iFolder-mappához engedélyezni kívánja a megosztást. </p></li></ul></div>
 </li>
 <li class="step" id="bfq5e6z">
-<p class="para">A létrehozandó iFolder mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
-<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p></li>
+<p class="para">A létrehozandó iFolder-mappa fájljainak biztonságos szinkronizálásához adja meg a <span class="guimenu">Biztonságos szinkronizálás</span> beállítást.</p>
+<p class="para">A biztonságos csatorna használata a normál és a titkosított iFolder-mappákhoz egyaránt engedélyezhető. Ha meg van adva ez a beállítás, az iFolder alkalmazás biztonságos csatorna használatát teszi lehetővé az iFolder-mappa kiszolgáló és a helyi számítógép közötti szinkronizálásához.</p></li>
 <li class="step" id="bctqamc">
 <p class="para">Kattintson az <span class="guimenu">OK</span> gombra.</p>
-<p class="para">Az iFolder mappa megjelenik az iFolder-böngésző ablakában.</p></li></ol>
+<p class="para">Az iFolder-mappa megjelenik az iFolder-böngésző ablakában.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
-<h2 class="title">iFolder mappák létrehozása FAT32 csatlakozási ponton (Linux)</h2>
+<h2 class="title">iFolder-mappák létrehozása FAT32 csatlakozási ponton (Linux)</h2>
 
-<p class="para">Linux rendszeren az iFolder támogatja az iFolder mappák létrehozását és használatát a FAT32 fájlrendszer egy csatlakoztatási pontján. Az iFolder felhasználó csak akkor hozhat létre új iFolder mappákat és megosztott iFolder mappákat a Linux számítógép FAT32 kötetén, ha rendelkezik egy csatlakoztatási ponttal, ahol tárolja az iFolder mappákat, továbbá a <span class="filename">/etc/fstab</span> fájlban pontosan meg kell adni az iFolder-felhasználó helyi felhasználói azonosítóját a csatlakoztatási ponthoz. </p>
+<span class="collapsible">
+
+<p class="para">Linux rendszeren az iFolder támogatja az iFolder-mappák létrehozását és használatát a FAT32 fájlrendszer egy csatlakoztatási pontján. Az iFolder felhasználó csak akkor hozhat létre új iFolder-mappákat és megosztott iFolder-mappákat a Linux számítógép FAT32 kötetén, ha rendelkezik egy csatlakoztatási ponttal, ahol tárolja az iFolder-mappákat, továbbá a <span class="filename">/etc/fstab</span> fájlban pontosan meg kell adni az iFolder-felhasználó helyi felhasználói azonosítóját a csatlakoztatási ponthoz. </p>
 <div class="important">
 <p class="para"><em class="title">FONTOS:</em>Ez kötelező, mert a FAT32 nem támogatja a fájlengedélyeket. Bármely más, a fájlengedélyeket nem támogató fájlrendszer esetén felmerül ugyanez a probléma.</p></div>
 
-<p class="para">Kettős rendszerindítású rendszerek esetén az iFolder mappákban található adatok normál mappákként érhetők el olyan rendszerből, ahol a mappa nem iFolder mappa. Ha mindkét platformon iFolder mappává teszi a mappát, akkor a rendszer az adatokat a kiszolgáló két különböző iFolder mappájában is tárolja, ami így kétszer annyi helyet foglal el a kiszolgálón.</p>
-<p class="para">Mivel a FAT32 fájlrendszer nem támogatja a POSIX fájlrendszer engedélyeit, győződjön meg róla, hogy az iFolder-felhasználó a csatlakoztatási pont helyi tulajdonosa. Módosítsa a <span class="filename">/etc/fstab</span> fájlt: a felhasználó helyi bejelentkezési azonosítójához tartozó felhasználóazonosító (UID) paraméter értékének adja meg azt az iFolder-felhasználót, aki létrehozza az iFolder mappákat az adott csatlakoztatási ponton.</p>
+<p class="para">Kettős rendszerindítású rendszerek esetén az iFolder-mappákban található adatok normál mappákként érhetők el olyan rendszerből, ahol a mappa nem iFolder-mappa. Ha mindkét platformon iFolder-mappává teszi a mappát, akkor a rendszer az adatokat a kiszolgáló két különböző iFolder-mappájában is tárolja, ami így kétszer annyi helyet foglal el a kiszolgálón.</p>
+<p class="para">Mivel a FAT32 fájlrendszer nem támogatja a POSIX fájlrendszer engedélyeit, győződjön meg róla, hogy az iFolder-felhasználó a csatlakoztatási pont helyi tulajdonosa. Módosítsa a <span class="filename">/etc/fstab</span> fájlt: a felhasználó helyi bejelentkezési azonosítójához tartozó felhasználóazonosító (UID) paraméter értékének adja meg azt az iFolder-felhasználót, aki létrehozza az iFolder-mappákat az adott csatlakoztatási ponton.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bwenpgg">
@@ -391,7 +387,7 @@
 <p class="para">Hozza létre azt a könyvtárat, ahová csatlakoztatni szeretné a FAT32 fájlrendszert. Írja be a következőt a parancssorba:</p><pre class="screen">
 mkdir /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>
 </pre>
-<p class="para">A <span class="filename"><span class="replaceable">felhasználónév</span></span> helyébe írja be annak a felhasználónak a felhasználónevét, aki a FAT32 meghajtót használni fogja az iFolder mappákhoz. Az <span class="filename"><span class="replaceable">fscsatl</span></span> helyébe írja be azt a könyvtárat, amelyet csatlakoztatási pontként kíván használni. Ha például a felhasználónév <span class="filename"><span class="replaceable">jkovacs</span></span>, és a könyvtárnév <span class="filename"><span class="replaceable">fat32csatlpont</span></span> egy FAT32 meghajtóhoz vagy partícióhoz, írja be a következőt:</p><pre class="screen">
+<p class="para">A <span class="filename"><span class="replaceable">felhasználónév</span></span> helyébe írja be annak a felhasználónak a felhasználónevét, aki a FAT32 meghajtót használni fogja az iFolder-mappákhoz. Az <span class="filename"><span class="replaceable">fscsatl</span></span> helyébe írja be azt a könyvtárat, amelyet csatlakoztatási pontként kíván használni. Ha például a felhasználónév <span class="filename"><span class="replaceable">jkovacs</span></span>, és a könyvtárnév <span class="filename"><span class="replaceable">fat32csatlpont</span></span> egy FAT32 meghajtóhoz vagy partícióhoz, írja be a következőt:</p><pre class="screen">
 mkdir /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemec8">
@@ -411,11 +407,13 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 </pre></li></ol>
 </div>
 
-</div>
+</span>
 
 </div>
 
-<p class="trademark"> További információ a <a href="legal.html">Szerzői jogi megjegyzések</a>.</p>
+</div>
+
+<p class="trademark"> További információ a <a href="legal.html">Jogi nyilatkozat</a>.</p>
 
 <div class='nav' id='bottomnav'>
   <a href="bkjj1f9.html" class="nav"><img src="ui/images/prev.png" alt="előző" title="előző" />előző</a>
