@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:13" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -37,15 +37,16 @@
 <div class='nav' id='topnav'>
   <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="login.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="login.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="accounts">
 
 <h1 class="title">Configuration d'un compte iFolder</h1>
 
-<p class="para">Utilisez <span class="guimenu">l'assistant de création d'un compte iFolder</span> pour ajouter et configurer un nouveau compte. Vous devez configurer au moins un compte iFolder pour pouvoir créer ou partager des dossiers iFolders sur votre système. Vous ne pouvez vous connecter au serveur iFolder qu'avec un seul compte à la fois. En revanche, pour vous connecter à plusieurs serveurs iFolder, vous pouvez configurer plusieurs comptes. Vous pouvez vous loguer séparément à chaque compte et être logué simultanément à plusieurs comptes.</p>
+<p class="para">Utilisez <span class="guimenu">l'assistant de création d'un compte iFolder</span> pour ajouter et configurer un nouveau compte. Vous devez configurer au moins un compte iFolder pour pouvoir créer ou partager des dossiers iFolders sur votre système. Vous ne pouvez vous connecter au serveur iFolder qu'avec un seul compte à la fois. En revanche, pour vous connecter à plusieurs serveurs iFolder, vous pouvez configurer plusieurs comptes. Vous pouvez vous connecter séparément à chaque compte et être connecté simultanément à plusieurs comptes.</p>
 <p class="para">Plusieurs utilisateurs ayant des identités de login local différentes peuvent posséder des dossiers iFolder sur le même ordinateur. Au premier démarrage de iFolder sous votre identité de login local actuelle, iFolder vous invite à configurer un compte iFolder.</p>
 <div class="important">
 <p class="para"><em class="title">IMPORTANT :</em>iFolder 3.7 et ses versions ultérieures introduisent une nouveauté, la création automatique de comptes, qui permet à l'administrateur iFolder de vous créer un compte et de le configurer. Si votre administrateur iFolder administrator a activé la création automatique de compte, vous ne devez pas vous créer de compte.  Au premier démarrage d'iFolder, vous êtes invité à introduire votre mot de passe. Entrez votre mot de passe, puis configurez le compte.</p></div>
@@ -104,8 +105,8 @@
 <tr class="oddrow" id="bvibwio"><td align="left" valign="top" colspan="1" rowspan="1">
 <p class="para">Mémoriser le mot de passe<span class="guimenu"></span></p></td>
 <td align="left" valign="top" colspan="1" rowspan="1">
-<p class="para">Cochez la case <span class="guimenu">Mémoriser le mot de passe sur cet ordinateur</span> pour vous loguer automatiquement à ce compte iFolder lorsque vous vous loguez à votre ordinateur. </p>
-<p class="para">Si votre mot de passe de réseau change, l'authentification automatique échoue la prochaine fois qu'iFolder essaie de vous loguer au compte iFolder. iFolder vous invite à vous loguer avec votre nouveau mot de passe et vous permet de le spécifier et de l'enregistrer.</p></td>
+<p class="para">Cochez la case <span class="guimenu">Mémoriser le mot de passe sur cet ordinateur</span> pour vous connecter automatiquement à ce compte iFolder lorsque vous vous connectez à votre ordinateur. </p>
+<p class="para">Si vous tentez de vous connecter à votre compte iFolder après un changement de mot de passe réseau, l'authentification automatique échoue. iFolder vous invite alors à vous connecter avec votre nouveau mot de passe et vous permet de le spécifier et de l'enregistrer.</p></td>
 </tr></table>
 </div>
 </li>
@@ -163,9 +164,9 @@
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
-<p class="listitem">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder</span> dans la zone Notification, puis sélectionnez <span class="guimenu">Dossiers iFolder</span> pour ouvrir le navigateur de dossiers iFolder.  Passez à la section <a href="createifolder.html" class="xref">Création et téléchargement d'un dossier iFolder</a>.</p></li>
+<p class="listitem">Cliquez avec le bouton droit sur l'icône <span class="guimenu">Services iFolder</span> dans la zone Notification, puis sélectionnez <span class="guimenu">Dossiers iFolder</span> pour ouvrir le navigateur de dossiers iFolder. Passez à la section <a href="createifolder.html" class="xref">Création et téléchargement d'un dossier iFolder</a>.</p></li>
 <li class="listitem">
-<p class="listitem">Si des dossiers iFolder pour ce compte sont téléchargeables à partir du serveur, ils sont listés dans la fenêtre iFolder sous Dossiers iFolder sur &lt;<span class="replaceable">nom serveur iFolder</span>&gt;.  L'icône de téléchargement <img src="images/if3_download.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> indique que le dossier iFolder peut être téléchargé. Passez à la section <a href="setupifolder.html" class="xref">Téléchargement d'un dossier iFolder disponible</a>.
+<p class="listitem">Si des dossiers iFolder pour ce compte sont téléchargeables à partir du serveur, ils sont listés dans la fenêtre iFolder sous Dossiers iFolder sur &lt;<span class="replaceable">nom serveur iFolder</span>&gt;. L'icône de téléchargement <img src="images/if3_download.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> indique que le dossier iFolder peut être téléchargé. Passez à la section <a href="setupifolder.html" class="xref">Téléchargement d'un dossier iFolder disponible</a>.
       </p></li></ul></div>
 </li></ol>
 </div>
@@ -177,7 +178,7 @@
 <div class='nav' id='bottomnav'>
   <a href="startclient.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="login.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="login.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
 </body>

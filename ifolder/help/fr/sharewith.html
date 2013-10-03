@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:13" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -37,45 +37,21 @@
 <div class='nav' id='topnav'>
   <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="viewhide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="viewhide.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="sharewith">
 
 <h1 class="title">Partage d'un iFolder</h1>
 
 <p class="para">Vous pouvez partager un dossier iFolder avec plusieurs utilisateurs. Cette section traite des tâches suivantes :</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bv2hnvt" class="xref">Présentation des droits d'accès des utilisateurs</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#b41tbcf" class="xref">Accès à l'onglet Partage</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwm0" class="xref">Ajout d'un utilisateur à un dossier iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwma" class="xref">Modification des droits d'accès des utilisateurs</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwmr" class="xref">Suppression d'un utilisateur d'un dossier iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#b47q8t9" class="xref">Transfert de propriété à un utilisateur iFolder</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bv2hnvt">
 
 <h2 class="title">Présentation des droits d'accès des utilisateurs</h2>
+
+<span class="collapsible">
 
 <p class="para">Le tableau suivant décrit les actions possibles associées à chaque niveau d'accès pour les utilisateurs ou le groupe LDAP.  </p>
 <div class="important">
@@ -252,11 +228,15 @@
 </tr></table>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b41tbcf">
 
 <h2 class="title">Accès à l'onglet Partage</h2>
+
+<span class="collapsible">
 
 <p class="para">Vous pouvez gérer l'adhésion pour le dossier iFolder à partir de l'onglet <span class="guimenu">Partage</span> dans la boîte de dialogue Propriétés iFolder.</p>
 <div class="procedure">
@@ -277,11 +257,15 @@
 </li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bq6lwm0">
 
 <h2 class="title">Ajout d'un utilisateur à un dossier iFolder</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -300,11 +284,15 @@
 <p class="para">Cliquez sur <span class="guimenu">Fermer</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bq6lwma">
 
 <h2 class="title">Modification des droits d'accès des utilisateurs</h2>
+
+<span class="collapsible">
 
 <p class="para">Étant donné que les relations de travail et l'état des membres d'un dossier iFolder changent, il peut être nécessaire de modifier le droit d'accès d'un utilisateur au dossier iFolder. Ainsi, il se peut que vous souhaitiez accorder à un utilisateur de confiance le droit Contrôle total pour le dossier iFolder.</p>
 <div class="procedure">
@@ -313,10 +301,12 @@
 <p class="para">Sous l'onglet <span class="guimenu">Partage</span>, sélectionnez un ou plusieurs utilisateurs auxquels vous souhaitez assigner le même droit d'accès.</p></li>
 <li class="step" id="bv2hoj5">
 <p class="para">Sélectionnez <span class="guimenu">Droits</span>, puis spécifiez le droit <span class="guimenu">Contrôle total</span>, <span class="guimenu">Lecture/écriture</span> ou <span class="guimenu">Lecture seule</span>.</p>
-<p class="para">Lorsque vous invitez pour la première fois un utilisateur ou un groupe LDAP à participer, l'option <span class="guimenu">Faire de cet utilisateur le propriétaire du dossier iFolder</span> est désactivée (grisée) dans la boîte de dialogue Accès.  Si vous prévoyez de faire du nouvel utilisateur le propriétaire du dossier, vous devez attendre que l'état de l'utilisateur passe de <span class="guimenu">Utilisateur invité</span> à <span class="guimenu">Utilisateur iFolder</span>. Vous pouvez ensuite transférer la propriété. Lorsque vous transférez la propriété à un groupe LDAP, tous les membres de ce groupe LDAP disposent des droits de possession.</p></li>
+<p class="para">Lorsque vous invitez pour la première fois un utilisateur ou un groupe LDAP à participer, l'option <span class="guimenu">Faire de cet utilisateur le propriétaire du dossier iFolder</span> est désactivée (grisée) dans la boîte de dialogue Accès. Si vous prévoyez de faire du nouvel utilisateur le propriétaire du dossier, vous devez attendre que l'état de l'utilisateur passe de <span class="guimenu">Utilisateur invité</span> à <span class="guimenu">Utilisateur iFolder</span>. Vous pouvez ensuite transférer la propriété. Lorsque vous transférez la propriété à un groupe LDAP, tous les membres de ce groupe LDAP disposent des droits de possession.</p></li>
 <li class="step" id="bv2hpae">
 <p class="para">Cliquez sur <span class="guimenu">OK</span>, puis cliquez sur <span class="guimenu">OK</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
@@ -324,7 +314,9 @@
 
 <h2 class="title">Suppression d'un utilisateur d'un dossier iFolder</h2>
 
-<p class="para">Pour annuler le partage d'un dossier iFolder, vous devez supprimer un utilisateur ou un groupe LDAP qui est membre de ce dossier.   Le dossier iFolder sur le poste de travail de l'utilisateur ou du membre du groupe LDAP devient un dossier normal.  Une copie des données est conservée sur le poste de travail de l'ancien membre, mais les fichiers ne sont plus synchronisés avec le dossier iFolder partagé.</p>
+<span class="collapsible">
+
+<p class="para">Pour annuler le partage d'un dossier iFolder, vous devez supprimer un utilisateur ou un groupe LDAP qui est membre de ce dossier. Le dossier iFolder sur le poste de travail de l'utilisateur ou du membre du groupe LDAP devient un dossier normal. Une copie des données est conservée sur le poste de travail de l'ancien membre, mais les fichiers ne sont plus synchronisés avec le dossier iFolder partagé.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bv2hug0">
@@ -333,13 +325,17 @@
 <p class="para">Cliquez sur <span class="guimenu">Supprimer</span>, puis sur <span class="guimenu">Oui</span>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b47q8t9">
 
 <h2 class="title">Transfert de propriété à un utilisateur iFolder </h2>
 
-<p class="para">Le propriétaire d'un dossier iFolder peut transférer la propriété de ce dernier à un autre membre individuel ou groupe LDAP dont l'état est Utilisateur iFolder.  Après le transfert, le propriétaire d'origine devient un membre disposant du droit Lecture-écriture, et l'espace occupé par le dossier iFolder est attribué au nouveau propriétaire. Lorsqu'un groupe LDAP devient le propriétaire d'un dossier iFolder, tous les membres du groupe disposent des droits de possession.</p>
+<span class="collapsible">
+
+<p class="para">Le propriétaire d'un dossier iFolder peut transférer la propriété de ce dernier à un autre membre individuel ou groupe LDAP dont l'état est Utilisateur iFolder. Après le transfert, le propriétaire d'origine devient un membre disposant du droit Lecture-écriture, et l'espace occupé par le dossier iFolder est attribué au nouveau propriétaire. Lorsqu'un groupe LDAP devient le propriétaire d'un dossier iFolder, tous les membres du groupe disposent des droits de possession.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="b47q70j">
@@ -353,6 +349,8 @@
 <p class="para">Cliquez sur <span class="guimenu">OK</span>, puis cliquez sur <span class="guimenu">OK</span> pour fermer la fenêtre Propriétés iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 </div>
@@ -362,7 +360,7 @@
 <div class='nav' id='bottomnav'>
   <a href="createifolder.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="viewhide.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="viewhide.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
 </body>

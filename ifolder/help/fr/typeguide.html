@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:13" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -37,37 +37,50 @@
 <div class='nav' id='topnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="nameconv.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="nameconv.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
 <h1 class="title">Directives sur les types et les tailles de fichier à ne pas synchroniser</h1>
 
-<p class="para">Lorsque le client iFolder est utilisé, votre administrateur iFolder peut spécifier des restrictions de type et de taille maximale de fichier au niveau du système, de l'utilisateur, du groupe LDAP ou du dossier iFolder.  Une limite de l'espace que vous pouvez utiliser pour les données dans les dossiers iFolder que vous possédez peut également être imposée au niveau de votre compte. Lorsque vous participez à d'autres dossiers iFolder, l'espace utilisé sur le serveur est déduit de l'espace alloué au propriétaire de ce dossier iFolder.</p>
+<p class="para">Lorsque le client iFolder est utilisé, votre administrateur iFolder peut spécifier des restrictions de type et de taille maximale de fichier au niveau du système, de l'utilisateur, du groupe LDAP ou du dossier iFolder. Une limite de l'espace que vous pouvez utiliser pour les données dans les dossiers iFolder que vous possédez peut également être imposée au niveau de votre compte. Lorsque vous participez à d'autres dossiers iFolder, l'espace utilisé sur le serveur est déduit de l'espace alloué au propriétaire de ce dossier iFolder.</p>
 <p class="para">Certains types de fichier ne sont pas adaptés à la synchronisation, notamment les fichiers du système d'exploitation, les fichiers masqués créés par un gestionnaire de fichiers ou des bases de données implémentées en tant que collection de fichiers liés. Vous pouvez inclure uniquement des types de fichier clés utilisés dans le cadre de votre entreprise, ou exclure des fichiers qui sont probablement sans rapport avec votre activité professionnelle, tels que les fichiers <span class="filename">.mp3</span>. </p>
 <div class="sect2" id="bctogsl">
 
 <h2 class="title">Fichiers du système d'exploitation</h2>
 
+<span class="collapsible">
+
 <p class="para">Vous ne devez pas convertir des répertoires système en dossiers iFolder. La plupart des fichiers système sont conservés sur l'ordinateur et il vaut mieux garder un fichier image de votre système de base et logiciel clé que d'essayer de synchroniser ces fichiers sur le serveur.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Fichiers masqués</h2>
 
+<span class="collapsible">
+
 <p class="para">Si votre système de fichiers utilise des fichiers masqués pour faire le suivi des préférences d'affichage, votre administrateur peut limiter ces types de fichier et les exclure de la synchronisation. En principe, les fichiers masqués ne sont utiles qu'à l'ordinateur sur lequel ils ont été créés et changent chaque fois qu'un utilisateur accède au fichier ou au répertoire. Vous n'avez pas besoin de les conserver. De plus, leur synchronisation entraîne de nombreuses erreurs de conflit de fichier. </p>
 <p class="para">Ainsi, iFolder exclut automatiquement deux fichiers masqués du gestionnaire de fichiers, appelés <span class="filename">thumbs.db</span> et <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Fichiers de base de données</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder synchronise des fichiers individuels ou les parties modifiées de ces fichiers ; il ne synchronise pas un ensemble de fichiers. Si un fichier de base de données est implémenté en tant que collection de fichiers liés, n'essayez pas de synchroniser ces fichiers dans un dossier iFolder.</p>
 <p class="para">N'essayez pas de synchroniser vos données GroupWise en transformant l'archive, le cache ou les répertoires distants GroupWise en dossiers iFolder. car ce faisant, les fichiers de données GroupWise sont altérés une fois le fichier synchronisé plusieurs fois. Les fichiers de l'archive GroupWise doivent être mis à jour en tant qu'ensemble de fichiers.</p>
+</span>
+
 </div>
 
 </div>
@@ -77,7 +90,7 @@
 <div class='nav' id='bottomnav'>
   <a href="locguide.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="nameconv.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="nameconv.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
 </body>

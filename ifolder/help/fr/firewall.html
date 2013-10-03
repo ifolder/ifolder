@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:13" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -37,39 +37,35 @@
 <div class='nav' id='topnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="virusscan.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
 <h1 class="title">Configuration des paramètres du pare-feu local pour le trafic iFolder</h1>
 
 <p class="para">Si vous utilisez un pare-feu local, vous devez le configurer de manière à permettre à iFolder de choisir un port dynamique local ou bien configurer un port statique local pour que le client iFolder puisse communiquer localement (même ordinateur) avec le serveur Mono XSP. iFolder utilise les services Web Mono XSP pour communiquer via HTTP avec les serveurs d'entreprise Novell iFolder où vous possédez des comptes iFolder. C'est l'administrateur iFolder qui configure les services iFolder qui déterminent si les communications utilisent le protocole HTTP dans votre environnement.</p>
-<p class="para">Votre pare-feu ne bloque pas le trafic entre Mono XSP et le serveur d'entreprise Novell iFolder car Mono XSP utilise les ports HTTP standard pour le trafic. Toutefois, si vous bloquez le trafic entre le client et Mono XSP, le client n'a plus aucun moyen de communication avec le serveur. Il ne vous est alors plus possible de vous loguer à votre compte iFolder et de synchroniser les données iFolder.</p>
+<p class="para">Votre pare-feu ne bloque pas le trafic entre Mono XSP et le serveur d'entreprise Novell iFolder car Mono XSP utilise les ports HTTP standard pour le trafic. Toutefois, si vous bloquez le trafic entre le client et Mono XSP, le client n'a plus aucun moyen de communication avec le serveur. Il ne vous est alors plus possible de vous connecter à votre compte iFolder et synchroniser les données iFolder.</p>
 <p class="para">A l'origine, la configuration iFolder ne spécifie pas de port particulier à utiliser pour les communications client-Mono XSP. À la première exécution de iFolder, celui-ci ouvre un port local disponible pour guetter les requêtes de Mono XSP et envoyer des données au serveur via Mono XSP. Il écrit le numéro de port dans un fichier de configuration et utilise ce port par la suite sauf s'il n'est pas disponible lorsque iFolder est lancé. Si le port est utilisé par une autre application, iFolder sélectionne un autre port disponible, reconfigure le port dans le fichier de configuration et utilise le nouveau port par la suite. Par exemple, si iFolder n'est pas exécuté et si une autre application utilise le port, iFolder doit sélectionner et configurer un autre port à utiliser lors de son redémarrage.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Utilisation d'un port dynamique local</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Utilisation d'un port statique local</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Utilisation d'un port dynamique local</h2>
 
+<span class="collapsible">
+
 <p class="para">Si vous utilisez un pare-feu local sur votre ordinateur, il doit détecter le trafic local entre iFolder et le serveur Mono XSP lorsque iFolder contacte le serveur pour synchroniser sa liste d'utilisateurs et ses données iFolder. Sélectionnez <span class="guimenu">Autoriser</span> pour autoriser le trafic iFolder pour cette session. Si vous autorisez le trafic de manière permanente, votre pare-feu ne doit pas se souvenir de vous, et vous pouvez éviter de recevoir les alertes contextuelles au démarrage de iFolder.</p>
 <p class="para">Si vous bloquez le trafic iFolder vers Mono XSP, votre pare-feu empêche votre connexion au serveur iFolder et vous ne pouvez pas synchroniser vos fichiers. iFolder ne détecte pas que le trafic est bloqué par le pare-feu ; il signale simplement qu'il ne peut pas se connecter à votre compte sur le serveur iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Utilisation d'un port statique local</h2>
+
+<span class="collapsible">
 
 <p class="para">Vous pouvez éventuellement ajouter le paramètre Web Service Port Range dans la section Service Manager du fichier <span class="filename">Simias.config</span> pour autoriser le serveur Mono XSP à utiliser un port statique ou une plage de ports pour ce trafic local. Il est ensuite possible d'ouvrir ce port ou cette plage de ports dans le pare-feu pour autoriser les communications pour le serveur Mono XSP. </p>
 <p class="para">Le fichier <span class="filename">Simias.config</span> se trouve aux endroits suivants :</p>
@@ -140,6 +136,8 @@
 <p class="para">Pour plus d'informations, reportez-vous au <a href="startclient.html" class="xref">Démarrage du client iFolder</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 </div>
@@ -149,7 +147,7 @@
 <div class='nav' id='bottomnav'>
   <a href="preferences.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="virusscan.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="virusscan.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
 </body>

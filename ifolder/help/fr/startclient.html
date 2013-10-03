@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="fr" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:49" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:13" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -37,21 +37,22 @@
 <div class='nav' id='topnav'>
   <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="accounts.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="accounts.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="startclient">
 
 <h1 class="title">Démarrage du client iFolder</h1>
 
-<p class="para">Lorsque iFolder s'exécute, l'icône <span class="guimenu">Services iFolder</span> <img src="images/ifolder22.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> apparaît dans la zone Notification de la barre des tâches. iFolder est intégré dans l'environnement de bureau.  Le symbole de iFolder (un « i » vert) <img src="images/ifolder32.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> s'affiche sur les dossiers iFolder lorsque ceux-ci s'affichent dans un gestionnaire de fichiers, sur le Bureau ou dans le navigateur iFolder. Le dossier codé iFolder est indiqué par le symbole<img src="images/ifolder_encrypted_fold.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> (dossier verrouillé).
+<p class="para">Lorsque iFolder s'exécute, l'icône <span class="guimenu">Services iFolder</span> <img src="images/ifolder22.png" alt="Icône de l'application iFolder" title="Icône de l'application iFolder" class="inline" /> apparaît dans la zone Notification de la barre des tâches. iFolder est intégré dans l'environnement de bureau. Le symbole de iFolder (un « i » vert) <img src="images/ifolder32.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> s'affiche sur les dossiers iFolder lorsque ceux-ci s'affichent dans un gestionnaire de fichiers, sur le Bureau ou dans le navigateur iFolder. Le dossier codé iFolder est indiqué par le symbole<img src="images/ifolder_encrypted_fold.png" alt="Icône de iFolder " title="Icône de iFolder " class="inline" /> (dossier verrouillé).
   </p>
 <div class="important">
 <p class="para"><em class="title">IMPORTANT :</em>La zone Notification de la barre des tâches doit être activée pour que l'icône <span class="guimenu">Services iFolder </span> apparaisse lorsque iFolder est en cours d'exécution. </p></div>
 
 <p class="para">Vous pouvez à tout moment travailler en local sur les fichiers se trouvant dans vos dossiers iFolder locaux. Lorsque le client iFolder est en cours d'exécution, il enregistre les changements que vous apportez aux données iFolder locales au fur et à mesure de votre travail. Si vous modifiez les données iFolder locales alors que iFolder n'est pas en cours d'exécution, iFolder identifie et consigne les différences au prochain démarrage.</p>
-<p class="para">Lorsque iFolder ne s'exécute pas, les dossiers iFolder apparaissent dans le gestionnaire de fichiers ou sur le Bureau.  Il vous est possible d'accéder aux fichiers dans votre copie locale d'un dossier iFolder, mais pas de gérer les dossiers iFolder. En outre, vous devez vous loguer à un compte pour créer un dossier iFolder ou synchroniser ses fichiers.</p>
+<p class="para">Lorsque iFolder ne s'exécute pas, les dossiers iFolder apparaissent dans le gestionnaire de fichiers ou sur le Bureau. Il vous est possible d'accéder aux fichiers dans votre copie locale d'un dossier iFolder, mais pas de gérer les dossiers iFolder. En outre, vous devez vous connecter à un compte pour créer un dossier iFolder ou synchroniser ses fichiers.</p>
 <div class="note">
 <p class="para"><em class="title">REMARQUE :</em>Lors de la création du compte, le login de l'utilisateur s'effectue via SSL. Lorsque vous êtes invité à accepter le certificat de serveur, vous devez le valider et l'accepter pour pouvoir établir une connexion.</p></div>
 
@@ -59,6 +60,8 @@
 <div class="sect2" id="b4064a7">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -81,9 +84,9 @@
 <li class="listitem">
 <p class="listitem">Ouvrez le menu Applications, cliquez sur <span class="guimenu">Plus d'applications</span>, localisez et cliquez avec le bouton droit sur <span class="guimenu">iFolder 3</span>, puis sélectionnez <span class="guimenu">Ajouter aux programmes de démarrage</span> dans le menu.</p></li>
 <li class="listitem">
-<p class="listitem">Assurez-vous que iFolder est en cours d'exécution lorsque vous vous déloguez, puis enregistrez les paramètres de la session. Sélectionnez cette option de session lorsque vous vous loguez sur l'ordinateur.</p></li>
+<p class="listitem">Vérifiez qu'iFolder s'exécute bien lorsque vous vous déconnectez, puis enregistrez les paramètres de la session. Sélectionnez cette option de session lorsque vous vous connectez sur l'ordinateur.</p></li>
 <li class="listitem">
-<p class="listitem">Ouvrez une fenêtre de terminal, loguez-vous en tant qu'utilisateur <span class="systemitem">root</span>, puis exécutez <span class="filename">/opt/gnome/bin/gnome-session-properties</span> pour ajouter iFolder aux programmes qui démarrent lorsque vous vous loguez.</p></li></ul></div>
+<p class="listitem">Ouvrez une fenêtre de terminal, connectez-vous en <span class="systemitem">root</span>, puis exécutez <span class="filename">/opt/gnome/bin/gnome-session-properties</span> pour ajouter iFolder à la liste des programmes qui démarrent lorsque vous vous connectez.</p></li></ul></div>
 
 <p class="para">Pour désactiver le démarrage automatique de iFolder lors du login, effectuez l'une des opérations suivantes :</p>
 <div class="itemizedlist">
@@ -91,7 +94,7 @@
 <li class="listitem">
 <p class="listitem">Ouvrez le menu Applications, localisez et cliquez avec le bouton droit sur <span class="guimenu">iFolder 3</span>, puis sélectionnez <span class="guimenu">Supprimer des programmes de démarrage</span>.</p></li>
 <li class="listitem">
-<p class="listitem">Assurez-vous que iFolder n'est pas en cours d'exécution lorsque vous vous déloguez, puis enregistrez les paramètres de la session.  Sélectionnez cette option de session lorsque vous vous loguez sur l'ordinateur.</p></li></ul></div>
+<p class="listitem">Assurez-vous qu' iFolder n'est pas en cours d'exécution lorsque vous vous déconnectez, puis enregistrez les paramètres de la session. Sélectionnez cette option de session lorsque vous vous connectez sur l'ordinateur.</p></li></ul></div>
 
 </div>
 
@@ -118,11 +121,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b406cyo">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -178,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b406d69">
 
 <h2 class="title">Macintosh</h2>
+
+<span class="collapsible">
 
 <div class="itemizedlist">
 <ul class="listbullet">
@@ -199,7 +210,7 @@
 
 <h3 class="title">Démarrage automatique de iFolder lors du login</h3>
 
-<p class="para">Pour activer le démarrage automatique de iFolder lorsque vous vous loguez à votre ordinateur Macintosh, ajoutez iFolder aux <span class="guimenu">Éléments de démarrage</span>.</p>
+<p class="para">Pour permettre qu'iFolder démarre automatiquement lorsque vous vous connectez à votre ordinateur Macintosh, ajoutez-le aux <span class="guimenu">Éléments de démarrage</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bcphuq0">
@@ -246,6 +257,8 @@
 
 </div>
 
+</span>
+
 </div>
 
 </div>
@@ -255,7 +268,7 @@
 <div class='nav' id='bottomnav'>
   <a href="accountsprefs.html" class="nav"><img src="ui/images/prev.png" alt="précédent" title="précédent" />précédent</a>
   <img src="ui/images/virt_dot-line.png" alt="" />
-  <a href="accounts.html" class="nav">&nbsp;Suivant<img src="ui/images/next.png" alt="Suivant" title="Suivant" /></a>
+  <a href="accounts.html" class="nav">&nbsp;suivant<img src="ui/images/next.png" alt="suivant" title="suivant" /></a>
 </div>
 
 </body>
