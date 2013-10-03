@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:05" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:52" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,29 +40,21 @@
   <a href="bctrxs4.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">Обновление клиента iFolder 3.<span class="replaceable">x</span></h1>
 
 <p class="para">Темы раздела:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">Автоматическое обновление до версии iFolder 3.7 или более поздней</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">Обновление до iFolder 3.7 или более поздней версии вручную</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">ВАЖНО.</em>Перед обновлением клиента 3.4.1 необходимо создать резервную копию локального хранилища Simias. Если резервное копирование не выполнено, вся конфигурационная информация компьютера будет утрачена, так как при сбое обновления харнилище Simias удаляется.</p></div>
 
 <div class="sect2" id="bctryt8">
 
 <h2 class="title">Автоматическое обновление до версии iFolder 3.7 или более поздней</h2>
+
+<span class="collapsible">
 
 <p class="para">Автоматическое обновление возможно только при наличии прав доступа суперпользователя, так как для обновления необходимо выполнить установку пакетов PRM. Во время обновления отображается запрос на ввод пароля "root". При отсутствии прав доступа "root" автоматическая установка пакета не выполняется. Однако пакеты клиента загружаются во временный каталог. Клиент Linux загружается в каталог <span class="filename">/mtp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Это позволяет выполнить обновление позднее, так как в каталоге содержатся два сценария установки, которые можно запустить вручную. Пока клиент не будет обновлен, невозможно установить соединение с сервером iFolder 3.7 или более поздней версии с помощью клиента iFolder 3.<span class="replaceable">x</span> будет невозможно.</p>
 <div class="procedure">
@@ -74,11 +66,15 @@
 </div>
 
 <p class="para">Если в iFolder 3.4.1 выбрать вариант <span class="guimenu">Нет</span> и попытаться подключить клиент iFolder 3.4.1 к серверу iFolder 3.7 или более поздней версии, будет отображено сообщение об ошибке. Щелкните <span class="guimenu">ОК</span>, чтобы закрыть сообщение.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">Обновление до iFolder 3.7 или более поздней версии вручную</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">Запустите iFolder из меню <span class="guimenu">Приложение</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

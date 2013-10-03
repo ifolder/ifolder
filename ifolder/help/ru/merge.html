@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:05" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:52" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">Слияние папок</h1>
 
 <p class="para">Функция слияния позволяет консолидировать данные iFolder и уменьшить объем данных, передаваемый между сервером и клиентом iFolder. Можно выполнить слияние содержимого папки iFolder на сервере с содержимым папки, существующей на локальном компьютере.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Слияние папки iFolder и стандартной папки</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Изменение расположения существующих папок iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Слияние перенесенных папок iFolder 2.x с папками iFolder 3.7 или более поздней версии</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Слияние папки iFolder и стандартной папки</h2>
+
+<span class="collapsible">
 
 <p class="para">Можно выполнить слияние папки iFolder и стандартной папки с аналогичным именем. Например, можно выполнить слияние содержимого папки iFolder с именем <span class="filename">corporate</span> с содержимым стандартной папки с именем <span class="filename">corporate</span>. </p>
 <p class="para">Предположим, папка iFolder <span class="filename">corporate</span> содержит три подпапки: <span class="filename">hr</span>, <span class="filename">finance</span> и <span class="filename">marketing</span>. Необходимо загрузить содержимое папки iFolder <span class="filename">corporate</span> в папку с именем <span class="filename">corporate,</span> которая содержит только папки <span class="filename">hr</span> и <span class="filename">finance</span>. В этом случае нет необходимости загружать все три папки в папку <span class="filename">corporate</span> и увеличивать скорость передачи. Вместо этого можно выполнить слияние папки iFolder <span class="filename">corporate</span> и папки <span class="filename">corporate</span> с помощью функции <span class="guimenu">Выполнить слияние с папкой</span> таким образом, чтобы предотвратить загрузку подпапок <span class="filename">hr</span> и <span class="filename">finance</span> и загрузить только подпапку <span class="filename">marketing</span>. Различие данных папки iFolder <span class="filename">corporate</span> и папки <span class="filename">corporate</span> приводит к появлению конфликта версий. Эти конфликты можно разрешить вручную. Вручную можно также разрешить конфликт имен файлов при его появлении.</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">Теперь выполняется сравнение содержимого этих двух папок и загрузка из папки iFolder файлов, которые отсутствуют в стандартной папке. Осуществляется передача файлов, которые отсутствуют в папке iFolder, но содержатся в стандартной папке.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Изменение расположения существующих папок iFolder</h2>
+
+<span class="collapsible">
 
 <p class="para">Процедура перемещения существующей папки iFolder с именем <span class="filename">corporate</span> в другое местоположение на клиентском компьютере: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Для получения дополнительной информации о слиянии см. подраздел <a href="merge.html#bcq0ign" class="xref">Слияние папки iFolder и стандартной папки</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Слияние перенесенных папок iFolder 2.<span class="replaceable">x</span> с папками iFolder 3.7 или более поздней версии </h2>
+
+<span class="collapsible">
 
 <p class="para">Перенесенные папки iFolder 2.x можно объединять с папками iFolder, созданными на сервере iFolder 3.7 или более поздней версии. Для получения дополнительной информации о миграции см. подраздел <a href="coexistmig.html" class="xref">Миграция и обновление Novell iFolder</a>. </p>
 <p class="para">После миграции папки iFolder 2.<span class="replaceable">x</span> перемещаются на сервер iFolder 3.7 или более поздней версии. Папки iFolder, перенесенные на сервер 3.7 или более поздней версии, можно загрузить на клиентский компьютер. Однако эти папки iFolder, возможно, уже существуют на клиентском компьютере. В этом случае используйте функцию слияния, чтобы предотвратить передачу ненужных данных с сервера на клиент. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Для слияния содержимого выберите стандартную папку и щелкните <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

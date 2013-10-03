@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ru" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:05" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:52" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;Далее<img src="ui/images/next.png" alt="Далее" title="Далее" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">При использовании локального брандмауэра Вы должны настроить брандмауэр так, чтобы разрешить iFolder выбрать локальный динамический порт, или настройте локальный статический порт клиента iFolder для локального взаимодействия (на одном и том же компьютере) с сервером Mono XSP. Клиент iFolder использует веб-сервисы Mono XSP для взаимодействия по протоколу HTTP с серверами Novell iFolder Enterprise Server, на которых у пользователя есть учетные записи. Администратор iFolder конфигурирует сервисы iFolder, определяя, используется ли при взаимодействиях протокол HTTP в Вашей среде.</p>
 <p class="para">Брандмауэр не блокирует трафик между сервером Mono XSP и сервером Novell iFolder Enterprise Server, поскольку Mono XSP использует для трафика стандартные порты HTTP. При этом, если обмен трафиком между клиентом и Mono XSP заблокирован, клиент не сможет обмениваться данными с сервером. Пользователь не сможет выполнить вход с помощью учетной записи iFolder и синхронизировать данные iFolder.</p>
 <p class="para">Изначально в конфигурации iFolder не указан отдельный порт, который следует использовать для соединения клиента с сервером Mono XSP. При первом запуске iFolder он открывает доступный локальный порт для прослушивания запросов с сервера Mono XSP и отправки данных на сервер с помощью Mono XSP. Номер порта записывается в конфигурационный файл, а затем этот порт всегда используется при запуске iFolder, за исключением тех случаев, когда он недоступен. Если порт используется другим приложением, iFolder выбирает следующий доступный порт, перенастраивает его в конфигурационном файле и затем использует новый порт. Например, если iFolder неактивен, а порт используется другим приложением, при перезагрузке iFolder должен выбрать и сконфигурировать другой порт для использования.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Использование локального динамического порта</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Использование локального статического порта</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Использование локального динамического порта</h2>
 
+<span class="collapsible">
+
 <p class="para">Если на Вашем компьютере используется локальный брандмауэр, он должен обнаружить локальный трафик между iFolder и сервером Mono XSP, возникающий при синхронизации списка пользователей и данных iFolder между клиентом iFolder и сервером. Выберите <span class="guimenu">Разрешить</span>, чтобы разрешить трафик iFolder для данного сеанса. Если разрешить трафик на постоянной основе, Ваш брандмауэр не будет выдавать повторные напоминания и при запуске клиента iFolder не будет отображаться всплывающее предупреждение.</p>
 <p class="para">Если заблокировать трафик между iFolder и Mono XSP, установление соединения с сервером iFolder будет запрещаться брандмауэром и синхронизация файлов будет невозможна. iFolder не может определить, что трафик заблокирован брандмауэром, поэтому будут появляться сообщения о невозможности подключения к учетной записи на сервере iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Использование локального статического порта</h2>
+
+<span class="collapsible">
 
 <p class="para">При необходимости можно добавить параметр "Web Service Port Range" (Диапазон портов веб-сервиса) в раздел "Service Manager" (Менеджер сервиса) конфигурационного файла <span class="filename">Simias.config</span>, чтобы разрешить серверу Mono-XSP использовать статический порт или диапазон портов для данного локального трафика. Этот порт или диапазон портов может затем быть открыт в брандмауэре для разрешения взаимодействия с сервером Mono-XSP. </p>
 <p class="para">Конфигурационный файл <span class="filename">Simias.config</span> может располагаться в следующих местах:</p>
@@ -139,6 +135,8 @@
 <p class="para">Запустите клиента iFolder.</p>
 <p class="para">См. дополнительные сведения: <a href="startclient.html" class="xref">Запуск клиента iFolder</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
