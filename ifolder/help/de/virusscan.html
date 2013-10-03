@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:06" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,12 +40,13 @@
   <a href="delacct.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="virusscan">
 
 <h1 class="title">Konfigurieren von lokalen Virenscanner-Einstellungen für den iFolder-Verkehr</h1>
 
-<p class="para">Wenn Sie die Antivirensoftware auf Ihrem Computer verwenden, schließen Sie das Verzeichnis <span class="filename">..\simias\WorkArea\</span> von der Virenüberprüfung aus.  Beispielsweise lautet der Speicherort des Verzeichnisses <span class="filename">..\simias\WorkArea\</span> unter Windows <span class="filename">c:\Dokumente und Einstellungen\<span class="replaceable">Benutzername</span>\Lokale Einstellungen\Anwendungsdaten\simias\WorkArea\.simias.wf.<span class="replaceable">Guid</span></span>. </p>
+<p class="para">Wenn Sie die Antivirensoftware auf Ihrem Computer verwenden, schließen Sie das Verzeichnis <span class="filename">..\simias\WorkArea\</span> von der Virenüberprüfung aus. Beispielsweise lautet der Speicherort des Verzeichnisses <span class="filename">..\simias\WorkArea\</span> unter Windows <span class="filename">c:\Dokumente und Einstellungen\<span class="replaceable">Benutzername</span>\Lokale Einstellungen\Anwendungsdaten\simias\WorkArea\.simias.wf.<span class="replaceable">Guid</span></span>. </p>
 <p class="para">Im Verzeichnis <span class="filename">..\simias\WorkArea\\</span> werden von iFolder Dateien zum Herunterladen vom Server aufgeführt. Wenn an einer iFolder-Datei ein Virus hängt und Ihr Virenprüfprogramm den Virus scannt, während sich die Datei im Verzeichnis <span class="filename">..\simias\WorkArea</span> befindet, zeigt der Virenscanner eine Meldung an, die besagt, dass ein Virus gefunden wurde, und verschiebt die Datei in die Quarantäne. Danach versucht iFolder erneut, die Datei zu synchronisieren. </p>
 <p class="para">Wenn "WorkArea" nicht gescannt wird, kann die Synchronisierung abgeschlossen werden. Die infizierte Datei wird erfolgreich heruntergeladen und in den lokalen iFolder-Ordner verschoben. Das Virenprüfprogramm erkennt daraufhin die infizierte Datei im iFolder-Ordner, verschiebt sie aus diesem Ordner und sperrt sie. Dadurch wird der Computer vor einer Infektion geschützt. Der Löschvorgang der Datei wird von iFolder erfasst und wenn die nächste Synchronisierung beginnt, wird die Datei durch iFolder vom Server sowie von den Mitgliedercomputern entfernt. </p>
 <p class="para">Wenn jedoch der iFolder-Ordner, in den die Datei heruntergeladen wird, ein Nur-Lesen-Ordner ist, wird der lokale Löschvorgang nicht für den Server und andere Mitgliedercomputer umgesetzt. Der Virus muss an anderer Stelle erkannt werden, an der Änderungen mithilfe von Berechtigungen synchronisiert werden können. Das Virenprüfprogramm des Benutzers warnt den Benutzer wahrscheinlich vor dem Virus, demnach sollte der Benutzer weitere iFolder-Mitglieder über den Virus benachrichtigen.</p>

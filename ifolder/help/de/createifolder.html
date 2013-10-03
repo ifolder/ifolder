@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:06" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">Innerhalb des iFolder-Ordners können Sie eine beliebige Struktur von Unterverzeichnissen erstellen, die Ihren persönlichen Gewohnheiten und den Bedürfnissen Ihres Unternehmens entspricht. Die Unterverzeichnisstruktur ist in allen iFolder-Mitgliedsordnern gleich. Jede Arbeitsstation kann ein anderes übergeordnetes Verzeichnis für den freigegebenen iFolder-Ordner angeben.</p>
 <p class="para">Wenn die Anzahl der iFolder-Ordner überschritten wird, die ein einzelner Benutzer erstellen kann, zeigt iFolder eine Fehlermeldung an. Wenn der Administrator die Richtlinie für <span class="guimenu">Anzahl der iFolder-Ordner pro Benutzer</span> beispielsweise auf 10 festgelegt hat und Sie versuchen einen 11. Ordner anzulegen, erhalten Sie eine Benachrichtigung zu dieser Richtlinienverletzung.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">Erstellen von iFolder-Ordnern auf einem FAT32-Mountpunkt (Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">Sie können iFolder-Ordner mit einem Dateimanager oder mit dem iFolder-Browser erstellen, den Sie in der Clientanwendung finden. Verwenden Sie zum Erstellen eines iFolder-Ordners die folgenden Methoden:</p>
 <div class="itemizedlist">
@@ -185,7 +169,7 @@
 <li class="listitem">
 <p class="listitem">Klicken Sie auf der Symbolleiste auf <span class="menuchoice"><span class="guimenu">Datei</span> > <span class="guimenu">In iFolder-Ordner umwandeln</span></span>.</p></li></ul></div>
 
-<p class="para">Das Ordnersymbol <img src="images/folder_16.png" alt="Ordnersymbol" title="Ordnersymbol" class="inline" />  wird in einen Ordner mit einem Overlay des iFolder-Symbols <img src="images/ifolder32.png" alt="iFolder-Symbol " title="iFolder-Symbol " class="inline" /> geändert (grünes "i").
+<p class="para">Das Ordnersymbol <img src="images/folder_16.png" alt="Ordnersymbol" title="Ordnersymbol" class="inline" /> wird in einen Ordner mit einem Overlay des iFolder-Symbols <img src="images/ifolder32.png" alt="iFolder-Symbol " title="iFolder-Symbol " class="inline" /> geändert (grünes "i").
       </p></li>
 <li class="step" id="bx19z0q">
 <p class="para">Wenn die Meldung <span class="guimenu">iFolder-Ordner erstellt</span> angezeigt wird, führen Sie eine der folgenden Aktionen aus:</p>
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">Sie können iFolder-Ordner mit einem Dateimanager oder mit dem iFolder-Browser erstellen, den Sie in der Clientanwendung finden. Verwenden Sie zum Erstellen eines iFolder-Ordners die folgenden Methoden:</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh</h2>
+
+<span class="collapsible">
 
 <p class="para">Sie können iFolder-Ordner mithilfe des iFolder-Browsers erstellen, der in der Clientanwendung zur Verfügung steht.</p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">Der iFolder-Ordner wird im Fenster des iFolder-Browsers angezeigt.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">Erstellen von iFolder-Ordnern auf einem FAT32-Mountpunkt (Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">Unter Linux unterstützt iFolder das Erstellen und Verwenden von iFolder-Ordnern auf einem Mountpunkt für ein FAT32-Dateisystem. Damit Sie neue iFolder-Ordner erstellen oder freigegebene iFolder-Ordner auf einem FAT32-Laufwerk Ihres Linux-Computers einrichten können, muss der iFolder-Benutzer den FAT32-Mountpunkt besitzen, an dem Sie die iFolder-Ordner speichern möchten. Zudem muss in der Datei <span class="filename">/etc/fstab</span> die lokale Benutzer-ID des iFolder-Benutzers für den Mountpunkt festgelegt werden. </p>
 <div class="important">
@@ -391,14 +387,14 @@
 <p class="para">Erstellen Sie das Verzeichnis, in dem Sie das FAT32-Dateisystem mounten möchten. Geben Sie an der Eingabeaufforderung Folgendes ein:</p><pre class="screen">
 mkdir /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount</span>
 </pre>
-<p class="para">Ersetzen Sie <span class="filename"><span class="replaceable">Benutzername</span></span> durch den Benutzernamen des Benutzers, der das FAT32-Laufwerk für iFolder-Ordner verwenden möchte.  Ersetzen Sie <span class="filename"><span class="replaceable">fsmount</span></span> durch den Namen des Verzeichnisses, das Sie als Mountpunkt verwenden möchten. Wenn der Benutzername beispielsweise <span class="filename"><span class="replaceable">rbauer</span></span> und der Verzeichnisname <span class="filename">fat32mntpt<span class="replaceable"> für ein FAT32-Laufwerk oder eine FAT32-Partition ist, geben Sie Folgendes ein:</span></span></p><pre class="screen">
+<p class="para">Ersetzen Sie <span class="filename"><span class="replaceable">Benutzername</span></span> durch den Benutzernamen des Benutzers, der das FAT32-Laufwerk für iFolder-Ordner verwenden möchte. Ersetzen Sie <span class="filename"><span class="replaceable">fsmount</span></span> durch den Namen des Verzeichnisses, das Sie als Mountpunkt verwenden möchten. Wenn der Benutzername beispielsweise <span class="filename"><span class="replaceable">rbauer</span></span> und der Verzeichnisname <span class="filename">fat32mntpt<span class="replaceable"> für ein FAT32-Laufwerk oder eine FAT32-Partition ist, geben Sie Folgendes ein:</span></span></p><pre class="screen">
 mkdir /home/jsmith/fat32mntpt
 </pre></li>
 <li class="step" id="bwemec8">
 <p class="para">Mounten Sie das FAT32-Laufwerk am gewünschten Mountpunkt. Geben Sie an der Eingabeaufforderung Folgendes ein:</p><pre class="screen">
 mount -t vfat /dev/<span class="replaceable">hda1</span> /home/<span class="replaceable">username</span>/<span class="replaceable">fsmount </span>
 </pre>
-<p class="para">Ersetzen Sie <span class="filename">/dev/<span class="replaceable">hda1</span></span> durch den Geräte- bzw. Partitionsnamen des Nicht-Linux-Geräts. Ersetzen Sie <span class="filename"><span class="replaceable">Benutzername</span></span> durch den Benutzernamen des iFolder-Benutzers.  Ersetzen Sie <span class="filename"><span class="replaceable">fsmount</span></span> durch den Namen des Verzeichnisses, das Sie als Mountpunkt verwenden möchten.  </p>
+<p class="para">Ersetzen Sie <span class="filename">/dev/<span class="replaceable">hda1</span></span> durch den Geräte- bzw. Partitionsnamen des Nicht-Linux-Geräts. Ersetzen Sie <span class="filename"><span class="replaceable">Benutzername</span></span> durch den Benutzernamen des iFolder-Benutzers. Ersetzen Sie <span class="filename"><span class="replaceable">fsmount</span></span> durch den Namen des Verzeichnisses, das Sie als Mountpunkt verwenden möchten.  </p>
 <p class="para">Wenn Sie vom Beispiel ausgehen, in dem sich das FAT32-Dateisystem <span class="literal">(vfat)</span> auf dem Gerät <span class="filename">hda4</span> befindet (<span class="filename"><span class="replaceable">/dev/hda4</span></span>), der Benutzername <span class="filename"><span class="replaceable">rbauer</span></span> lautet und das Mountpunktverzeichnis <span class="filename">/home/<span class="replaceable">rbauer</span>/<span class="replaceable">fat32mntpt ist</span></span>, geben Sie Folgendes ein:</p><pre class="screen">
 mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 </pre></li>
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

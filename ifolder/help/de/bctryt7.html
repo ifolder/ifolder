@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:06" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,29 +40,21 @@
   <a href="bctrxs4.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">Upgraden vom iFolder 3.<span class="replaceable">x</span>-Clients</h1>
 
 <p class="para">Dieser Abschnitt enthält Folgendes:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">Automatisches Upgrade auf iFolder 3.7 oder höher</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">Manuelles Upgrade auf iFolder 3.7 oder höher</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">WICHTIG:</em>Bevor Sie Ihren 3.4.1-Client upgraden, müssen Sie Ihren lokalen Simias-Speicher sichern. Wenn Sie die Sicherung nicht ausführen, verlieren Sie alle Konfigurationsinformationen des Computers, da der Simias-Speicher bei einem Fehler beim Upgrade gelöscht wird.</p></div>
 
 <div class="sect2" id="bctryt8">
 
 <h2 class="title">Automatisches Upgrade auf iFolder 3.7 oder höher</h2>
+
+<span class="collapsible">
 
 <p class="para">Das automatische Upgrade ist nur möglich, wenn Sie über Root-Zugriffsrechte verfügen, da für diesen Vorgang die RPM-Pakete installiert werden müssen. Das Root-Passwort wird während des Upgrades abgefragt. Wenn Sie nicht über Root-Zugriffsrechte verfügen, wird das Paket nicht automatisch installiert. Die Client-Pakete werden jedoch zu einem temporären Speicherort heruntergeladen. Der Linux-Client wird zu <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span> heruntergeladen. Dies ermöglicht ein späteres Upgrade, da der Speicherort die beiden Installationsskripts enthält, die Sie manuell ausführen können. Eine Verbindung zu einem iFolder-Server der Version 3.7 oder höher mit einem iFolder 3.<span class="replaceable">x</span>-Client ist erst nach einem Upgrade des Clients auf die neuere Version möglich.</p>
 <div class="procedure">
@@ -74,11 +66,15 @@
 </div>
 
 <p class="para">Wenn Sie in iFolder 3.4.1 auf <span class="guimenu">Nein</span> klicken und versuchen, eine Verbindung mit dem iFolder 3.4.1-Client zu dem iFolder-Server der Version 3.7 oder höher herzustellen, wird eine Fehlermeldung angezeigt. Klicken Sie auf <span class="guimenu">OK</span>, um die Meldung auszublenden.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">Manuelles Upgrade auf iFolder 3.7 oder höher</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">Starten Sie iFolder über das Menü <span class="guimenu">Anwendung</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

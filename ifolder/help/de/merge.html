@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="de" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:31" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:06" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;weiter<img src="ui/images/next.png" alt="weiter" title="weiter" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">iFolder-Ordner zusammenführen</h1>
 
 <p class="para">Mithilfe der Zusammenführung können Sie Daten in iFolder-Ordnern konsolidieren und den Datentransfer zwischen dem iFolder-Server und dem Client minimieren. Sie können den Inhalt in einem iFolder-Ordner auf dem Server mit dem Inhalt des Ordners auf einem lokalen Computer zusammenführen.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Zusammenführen eines iFolder-Ordners mit einem Ordner</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Verschieben von vorhandenen iFolder-Ordnern an einen anderen Speicherplatz</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Zusammenführen migrierter iFolder 2.x-Ordner mit iFolder-Ordnern der Version 3.7 oder höher</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Zusammenführen eines iFolder-Ordners mit einem Ordner</h2>
+
+<span class="collapsible">
 
 <p class="para">Sie können einen iFolder-Ordner mit einem normalen Ordner zusammenführen, der den gleichen Namen besitzt. Beispielsweise können Sie den Inhalt eines iFolder-Ordners mit dem Namen <span class="filename">Firma</span> mit dem eines normalen Ordners mit dem Namen <span class="filename">Firma</span> zusammenführen. </p>
 <p class="para">Angenommen, der iFolder-Ordner <span class="filename">Firma</span> besitzt drei Unterordner: <span class="filename">Personal</span>, <span class="filename">Finanzen</span> und <span class="filename">Marketing</span>. Sie möchten nun den Inhalt des iFolder-Ordners<span class="filename">Firma</span> zu dem Ordner mit dem Namen <span class="filename">Firma</span> herunterladen, der nur die Unterordner <span class="filename">Personal</span> und <span class="filename">Finanzen</span> enthält. In diesem Fall brauchen Sie nicht alle drei Ordner in den Ordner <span class="filename">Firma</span> herunterzuladen, wodurch die Übertragungsgeschwindigkeit viel höher ist. Stattdessen können Sie den iFolder-Ordner <span class="filename">Firma</span> mit dem Ordner <span class="filename">Firma</span> zusammenführen, sodass die Funktion <span class="guimenu">Mit Ordner zusammenführen</span> auf intelligente Weise die Unterordner <span class="filename">Personal</span> und <span class="filename">Finanzen</span> nicht herunterlädt, sondern nur den Unterordner <span class="filename">Marketing</span>. Wenn sich der Inhalt des iFolder-Ordners <span class="filename">Firma</span> von demjenigen des Ordners <span class="filename">Firma</span> unterscheidet, wird ein Versionskonflikt angezeigt. Sie können diesen Konflikt manuell auflösen. Auch eventuelle Dateinamenkonflikte können manuell aufgelöst werden.</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">Die Inhalte dieser beiden Ordner werden jetzt miteinander verglichen und die in dem Ordner nicht vorhandenen Dateien werden von dem iFolder-Ordner heruntergeladen. Die Dateien, die im iFolder-Ordner nicht vorhanden sind, jedoch in dem Ordner, werden hochgeladen.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Verschieben von vorhandenen iFolder-Ordnern an einen anderen Speicherplatz</h2>
+
+<span class="collapsible">
 
 <p class="para">So verschieben Sie einen vorhandenen iFolder-Ordner mit dem Namen <span class="filename">Firma</span> zu einem anderen Speicherort auf dem Clientcomputer: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Weitere Informationen zum Zusammenführen finden Sie unter <a href="merge.html#bcq0ign" class="xref">Zusammenführen eines iFolder-Ordners mit einem Ordner</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Zusammenführen migrierter iFolder 2.<span class="replaceable">x</span>-Ordner mit iFolder-Ordnern der Version 3.7 oder höher </h2>
+
+<span class="collapsible">
 
 <p class="para">Sie können einen migrierten iFolder 2.x-Ordner mit einem auf einem iFolder-Server der Version 3.7 oder höher erstellten iFolder-Ordner zusammenführen. Weitere Informationen zur Migration finden Sie unter <a href="coexistmig.html" class="xref">Novell iFolder-Migration und -Upgrade</a>. </p>
 <p class="para">Nach der Migration werden die iFolder 2.<span class="replaceable">x</span>-Ordner auf den iFolder-Server der Version 3.7 oder höher verschoben. Sie können die auf den iFolder-Server der Version 3.7 oder höher migrierten iFolder-Ordner auf den Clientcomputer herunterladen. Diese iFolder-Ordner sind jedoch möglicherweise auf dem Clientcomputer bereits vorhanden. Verwenden Sie in diesem Fall die Funktion zum Zusammenführen, um unnötigen Datentransfer vom Server zum Client zu vermeiden. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Um die Inhalte zusammenzuführen, wählen Sie den normalen Ordner aus und klicken Sie auf <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
