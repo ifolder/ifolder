@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:04" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:43" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">Dentro da pasta iFolder, é possível configurar qualquer estrutura de subdiretório que se adapte aos seus hábitos de trabalho pessoais ou profissionais. A estrutura de subdiretórios é constante em todos os membros das pastas iFolder. Cada estação de trabalho pode especificar um diretório pai diferente para a pasta iFolder compartilhada.</p>
 <p class="para">Quando você exceder o limite do número de pastas que um usuário individual pode criar, o iFolder exibirá uma mensagem de erro. Por exemplo, se o administrador tiver definido a política de <span class="guimenu">Número de pastas do iFolder por usuário</span> como 10 e você tentar criar a décima primeira pasta, você receberá uma notificação sobre a violação da política.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh.</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">Criando pastas iFolder em um Ponto de Montagem FAT32 (Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">Você pode criar pastas do iFolder com um gerenciador de arquivos ou com o browser do iFolder, que está disponível no aplicativo cliente. Use os seguintes métodos para criar uma pasta iFolder:</p>
 <div class="itemizedlist">
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">Você pode criar pastas do iFolder com um gerenciador de arquivos ou com o browser do iFolder, que está disponível no aplicativo cliente. Use os seguintes métodos para criar uma pasta iFolder:</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh.</h2>
+
+<span class="collapsible">
 
 <p class="para">Você pode criar pastas com o browser do iFolder, que está disponível no aplicativo do cliente. </p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">O iFolder aparece na janela do browser do iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">Criando pastas iFolder em um Ponto de Montagem FAT32 (Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">No Linux, o iFolder suporta a criação e a utilização de pastas iFolder em um ponto de montagem para um sistema de arquivos FAT32. Para criar novas pastas do iFolder ou configurar pastas compartilhadas do iFolder em um volume FAT32 no seu computador Linux, o usuário do iFolder deve possuir o ponto de montagem FAT32 em que essas pastas devem ser armazenadas, e o arquivo <span class="filename">/etc/fstab</span> deve identificar explicitamente o ID do usuário local do iFolder referente ao ponto de montagem. </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

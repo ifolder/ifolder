@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:04" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:43" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="nameconv.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
@@ -51,23 +52,35 @@
 
 <h2 class="title">Arquivos de sistema operacional</h2>
 
+<span class="collapsible">
+
 <p class="para">Você não deve converter arquivos de diretórios de sistema para pastas iFolder. A maioria dos arquivos de sistema muda raras vezes e é melhor manter um arquivo de imagem de seu sistema básico e software chave do que tentar sincronizar aqueles arquivos para o servidor.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Arquivos ocultos</h2>
 
+<span class="collapsible">
+
 <p class="para">Se o seu sistema de arquivos utiliza arquivos ocultos para rastrear preferências, seu administrador pode restringir esses tipos de arquivos para excluí-los da sincronização em seu sistema. Normalmente, os arquivos ocultos são relevantes somente para os computadores particulares onde eles foram criados e mudam todas as vezes que o arquivo ou diretório é acessado. Você não precisa manter esses arquivos e a sincronização dos mesmos resulta em erros repetidos de conflito de arquivos. </p>
 <p class="para">Por exemplo, o iFolder exclui automaticamente dois arquivos ocultos do gerenciador de arquivos chamados <span class="filename">thumbs.db</span> e <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Arquivos de banco de dados</h2>
 
+<span class="collapsible">
+
 <p class="para">O iFolder sincroniza arquivos individuais ou as partes mudadas de arquivos individuais; ele não sincroniza arquivos como um conjunto. Se você tem um arquivo de banco de dados que seja implementado como uma coleção de arquivos vinculados, não tente sincronizá-los em um iFolder.</p>
 <p class="para">Não tente sincronizar seus dados do GroupWise transformando os diretórios de arquivo e cache ou os diretórios remotos em pastas iFolder. Se você fizer isso, os arquivos de dados do GroupWise serão corrompidos depois que o arquivo for sincronizado algumas vezes. O GroupWise precisa que os arquivos no arquivo sejam mantidos como um conjunto de arquivos.</p>
+</span>
+
 </div>
 
 </div>

@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:04" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:43" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">Fundindo pastas do iFolder</h1>
 
 <p class="para">A ação de fundir ajuda você a consolidar os dados das pastas do iFolder e minimizar a transferência de dados entre o cliente e o servidor iFolder. Você pode fundir o conteúdo em uma pasta do iFolder no servidor com o conteúdo em um conteúdo da pasta existente na máquina local.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Fundição de uma pasta do iFolder com outra pasta</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Movendo pastas do iFolder existentes para localizações diferentes</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Fundindo iFolders 2.x migrados com iFolders 3.7 ou posteriores</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Fundição de uma pasta do iFolder com outra pasta</h2>
+
+<span class="collapsible">
 
 <p class="para">Você pode fundir uma pasta do iFolder e uma pasta normal com o mesmo nome. Por exemplo, você pode fundir o conteúdo de uma pasta do iFolder chamada <span class="filename">corporativa</span> com o de uma pasta normal chamada <span class="filename">corporativa</span>. </p>
 <p class="para">Considere que o iFolder <span class="filename">corporativo</span> possui três subpastas: <span class="filename">rh</span>, <span class="filename">finanças</span> e <span class="filename">marketing</span>.  Você deseja fazer download do conteúdo da pasta <span class="filename">corporativa</span> do iFolder para a pasta chamada <span class="filename">corporativa</span>, que contém apenas as pastas <span class="filename">rh</span> e <span class="filename">finanças</span>. Nesse caso, não é necessário fazer o download das três pastas para <span class="filename">a pasta corporativa</span> e aumentar a taxa de transferência.  Em vez disso, você pode fundir a pasta <span class="filename">corporativa</span> do iFolder com a pasta <span class="filename">corporativa</span>, de forma que o recurso <span class="guimenu">Fundir com a pasta</span> evite de maneira inteligente o download das subpastas <span class="filename">rh</span> e <span class="filename">finanças</span> e faça o download somente da subpasta <span class="filename">marketing</span>. Se os dados na pasta <span class="filename">corporativa</span> do iFolder e na pasta <span class="filename">corporativa</span> forem diferentes, será exibido um conflito de versão. Esses conflitos podem ser resolvidos manualmente. Da mesma forma, se houver um conflito com nome de arquivo, você poderá resolvê-lo manualmente.</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">Agora, o conteúdo dessas duas pastas são comparados e os arquivos que não estão na pasta são descarregados da pasta do iFolder. Os arquivos que não estão presentes na pasta do iFolder, mas estão disponíveis na pasta são carregados. </p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Movendo pastas do iFolder existentes para localizações diferentes</h2>
+
+<span class="collapsible">
 
 <p class="para">Para mover uma pasta existente do iFolder chamada <span class="filename">corporativa</span> para uma localização diferente na máquina do cliente: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Para obter mais informações sobre fusão, consulte a <a href="merge.html#bcq0ign" class="xref">Fundição de uma pasta do iFolder com outra pasta</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Fundindo iFolders 2.<span class="replaceable">x</span> migrados com iFolders 3.7 ou posteriores </h2>
+
+<span class="collapsible">
 
 <p class="para">Você pode fundir um iFolder 2.x migrado com um iFolder criado no servidor do iFolder 3.7 ou posterior. Para obter mais informações sobre a migração, consulte o <a href="coexistmig.html" class="xref">Migração e upgrade do Novell iFolder</a>. </p>
 <p class="para">Após a migração, as pastas do iFolder 2.<span class="replaceable">x</span> são movidas para o servidor do iFolder 3.7 ou posterior. Você pode optar por fazer download das pastas do iFolder migradas no servidor 3.7 ou posterior para a máquina cliente. Porém, essas pastas já podem existir na máquina do cliente. Se esse for o caso, use o recurso de fundição para evitar transferências de dados desnecessárias do servidor para o cliente. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Para fundir o conteúdo, selecione a pasta normal e clique em <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

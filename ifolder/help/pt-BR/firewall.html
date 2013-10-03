@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pt-br" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:04" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:43" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;próximo<img src="ui/images/next.png" alt="próximo" title="próximo" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">Se você usar um firewall local, deverá configurá-lo para que o iFolder possa escolher uma porta dinâmica local ou configurar uma porta estática local para que o cliente do iFolder se comunique localmente (o mesmo computador) com o Mono XSP Server. O iFolder usa serviços Web do Mono XSP para se comunicar via HTTP com os servidores empresariais Novell iFolder em que residem suas contas do iFolder. O administrador do iFolder configura serviços do iFolder que determinam se a comunicação usa HTTP no seu ambiente.</p>
 <p class="para">Seu firewall não bloqueia o tráfego entre o Mono XSP e o servidor empresarial Novell iFolder, pois o Mono XSP usa as portas HTTP padrão para o tráfego. No entanto, se você bloquear o tráfego entre o cliente e o Mono XSP, o cliente não poderá se comunicar com o servidor. Você não poderá efetuar login na sua conta do iFolder e sincronizar os dados dele.</p>
 <p class="para">Inicialmente, a configuração do iFolder não especifica uma porta particular a ser usada para as comunicações cliente a Mono XSP. Quando o iFolder é executado pela primeira vez, ele abre uma porta local disponível para receber as solicitações do Mono XSP e enviar dados ao servidor por esse programa. Ele grava o número da porta em um arquivo de configuração e utiliza essa porta posteriormente, a não ser que ela não esteja disponível quando o iFolder for iniciado. Se a porta estiver sendo usada por outro aplicativo, o iFolder seleciona uma porta diferente disponível, reconfigura a porta no arquivo de configuração e utiliza a nova porta posteriormente. Por exemplo, se o iFolder estiver inativo e outro aplicativo utilizar a porta, o iFolder deverá selecionar e configurar outra porta a ser usada quando você reiniciá-lo.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Utilizando uma porta dinâmica local</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Utilizando uma porta estática local</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Utilizando uma porta dinâmica local</h2>
 
+<span class="collapsible">
+
 <p class="para">Se você usar um firewall local no computador, o firewall deverá detectar o tráfego local entre o iFolder e o servidor Mono XSP sempre que o iFolder entrar em contato com o servidor para sincronizar suas listas de usuários e dados do iFolder. Selecione <span class="guimenu">Permitir</span> para permitir o tráfego do iFolder nesta sessão. Se você permitir o tráfego permanentemente, seu firewall não deverá lembrá-lo novamente por meio de alertas pop-up sempre que o iFolder for iniciado.</p>
 <p class="para">Se você bloquear o tráfego do iFolder para o Mono XSP, seu firewall o impedirá de se conectar ao servidor iFolder e não será possível sincronizar seus arquivos. O iFolder não detecta que o tráfego está bloqueado pelo firewall; ele relata apenas que ele não pode se conectar à sua conta no servidor iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Utilizando uma porta estática local</h2>
+
+<span class="collapsible">
 
 <p class="para">Se preferir, você pode adicionar o parâmetro de Faixa de Portas do Serviço Web na seção de Gerenciamento de Serviços do arquivo <span class="filename">Simias.config</span> para que o Servidor Mono XSP use uma porta estática ou uma faixa de portas para esse tráfego local. Essa porta ou faixa de portas pode ser aberta no firewall para permitir a comunicação do Mono XSP. </p>
 <p class="para">O arquivo <span class="filename">Simias.config</span> pode estar nas seguintes localizações:</p>
@@ -139,6 +135,8 @@
 <p class="para">Inicie o cliente iFolder.</p>
 <p class="para">Para obter mais informações, consulte a <a href="startclient.html" class="xref">Iniciando o cliente iFolder</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
