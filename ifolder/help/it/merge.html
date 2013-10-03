@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="it" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:21" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">Fusione di cartelle iFolder</h1>
 
 <p class="para">Con la funzionalità di fusione è possibile consolidare i dati delle cartelle iFolder e ridurre in questo modo i tempi necessari per il loro trasferimento tra il server e il client iFolder. È possibile fondere il contenuto in una cartella iFolder sul server con quello di una cartella esistente nel computer locale.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Fusione tra cartella iFolder e cartella normale</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Spostamento di cartelle iFolder esistenti in altre ubicazioni</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Fusione di cartelle iFolder 2.x di cui è stata eseguita la migrazione con iFolder 3.7 o versione successiva</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Fusione tra cartella iFolder e cartella normale</h2>
+
+<span class="collapsible">
 
 <p class="para">È possibile fondere una cartella iFolder e una cartella normale con lo stesso nome. Ad esempio, è possibile fondere il contenuto di una cartella iFolder denominata <span class="filename">corporate</span> con una cartella normale denominata <span class="filename">corporate</span>. </p>
 <p class="para">Si supponga che la cartella iFolder <span class="filename">corporate</span> disponga di tre sottocartelle: <span class="filename">hr</span>, <span class="filename">finance</span> e <span class="filename">marketing</span>. Si desidera scaricare il contenuto della cartella iFolder <span class="filename">corporate</span> nella cartella normale denominata <span class="filename">corporate</span> che contiene solo le cartelle <span class="filename">hr</span> e <span class="filename">finance</span>. In tal caso, non è necessario scaricare tutte e tre le cartelle nella cartella <span class="filename">corporate</span> e aumentare la velocità di trasferimento. Invece, è possibile fondere la cartella iFolder <span class="filename">corporate</span> con la cartella <span class="filename">corporate</span> in modo che la funzione di <span class="guimenu">fusione</span> eviti di scaricare le sottocartelle <span class="filename">hr</span> e <span class="filename">finance</span> e si limiti a scaricare la cartella <span class="filename">marketing</span>. Se i dati nella cartella iFolder <span class="filename">corporate</span> e quelli nella cartella normale <span class="filename">corporate</span> sono diversi, verrà generato un conflitto di versioni. È possibile risolvere i conflitti manualmente. Analogamente, è possibile risolvere gli eventuali conflitti tra nomi di file. </p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">I contenuti delle cartelle verranno confrontati e i file non presenti in quella normale verranno scaricati dalla cartella iFolder. I file non presenti nella cartella iFolder ma disponibili in quella locale verranno invece caricati.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Spostamento di cartelle iFolder esistenti in altre ubicazioni</h2>
+
+<span class="collapsible">
 
 <p class="para">Per spostare un cartella iFolder esistente denominata <span class="filename">corporate</span> in un'altra ubicazione nel computer client: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Per ulteriori informazioni sulla fusione, vedere <a href="merge.html#bcq0ign" class="xref">Fusione tra cartella iFolder e cartella normale</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Fusione di cartelle iFolder 2.<span class="replaceable">x</span> di cui è stata eseguita la migrazione con iFolder 3.7 o versione successiva </h2>
+
+<span class="collapsible">
 
 <p class="para">È possibile eseguire la fusione di una cartella iFolder 2.x di cui è stata eseguita la migrazione con una cartella iFolder creata nel server iFolder 3.7 o versione successiva. Per ulteriori informazioni sulla migrazione, vedere <a href="coexistmig.html" class="xref">Migrazione e upgrade di Novell iFolder</a>. </p>
 <p class="para">Dopo aver eseguito la migrazione, le cartelle iFolder 2.<span class="replaceable">x</span> vengono spostate nel server iFolder 3.7 o versione successiva. È possibile scegliere di eseguire il download delle cartelle iFolder di cui è stata eseguita la migrazione dal server 3.7 o versione successiva nel computer client. Tuttavia, tali cartelle potrebbero esistere già nel computer client. In questo caso, utilizzare la funzionalità di fusione per evitare il trasferimento di dati non necessari tra il server e il client. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Per fondere il contenuto, selezionare la cartella normale e fare clic su <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

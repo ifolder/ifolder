@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="it" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:50" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:21" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,34 +40,47 @@
   <a href="nameconv.html" class="nav">&nbsp;avanti<img src="ui/images/next.png" alt="avanti" title="avanti" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
 <h1 class="title">Indicazioni relative a tipi e dimensioni dei file da non sincronizzare</h1>
 
-<p class="para">Quando il client iFolder è utilizzato con Novell iFolder, è possibile che l'amministratore di iFolder specifichi restrizioni relative ai tipi e alle dimensioni massime dei file a livello di sistema, di utente, di gruppo LDAP o di cartella iFolder.  Inoltre è possibile che il conto preveda limitazioni per quanto riguarda la quantità di spazio utilizzabile per i dati delle cartelle iFolder di cui si è proprietari. Quando si partecipa ad altre cartelle iFolder, lo spazio utilizzato sul server viene utilizzato a svantaggio del proprietario di quella cartella.</p>
+<p class="para">Quando il client iFolder è utilizzato con Novell iFolder, è possibile che l'amministratore di iFolder specifichi restrizioni relative ai tipi e alle dimensioni massime dei file a livello di sistema, di utente, di gruppo LDAP o di cartella iFolder. Inoltre è possibile che il conto preveda limitazioni per quanto riguarda la quantità di spazio utilizzabile per i dati delle cartelle iFolder di cui si è proprietari. Quando si partecipa ad altre cartelle iFolder, lo spazio utilizzato sul server viene utilizzato a svantaggio del proprietario di quella cartella.</p>
 <p class="para">Alcuni tipi di file non sono buoni candidati per la sincronizzazione, ad esempio i file del sistema operativo, i file nascosti creati da un manager di file o i database implementati come raccolte di file collegati. Si potrebbero includere solo i tipi di file principali utilizzati per l’attività o escludere i file probabilmente non legati all’attività, ad esempio i file <span class="filename">.mp3</span>. </p>
 <div class="sect2" id="bctogsl">
 
 <h2 class="title">File del sistema operativo</h2>
 
+<span class="collapsible">
+
 <p class="para">È consigliabile non convertire le directory di sistema in cartelle iFolder. La maggior parte dei file di sistema vengono raramente modificati ed è meglio mantenere un file di immagine del sistema di base e del software principale piuttosto che tentare di sincronizzare questi file con il server.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">File nascosti</h2>
 
+<span class="collapsible">
+
 <p class="para">Se il file system utilizza file nascosti per tenere traccia delle preferenze di visualizzazione, è possibile che l’amministratore limiti questi tipi di file in modo da escluderli dalla sincronizzazione sul sistema dell’utente. In genere, i file nascosti riguardano solo il particolare computer su cui sono stati creati e vengono modificati ogni volta che si accede al file o alla directory. Non è necessario mantenere questi file e la loro sincronizzazione genera ripetuti errori di conflitto di file. </p>
 <p class="para">Ad esempio, verranno automaticamente esclusi due file del manager di file nascosti, denominati <span class="filename">thumbs.db</span> e <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">File di database</h2>
 
+<span class="collapsible">
+
 <p class="para">In iFolder vengono sincronizzati i singoli file o le parti modificate dei singoli file, non i file come un unico insieme. Se si dispone di un file di database implementato come raccolta di file collegati, non tentare di sincronizzali in una cartella iFolder.</p>
 <p class="para">Non tentare la sincronizzazione dei dati GroupWise inserendo l’archivio GroupWise, la cache o le directory remote nelle cartelle iFolder. altrimenti i file dei dati GroupWise si danneggeranno dopo alcune sincronizzazioni. I file dell’archivio GroupWise devono essere gestiti come un unico insieme.</p>
+</span>
+
 </div>
 
 </div>
