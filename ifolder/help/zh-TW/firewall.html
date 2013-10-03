@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:15" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">如果您使用了本地防火牆，您必須設定防火牆允許 iFolder 選擇本地動態連接埠或為 iFolder 用戶端設定本地靜態連接埠，以便在本地 (相同電腦) 與 Mono XSP Server 進行通訊。iFolder 使用 Mono XSP Web 服務透過 HTTP 與您在其中擁有 iFolder 帳戶的 Novell iFolder 企業伺服器通訊。iFolder 管理員會設定 iFolder 服務的組態，決定您環境中的何種通訊使用 HTTP。</p>
 <p class="para">因為 Mono XSP 將標準 HTTP 連接埠用於流量，所以您的防火牆不會封鎖 Mono XSP 與 Novell iFolder 企業伺服器之間的流量。 不過，如果您封鎖用戶端與 Mono XSP 之間的流量，則用戶端將無法與伺服器通訊。您將無法登入 iFolder 帳戶並同步 iFolder 資料。</p>
 <p class="para">開始時，iFolder 組態並未指定要用於用戶端至 Mono XSP 通訊的特定連接埠。 當 iFolder 初次執行時，它會開啟一個可用的本地連接埠，以傾聽 Mono XSP 的要求並透過 Mono XSP 將資料傳送給伺服器。 它會將連接埠編號寫入組態檔案，並在此後一直使用此連接埠，直到啟動 iFolder 時無法使用該連接埠為止。 如果其他應用程式已經使用連接埠，iFolder 會選取其他可用的連接埠，在組態檔中重新設定連接埠，之後就會使用新的連接埠。例如，如果 iFolder 已關閉且連結埠正由另一應用程式使用，iFolder 必須在重新開啟 iFolder 時選取並設定其他的連接埠。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">使用本地動態連接埠</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">使用本地靜態連接埠</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">使用本地動態連接埠</h2>
 
+<span class="collapsible">
+
 <p class="para">如果您在電腦上使用本地防火牆，則每當 iFolder 聯絡 Mono XSP 伺服器以同步其使用者清單及 iFolder 資料時，該防火牆都應偵測 iFolder 與該伺服器之間的本地流量。 選取<span class="guimenu">「允許」</span>，允許此會期的 iFolder 流量。如果永遠允許該流量，防火牆應不會再次提醒您，便可避免在 iFolder 開啟時收到彈出式警告。</p>
 <p class="para">如果封鎖 iFolder 至 Mono XSP 的流量，防火牆會阻止您連接 iFolder 伺服器且您將無法同步檔案。iFolder 不會偵測防火牆已封鎖的流量；它僅會回報無法連接至 iFolder 伺服器上的帳戶。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">使用本地靜態連接埠</h2>
+
+<span class="collapsible">
 
 <p class="para">您可以選擇性地在 <span class="filename">Simias.config</span> 檔案的「服務管理員」區段新增「Web 服務埠範圍」參數，以允許 Mono XSP Server 使用靜態連接埠或某範圍的連接埠來進行此本地交通。 然後可以在防火牆中開啟此埠或此範圍的埠，以允許 Mono XSP 的通訊。 </p>
 <p class="para">您可以在下列位置找到 <span class="filename">Simias.config</span>：</p>
@@ -139,6 +135,8 @@
 <p class="para">啟動 iFolder 用戶端。</p>
 <p class="para">如需詳細資訊，請參閱<a href="startclient.html" class="xref">啟動 iFolder 用戶端</a>。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

@@ -2,7 +2,6 @@ var tIdMap = new Object();
 tIdMap['bookinfo'] = 'bookinfo.html';
 tIdMap['overview'] = 'overview.html';
 tIdMap['benefits'] = 'benefits.html';
-tIdMap['bawqltp'] = 'bawqltp.html';
 tIdMap['bawqmpe'] = 'bawqmpe.html';
 tIdMap['ovwxplat'] = 'ovwxplat.html';
 tIdMap['keyfeatures'] = 'keyfeatures.html';

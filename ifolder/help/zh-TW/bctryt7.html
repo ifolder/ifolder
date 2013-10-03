@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:15" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,29 +40,21 @@
   <a href="bctrxs4.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">升級 iFolder 3.<span class="replaceable">x</span> 用戶端</h1>
 
 <p class="para">本節討論以下各項：</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">自動升級至 iFolder 3.7或更新版本</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">手動升級到 iFolder 3.7 或更新版本</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">重要：</em>您必須先備份本地的 Simias 儲存區，再升級至 3.4.1 用戶端。如果您不備份，會遺失電腦上的所有組態資訊，因為升級失敗時會刪除 Simias 儲存區。</p></div>
 
 <div class="sect2" id="bctryt8">
 
-<h2 class="title">自動升級至 iFolder 3.7或更新版本</h2>
+<h2 class="title">自動升級至 iFolder 3.7 或更新版本</h2>
+
+<span class="collapsible">
 
 <p class="para">只有在您有根部存取權限時才能自動升級，因為此程序需要安裝 RPM 套件。升級期間必須有根部密碼。如果您沒有根部存取權限，則無法自動安裝套件。但是，用戶端套件會下載至暫時的位置。Linux 用戶端會下載至 <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>。這讓您可以稍後升級，因為位置包含兩個可以手動執行的安裝指令碼。除非您升級用戶端，否則無法使用 iFolder 3.<span class="replaceable">x</span> 用戶端連接到 iFolder 3.7 或更新版本的伺服器。</p>
 <div class="procedure">
@@ -74,11 +66,15 @@
 </div>
 
 <p class="para">若是 iFolder 3.4.1，如果您按一下<span class="guimenu">「否」</span>並嘗試將 iFolder 3.4.1 用戶端連接到 iFolder 3.7 或更新版本的伺服器，會顯示錯誤訊息。按一下<span class="guimenu">「確定」</span>關閉訊息。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">手動升級到 iFolder 3.7 或更新版本</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">從<span class="guimenu">「應用程式」</span>功能表啟動 iFolder。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:15" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">合併 iFolder</h1>
 
 <p class="para">「合併」會協助您統整 iFolder 資料並使 iFolder 伺服器語用戶端之間的資料傳輸降到最低。您可以合併伺服器上的 iFolder 內容與現有本地機器資料夾的內容。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">iFolder 對資料夾合併</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">移動現有的 iFolder 到不同的位置</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">合併移轉的 2.x iFolder 與 3.7 或更新版本的 iFolder</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">iFolder 對資料夾合併</h2>
+
+<span class="collapsible">
 
 <p class="para">您可以使用相同的名稱合併 iFolder 與一般資料夾。例如，您可以合併名稱為 <span class="filename">corporate</span> 的 iFolder 與名稱為 <span class="filename">corporate</span> 的一般資料夾的內容。 </p>
 <p class="para">假設 <span class="filename">corporate</span> iFolder 有三個子資料夾：<span class="filename">hr</span>、<span class="filename">finance</span> 與 <span class="filename">marketing</span>。您想要將 <span class="filename">corporate</span> iFolder 的內容下載到 <span class="filename">corporate</span> 資料夾，這個資料夾僅包含 <span class="filename">hr</span> 和 <span class="filename">finance</span> 子資料夾。在這個情況下，您不需要將全部三個資料夾下載到 <span class="filename">corporate</span> 資料夾而增加傳輸率。您可以合併 <span class="filename">corporate</span> iFolder 與 <span class="filename">corporate</span> 資料夾，讓<span class="guimenu">「合併到資料夾」</span>特性聰明地避免下載 <span class="filename">hr</span> 和 <span class="filename">finance</span> 子資料夾，而只下載 <span class="filename">marketing</span> 子資料夾。如果 <span class="filename">corporate</span> iFolder 和 <span class="filename">corporate</span> 資料夾中的資料不同，會顯示版本衝突。您可以手動解決衝突。相同地，如果顯示檔名衝突，您也可以手動解決衝突。</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">現在，會比較這兩個資料夾的內容，並從 iFolder 下載沒有出現在資料夾中的檔案。並上載沒有出現在 iFolder 中但是出現在資料夾中的檔案。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">移動現有的 iFolder 到不同的位置</h2>
+
+<span class="collapsible">
 
 <p class="para">若要將現有的 <span class="filename">corporate</span> iFolder 移動到用戶端機器上的不同位置： </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">如需有關合併的詳細資訊，請參閱 <a href="merge.html#bcq0ign" class="xref">iFolder 對資料夾合併</a>。</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">合併移轉的 2.<span class="replaceable">x</span> iFolder 與 3.7 或更新版本的 iFolder </h2>
+
+<span class="collapsible">
 
 <p class="para">您可以合併移轉的 2.x iFolder 與在 iFolder 3.7 或更新版本之伺服器中建立的 iFolder。如需有關移轉的詳細資訊，請參閱 <a href="coexistmig.html" class="xref">Novell iFolder 移轉和升級</a>。 </p>
 <p class="para">移轉之後， 2.<span class="replaceable">x</span> iFolder 會移動到 iFolder 3.7 或更新版本的伺服器。您可以選擇將 iFolder 3.7 或更新版本之伺服器上移轉的 iFolder 下載到用戶端機器。但是，這些 iFolder 可能已經存在用戶端機器上。如果是這個情況，則使用合併功能避免從伺服器到用戶端發生不必要的資料傳輸。 </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">若要合併內容，則選取一般資料夾，然後按一下<span class="guimenu">「確定」</span>。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

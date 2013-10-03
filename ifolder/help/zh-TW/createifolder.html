@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-tw" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:15" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;下一步<img src="ui/images/next.png" alt="下一步" title="下一步" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">在 iFolder 中，您可以設定任何次目錄結構，配合您個人或公司的工作習慣。 該次目錄結構在所有成員 iFolder 之間均保持不變。 每個工作站都可以為共用 iFolder 指定不同的父目錄。</p>
 <p class="para">當您超過個別使用者可以建立的 iFolder 數量限制時，iFolder 會顯示錯誤訊息。例如，如果您的管理員將<span class="guimenu">「每位使用者的 iFolder 數目」</span>規則設定為 10，而您試圖建立第十一個 iFolder，您會收到違反規則通知。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">跨平台用戶端</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">在 FAT32 裝載點上建立 iFolder (Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">您可以使用檔案管理員或可在用戶端應用程式中使用的 iFolder 瀏覽器，建立 iFolder。使用下列方式建立 iFolder：</p>
 <div class="itemizedlist">
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">您可以使用檔案管理員或可在用戶端應用程式中使用的 iFolder 瀏覽器，建立 iFolder。使用下列方式建立 iFolder：</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">跨平台用戶端</h2>
+
+<span class="collapsible">
 
 <p class="para">您可以使用用戶端應用程式中提供的 iFolder 瀏覽器建立 iFolder。</p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">iFolder 隨即出現在 iFolder 瀏覽器視窗中。</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">在 FAT32 裝載點上建立 iFolder (Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">在 Linux 上，iFolder 支援在 FAT32 檔案系統的裝載點上建立及使用 iFolder。iFolder 使用者必須擁有您要儲存 iFolder 的 FAT32 裝載點，且 <span class="filename">/etc/fstab</span> 檔案必須明確識別該裝載點之 iFolder 使用者的本地使用者 ID，您才可以在 Linux 電腦的 FAT32 卷冊上建立新的 iFolder 或設定共用 iFolder。 </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 
