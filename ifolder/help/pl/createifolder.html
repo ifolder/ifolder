@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:48" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">W folderze iFolder można skonfigurować dowolną strukturę katalogów zgodną z osobistymi lub firmowymi zasadami pracy. Struktura katalogów jest stała dla wszystkich iFolderów będących członkami. Każda stacja robocza może określić inny katalog nadrzędny dla współużytkowanego iFolderu.</p>
 <p class="para">Gdy zostanie przekroczony limit liczby folderów iFolder, które może utworzyć pojedynczy użytkownik, program iFolder wyświetla komunikat o błędzie. Jeśli na przykład administrator ustawił założenia dla opcji <span class="guimenu">Liczba iFolderów na użytkownika</span> na wartość 10, a użytkownik spróbuje utworzyć jedenasty folder iFolder, zostanie wyświetlona informacja o naruszeniu założeń.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">Tworzenie iFolderów w punkcie montowania z systemem plików FAT32 (Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">Tworzenie iFolderów jest możliwe za pomocą menedżera plików lub przeglądarki iFolderów, dostępnej w aplikacji klienckiej. iFolder można utworzyć, korzystając z następujących metod:</p>
 <div class="itemizedlist">
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">Tworzenie iFolderów jest możliwe za pomocą menedżera plików lub przeglądarki iFolderów, dostępnej w aplikacji klienckiej. iFolder można utworzyć, korzystając z następujących metod:</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh</h2>
+
+<span class="collapsible">
 
 <p class="para">iFoldery można tworzyć za pomocą przeglądarki iFolderów, która jest dostępna w aplikacji klienckiej.</p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">iFolder pojawi się w oknie przeglądarki iFolderów.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">Tworzenie iFolderów w punkcie montowania z systemem plików FAT32 (Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">W systemie Linux program iFolder obsługuje tworzenie i używanie iFolderów w punkcie montowania dla systemu plików FAT32. Przed tworzeniem nowych iFolderów lub konfigurowaniem współużytkowanych iFolderów na wolumenie FAT32 komputera z systemem Linux, użytkownik programu iFolder musi być właścicielem punktu montowania FAT32, w którym mają być zapisywane iFoldery, a plik <span class="filename">/etc/fstab</span> musi dla punktu montowania jednoznacznie identyfikować lokalny identyfikator użytkownika programu iFolder. </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

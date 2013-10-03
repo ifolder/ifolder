@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:48" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">W przypadku używania zapory lokalnej należy tak skonfigurować zaporę, aby umożliwić programowi iFolder wybranie lokalnego portu dynamicznego lub skonfigurowanie lokalnego portu statycznego dla klienta programu iFolder do celów komunikacji lokalnej (na tym samym komputerze) z serwerem Mono® XSP Server. Program iFolder korzysta z usług webserwisu Mono XSP do komunikacji poprzez protokół HTTP z firmowymi serwerami Novell iFolder, na których użytkownik ma konta iFolder. Administrator programu iFolder konfiguruje usługi iFolder określające, czy w środowisku użytkownika do komunikacji wykorzystywany jest protokół HTTP.</p>
 <p class="para">Zapora nie blokuje ruchu między serwerem Mono XSP i serwerem firmowym Novell iFolder, ponieważ serwer Mono XSP wykorzystuje do komunikacji standardowe porty. Jeśli jednak ruch między klientem i serwerem Mono XSP zostanie zablokowany, klient nie będzie mógł komunikować się z serwerem. Nie można zalogować się do konta programu iFolder i zsynchronizować danych z iFolderu.</p>
 <p class="para">Początkowo konfiguracja programu iFolder nie podaje określonego portu służącego do komunikacji z klienta z serwerem Mono XSP. Podczas pierwszego uruchomienia program iFolder otwiera dostępny port lokalny do nasłuchiwania żądań z serwera Mono XSP i wysyłania danych do serwera przez serwer Mono XSP. Numer portu jest zapisywany w pliku konfiguracyjnym i później wykorzystywany, chyba że nie będzie dostępny podczas uruchamiania programu iFolder. Jeżeli port jest wykorzystywany przez inną aplikację, program iFolder wybierze inny dostępny port, zmieni port w pliku konfiguracyjnym i będzie korzystać z tego portu. Jeśli na przykład program iFolder jest wyłączony i inna aplikacja przejmuje port, program iFolder musi przy ponownym uruchomieniu wybrać i skonfigurować do wykorzystywania inny port.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Korzystanie z lokalnego portu dynamicznego</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Korzystanie z lokalnego portu statycznego</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Korzystanie z lokalnego portu dynamicznego</h2>
 
+<span class="collapsible">
+
 <p class="para">Jeśli na komputerze wykorzystywana jest lokalna zapora, powinna ona wykrywać lokalny ruch między programem iFolder i serwerem Mono XSP za każdym razem, gdy program iFolder łączy się z serwerem w celu zsynchronizowania listy użytkowników i danych programu iFolder. Zaznacz opcję <span class="guimenu">Zezwalaj</span>, aby umożliwić komunikację z programem iFolder dla tej sesji. Jeśli zgoda na komunikację zostanie wydana na stałe, zapora nie powinna ponownie przypominać o tym, dzięki czemu można będzie uniknąć wyskakujących alertów przy każdym uruchomieniu programu iFolder.</p>
 <p class="para">Jeśli komunikacja między programem iFolder i serwerem Mono XSP zostanie zablokowana, zapora uniemożliwi połączenie się z serwerem iFolder i nie będzie można zsynchronizować plików użytkownika. Program iFolder nie wykryje zablokowania komunikacji przez zaporę; zgłosi jedynie niemożność połączenia do konta użytkownika na serwerze iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Korzystanie z lokalnego portu statycznego</h2>
+
+<span class="collapsible">
 
 <p class="para">Opcjonalnie można dodać parametr Web Service Port Range w sekcji Service Manager pliku <span class="filename">Simias.config</span>, aby zezwolić na wykorzystanie przez serwer Mono XSP statycznego portu lub zakresu portów dla tego ruchu lokalnego. Ten port lub zakres portów może być następnie otwierany w zaporze, aby umożliwić komunikację z serwerem Mono XSP. </p>
 <p class="para">Plik <span class="filename">Simias.config</span> można znaleźć w następujących lokalizacjach:</p>
@@ -139,6 +135,8 @@
 <p class="para">Uruchom klienta programu iFolder.</p>
 <p class="para">Więcej informacji można znaleźć w dokumencie <a href="startclient.html" class="xref">Uruchamianie klienta programu iFolder</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

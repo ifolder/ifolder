@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:48" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,23 +40,13 @@
   <a href="bctrxs4.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">Uaktualnienie klienta programu iFolder 3.<span class="replaceable">x</span> klienci</h1>
 
 <p class="para">Ta sekcja zawiera omówienie następujących zagadnień:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">Automatyczne uaktualnienie do programu iFolder 3.7 lub jego nowszych wersji</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">Ręczne uaktualnianie do programu iFolder 3.7 lub jego nowszych wersji</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">WAŻNE:</em>Przed uaktualnieniem klienta w wersji 3.4.1 należy utworzyć kopię zapasową lokalnego magazynu Simias. W przypadku nieutworzenia kopii zapasowej może nastąpić utrata wszystkich informacji konfiguracyjnych w komputerze, ponieważ w przypadku niepowodzenia uaktualnienia magazyn Simias jest usuwany.</p></div>
 
@@ -64,21 +54,27 @@
 
 <h2 class="title">Automatyczne uaktualnienie do programu iFolder 3.7 lub jego nowszych wersji</h2>
 
+<span class="collapsible">
+
 <p class="para">Automatyczne uaktualnienie jest możliwe tylko wtedy, gdy użytkownik ma dostęp do katalogu głównego, ponieważ proces musi zainstalować pakiety RPM. Podczas uaktualnienia pojawi się żądanie podania hasła superużytkownika. Jeśli użytkownik nie ma praw dostępu do katalogu głównego, pakiet nie zostanie zainstalowany automatycznie. Jednak pakiety klienta są pobierane do folderu tymczasowego. Klient Linux jest pobierany do folderu <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. Umożliwia to późniejsze uaktualnienie, ponieważ folder zawiera dwa skrypty instalacyjne, które można uruchomić ręcznie Do czasu uaktualnienia klienta nie można łączyć się z serwerem programu iFolder w wersji 3.7 lub nowszej za pomocą klienta programu iFolder 3.<span class="replaceable">x</span>.</p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
-<p class="para">Z poziomu klienta programu iFolder 3.<span class="replaceable">x</span> starszego niż iFolder 3.7 spróbuj połączyć się z serwerem iFolder. Zostanie wyświetlony monit o przeprowadzenie uaktualnienia.</p></li>
+<p class="para">Za pomocą klienta programu iFolder 3.<span class="replaceable">x</span> starszego niż iFolder 3.7 spróbuj połączyć się z serwerem programu iFolder. Zostanie wyświetlony monit o przeprowadzenie uaktualnienia.</p></li>
 <li class="step" id="bctryta">
 <p class="para">Kliknij przycisk <span class="guimenu">Tak</span>, aby automatycznie uaktualnić klienta programu iFolder 3.<span class="guimenu">x</span>.</p></li></ol>
 </div>
 
 <p class="para">W przypadku programu iFolder 3.4.1 kliknięcie przycisku <span class="guimenu">Nie</span> i próba połączenia się za pomocą klienta programu iFolder 3.4.1 z serwerem iFolder w wersji 3.7 lub nowszej spowoduje wyświetlenie komunikatu o błędzie. Kliknij przycisk <span class="guimenu">OK</span>, aby zamknąć okno komunikatu.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">Ręczne uaktualnianie do programu iFolder 3.7 lub jego nowszych wersji</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">Uruchom klienta programu iFolder z menu <span class="guimenu">Aplikacja</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:48" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">Scalanie iFolderów</h1>
 
 <p class="para">Scalanie pomaga konsolidować dane iFolderu oraz minimalizować ilość przesyłanych danych między serwerem a klientem programu iFolder. Użytkownik może scalać zawartość znajdującą się w iFolderze na serwerze z zawartością znajdującą się w folderze istniejącym na komputerze lokalnym.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Scalanie iFolderu z folderem</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Przenoszenie istniejących iFolderów w inne miejsca</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Scalanie zmigrowanych folderów iFolder w wersji 2.x z folderami iFolder w wersji 3.7 lub nowszej</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Scalanie iFolderu z folderem</h2>
+
+<span class="collapsible">
 
 <p class="para">Użytkownik może scalać iFolder ze zwykłym folderem o tej samej nazwie. Na przykład zawartość iFolderu o nazwie <span class="filename">korporacja</span> można scalić ze zwykłym folderem o nazwie <span class="filename">korporacja</span>. </p>
 <p class="para">Załóżmy, że folder iFolder <span class="filename">korporacja</span> ma trzy podfoldery: <span class="filename">zasoby_ludzkie</span>, <span class="filename">finanse</span> i <span class="filename">marketing</span>. Użytkownik chce pobrać zawartość folderu iFolder <span class="filename">korporacja</span> do folderu o nazwie <span class="filename">korporacja</span>, który zawiera tylko foldery <span class="filename">zasoby_ludzkie</span> i <span class="filename">finanse</span>. W tym przypadku do folderu <span class="filename">korporacja</span> nie trzeba pobierać wszystkich trzech folderów i w ten sposób zwiększać transmisji. Zamiast tego iFolder <span class="filename">korporacja</span> można scalić z folderem <span class="filename">korporacja</span>, aby funkcja <span class="guimenu">Scalanie z folderem</span> mogła inteligentnie uniknąć pobierania podfolderów <span class="filename">zasoby_ludzkie</span> i <span class="filename">finanse</span>, pobierając jedynie podfolder <span class="filename">marketing</span>. Jeśli dane iFolderu <span class="filename">korporacja</span> i folderu <span class="filename">korporacja</span> są różne, zostanie wyświetlony konflikt wersji. Konflikty można rozwiązywać ręcznie. Podobnie ręcznie można rozwiązywać konflikty nazw plików.</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">W tym momencie porównywana jest zawartość tych dwóch folderów, a pliki, które nie znajdują się w folderze, są pobierane z iFolderu. Pliki, które nie są obecne w iFolderze, ale dostępne w zwykłym folderze, są przekazywane.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Przenoszenie istniejących iFolderów w inne miejsca</h2>
+
+<span class="collapsible">
 
 <p class="para">Aby przenieść istniejący iFolder o nazwie <span class="filename">korporacja</span> w inne miejsce na komputerze klienckim: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Więcej informacji dotyczących scalania można znaleźć w temacie <a href="merge.html#bcq0ign" class="xref">Scalanie iFolderu z folderem</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Scalanie zmigrowanych folderów iFolder w wersji 2.<span class="replaceable">x</span> z folderami iFolder w wersji 3.7 lub nowszej </h2>
+
+<span class="collapsible">
 
 <p class="para">Zmigrowane foldery iFolder w wersji 2.x można scalać z folderami iFolder utworzonymi na serwerze programu iFolder w wersji 3.7 lub nowszej. Więcej informacji dotyczących migracji można znaleźć w temacie <a href="coexistmig.html" class="xref">Migracja i uaktualnienie programu Novell iFolder</a>. </p>
 <p class="para">Po migracji foldery iFolder w wersji 2.<span class="replaceable">x</span> są przenoszone na serwer programu iFolder w wersji 3.7 lub nowszej. Użytkownik może pobrać zmigrowane foldery iFolder z serwera w wersji 3.7 lub nowszej na komputer klienta. Jednak te iFoldery mogą już istnieć na tym komputerze. Jeśli tak jest, należy użyć funkcji scalania, aby uniknąć niepotrzebnego przesyłania danych z serwera do klienta. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Aby scalić zawartość, wybierz zwykły folder i kliknij przycisk <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

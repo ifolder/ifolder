@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="pl" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:01" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:48" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="nameconv.html" class="nav">&nbsp;następna<img src="ui/images/next.png" alt="następna" title="następna" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
@@ -51,23 +52,35 @@
 
 <h2 class="title">Pliki systemu operacyjnego</h2>
 
+<span class="collapsible">
+
 <p class="para">Nie należy konwertować katalogów systemowych na iFoldery. Większość plików systemowych nie ulega częstym zmianom i lepiej jest przechowywać obraz systemu i najważniejszego oprogramowania niż podejmować próby synchronizowania tych plików na serwerze.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Pliki ukryte</h2>
 
+<span class="collapsible">
+
 <p class="para">Jeżeli system plików wykorzystuje pliki ukryte do śledzenia preferencji wyświetlania, administrator może wykluczyć te typy plików z synchronizacji na serwerze. Zwykle plik ukryte są związane z komputerem, na którym zostały utworzone i zmieniane są podczas każdego dostępu do katalogu. Nie ma potrzeby zachowywania tych plików i ich synchronizacja może powodować powtarzające się konflikty. </p>
 <p class="para">Na przykład program iFolder automatycznie wyklucza dwa ukryte pliki menedżera plików o nazwach <span class="filename">thumbs.db</span> i <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Pliki bazy danych</h2>
 
+<span class="collapsible">
+
 <p class="para">Program iFolder synchronizuje pojedyncze pliki lub zmienione fragmenty plików, nie synchronizuje plików jako zbioru. Jeżeli baza danych jest zaimplementowana jako zbiór połączonych plików, nie należy podejmować próby synchronizowania ich w programie iFolder.</p>
 <p class="para">Nie należy synchronizować danych programu GroupWise, umieszczając w folderach iFolder takich elementów jak archiwum, pamięć podręczna i katalogi zdalne programu GroupWise. Jeżeli ta operacja zostanie wykonana, dane programu GroupWise zostaną po kilku synchronizacjach uszkodzone. Program GroupWise wymaga traktowania plików w archiwum jako zbioru plików.</p>
+</span>
+
 </div>
 
 </div>
