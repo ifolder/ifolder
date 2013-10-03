@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 13:57" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,23 +40,13 @@
   <a href="bctrxs4.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">Inovace verze iFolder 3.<span class="replaceable">x</span> Klienti</h1>
 
 <p class="para">Tato kapitola pojednává o následujících tématech:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">Automatická inovace na verzi iFolder 3.7 nebo novější</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">Ruční inovace na verzi iFolder 3.7 nebo novější</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">DŮLEŽITÉ:</em>Před inovací na klienta verze 3.4.1 musíte zálohovat lokální úložiště Simias. Pokud zálohování neprovedete, ztratíte všechny konfigurační informace z počítače, protože pokud se inovace nezdaří, dojde k odstranění úložiště Simias.</p></div>
 
@@ -64,21 +54,27 @@
 
 <h2 class="title">Automatická inovace na verzi iFolder 3.7 nebo novější</h2>
 
-<p class="para">Automatická inovace je možná pouze v případě, že nemáte přístupová práva do kořenové složky, protože proces vyžaduje instalování balíčků RPM. Během inovace se vyžaduje heslo do kořenové složky. Pokud oprávnění přístupu do kořenové složky nemáte, balíček nebude instalován automaticky. Klientské balíčky jsou však staženy do dočasného umístění. Klient systému Linux se stahuje do umístění <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. To vám umožňuje provést inovaci později, protože umístění obsahuje dva instalační skripty, které můžete spouštět ručně. Až do inovace klienta se nemůžete připojit k serveru iFolder 3.7 nebo novějšímu s klientem iFolder 3.<span class="replaceable">x</span>.   </p>
+<span class="collapsible">
+
+<p class="para">Automatická inovace je možná pouze v případě, že nemáte přístupová práva do kořenové složky, protože proces vyžaduje instalování balíčků RPM. Během inovace se vyžaduje heslo do kořenové složky. Pokud oprávnění přístupu do kořenové složky nemáte, balíček nebude instalován automaticky. Klientské balíčky jsou však staženy do dočasného umístění. Klient systému Linux se stahuje do umístění <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>. To vám umožňuje provést inovaci později, protože umístění obsahuje dva instalační skripty, které můžete spouštět ručně. Až do inovace klienta se nemůžete připojit k serveru iFolder 3.7 nebo novějšímu s klientem iFolder 3.<span class="replaceable">x</span>.  </p>
 <div class="procedure">
 <ol class="steps">
 <li class="step" id="bbjrxu1">
 <p class="para">Z aplikace iFolder 3.Klient verze iFolder <span class="replaceable">x</span> starší než iFolder 3.7: pokuste se připojit k serveru iFolder. Budete vyzváni k inovaci.</p></li>
 <li class="step" id="bctryta">
-<p class="para">Klepněte na tlačítko <span class="guimenu">Ano</span> a automaticky inovujte svého klienta iFolder 3.<span class="guimenu">x</span>.   </p></li></ol>
+<p class="para">Klepněte na tlačítko <span class="guimenu">Ano</span> a automaticky inovujte svého klienta iFolder 3.<span class="guimenu">x</span>.  </p></li></ol>
 </div>
 
 <p class="para">Pokud u verze iFolder 3.4.1 klepnete na možnost <span class="guimenu">Ne</span> a pokusíte se připojit klienta iFolder 3.4.1 k serveru verze iFolder 3.7 nebo novějšímu, zobrazí systém chybové hlášení. Klepnutím na tlačítko <span class="guimenu">OK</span> hlášení deaktivujte.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">Ruční inovace na verzi iFolder 3.7 nebo novější</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">Spusťte iFolder z nabídky <span class="guimenu">Aplikace</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

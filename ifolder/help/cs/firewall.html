@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 13:57" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">Pokud používáte místní bránu firewall, musíte ji nastavit tak, aby umožňovala aplikaci iFolder vybrat místní dynamický port nebo nakonfigurovat statický port pro klienta iFolder tak, aby komunikoval lokálně (stejný počítač) se serverem Mono XSP Server. iFolder používá webové služby Mono XSP ke komunikaci prostřednictvím protokolu HTTP s podnikovými servery Novell iFolder, kde máte účet iFolder. Správce iFolder konfiguruje služby iFolder, které určují, zda komunikace bude používat ve vašem prostředí protokol HTTP.</p>
 <p class="para">Brána firewall neblokuje provoz mezi Mono XSP a podnikovým serverem Novell iFolder, protože Mono XSP používá pro přenos standardní porty HTTP. Pokud však blokujete provoz mezi klientem a Mono XSP, klient nemůže komunikovat se serverem. Nemůžete se přihlásit k účtu iFolder a synchronizovat data iFolder.</p>
 <p class="para">V počátku konfigurace iFolder neudává určitý port pro použití ke komunikaci klient-Mono XSP. Když je prvně spuštěna aplikace iFolder, otevře se místní dostupný port pro poslech požadavků od Mono XSP a pro odesílání dat na server prostřednictvím Mono XSP. Zapíše číslo port do konfiguračního souboru a použije poté tento, pokud nebude dostupný vždy, když se aplikace iFolder spustí Pokud je port používán jinou aplikací, iFolder vybere jiný dostupný port a překonfiguruje jej v konfiguračním souboru a poté použije nový port. Pokud je například aplikace iFolder vypnutá a další aplikace port převezme, musí iFolder vybrat a nakonfigurovat jiný port pro použití při restartu aplikace iFolder.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Použití lokálního dynamického portu</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Použití lokálního statického portu</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Použití lokálního dynamického portu</h2>
 
+<span class="collapsible">
+
 <p class="para">Pokud ve svém počítači používáte místní bránu firewall, měla by detekovat místní provoz mezi aplikací iFolder a serverem Mono XSP vždy, když aplikace iFolder kontaktuje server pro synchronizování seznamu uživatelů a dat iFolder. Vyberte možnost <span class="guimenu">Povolit</span> a umožněte tak provoz aplikace iFolder pro tuto relaci. Pokud provoz umožníte trvale, vaše brána firewall by vás již neměla upomínat a měli byste se vyhnout zobrazování kontextových upozornění vždy při spuštění aplikace iFolder.</p>
 <p class="para">Pokud zablokujete provoz mezi aplikací iFolder a systémem Mono XSP, brána firewall zabraňuje v připojování k serveru iFolder a nemůžete tak své soubory synchronizovat. Aplikace iFolder nedetekuje, že provoz je zablokován bránou firewall; hlásí pouze, že se nelze připojit k účtu na serveru iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Použití lokálního statického portu</h2>
+
+<span class="collapsible">
 
 <p class="para">Volitelně můžete přidat parametr Rozsah portů webové služby do části správce služeb (Service Manager) souboru <span class="filename">Simias.config</span> a umožníte tak serveru Mono XSP Server používat statický port nebo rozsah portů pro tento místní provoz. Tento port nebo rozsah portů může být v bráně firewall otevřen a umožní se tak komunikace pro Mono XSP. </p>
 <p class="para">Soubor <span class="filename">Simias.config</span> naleznete v následujících umístěních:</p>
@@ -139,6 +135,8 @@
 <p class="para">Spusťte klienta iFolder.</p>
 <p class="para">Další informace naleznete v části <a href="startclient.html" class="xref">Spuštění klienta iFolder</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

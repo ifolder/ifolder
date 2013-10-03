@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 13:57" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,30 +40,18 @@
   <a href="setupifolder.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="merge">
 
 <h1 class="title">Sloučení složek iFolder</h1>
 
 <p class="para">Slučování vám pomůže konsolidovat data složky iFolder a minimalizovat tak přenos dat mezi serverem a klientem iFolder. Obsah složky iFolder můžete sloučit na serveru s obsahem stávající složky v místním počítači.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0ign" class="xref">Sloučení složek iFolder s normální složkou</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0kks" class="xref">Přesunutí stávající složky iFolder do jiného umístění</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="merge.html#bcq0l8i" class="xref">Probíhá slučování migrovaných složek iFolder verze 2.x se složkami iFolder verze 3.7 nebo novější.</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bcq0ign">
 
 <h2 class="title">Sloučení složek iFolder s normální složkou</h2>
+
+<span class="collapsible">
 
 <p class="para">Složku aplikace iFolder můžete sloučit s normální složkou. Můžete například sloučit obsah složky iFolder pojmenované <span class="filename">podniková</span> s normální složkou pojmenovanou <span class="filename">podniková</span>. </p>
 <p class="para">Předpokládejme, že <span class="filename">podniková</span> složka iFolder má tři podsložky: <span class="filename">hr</span>, <span class="filename">finance</span> a <span class="filename">marketing</span>. Obsah <span class="filename">podnikové</span> složky iFolder si můžete stáhnout do složky pojmenované <span class="filename">podniková</span>, která bude obsahovat pouze složky <span class="filename">hr</span> a <span class="filename">finance</span>. V tomto případě nemusíte stahovat všechny tři složky do složky <span class="filename">podniková</span> a zvyšovat tak objem přenesených dat. Místo toho můžete sloučit <span class="filename">podnikovou</span> složku iFolder s <span class="filename">podnikovou</span> složkou tak, aby funkce <span class="guimenu">Sloučit se složkou</span> inteligentně zabránila stahování podsložek <span class="filename">hr</span> a <span class="filename">finance</span> a stáhne pouze data podsložky <span class="filename">marketing</span>. Pokud jsou data v <span class="filename">podnikové</span> složce iFolder a <span class="filename">podnikové</span> normální složce odlišná, zobrazí se konflikt verzí. Konflikt můžete vyřešit ručně. Podobně, pokud se zobrazí konflikt názvu souborů, můžete jej také vyřešit ručně.</p>
@@ -77,11 +65,15 @@
 </div>
 
 <p class="para">Nyní je obsah těchto dvou složek porovnán a soubory, které nejsou k dispozici v normální složce, jsou staženy ze složky iFolder. Soubory, které nejsou k dispozici ve složce iFolder, ale jsou k dispozici ve složce normální, jsou vyslány.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0kks">
 
 <h2 class="title">Přesunutí stávající složky iFolder do jiného umístění</h2>
+
+<span class="collapsible">
 
 <p class="para">Chcete-li přesunout stávající složku iFolder pojmenovanou <span class="filename">podniková</span> do jiného umístění v klientském počítači: </p>
 <div class="procedure">
@@ -107,11 +99,15 @@
 <p class="para">Další informace o slučování najdete v části <a href="merge.html#bcq0ign" class="xref">Sloučení složek iFolder s normální složkou</a>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bcq0l8i">
 
 <h2 class="title">Probíhá slučování migrovaných složek iFolder verze 2.<span class="replaceable">x</span> se složkami iFolder verze 3.7 nebo novější. </h2>
+
+<span class="collapsible">
 
 <p class="para">Migrovanou složku iFolder 2.x lze sloučit se složkou iFolder vytvořenou na serveru iFolder 3.7 nebo novějším. Další informace o migraci najdete v části <a href="coexistmig.html" class="xref">Migrace a inovace aplikace Novell iFolder</a>. </p>
 <p class="para">Po migraci jsou složkyiFolder verze 2.<span class="replaceable">x</span> přesunuty na server iFolder 3.7 nebo novější. Migrované složky iFolder na serveru verze 3.7 nebo novějším můžete stáhnout do klientského počítače. Nicméně tyto složky iFolder se mohou v klientském počítač již vyskytovat. V takovém případě použijte funkci slučování, vyhnete se tak zbytečnému přenosu dat ze serveru na klienta. </p>
@@ -127,6 +123,8 @@
 <li class="step" id="bcr6is8">
 <p class="para">Chcete-li obsah sloučit, vyberte normální složku a klepněte na tlačítko <span class="guimenu">OK</span>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

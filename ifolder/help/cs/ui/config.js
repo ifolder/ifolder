@@ -1,4 +1,5 @@
 var CFG_MAIN_TOPIC="bookinfo.html";
+var CFG_HTML_EXT="html";
 var CFG_HTML2UI_RELPATH="ui/";
 var CFG_BOOKUI2SHAREDUI_RELPATH="";
 var CFG_BOOK2HTML_RELPATH="";

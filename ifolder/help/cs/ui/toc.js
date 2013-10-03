@@ -76,7 +76,7 @@ this.text=_1b;
 this.topicId=_1c;
 this.parentTopicId=_1d;
 this.depth=_21;
-this.topicUrl="../"+_1c+".html";
+this.topicUrl="../"+_1c+"."+CFG_HTML_EXT;
 this.thisIndex=_19;
 this.prevEntry=null;
 this.nextEntry=null;
@@ -550,7 +550,7 @@ function TocLoad(_a0,_a1,_a2){
 var _a3=true;
 var _a4=false;
 var _a5=null;
-var _a6=this.findEntry(_a0);
+var _a6=(_a0!=null)?this.findEntry(_a0):-1;
 if(_a6==-1){
 if(_a1){
 _a3=this.load(_a1,null,_a2);
@@ -698,15 +698,23 @@ _be.add("DocumentSelected",ip+_c1+"doc_sel.png",_bf,_bf);
 }
 function TocUpdate(_c2){
 var _c3=false;
-var _c4=top.frames[theToc.contentFrame];
-if(_c4&&typeof (_c4.thisId)!="undefined"){
-_c3=theToc.load(_c4.thisId,_c4.parentId);
+var _c4=null;
+var _c5=null;
+var _c6=top.frames[theToc.contentFrame];
+if(_c6&&typeof (_c6.thisId)!="undefined"){
+_c4=_c6.thisId;
+_c5=_c6.parentId;
+}else{
+if(typeof (CFG_MAIN_TOPIC)!="undefined"){
+_c4=CFG_MAIN_TOPIC.replace("."+CFG_HTML_EXT,"");
+}
+}
+_c3=theToc.load(_c4,_c5);
 if(_c3==true){
-theToc.syncWithPage(_c4.thisId);
+theToc.syncWithPage(_c4);
 }else{
 if(typeof _c2=="undefined"){
 dom_getEl(document,"tocContent").innerHTML="<div class='entry0'>Contents not available.</div>"+"<div class='entry0'>Unable to load xml content.</div>";
-}
 }
 }
 return _c3;

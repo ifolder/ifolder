@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="cs" />
-<meta name="Generation-Date" content="Wednesday, June 20, 2012 14:03" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 13:57" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="nameconv.html" class="nav">&nbsp;Další<img src="ui/images/next.png" alt="Další" title="Další" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
@@ -51,23 +52,35 @@
 
 <h2 class="title">Soubory operačního systému</h2>
 
+<span class="collapsible">
+
 <p class="para">Systémové adresáře byste na složky iFolder neměli převádět. Většina systémových souborů se mění pouze občas a je lepší si uchovat soubor bitové kopie základního systému a klíčových aplikací než synchronizovat tyto soubory se serverem.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Skryté soubory</h2>
 
+<span class="collapsible">
+
 <p class="para">Pokud souborový systém používá skryté soubory pro sledování předvoleb zobrazení, správce může typy těchto souborů tak, aby je vyloučil ze synchronizování ve vašem systému. Skryté soubory jsou obvykle relevantní pouze pro zadaný počítač, na kterém byly vytvořeny a mění se vždy, když k souboru nebo adresáři přistupujete. Není nutné tyto soubory uchovávat a jejich synchronizování vede k opakovaným konfliktům souborů. </p>
 <p class="para">Aplikace iFolder automaticky například vylučuje dva skryté soubory správce souborů nazvané <span class="filename">thumbs.db</span> a <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Databázové soubory</h2>
 
+<span class="collapsible">
+
 <p class="para">Aplikace iFolder synchronizuje jednotlivé soubory nebo změněné části jednotlivých souborů; nesynchronizuje soubory jako sadu. Pokud máte databázový soubor, který je implementovaný jako kolekce spojených souborů, nesynchronizujte je ve složce iFolder.</p>
 <p class="para">Nesynchronizujte data GroupWise vytvořením složek iFolder z archivu, mezipaměti nebo vzdálených adresářů GroupWise. Pokud tak učiníte, datové soubory GroupWise se poruší po několikerém synchronizování souborů. Aplikace GroupWise vyžaduje údržbu souborů v archivu jako sady souborů.</p>
+</span>
+
 </div>
 
 </div>
