@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 12:59" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:29" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">iFolder内では、ユーザの好みや職場の慣行に合わせて、任意のサブディレクトリ構造を設定できます。このサブディレクトリ構造は、iFolderのメンバー全員に同じものが提供されます。各ワークステーションでは、共有iFolderの親ディレクトリには別のディレクトリを指定できます。</p>
 <p class="para">ユーザが作成できるiFolder数の制限を超えると、iFolderにエラーメッセージが表示されます。たとえば、管理者によって［<span class="guimenu">Number of iFolder per user(ユーザごとのiFolder数)</span>］のポリシーが10に設定されている場合に、11個目のiFolderを作成しようとすると、ポリシー違反に関する通知が表示されます。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">FAT32マウントポイント(Linux)上にiFolderを作成する</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">iFolderは、クライアントアプリケーションで使用可能なファイルマネージャまたはiFolderブラウザを使用して作成できます。iFolderは次の方法で作成します。</p>
 <div class="itemizedlist">
@@ -177,7 +161,7 @@
 <li class="step" id="bq6lwlg">
 <p class="para">ファイルマネージャを使用してiFolderに変換するフォルダを参照し、そのフォルダを選択します。</p></li>
 <li class="step" id="bq6lwlh">
-<p class="para">次の方法のいずれかを使用します。</p>
+<p class="para">次のいずれかの方法を使用します。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">iFolderは、クライアントアプリケーションで使用可能なファイルマネージャまたはiFolderブラウザを使用して作成できます。iFolderは次の方法で作成します。</p>
 <div class="itemizedlist">
@@ -301,7 +289,7 @@
 <li class="step" id="bbrklt7">
 <p class="para">ファイルマネージャを使用してiFolderに変換するフォルダを参照し、そのフォルダを選択します。</p></li>
 <li class="step" id="bbrklxp">
-<p class="para">次の方法のいずれかを使用します。</p>
+<p class="para">次のいずれかの方法を使用します。</p>
 <div class="itemizedlist">
 <ul class="listbullet">
 <li class="listitem">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh</h2>
+
+<span class="collapsible">
 
 <p class="para">クライアントアプリケーションで使用できるiFolderブラウザでiFolderを作成できます。</p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">iFolderがiFolderブラウザウィンドウに表示されます。</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">FAT32マウントポイント(Linux)上にiFolderを作成する</h2>
+
+<span class="collapsible">
 
 <p class="para">Linuxでは、FAT32ファイルシステムのマウントポイント上におけるiFolderの作成と使用がサポートされています。Linuxコンピュータ上のFAT32ボリュームに新しいiFolderを作成したり、共有iFolderをセットアップしたりする場合、iFolderを保存するFAT32マウントポイントをiFolderユーザが所有しており、<span class="filename">/etc/fstab</span>ファイルがそのマウントポイントにおけるiFolderユーザのローカルユーザIDを明示的に特定する必要があります。 </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

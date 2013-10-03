@@ -155,7 +155,6 @@ dom_getEl(document,"searchContent").innerHTML="<div class='entry0'>Search not av
 }
 }
 function doSearch(){
-dom_getEl(document,"searchContent").innerHTML="<p>&nbsp;&nbsp;Searching...</p>";
 self.setTimeout("doTheSearch()",1);
 }
 function getTabWidth(){

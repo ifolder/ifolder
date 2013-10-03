@@ -4,7 +4,6 @@
 <tocsection parent="bookinfo" level="2" id="overview">
  <title>iFolderの概要</title>
  <entry leaf="true" id="benefits">iFolderのメリット</entry>
- <entry leaf="true" id="bawqltp">iFolderクライアント</entry>
  <entry leaf="true" id="bawqmpe">iFolderアカウント</entry>
  <entry leaf="true" id="ovwxplat">クロスプラットフォームの注意事項</entry>
  <entry leaf="true" id="keyfeatures">iFolderの主要機能</entry>

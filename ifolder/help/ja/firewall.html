@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="ja" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 12:59" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:29" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;次へ<img src="ui/images/next.png" alt="次へ" title="次へ" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">ローカルファイアウォールを使用する場合、iFolderがローカルのダイナミックポートを選択できるようにファイアウォールを設定するか、またはiFolderクライアントにローカルのスタティックポートを設定してローカル(同じコンピュータ)でMono XSP Serverと通信できるようにします。iFolderはMono XSP Webサービスを使用して、iFolderアカウントを保持するNovell iFolderエンタープライズサーバとHTTP経由で通信します。iFolderの管理者は、iFolderサービスを設定して、ユーザ環境でHTTPを使用して通信するかどうかを指定します。</p>
 <p class="para">Mono XSPはトラフィックに対して標準的なHTTPポートを使用するので、お使いのファイアウォールが、Mono XSPとNovell iFolderエンタープライズサーバ間のトラフィックをブロックすることはありません。ただし、クライアントとMono XSP間のトラフィックをブロックすると、クライアントはサーバと通信できません。ユーザはiFolderアカウントにログインして、iFolderデータを同期できなくなります。</p>
 <p class="para">最初は、iFolder環境設定でクライアントとMono XSPとの通信で使用する特定のポートを指定しません。iFolderをはじめて実行すると、Mono XSPからの要求をリッスンして、データをMono XSP経由でサーバに送信するための、使用可能なローカルポートが開かれます。そのポート番号が環境設定ファイルに書き込まれ、それ以降iFolderを開始するときは、ポートが使用不可でない限り、常にこのポートが使用されます。そのポートが別のアプリケーションで使用されている場合、iFolderは使用可能な別のポートを選択し、環境設定ファイルにそのポートを再設定し、以降はその新しいポートを使用します。たとえば、iFolderが停止中に他のアプリケーションがそのポートを使用すると、iFolderは再起動時に別のポートを選択してこれを使用するように設定する必要があります。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">ローカルダイナミックポートの使用</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">ローカルスタティックポートの使用</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">ローカルダイナミックポートの使用</h2>
 
+<span class="collapsible">
+
 <p class="para">お使いのコンピュータでローカルファイアウォールを使用する場合、iFolderがサーバに接続してユーザのリストとiFolderデータを同期するときは、ファイアウォールは常にiFolderとMono XSPサーバ間のローカルトラフィックを検出する必要があります。このセッションでiFolderトラフィックを許可するには［<span class="guimenu">許可</span>］を選択します。トラフィックを永続的に許可すると、再度ファイアウォールによって通知されることはなく、iFolder起動時のポップアップ警告も表示されなくなります。</p>
 <p class="para">iFolderとMono XSPとの間のトラフィックをブロックすると、ファイアウォールによってiFolderサーバとの接続が切断されるため、ファイルを同期できなくなります。iFolderは、トラフィックがファイアウォールによってブロックされたことを検出せず、iFolderサーバ上のアカウントに接続できないことだけを報告します。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">ローカルスタティックポートの使用</h2>
+
+<span class="collapsible">
 
 <p class="para">必要に応じて、<span class="filename">Simias.config</span>ファイルのService ManagerセクションにWeb Service PORT Rangeパラメータを追加することで、Mono XSPサーバがこのローカルトラフィック用にスタティックポートまたは一定の範囲のポートを使用するようにできます。これにより、ファイアウォールでこのポートまたは一定の範囲のポートが開かれ、Mono XSPとの通信が可能になります。 </p>
 <p class="para"><span class="filename">Simias.config</span>ファイルは、次の場所にあります。</p>
@@ -139,6 +135,8 @@
 <p class="para">iFolderクライアントを起動します。</p>
 <p class="para">詳細については、<a href="startclient.html" class="xref">iFolderクライアントの起動</a>を参照してください。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
