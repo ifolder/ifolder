@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:12" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:07" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">如果您使用的是本地防火墙，则必须将您的防火墙设置为允许 iFolder 选择本地动态端口，或为 iFolder 客户端配置本地静态端口以与 Mono XSP 服务器进行本地（同一台计算机）通讯。iFolder 使用 Mono XSP 万维网服务通过 HTTP 与您拥有 iFolder 帐户的 Novell iFolder Enterprise Server 进行通讯。iFolder 管理员配置 iFolder 服务以确定是否在您的环境中使用 HTTP。</p>
 <p class="para">您的防火墙未阻止 Mono XSP 与 Novell iFolder Enterprise Server 之间的通讯，这是因为 Mono XSP 使用了标准的 HTTP 端口进行通讯。但是，如果您阻止客户端与 Mono XSP 之间的通讯，则客户端将无法与服务器进行通讯。您无法登录到您的 iFolder 帐户以及同步 iFolder 数据。</p>
 <p class="para">最初，iFolder 配置并未指定用于客户程序与 Mono XSP 通讯的特定端口。iFolder 首次运行时，将打开一个可用的本地端口以监听来自 Mono XSP 的请求，然后通过 Mono XSP 将数据发送到服务器上。iFolder 将端口号写入配置文件，除非此端口不可用，否则以后每当 iFolder 启动时都会使用此端口。如果有其他应用程序正在使用此端口，iFolder 会选择其他可用端口，并在配置文件中重新配置端口，之后使用新的端口。例如，如果 iFolder 关闭后由另一个应用程序使用该端口，则 iFolder 必须选择并配置重启动 iFolder 时要用的其他端口。</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">使用本地动态端口</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">使用本地静态端口</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">使用本地动态端口</h2>
 
+<span class="collapsible">
+
 <p class="para">如果在计算机上使用本地防火墙，则只要 iFolder 联系服务器同步其用户列表和 iFolder 数据时，该防火墙都应检测到 iFolder 与 Mono XSP 服务器之间的本地通讯。选择<span class="guimenu">“允许”</span>以允许此会话的 iFolder 通讯。如果您始终允许通讯，则防火墙应该不会再次提醒您，而且每次 iFolder 启动时，您都可以避免收到弹出式警报。</p>
 <p class="para">如果您阻止 iFolder 与 Mono XSP 的通讯，则您的防火墙将阻止您连接到 iFolder 服务器，而您也无法同步文件。iFolder 不会检测到通讯受防火墙阻止；它仅报告无法连接到您在 iFolder 服务器上的帐户。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">使用本地静态端口</h2>
+
+<span class="collapsible">
 
 <p class="para">可以选择将万维网服务端口范围参数添加到 <span class="filename">Simias.config</span> 文件的“服务管理器”部分，以允许 Mono XSP 服务器使用静态端口或一组端口进行此本地通讯。此端口或这组端口随即可在防火墙中打开，以实现 Mono XSP 的通讯。 </p>
 <p class="para">您可以在以下位置找到 <span class="filename">Simias.config</span>：</p>
@@ -139,6 +135,8 @@
 <p class="para">启动 iFolder 客户程序。</p>
 <p class="para">有关更多信息，请参见<a href="startclient.html" class="xref">启动 iFolder 客户程序</a>。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

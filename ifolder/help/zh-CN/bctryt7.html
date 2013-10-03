@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:12" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:07" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,29 +40,21 @@
   <a href="bctrxs4.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="bctryt7">
 
 <h1 class="title">升级 iFolder 3.<span class="replaceable">x</span> 客户程序</h1>
 
 <p class="para">本节讨论以下内容：</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bctryt8" class="xref">自动升级到 iFolder 3.7 或更高版本</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="bctryt7.html#bbjs0lm" class="xref">手动升级到 iFolder 3.7 或更高版本</a>
-          </p></li></ul></div>
-
 <div class="important">
 <p class="para"><em class="title">重要说明：</em>在升级 3.4.1 客户程序前，必须备份本地 Simias 储存。如果不进行备份，当升级操作失败时，则会丢失计算机上的所有配置信息，因为该操作将删除 Simias 储存。</p></div>
 
 <div class="sect2" id="bctryt8">
 
 <h2 class="title">自动升级到 iFolder 3.7 或更高版本</h2>
+
+<span class="collapsible">
 
 <p class="para">仅当具有根访问权限时，才有可能进行自动升级，因为升级过程需要安装 RPM 包。在升级过程中将请求提供根口令。如果您不具有根访问权限，则不会自动安装该软件包。但是，客户程序包将被下载到一个临时位置。该 Linux 客户程序将被下载到 <span class="filename">/tmp/&lt;32chardir&gt;/ifolder3-linux.tar.gz</span>。这样，您就可在以后进行升级，因为该位置包含两个您可手工运行的安装脚本。升级客户端之前，不能使用 iFolder 3.<span class="replaceable">x</span> 客户端连接到 iFolder 3.7 或更高版本的服务器。</p>
 <div class="procedure">
@@ -74,11 +66,15 @@
 </div>
 
 <p class="para">对于 iFolder 3.4.1，如果您单击<span class="guimenu">“否”</span>并试图将 iFolder 3.4.1 客户程序连接到 iFolder 3.7 或更高版本服务器，则将显示一条错误讯息。单击<span class="guimenu">“确定”</span>关闭此讯息。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbjs0lm">
 
 <h2 class="title">手动升级到 iFolder 3.7 或更高版本</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -100,6 +96,8 @@
 <li class="step" id="bbjehh4">
 <p class="para">从<span class="guimenu">“应用程序”</span>菜单启动 iFolder。</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

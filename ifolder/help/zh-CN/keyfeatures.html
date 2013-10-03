@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="zh-cn" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 15:12" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 15:07" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,58 +40,18 @@
   <a href="ovwnext.html" class="nav">&nbsp;下一个<img src="ui/images/next.png" alt="下一个" title="下一个" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="keyfeatures">
 
 <h1 class="title">iFolder 的主要功能</h1>
 
 <p class="para">在开始使用 iFolder 之前，必须先了解以下主要功能：</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bawqka3" class="xref">iFolder 共享</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425tb" class="xref">iFolder 访问权限</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425tg" class="xref">文件同步</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9lux1e" class="xref">迁移</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b7x5io1" class="xref">加密</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bbfpgeh" class="xref">升级</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bcq09cf" class="xref">合并</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bayydrd" class="xref">默认 iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b7x6cp3" class="xref">增强型万维网访问</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425th" class="xref">同步日志</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bawqka3">
 
 <h2 class="title">iFolder 共享</h2>
+
+<span class="collapsible">
 
 <p class="para">通常，当您在多个地点工作或与其他人合作时，您必须认真负责地管理文件版本。 使用 iFolder，您就可以将最新版本的文件放置到您安装了 iFolder 客户程序并且为这些文件创建了一个 iFolder 的任何计算机上。iFolder 还允许您与其他授权用户或 LDAP 组共享多个 iFolder 及其各自的内容。有关共享 iFolder 的更多信息，请参见<a href="keyfeatures.html#bawqvmt" class="xref">共享的 iFolder</a>。</p>
 <p class="para">iFolder 客户程序通过中央服务器同步多台计算机上的文件，从而实现对共享的支持。它允许您执行以下操作：</p>
@@ -117,11 +77,15 @@
 <p class="para">您可以决定每个 iFolder 有哪些用户参与以及每个成员的访问级别。同样，您也可以参与协作环境中其他用户拥有的共享 iFolder。当您共享 iFolder 时，具有“写入”权限的成员用户可以修改目录结构，并且这些更改将应用于 iFolder 的所有副本。如果共享 iFolder 符合<a href="locguide.html" class="xref">iFolder 的位置和用途的准则</a>的要求，则每个用户都可以将其放在自己计算机的任何位置上。</p>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b9425tb">
 
 <h2 class="title">iFolder 访问权限</h2>
+
+<span class="collapsible">
 
 <p class="para">iFolder 客户程序支持拥有者和三种 iFolder 成员访问级别： </p>
 <div class="important">
@@ -157,70 +121,104 @@
 </li></ul></div>
 
 <p class="para">任何 iFolder 用户或 LDAP 组都可拥有某些 iFolder 并可以是其他 iFolder 的成员。作为拥有者用户，您始终具有“完全控制”权限。作为成员用户，您在每个共享 iFolder 中的访问级别可能各不相同，具体取决于由具有“完全控制”权限的成员授予您的访问权限。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9425tg">
 
 <h2 class="title">文件同步 </h2>
 
+<span class="collapsible">
+
 <p class="para">当您连接到服务器时，iFolder 可以在您工作时在后台同步 iFolder 成员资格和文件。设置 iFolder 帐户后，即可启用<span class="guimenu">“保存我的口令”</span>以便 iFolder 在该计算机上保存口令，当您下次起动 iFolder 时，它将自动连接到服务器并同步数据而不提示输入口令。</p>
 <p class="para">您可以将 iFolder 客户程序配置为在每次登录计算机的桌面环境时自动运行。当您对本地 iFolder 中的文件进行处理时，该会话在后台运行，跟踪并记录您所做的任何更改。 </p>
 <p class="para">可以手动或者以指定的间隔同步文件。</p>
 <p class="para">iFolder 也具有增量同步功能。对 iFolder 文件进行更改后，只将增量或更改同步到服务器。换句话说，增量同步只检索自 iFolder 客户程序和服务器上次同步后的更新。这将会提高效率，因为减少了同步时间。 </p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9lux1e">
 
 <h2 class="title">迁移</h2>
 
+<span class="collapsible">
+
 <p class="para">Novell iFolder 提供了一个简单易用的用户界面，可在客户端上从 iFolder 2.x 迁移至 iFolder 3.6 和更高版本。iFolder 客户程序中提供的迁移向导可帮助您将现有的 iFolder 2.<span class="replaceable">x</span> 数据简便快速地迁移到 iFolder 3.6 和更高版本。有关更多信息，请参见<a href="coexistmig.html" class="xref">Novell iFolder 迁移和升级</a>。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b7x5io1">
 
 <h2 class="title">加密</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder 为您的机密 iFolder 文件提供了更高的安全性，可防止未授权用户有意或无意地访问这些文件。过去在服务器一端，数据安全无法保障，所以数据可以被管理员或对服务器拥有未经授权的访问权限的任何人访问。此外，当您通过 ISP 提供商访问 iFolder 时，未经授权的个人可能会有机会发现您的机密文件。现在，您可以对文件加密并将其保存到服务器上，然后通过只有您知道的通行口令来检索它们。如果您忘记通行口令，则在创建加密 iFolder 过程中选择的恢复代理可帮助您恢复数据。</p>
 <div class="important">
 <p class="para"><em class="title">重要说明：</em>无法共享加密的 iFolder。</p></div>
 
 <p class="para">有关加密的更多信息，请参见<a href="managingpassphrse.html" class="xref">管理加密 iFolder 的通行口令</a>。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbfpgeh">
 
 <h2 class="title">升级</h2>
 
+<span class="collapsible">
+
 <p class="para">Novell iFolder 提供了一种简单的升级方法，可从 iFolder 3.<span class="replaceable">x</span> 升级到 Novell iFolder 3.6 和更高版本的客户程序。有关更多信息，请参见<a href="bctryt7.html" class="xref">升级 iFolder 3.x 客户程序</a>。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq09cf">
 
 <h2 class="title">合并</h2>
 
+<span class="collapsible">
+
 <p class="para">使用合并功能，您可以合并 iFolder 数据并将 iFolder 客户程序和服务器之间的数据传输量降至最低。另外，您还可以使用此功能将现有文件夹移动到客户机上的其他位置。有关更多信息，请参见<a href="merge.html" class="xref">合并 iFolder</a>。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bayydrd">
 
 <h2 class="title">默认 iFolder</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder 允许您在配置新帐户时设置默认 iFolder。当您配置新的 iFolder 帐户时，iFolder 将自动检查是否存在默认 iFolder。如果您尚未创建默认 iFolder，则 iFolder 将提示您创建一个。如果已存在默认值，则 iFolder 客户程序将提示您进行下载。您也可以忽略这两个选项。有关更多信息，请参见<a href="accounts.html" class="xref">配置 iFolder 帐户</a>中的<a href="accounts.html#bbba119" class="xref">步骤 7</a>。 </p>
+</span>
+
 </div>
 
 <div class="sect2" id="b7x6cp3">
 
 <h2 class="title">增强型万维网访问</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder 提供一个增强型万维网界面，它允许您访问远程服务器上您的 iFolder 文件。使用万维网访问控制台，您可使用万维网浏览器从未安装 iFolder 客户程序的任何工作站来访问您在 iFolder 服务器上的文件。使用万维网访问界面，您可执行 iFolder 客户程序的拥有操作。</p>
-<p class="para">与以前的  iFolder 版本相比较，iFolder 3.6 和更高版本允许您通过增强的万维网访问控制台来创建、浏览、共享、上载和删除 iFolder。移动用户也可以通过万维网使用此功能。</p>
+<p class="para">与以前的 iFolder 版本相比较，iFolder 3.6 和更高版本允许您通过增强的万维网访问控制台来创建、浏览、共享、上载和删除 iFolder。移动用户也可以通过万维网使用此功能。</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9425th">
 
 <h2 class="title">同步日志</h2>
 
+<span class="collapsible">
+
 <p class="para">同步日志显示您的 iFolder 后台活动的日志，如为不同 iFolder 上载和下载文件、违反策略、已排除的文件以及未同步的文件。 </p>
+</span>
+
 </div>
 
 </div>
