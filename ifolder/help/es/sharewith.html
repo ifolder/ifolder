@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:48" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,42 +40,18 @@
   <a href="viewhide.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="sharewith">
 
 <h1 class="title">Uso compartido de carpetas iFolder</h1>
 
 <p class="para">Es posible compartir una carpeta iFolder con varios usuarios. Esta sección trata las tareas siguientes:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bv2hnvt" class="xref">Comprensión de los derechos de acceso de usuario</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#b41tbcf" class="xref">Acceso a la pestaña Compartición</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwm0" class="xref">Adición de un usuario a una carpeta iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwma" class="xref">Modificación de los derechos de acceso de usuario</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#bq6lwmr" class="xref">Eliminación de un usuario de una carpeta iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="sharewith.html#b47q8t9" class="xref">Transferencia de la propiedad a un usuario de carpeta iFolder</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bv2hnvt">
 
 <h2 class="title">Comprensión de los derechos de acceso de usuario</h2>
+
+<span class="collapsible">
 
 <p class="para">En la tabla siguiente se describen las funciones asociadas a cada nivel de acceso de los usuarios o grupos LDAP. </p>
 <div class="important">
@@ -252,11 +228,15 @@
 </tr></table>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b41tbcf">
 
 <h2 class="title">Acceso a la pestaña Compartición</h2>
+
+<span class="collapsible">
 
 <p class="para">Es posible gestionar la pertenencia a una carpeta iFolder desde la pestaña <span class="guimenu">Compartición</span> del recuadro de diálogo Propiedades de iFolder.</p>
 <div class="procedure">
@@ -277,11 +257,15 @@
 </li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bq6lwm0">
 
 <h2 class="title">Adición de un usuario a una carpeta iFolder</h2>
+
+<span class="collapsible">
 
 <div class="procedure">
 <ol class="steps">
@@ -300,11 +284,15 @@
 <p class="para">Haga clic en <span class="guimenu">Cerrar</span> para cerrar la ventana de propiedades de iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bq6lwma">
 
 <h2 class="title">Modificación de los derechos de acceso de usuario</h2>
+
+<span class="collapsible">
 
 <p class="para">A medida que las relaciones de trabajo y el estado de los miembros de una carpeta iFolder cambian, es posible que necesite cambiar el derecho de acceso de un usuario a la carpeta iFolder. Por ejemplo, es posible que desee otorgar a un usuario de confianza el derecho de control total de la carpeta iFolder.</p>
 <div class="procedure">
@@ -318,11 +306,15 @@
 <p class="para">Haga clic en <span class="guimenu">Aceptar</span> y, a continuación, en <span class="guimenu">Aceptar</span> para cerrar la ventana Propiedades de iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bq6lwmr">
 
 <h2 class="title">Eliminación de un usuario de una carpeta iFolder</h2>
+
+<span class="collapsible">
 
 <p class="para">Para dejar de compartir una carpeta iFolder, debe eliminar un usuario o grupo LDAP como miembro de dicha carpeta iFolder. La carpeta iFolder de una estación de trabajo de un usuario o un miembro de un grupo LDAP se convierte en una carpeta normal. Aunque se conservará una copia de los datos en la estación de trabajo del antiguo miembro, los archivos ya no se sincronizarán con la carpeta iFolder compartida.</p>
 <div class="procedure">
@@ -333,11 +325,15 @@
 <p class="para">Haga clic en <span class="guimenu">Eliminar</span> y, a continuación, en <span class="guimenu">Sí</span>.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b47q8t9">
 
 <h2 class="title">Transferencia de la propiedad a un usuario de carpeta iFolder </h2>
+
+<span class="collapsible">
 
 <p class="para">El propietario de una carpeta iFolder puede transferir la propiedad de la misma a otro miembro o grupo LDAP cuyo estado sea Usuario de iFolder. Una vez realizada la transferencia, el propietario original pasará a ser un miembro con derecho de Lectura/escritura, y el espacio consumido por la carpeta iFolder le será atribuido al nuevo propietario. Cuando un grupo LDAP se convierte en el propietario de una carpeta iFolder, todos los miembros del grupo obtienen los derechos de propiedad.</p>
 <div class="procedure">
@@ -352,6 +348,8 @@
 <li class="step" id="b47qbju">
 <p class="para">Haga clic en <span class="guimenu">Aceptar</span> y, a continuación, en <span class="guimenu">Aceptar</span> para cerrar la ventana Propiedades de iFolder.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 

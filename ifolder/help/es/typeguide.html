@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:48" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="nameconv.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="typeguide">
 
@@ -51,23 +52,35 @@
 
 <h2 class="title">Archivos de sistema operativo</h2>
 
+<span class="collapsible">
+
 <p class="para">Los directorios del sistema no deben convertirse en carpetas iFolder. La mayoría de archivos de sistema cambian raramente, y es mejor mantener un archivo de imagen del sistema básico y del software importante que intentar sincronizar dichos archivos en el servidor.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctogyn">
 
 <h2 class="title">Archivos ocultos</h2>
 
+<span class="collapsible">
+
 <p class="para">Si el sistema de archivos utiliza archivos ocultos para realizar un seguimiento de las preferencias de visualización, es posible que el administrador aplique restricciones a estos tipos de archivo para evitar que se sincronicen en el sistema. Por lo general, los archivos ocultos sólo son importantes para el equipo concreto en el que se han creado y cambian cada vez que se accede al archivo o directorio. No es necesario conservar estos archivos, además, su sincronización provoca errores de conflicto de archivos repetidos. </p>
 <p class="para">Por ejemplo, iFolder excluye automáticamente dos archivos ocultos del gestor de archivos denominados <span class="filename">thumbs.db</span> y <span class="filename">.DS_Store</span>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctoh6r">
 
 <h2 class="title">Archivos de base de datos</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder sincroniza archivos individuales o las partes modificadas de dichos archivos; no sincroniza archivos como un conjunto. Si tiene un archivo de base de datos que se ha implementado como una recopilación de archivos enlazados, no intente sincronizarlos en una carpeta iFolder.</p>
 <p class="para">No trate de sincronizar los datos de GroupWise convirtiendo los directorios del archivo de reserva, caché o los directorios remotos de GroupWise en carpetas iFolder. De lo contrario, los archivos de datos de GroupWise resultarán dañados tras sincronizarlos varias veces. GroupWise necesita que los archivos del archivo de reserva se mantengan como un conjunto de archivos.</p>
+</span>
+
 </div>
 
 </div>

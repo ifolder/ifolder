@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:48" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,58 +40,18 @@
   <a href="ovwnext.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="keyfeatures">
 
 <h1 class="title">Funciones clave de iFolder</h1>
 
 <p class="para">Antes de comenzar a utilizar iFolder, es importante comprender las siguientes funciones clave:</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bawqka3" class="xref">Compartición de carpetas iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425tb" class="xref">Derechos de acceso a iFolder</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425tg" class="xref">Sincronización de archivos</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9lux1e" class="xref">Migración</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b7x5io1" class="xref">Cifrado</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bbfpgeh" class="xref">Actualizar</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bcq09cf" class="xref">Fusionar</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#bayydrd" class="xref">Carpeta iFolder por defecto</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b7x6cp3" class="xref">Acceso Web mejorado</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="keyfeatures.html#b9425th" class="xref">Registro de sincronización</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bawqka3">
 
 <h2 class="title">Compartición de carpetas iFolder</h2>
+
+<span class="collapsible">
 
 <p class="para">Por lo general, al trabajar en varias ubicaciones o en colaboración con otros usuarios, debe gestionar con detenimiento las versiones de archivos. Con iFolder, podrá contar con la versión más reciente de sus archivos en cualquier equipo en el que tenga instalado el Cliente iFolder y haya creado una carpeta iFolder para ellos. iFolder también permite compartir varias carpetas iFolder y su contenido independiente con otros usuarios autorizados o grupos LDAP. Para obtener más información sobre carpetas iFolder compartidas, consulte <a href="keyfeatures.html#bawqvmt" class="xref">Carpetas iFolder compartidas</a>.</p>
 <p class="para">Es posible compartir archivos con el Cliente iFolder mediante la sincronización de archivos en varios equipos a través de un servidor central. iFolder permite realizar las acciones siguientes:</p>
@@ -117,11 +77,15 @@
 <p class="para">El propietario decide quién participa en cada carpeta iFolder y el nivel de acceso de cada miembro. De forma similar, es posible participar en carpetas iFolder compartidas propiedad de otros usuarios de su entorno de colaboración. Al compartir una carpeta iFolder, los usuarios miembro con permiso de escritura pueden modificar la estructura de directorios. Los cambios realizados se aplicarán a todas las copias de dicha carpeta iFolder. Cada usuario puede buscar la carpeta iFolder compartida en cualquier ubicación de su equipo si cumple con los requisitos de <a href="locguide.html" class="xref">Directrices para la ubicación y utilización de carpetas iFolder</a>.</p>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="b9425tb">
 
 <h2 class="title">Derechos de acceso a iFolder</h2>
+
+<span class="collapsible">
 
 <p class="para">El Cliente iFolder es compatible con el propietario y tres niveles de acceso para miembros en una carpeta iFolder: </p>
 <div class="important">
@@ -157,70 +121,104 @@
 </li></ul></div>
 
 <p class="para">Cualquier usuario de iFolder puede ser el propietario de varias carpetas iFolder y ser miembro de otras. El usuario propietario siempre posee el derecho de control total. En calidad de usuario miembro, el nivel de acceso a cada carpeta iFolder compartida puede variar en función del acceso que le haya otorgado cualquier miembro con derecho de control total.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9425tg">
 
 <h2 class="title">Sincronización de archivos </h2>
 
+<span class="collapsible">
+
 <p class="para">Cuando está conectado al servidor, iFolder puede sincronizar la pertenencia a una carpeta iFolder y los archivos de ésta en segundo plano mientras el usuario realiza su trabajo. Al configurar una cuenta de iFolder, puede habilitar la opción <span class="guimenu">Recordar mi contraseña</span> para que iFolder recuerde la contraseña en ese equipo. De este modo, la próxima vez que inicie iFolder, la conexión con el servidor se establecerá automáticamente y se sincronizarán los datos sin que se le solicite la contraseña.</p>
 <p class="para">Es posible configurar el Cliente iFolder para que se ejecute automáticamente cada vez que entre al entorno de escritorio del equipo. La sesión se ejecuta en segundo plano mientras se trabaja con los archivos de las carpetas iFolder locales, y se lleva a cabo el registro y seguimiento de los cambios efectuados. </p>
 <p class="para">Es posible sincronizar los archivos manualmente o a intervalos especificados.</p>
 <p class="para">iFolder también incluye funciones de sincronización delta. Cuando realiza algún cambio en un archivo de una carpeta iFolder, sólo se sincronizan los delta o los cambios con el servidor. O, lo que es lo mismo, la sincronización delta sólo recupera las actualizaciones desde la última sincronización efectuada entre el Cliente iFolder y el servidor. De este modo se incrementa la eficacia, ya que se reduce el tiempo de sincronización. </p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9lux1e">
 
 <h2 class="title">Migración</h2>
 
+<span class="collapsible">
+
 <p class="para">Novell iFolder ofrece una interfaz de usuario simple y sin problemas para la migración basada en cliente de iFolder2.x a iFolder 3.6 y versiones posteriores. El Asistente de migración incluido en el cliente iFolder le ayuda a migrar el cliente iFolder 2 existente.<span class="replaceable">x</span> a iFolder 3.6 de una manera sencilla y rápida. Para obtener más información, consulte la <a href="coexistmig.html" class="xref">Migración y actualización de Novell iFolder</a>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b7x5io1">
 
 <h2 class="title">Cifrado</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder proporciona una mayor seguridad para los archivos de carpetas iFolder confidenciales con el fin de protegerlos de posibles accesos por parte de usuarios no autorizados, ya sea de manera intencionada o no intencionada. Anteriormente, la protección de los datos no estaba del todo asegurada en el servidor, por lo que el administrador o cualquier usuario que obtuviera acceso no autorizado al servidor podía acceder a los datos. Asimismo, al acceder a los archivos de carpetas iFolder a través de un proveedor ISP, existe el riesgo de que un usuario no autorizado pueda acceder sin darse cuenta a sus archivos confidenciales. Ahora, sin embargo, puede cifrar y guardar los archivos en el servidor y recuperarlos por medio de una contraseña codificada que sólo usted conoce. Si la olvida, el agente de recuperación que haya seleccionado durante la creación de la carpeta iFolder cifrada le ayudará a recuperar los datos.</p>
 <div class="important">
 <p class="para"><em class="title">IMPORTANTE:</em>No es posible compartir las carpetas iFolder cifradas</p></div>
 
 <p class="para">Para obtener más información sobre el cifrado, consulte <a href="managingpassphrse.html" class="xref">Gestión de la contraseña codificada para carpetas iFolder cifradas</a>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bbfpgeh">
 
 <h2 class="title">Actualizar</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder de Novell permite realizar una sencilla actualización de iFolder 3.<span class="replaceable">x</span> al Cliente iFolder de iFolder 3.6 de Novell y versiones posteriores. Para obtener más información, consulte la <a href="bctryt7.html" class="xref">Actualización del Cliente iFolder 3.x</a>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bcq09cf">
 
 <h2 class="title">Fusionar</h2>
 
+<span class="collapsible">
+
 <p class="para">Mediante la opción de fusión, puede consolidar los datos de iFolder y minimizar la transferencia de datos entre el Cliente y el servidor iFolder. Esta opción también le permite cambiar la ubicación de una carpeta en el equipo cliente. Para obtener más información, consulte la <a href="merge.html" class="xref">Fusión de carpetas iFolder</a>.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bayydrd">
 
 <h2 class="title">Carpeta iFolder por defecto</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder permite definir una carpeta iFolder por defecto durante la configuración de una cuenta nueva. Al configurar una cuenta de iFolder nueva, iFolder comprueba automáticamente la presencia de una carpeta iFolder por defecto. Si no ha creado ninguna, iFolder le pedirá que lo haga. Si ya existe, el Cliente iFolder le solicitará que la descargue. Si lo desea, también puede omitir ambas opciones. Para obtener más información, consulte el <a href="accounts.html#bbba119" class="xref">Paso 7</a> en <a href="accounts.html" class="xref">Configuración de una cuenta de iFolder</a>. </p>
+</span>
+
 </div>
 
 <div class="sect2" id="b7x6cp3">
 
 <h2 class="title">Acceso Web mejorado</h2>
 
+<span class="collapsible">
+
 <p class="para">iFolder incluye una interfaz Web mejorada que permite acceder a los archivos de carpetas iFolder ubicados en servidores remotos. Con la consola de Web Access, puede utilizar un navegador Web para acceder a los archivos del servidor iFolder desde cualquier estación de trabajo sin disponer del Cliente iFolder. La interfaz de Web Access permite realizar todas las operaciones del Cliente iFolder.</p>
 <p class="para">En comparación con las versiones anteriores de iFolder, iFolder 3.6 y las versiones posteriores permiten crear, examinar, compartir, cargar y suprimir carpetas iFolder a través de la consola mejorada de Web Access. Los usuarios móviles también podrán beneficiarse de esta funcionalidad a través de Internet.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="b9425th">
 
 <h2 class="title">Registro de sincronización</h2>
 
+<span class="collapsible">
+
 <p class="para">El registro de sincronización muestra un registro de la actividad en segundo plano de la carpeta iFolder como, por ejemplo, la carga y descarga de archivos de distintas carpetas iFolder, las infracciones de directivas, los archivos excluidos o los archivos no sincronizados. </p>
+</span>
+
 </div>
 
 </div>

@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:48" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">En la carpeta de iFolder, es posible configurar cualquier estructura de subdirectorios que se adecue a los hábitos de trabajo personales o de la empresa. La estructura de subdirectorios es constante en todas las carpetas iFolder miembro. Cada estación de trabajo puede especificar un directorio padre diferente para la carpeta iFolder compartida.</p>
 <p class="para">Cuando se supera el número límite de carpetas iFolder que un usuario puede crear, iFolder muestra un mensaje de error. Por ejemplo, si el administrador ha establecido la directiva de <span class="guimenu">Número de carpetas por usuario</span> en diez e intenta crear la carpeta iFolder número once, recibirá una notificación acerca de la infracción de la directiva.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Macintosh</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">Para crear carpetas iFolder puede utilizar un gestor de archivos o bien el navegador de iFolder, disponible en la aplicación del cliente. Para crear una carpeta iFolder, utilice los métodos siguientes:</p>
 <div class="itemizedlist">
@@ -185,7 +169,7 @@
 <li class="listitem">
 <p class="listitem">En la barra de herramientas, haga clic en <span class="menuchoice"><span class="guimenu">Archivo</span> > <span class="guimenu">Convertir en una carpeta iFolder</span></span>.</p></li></ul></div>
 
-<p class="para">El icono de carpeta <img src="images/folder_16.png" alt="Icono de carpeta" title="Icono de carpeta" class="inline" />  se convertirá en una carpeta con una superposición de emblema de iFolder <img src="images/ifolder32.png" alt="Icono iFolder" title="Icono iFolder" class="inline" /> (la “i” verde).
+<p class="para">El icono de carpeta <img src="images/folder_16.png" alt="Icono de carpeta" title="Icono de carpeta" class="inline" /> se convertirá en una carpeta con una superposición de emblema de iFolder <img src="images/ifolder32.png" alt="Icono iFolder" title="Icono iFolder" class="inline" /> (la “i” verde).
       </p></li>
 <li class="step" id="bx19z0q">
 <p class="para">Si aparece el mensaje <span class="guimenu">Carpeta iFolder creada</span>, realice una de las siguientes acciones:</p>
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">Para crear carpetas iFolder puede utilizar un gestor de archivos o bien el navegador de iFolder, disponible en la aplicación del cliente. Para crear una carpeta iFolder, utilice los métodos siguientes:</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Macintosh</h2>
+
+<span class="collapsible">
 
 <p class="para"> Se pueden crear carpetas iFolder con el navegador de iFolder, disponible en la aplicación cliente.</p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">La carpeta iFolder aparecerá en la ventana del navegador de iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">Creación de carpetas iFolder en un punto de montaje FAT32 (Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">En Linux, iFolder admite la creación y uso de carpetas iFolder en un punto de montaje de un sistema de archivos FAT32. Antes de crear nuevas carpetas iFolder o de configurar carpetas iFolder compartidas en un volumen FAT32 del equipo Linux, el usuario de la carpeta iFolder debe poseer el punto de montaje FAT32 donde desea almacenar las carpetas iFolder, y el archivo <span class="filename">/etc/fstab</span> debe identificar explícitamente el ID de usuario local del usuario de la carpeta iFolder para el punto de montaje. </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

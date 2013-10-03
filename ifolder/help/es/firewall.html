@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="es" />
-<meta name="Generation-Date" content="Friday, May 25, 2012 16:48" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:10" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="virusscan.html" class="nav">&nbsp;siguiente<img src="ui/images/next.png" alt="siguiente" title="siguiente" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="firewall">
 
@@ -48,28 +49,23 @@
 <p class="para">Si utiliza un cortafuegos local, deberá configurarlo para que permita a iFolder elegir un puerto local dinámico o configurar un puerto local estático de modo que el cliente iFolder pueda comunicarse a nivel local (el mismo equipo) con el servidor Mono XSP. iFolder utiliza los servicios Web de Mono XSP para comunicarse a través de HTTP con los servidores empresariales de Novell iFolder en los que residen las cuentas de iFolder. El administrador de iFolder configura los servicios de iFolder que determinan si las comunicaciones utilizarán o no HTTP en el entorno del usuario.</p>
 <p class="para">El cortafuegos no bloquea el tráfico entre Mono XSP y el servidor empresarial de Novell iFolder, porque Mono XSP utiliza los puertos HTTP estándar para el tráfico. No obstante, si bloquea el tráfico entre el cliente y Mono XSP, el cliente no podrá comunicarse con el servidor. No será posible entrar en la cuenta de iFolder ni sincronizar los datos de iFolder.</p>
 <p class="para">En un principio, la configuración de iFolder no especifica un puerto concreto para usar en las comunicaciones entre el cliente y Mono XSP. La primera vez que se ejecuta iFolder, abre un puerto local disponible para escuchar las peticiones de Mono XSP y enviar datos al servidor a través de Mono XSP. Registra el número de puerto en un archivo de configuración y utiliza dicho puerto posteriormente, a no ser que no esté disponible al iniciar iFolder. Si otra aplicación está utilizando el puerto, iFolder selecciona otro puerto disponible, lo reconfigura en el archivo de configuración y lo utiliza en adelante. Si, por ejemplo, iFolder está desactivado y otra aplicación ocupa el puerto, iFolder deberá seleccionar y configurar otro puerto cuando el usuario lo reinicie.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjo" class="xref">Uso de un puerto dinámico local</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="firewall.html#bctnqjp" class="xref">Uso de un puerto estático local</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bctnqjo">
 
 <h2 class="title">Uso de un puerto dinámico local</h2>
 
+<span class="collapsible">
+
 <p class="para">Si utiliza un cortafuegos local en el equipo, éste debería detectar el tráfico local entre iFolder y el servidor Mono XSP siempre que iFolder se ponga en contacto con el servidor para sincronizar la lista de usuarios y los datos de iFolder. Seleccione <span class="guimenu">Permitir</span> para permitir el tráfico de iFolder para esta sesión. Si permite el tráfico de forma permanente, el cortafuegos no deberá recordarle de nuevo sobre esta circunstancia, por lo que evitará tener que recibir las alertas emergentes cada vez que se inicie iFolder.</p>
 <p class="para">Si bloquea el tráfico de iFolder a Mono XSP, el cortafuegos le impedirá conectarse con el servidor iFolder, con lo que no podrá sincronizar los archivos. iFolder no detecta que el cortafuegos está bloqueando el tráfico, sino que simplemente notifica que no es posible establecer la conexión con la cuenta del servidor iFolder.</p>
+</span>
+
 </div>
 
 <div class="sect2" id="bctnqjp">
 
 <h2 class="title">Uso de un puerto estático local</h2>
+
+<span class="collapsible">
 
 <p class="para">De forma opcional, puede añadir el parámetro Web Service Port Range (Rango de puertos del servicio Web) en la sección Service Manager (Gestor de servicios) del archivo <span class="filename">Simias.config</span> para permitir que Mono-XSP Server utilice un puerto estático o un rango de puertos para este tráfico local. Este puerto o rango de puertos podrá entonces abrirse en el cortafuegos para permitir la comunicación de Mono XSP. </p>
 <p class="para">Encontrará el archivo <span class="filename">Simias.config</span> en las ubicaciones siguientes:</p>
@@ -139,6 +135,8 @@
 <p class="para">Inicie el Cliente iFolder.</p>
 <p class="para">Para obtener más información, consulte la <a href="startclient.html" class="xref">Inicio del Cliente iFolder</a>.</p></li></ol>
 </div>
+
+</span>
 
 </div>
 
