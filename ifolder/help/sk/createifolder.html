@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="sk" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:47" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:59" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,6 +40,7 @@
   <a href="sharewith.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="createifolder">
 
@@ -63,28 +64,11 @@
 
 <p class="para">V rámci priečinka iFolder môžete nastaviť akúkoľvek štruktúru podadresárov, ktorá vyhovuje vašim osobným pracovným zvykom alebo zvyklostiam spoločnosti. Štruktúra podadresárov je pre všetky členské priečinky iFolder rovnaká. Každá pracovná stanica môže pre zdieľaný priečinok iFolder určiť iný nadradený adresár.</p>
 <p class="para">Ak prekročíte obmedzenie počtu priečinkov iFolder, ktoré môže jednotlivý používateľ vytvoriť, aplikácia iFolder zobrazí chybové hlásenie. Ak napríklad váš správca nastavil politiku <span class="guimenu">Počtu priečinkov iFolder na používateľa</span> na 10 a vy sa pokúsite vytvoriť jedenásty priečinok iFolder, aplikácia iFolder vás upozorní na porušenie politiky.</p>
-<div class="itemizedlist">
-<ul class="listbullet">
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjhr" class="xref">Systém Linux</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bbrkjtk" class="xref">Systém Windows</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#bctq91g" class="xref">Systém Macintosh</a>
-          </p></li>
-<li class="listitem">
-<p class="listitem">
-            <a href="createifolder.html#fat32mtpt" class="xref">Vytváranie priečinkov iFolder na bode pripojenia v systéme FAT32 (systém Linux)</a>
-          </p></li></ul></div>
-
 <div class="sect2" id="bbrkjhr">
 
 <h2 class="title">Systém Linux</h2>
+
+<span class="collapsible">
 
 <p class="para">Priečinky iFolder môžete vytvoriť priamo pomocou správcu súborov alebo v prehľadávači priečinkov iFolder, ktorý je k dispozícii v klientskej aplikácii. Priečinok iFolder môžete vytvoriť nasledujúcimi spôsobmi:</p>
 <div class="itemizedlist">
@@ -201,11 +185,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bbrkjtk">
 
 <h2 class="title">Systém Windows</h2>
+
+<span class="collapsible">
 
 <p class="para">Priečinky iFolder môžete vytvoriť priamo pomocou správcu súborov alebo v prehľadávači priečinkov iFolder, ktorý je k dispozícii v klientskej aplikácii. Priečinok iFolder môžete vytvoriť nasledujúcimi spôsobmi:</p>
 <div class="itemizedlist">
@@ -325,11 +313,15 @@
 
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="bctq91g">
 
 <h2 class="title">Systém Macintosh</h2>
+
+<span class="collapsible">
 
 <p class="para">Priečinky iFolder môžete vytvoriť pomocou prehľadávača aplikácie iFolder, ktorý je k dispozícii v klientskej aplikácii. </p>
 <div class="procedure">
@@ -371,11 +363,15 @@
 <p class="para">Priečinok iFolder sa zobrazí v okne prehľadávača aplikácie iFolder.</p></li></ol>
 </div>
 
+</span>
+
 </div>
 
 <div class="sect2" id="fat32mtpt">
 
 <h2 class="title">Vytváranie priečinkov iFolder na bode pripojenia v systéme FAT32 (systém Linux)</h2>
+
+<span class="collapsible">
 
 <p class="para">V systéme Linux aplikácia iFolder podporuje pre súborový systém FAT32 vytváranie a používanie priečinkov iFolder na bode pripojenia. Skôr, ako bude možné na zväzku so systémom FAT32 na počítači so systémom Linux vytvoriť nové priečinky iFolder alebo nastaviť zdieľané priečinky iFolder, musí byť používateľ aplikácie iFolder vlastníkom bodu pripojenia systému FAT32, na ktorom chcete priečinky iFolder uložiť, a súbor <span class="filename">/etc/fstab</span> musí explicitne určovať lokálnu identifikáciu tohto používateľa aplikácie iFolder pre tento bod pripojenia. </p>
 <div class="important">
@@ -410,6 +406,8 @@ mount -t vfat /dev/hda4 /home/jsmith/fat32mntpt
 /dev/hda4  /home/jsmith/fat32mntpt  vfat  uid=jsmith
 </pre></li></ol>
 </div>
+
+</span>
 
 </div>
 

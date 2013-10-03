@@ -6,9 +6,9 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Language" content="sk" />
-<meta name="Generation-Date" content="Monday, May 28, 2012 13:47" />
-<meta name="Content-Date" content="Mon, 16 May 1912 12:00:00 GMT" />
-<meta name="Copyright" content="Copyright Novell, Inc. 2012" />
+<meta name="Generation-Date" content="Tuesday, October 01, 2013 14:59" />
+<meta name="Content-Date" content="Mon, 18 Aug 1913 12:00:00 GMT" />
+<meta name="Copyright" content="Copyright Novell, Inc. 2013" />
 
 <style type="text/css">
   @import url(ui/styles.css);
@@ -40,12 +40,13 @@
   <a href="delacct.html" class="nav">&nbsp;ďalej<img src="ui/images/next.png" alt="ďalej" title="ďalej" /></a>
 </div>
 
+<script type="text/javascript" src="ui/expandable.js"></script>
 
 <div class="sect1" id="virusscan">
 
 <h1 class="title">Konfigurácia lokálnych nastavení zisťovania vírusov pre prevádzku aplikácie iFolder</h1>
 
-<p class="para">Ak na počítači používate softvér na zisťovanie vírusov, vylúčte zo zisťovania vírusov adresár <span class="filename">..\simias\WorkArea\</span>. Umiestnenie adresára <span class="filename">..\simias\WorkArea\</span> je napríklad v systéme Windows <span class="filename">c:\documents and settings\<span class="replaceable">username</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>  </p>
+<p class="para">Ak na počítači používate softvér na zisťovanie vírusov, vylúčte zo zisťovania vírusov adresár <span class="filename">..\simias\WorkArea\</span>. Umiestnenie adresára <span class="filename">..\simias\WorkArea\</span> je napríklad v systéme Windows <span class="filename">c:\documents and settings\<span class="replaceable">username</span>\local settings\application data\simias\WorkArea\.simias.wf.<span class="replaceable">guid</span></span>. </p>
 <p class="para">Adresár <span class="filename">..\simias\WorkArea\</span> je miestom, kam aplikácia iFolder usporadúva súbory na prebratie zo servera. Ak súbor aplikácie iFolder obsahuje vírus a softvér na zisťovanie vírusov objaví daný vírus počas umiestnenia súboru v adresári <span class="filename">..\simias\WorkArea</span>, zobrazí softvér na zisťovanie vírusov správu s upozornením, že sa našiel vírus, a premiestni daný súbor do karantény. Aplikácia iFolder sa potom znova pokúsi súbor synchronizovať. </p>
 <p class="para">Vynechanie adresára WorkArea z kontroly umožní dokončiť synchronizáciu. Infikovaný súbor sa úspešne prevezme a premiestni do lokálneho priečinka iFolder. Softvér na zisťovanie vírusov potom rozpozná infikovaný súbor v priečinku iFolder a premiestni ho z daného priečinka do karantény, čím počítač chráni pred infikovaním. Aplikácia iFolder rozpozná odstránenie súboru. Keď začne ďalšia synchronizácia, aplikácia iFolder odstráni súbor zo servera a z členských počítačov. </p>
 <p class="para">Ak je však priečinok iFolder, kam sa súbor prevzal, určený iba na čítanie, lokálne odstránenie sa na serveri a ostatných členských počítačoch neuplatní. Vírus sa musí rozpoznať niekde inde, kde povolenia umožňujú synchronizáciu zmien. Používateľov softvér na zisťovanie vírusov pravdepodobne upozorní používateľa na vírus. Ten by mal preto upozorniť ostatných členov priečinka iFolder na existenciu vírusu.</p>
